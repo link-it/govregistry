@@ -1,28 +1,32 @@
 openapi: 3.0.3
+
 info:
   title: GovHub Management Backoffice - OpenAPI 3.0
-  x-summary: |-
-    Backoffice GovHub
-  description: |-
-    Servizio per il backoffice condiviso delle applicazioni di govhub. 
+  x-summary: Backoffice GovHub
+  description: This Service runs the shared govhub backoffice.
   x-api-id: management-govhub
   termsOfService: TODO
+  version: 1.0.1
+
   contact:
     name: TODO
     email: TODO@TODO.it
+
   license:
     name: Apache 2.0 ( TODO )
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.11
+    url: http://www.apache.org/licenses/LICENSE-2.0.html 
+
 servers:
   - url: https://govhub.backoffice.it/api/v3
-    description: Url di test dell'API
+    description: Sample Deployment URL (Not Actual)
+
 security:
    - header-principal: []
+
 tags:
   - name: user
     description: Operations on users
-        
+
 paths:
   /users:
     post:
@@ -56,6 +60,7 @@ paths:
           $ref: "#/components/responses/503ServiceUnavailable"
         default:
           $ref: "#/components/responses/ResponseDefault"
+          
   /status:
     get:
       tags:
