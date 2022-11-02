@@ -9,6 +9,7 @@ import it.govhub.management_bo.api.UsersApi;
 import it.govhub.management_bo.beans.PatchOp;
 import it.govhub.management_bo.beans.User;
 import it.govhub.management_bo.beans.UserCreate;
+import it.govhub.management_bo.beans.UserList;
 import it.govhub.management_bo.beans.UserOrdering;
 
 public class UsersController implements UsersApi {
@@ -27,7 +28,7 @@ public class UsersController implements UsersApi {
 	}
 
 	@Override
-	public ResponseEntity<Object> listUsers(Integer limit,	Long offset,	String q, Boolean enabled, UserOrdering orderBy) {
+	public ResponseEntity<UserList> listUsers(Integer limit,	Long offset,	String q, Boolean enabled, UserOrdering orderBy) {
 		// TODO Auto-generated method stub
 		return null;
 	}
