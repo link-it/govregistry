@@ -82,10 +82,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                 type: object
-                 additionalProperties: false
-                 # TODO: Quando implemento il metodo e vedo come viene serializzato 
-                 # un PagedModel, scrivo lo schema
+                 $ref: "#/components/schemas/UserList"
         '400':
           $ref: "#/components/responses/400BadRequest"
         '401':
@@ -531,6 +528,7 @@ components:
          required:
            - op
            - path
+         additionalProperties: false
          properties:
            op:
              type: string
@@ -549,3 +547,75 @@ components:
            value:
              type: object
              description: updating value.
+             
+      ListWithoutTotal:
+         required:
+         - limit
+         - offset
+         type: object
+         additionalProperties: false
+         properties:
+           offset:
+             type: integer
+             description: Offset value (zero-based) for the results
+             format: int64
+             minimum: 0
+             maximum: 9223372036854775807
+           limit:
+             type: integer
+             description: numero massimo di elementi restituiti
+             format: int32
+             minimum: 0
+             maximum: 2147483647
+           first:
+             type: string
+             format: url
+             description: Link to the first results page. Is Null if this is already the first page.
+             maxLength: 2048
+           next:
+             type: string
+             format: url
+             description: Link to the next results page. Null if this is the last page.
+             maxLength: 2048
+           prev:
+             type: string
+             format: url
+             description: Link to the previous results page. Null if this is the first page.
+             maxLength: 2048
+             
+      List:
+         allOf:
+         - $ref: "#/components/schemas/ListWithoutTotal"
+         - required:
+           - total
+           type: object
+           additionalProperties: false
+           properties:
+             total:
+               minimum: 0
+               maximum: 9223372036854775807
+               type: integer
+               description: Number of found elements.
+               format: int64
+             last:
+               type: string
+               description: Link to last result page. Null if this is already the last page.
+               format: url
+               maxLength: 2048
+      
+      UserList:
+         allOf:
+            - $ref: "#/components/schemas/List"
+            - type: object
+              properties:              
+                 items:
+                    type: array
+                    items:
+                       $ref: "#/components/schemas/User"
+                    minItems: 0
+                    maxItems: 2147483647
+              required:
+                 - items 
+              additionalProperties: false
+         
+         
