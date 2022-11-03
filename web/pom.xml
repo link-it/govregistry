@@ -7,7 +7,7 @@
 	<name>GovHub Backoffice - API</name>
 	<parent>
 		<groupId>it.govhub</groupId>
-		<artifactId>management_bo</artifactId>
+		<artifactId>bom</artifactId>
 		<version>1.0.0</version>
 	</parent>
 	

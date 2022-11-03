@@ -7,7 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
-@SpringBootApplication
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+
+@SpringBootApplication()
+@OpenAPIDefinition(info = @Info(title = "API GovHub", version = "1.0", description = "API di gestione GovHub"))
 public class Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
@@ -15,7 +19,7 @@ public class Application extends SpringBootServletInitializer {
 	}
 	
 	@Bean
-	ForwardedHeaderFilter forwardedHeaderFilter() {
+	public ForwardedHeaderFilter forwardedHeaderFilter() {
 	    return new ForwardedHeaderFilter();
 	}
 	
