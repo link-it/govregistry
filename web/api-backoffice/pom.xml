@@ -16,7 +16,7 @@
 	<artifactId>api-backoffice</artifactId>
 	<packaging>${packaging.type}</packaging>
 	<version>1.0.0</version>
-	<name>GovHub Backoffice - API - Monitoraggio</name>
+	<name>GovHub Backoffice - API Monitoraggio</name>
 	<description>API per il backoffice del modulo condiviso di govhub</description>
 
 	<properties>
@@ -68,6 +68,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-data-redis</artifactId>
 		</dependency>
 
 		<dependency>
