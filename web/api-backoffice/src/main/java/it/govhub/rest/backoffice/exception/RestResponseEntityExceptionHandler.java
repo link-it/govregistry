@@ -2,9 +2,12 @@ package it.govhub.rest.backoffice.exception;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,42 +22,68 @@ import it.govhub.rest.backoffice.beans.Problem;
 @ControllerAdvice
 @ResponseBody
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
-
-	@ResponseStatus(HttpStatus.CONFLICT)
-	@ExceptionHandler(ConflictException.class)
-	public Problem handleConstraintViolation(ConflictException ex) {
+	
+	private static Map<HttpStatus, String> problemTypes = Map.of(
+			HttpStatus.CONFLICT,  "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
+			HttpStatus.NOT_FOUND, "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
+			HttpStatus.BAD_REQUEST,"https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request" 
+		);
+	
+	private Problem buildProblem(HttpStatus status, String detail) {
 		try {
 			Problem ret = new Problem();
-			ret.setStatus(HttpStatus.CONFLICT.value());
-			ret.setTitle(HttpStatus.CONFLICT.getReasonPhrase());
-			ret.setType(new URI("https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict"));
-			ret.setDetail(ex.getLocalizedMessage());
+			ret.setStatus(status.value());
+			ret.setTitle(status.getReasonPhrase());
+			ret.setType(new URI(problemTypes.get(status)));
+			ret.setDetail(detail);
 			return ret;
 			
 		} catch (URISyntaxException e){
 			// Non deve mai fallire la new URI di sopra
 			throw new RuntimeException(e);
 		}
+	}
+
+	@ResponseStatus(HttpStatus.CONFLICT)
+	@ExceptionHandler(ConflictException.class)
+	public Problem handleConstraintViolation(ConflictException ex) {
+		return buildProblem(HttpStatus.CONFLICT, ex.getLocalizedMessage());
 	}
 	
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public Problem handleConstraintViolation(ResourceNotFoundException ex) {
-		try {
-			Problem ret = new Problem();
-			ret.setStatus(HttpStatus.NOT_FOUND.value());
-			ret.setTitle(HttpStatus.NOT_FOUND.getReasonPhrase());
-			ret.setType(new URI("https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found"));
-			ret.setDetail(ex.getLocalizedMessage());
-			return ret;
-			
-		} catch (URISyntaxException e){
-			// Non deve mai fallire la new URI di sopra
-			throw new RuntimeException(e);
-		}
+		return buildProblem(HttpStatus.NOT_FOUND, ex.getLocalizedMessage());
 	}
 
+	
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			org.springframework.http.HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		return new ResponseEntity<>(
+				buildProblem(HttpStatus.BAD_REQUEST, extractValidationError(ex)),
+				HttpStatus.BAD_REQUEST);
+	}
+	
+	/**
+	 * Crea un messaggio che descrive un errore di validazione.
+	 * Più leggibile per una API rispetto a quello restituito di default.
+	 * 	
+	 */
+	private static String extractValidationError(MethodArgumentNotValidException ex) {
+		var error = ex.getBindingResult().getAllErrors().get(0);
+		if (error instanceof FieldError) {			
+			var ferror = (FieldError) error;
+			
+			return "Field error in object '" + error.getObjectName() + "' on field '" + ferror.getField() +
+					"': rejected value [" + ObjectUtils.nullSafeToString(ferror.getRejectedValue()) + "]; " +
+					error.getDefaultMessage();
+		}
+		return error.toString();		
+	}
+	
 	/*@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler(SemanticValidationException.class)
 	public ProblemModel handleConstraintViolation(SemanticValidationException ex) {
@@ -77,26 +106,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
 
 
-	@Override
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-			org.springframework.http.HttpHeaders headers, HttpStatus status, WebRequest request) {
-		ProblemModel problem = null;
-		try {
-			problem = ProblemModel.builder()
-					.status(HttpStatus.BAD_REQUEST.value())
-					.title(HttpStatus.BAD_REQUEST.getReasonPhrase())
-					.type(new URI("https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request"))
-					.detail(ex.getBindingResult().getAllErrors().get(0).getDefaultMessage())
-					.build();
-		} catch (URISyntaxException e) {
-			problem = ProblemModel.builder()
-					.status(HttpStatus.BAD_REQUEST.value())
-					.title(HttpStatus.BAD_REQUEST.getReasonPhrase())
-					.detail(ex.getMessage())
-					.build();
-		}
-		return new ResponseEntity<>(problem, HttpStatus.BAD_REQUEST);
-	}
+
 	
 	@ResponseStatus(HttpStatus.BAD_GATEWAY)
 	@ExceptionHandler(BadGatewayException.class)
