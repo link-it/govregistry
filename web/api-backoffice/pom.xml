@@ -186,13 +186,15 @@
 								<dateLibrary>java8</dateLibrary>
 								<library>spring-boot</library>
 								<sourceFolder>generated-sources/java/</sourceFolder>
-								<apiPackage>it.govhub.management_bo.api</apiPackage>
-								<invokerPackage>it.govhub.management_bo.api.impl</invokerPackage>
-								<modelPackage>it.govhub.management_bo.beans</modelPackage>
+								<basePackage>it.govhub.rest.backoffice</basePackage>
+								<apiPackage>it.govhub.rest.backoffice.api</apiPackage>
+								<modelPackage>it.govhub.rest.backoffice.beans</modelPackage>
+								<configPackage>it.govhub.rest.backoffice.config</configPackage>
 								<useBeanValidation>true</useBeanValidation>
-								<performBeanValidation>true</performBeanValidation>
+								 <performBeanValidation>true</performBeanValidation>
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<interfaceOnly>true</interfaceOnly>
+								<hateoas>true</hateoas>
 							</configOptions>
 							<output>${project.basedir}/target</output>
 							<generateApiDocumentation>false</generateApiDocumentation>

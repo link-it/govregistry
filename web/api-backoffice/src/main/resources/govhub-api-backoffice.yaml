@@ -22,6 +22,7 @@ servers:
 
 security:
    - header-principal: []
+   - basic-auth: []
 
 tags:
   - name: user
@@ -80,7 +81,7 @@ paths:
         '200':
           description: Successful operation
           content:
-            application/problem+json:
+            application/json:
               schema:
                  $ref: "#/components/schemas/UserList"
         '400':
@@ -143,7 +144,7 @@ paths:
         '200':
           description: Successful operation
           content:
-            application/problem+json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/User'          
         '400':
@@ -170,7 +171,7 @@ paths:
         '200':
           description: Successful operation
           content:
-            application/problem+json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/User'          
         '400':
@@ -222,6 +223,9 @@ components:
          type: apiKey
          in: header
          name: X-GovHub-Username
+      basic-auth:
+         type: http
+         scheme: basic
 
    # RESPONSES ---------------
    
@@ -373,10 +377,7 @@ components:
          in: path
          required: true
          schema:
-           type: string
-           format: uuid
-           minLength: 36
-           maxLength: 36
+            $ref: "#/components/schemas/UserId"
            
       limit:
          name: limit
@@ -418,7 +419,7 @@ components:
             type: boolean                      
            
       user_ordering_query:
-         name: order_by
+         name: sort
          in: query
          description: generic query
          required: false
@@ -431,6 +432,13 @@ components:
    
    schemas:
    
+      UserId:
+         type: integer
+         format: int64
+         minimum: 0
+         maximum: 9223372036854775807
+         description: User identifier 
+      
       UserCreate:
          type: object
          additionalProperties: false
@@ -454,7 +462,6 @@ components:
          required:
             - principal
             - name
-            - email
             - enabled            
          
       User:         
@@ -464,9 +471,7 @@ components:
               additionalProperties: false
               properties:
                   id:
-                     type: string
-                     maxLength: 255
-                     format: uuid
+                     $ref: "#/components/schemas/UserId"
            
       Problem:
          type: object

@@ -41,10 +41,13 @@ public class SecurityConfig {
 	public static final String REALM_NAME = "govhub";
 	public static final String JSESSIONID_NAME = "GOVHUB-JSESSIONID";
 	public static final String RUOLO_GOVHUB_SYSADMIN = "govhub_sysadmin"; // Accesso a tutte le risorse
-	public static final Set<String> ruoliConsentiti = new HashSet<>(); // impostarli nel componente jee utilizzando la funzione mappableAuthorities al posto di mappableRoles che aggiunge il prefisso 'ROLE_' ad ogni ruolo
-	{
-		ruoliConsentiti.add(RUOLO_GOVHUB_SYSADMIN);
-	}
+
+	// impostarli nel componente jee utilizzando la funzione mappableAuthorities al posto di mappableRoles che aggiunge il prefisso 'ROLE_' ad ogni ruolo
+	public static final Set<String> ruoliConsentiti = Set.of
+			( 
+				RUOLO_GOVHUB_SYSADMIN
+			);
+	
 	
 	@Bean
 	public SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
