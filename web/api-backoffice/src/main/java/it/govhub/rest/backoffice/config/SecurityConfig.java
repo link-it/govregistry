@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,6 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
+
 
 /**
  * Configurazione della sicurezza
@@ -41,11 +43,17 @@ public class SecurityConfig {
 	public static final String REALM_NAME = "govhub";
 	public static final String JSESSIONID_NAME = "GOVHUB-JSESSIONID";
 	public static final String RUOLO_GOVHUB_SYSADMIN = "govhub_sysadmin"; // Accesso a tutte le risorse
+	public static final String RUOLO_GOVHUB_USERS_EDITOR = "govhub_users_editor";
+	public static final String RUOLO_GOVHUB_USERS_VIEWER = "govhub_users_viewer";
+	public static final String RUOLO_GOVHUB_USER = "govhub_user";
 
 	// impostarli nel componente jee utilizzando la funzione mappableAuthorities al posto di mappableRoles che aggiunge il prefisso 'ROLE_' ad ogni ruolo
 	public static final Set<String> ruoliConsentiti = Set.of
 			( 
-				RUOLO_GOVHUB_SYSADMIN
+				RUOLO_GOVHUB_SYSADMIN,
+				RUOLO_GOVHUB_USERS_EDITOR,
+				RUOLO_GOVHUB_USERS_VIEWER,
+				RUOLO_GOVHUB_USER
 			);
 	
 	
@@ -58,14 +66,20 @@ public class SecurityConfig {
 	}
 
 	private HttpSecurity applyAuthRules(HttpSecurity http) throws Exception {
+		
 		http.csrf().disable()
 		.authorizeRequests()
-		.anyRequest().authenticated()
+		.antMatchers(HttpMethod.POST, "/users").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
+		.antMatchers(HttpMethod.PATCH, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
+		.antMatchers(HttpMethod.GET, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR, RUOLO_GOVHUB_USERS_VIEWER)
+		.antMatchers(HttpMethod.GET, "/profile").hasAnyRole(ruoliConsentiti.toArray(new String[0]))
+		.anyRequest().denyAll()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Creazione della sessione in caso non ci sia
 		.and().logout().deleteCookies(JSESSIONID_NAME).invalidateHttpSession(true).logoutSuccessHandler(new DefaultLogoutSuccessHandler()) // Gestione Logout
 		;
 		return http;
 	}
+	
 	
 	@Bean
 	public CookieSerializer cookieSerializer() {
@@ -75,6 +89,7 @@ public class SecurityConfig {
 		serializer.setDomainNamePattern("^.+?\\.(\\w+\\.[a-z]+)$"); 
 		return serializer;
 	}
+	
 	
 	@Bean
     public InMemoryUserDetailsManager userDetailsService() throws Exception {
