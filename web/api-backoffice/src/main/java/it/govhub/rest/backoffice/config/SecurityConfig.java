@@ -73,6 +73,9 @@ public class SecurityConfig {
 		.antMatchers(HttpMethod.PATCH, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
 		.antMatchers(HttpMethod.GET, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR, RUOLO_GOVHUB_USERS_VIEWER)
 		.antMatchers(HttpMethod.GET, "/profile").hasAnyRole(ruoliConsentiti.toArray(new String[0]))
+		// richieste GET Schema open-api accessibile a tutti
+		.antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() 
+		.antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
 		.anyRequest().denyAll()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Creazione della sessione in caso non ci sia
 		.and().logout().deleteCookies(JSESSIONID_NAME).invalidateHttpSession(true).logoutSuccessHandler(new DefaultLogoutSuccessHandler()) // Gestione Logout
