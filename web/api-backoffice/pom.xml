@@ -165,16 +165,42 @@
 			    <artifactId>json-patch</artifactId>
 			    <version>${jsonpatch.version}</version>
 		</dependency>
-
+		
+		
+		<!--  Generazione MetaModel Hibernate per query JPA -->
+<!-- 		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-jpamodelgen</artifactId>
+		</dependency>
+ -->
 	</dependencies>
 
 	<build>
 		<finalName>api-backoffice</finalName>
 		<plugins>
+
+<!--  <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-compiler-plugin</artifactId>
+	<configuration>
+		<source>11</source>
+		<target>11</target>
+		<annotationProcessorPaths>
+			<path>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-jpamodelgen</artifactId>
+				<version>${hibernate.version}</version>
+			</path>
+			...
+		</annotationProcessorPaths>
+	</configuration>
+</plugin>			 -->
+	
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+		
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
@@ -213,6 +239,36 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			
+			<plugin>
+			    <groupId>org.bsc.maven</groupId>
+			    <artifactId>maven-processor-plugin</artifactId>
+			    <version>4.5</version>
+			    <executions>
+			        <execution>
+			            <id>process</id>
+			            <goals>
+			                <goal>process</goal>
+			            </goals>
+			            <phase>generate-sources</phase>
+			            <configuration>
+			                <processors>
+			                    <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+			                </processors>
+			            </configuration>
+			        </execution>
+			    </executions>
+			    <dependencies>
+			        <dependency>
+			            <groupId>org.hibernate</groupId>
+			            <artifactId>hibernate-jpamodelgen</artifactId>
+			            <version>${hibernate.version}</version>
+			        </dependency>
+			    </dependencies>
+			</plugin>
+			
+			
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>

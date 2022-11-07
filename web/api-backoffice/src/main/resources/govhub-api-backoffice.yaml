@@ -388,7 +388,7 @@ components:
          schema:
            type: integer
            format: int32
-           minimum: 0
+           minimum: 1
            maximum: 100
            
       offset:
@@ -414,10 +414,11 @@ components:
       enabled_query:
          name: enabled
          in: query
-         description: generic query
+         description: filter by status
          required: false
          schema:
             type: boolean                      
+           
            
       user_ordering_query:
          name: sort
