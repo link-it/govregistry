@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -62,8 +63,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(BadRequestException.class)
-	public Problem handleConstraintViolation(RuntimeException ex) {
+	@ExceptionHandler({BadRequestException.class, MethodArgumentTypeMismatchException.class})
+	public Problem handleConstraintViolation(RuntimeException ex) {		
 		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
 	}
 	
