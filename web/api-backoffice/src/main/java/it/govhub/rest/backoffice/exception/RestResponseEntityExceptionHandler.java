@@ -4,10 +4,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ObjectUtils;
-import org.springframework.validation.FieldError;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
+
 import it.govhub.rest.backoffice.beans.Problem;
+import it.govhub.rest.backoffice.utils.RequestUtils;
 
 
 @ControllerAdvice
@@ -56,33 +59,43 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	public Problem handleConstraintViolation(ResourceNotFoundException ex) {
 		return buildProblem(HttpStatus.NOT_FOUND, ex.getLocalizedMessage());
 	}
-
 	
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(BadRequestException.class)
+	public Problem handleConstraintViolation(RuntimeException ex) {
+		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
+	}
+	
+
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			org.springframework.http.HttpHeaders headers, HttpStatus status, WebRequest request) {
-		
+
+		var error = ex.getBindingResult().getAllErrors().get(0);
+
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.BAD_REQUEST, extractValidationError(ex)),
+				buildProblem(HttpStatus.BAD_REQUEST, RequestUtils.extractValidationError(error)),
 				HttpStatus.BAD_REQUEST);
 	}
 	
-	/**
-	 * Crea un messaggio che descrive un errore di validazione.
-	 * Più leggibile per una API rispetto a quello restituito di default.
-	 * 	
-	 */
-	private static String extractValidationError(MethodArgumentNotValidException ex) {
-		var error = ex.getBindingResult().getAllErrors().get(0);
-		if (error instanceof FieldError) {			
-			var ferror = (FieldError) error;
-			
-			return "Field error in object '" + error.getObjectName() + "' on field '" + ferror.getField() +
-					"': rejected value [" + ObjectUtils.nullSafeToString(ferror.getRejectedValue()) + "]; " +
-					error.getDefaultMessage();
+	
+	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(
+			HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		String msg;
+		if (ex.getCause() instanceof ValueInstantiationException) {
+			msg = ex.getCause().getLocalizedMessage();			
+		} else {
+			msg = ex.getLocalizedMessage();
 		}
-		return error.toString();		
+		
+		return new ResponseEntity<>(
+				buildProblem(HttpStatus.BAD_REQUEST,msg),
+				HttpStatus.BAD_REQUEST);
 	}
+
 	
 	/*@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler(SemanticValidationException.class)

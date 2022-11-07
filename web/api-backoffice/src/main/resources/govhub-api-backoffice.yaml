@@ -96,6 +96,36 @@ paths:
           $ref: "#/components/responses/503ServiceUnavailable"
         default:
           $ref: "#/components/responses/ResponseDefault"       
+
+          
+  /users/{id}:
+    parameters:
+      - $ref: "#/components/parameters/user_id"    
+    get:
+      tags:
+        - user
+      summary: Retrieve a user
+      description: Retrieve the user with the provided id
+      operationId: readUser
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+        '400':
+          $ref: "#/components/responses/400BadRequest"
+        '401':
+          $ref: "#/components/responses/401Unauthorized"
+        '403':
+          $ref: "#/components/responses/403Forbidden"
+        '429':
+          $ref: "#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/ResponseDefault"
           
     patch:
       summary: Update user data.
@@ -129,36 +159,7 @@ paths:
         "503":
           $ref: "#/components/responses/503ServiceUnavailable"
         default:
-          $ref: "#/components/responses/ResponseDefault"
-                    
-  /users/{id}:    
-    get:
-      parameters:
-      - $ref: "#/components/parameters/user_id"
-      tags:
-        - user
-      summary: Retrieve a user
-      description: Retrieve the user with the provided id
-      operationId: readUser
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'          
-        '400':
-          $ref: "#/components/responses/400BadRequest"
-        '401':
-          $ref: "#/components/responses/401Unauthorized"
-        '403':
-          $ref: "#/components/responses/403Forbidden"
-        '429':
-          $ref: "#/components/responses/429TooManyRequests"
-        '503':
-          $ref: "#/components/responses/503ServiceUnavailable"
-        default:
-          $ref: "#/components/responses/ResponseDefault"
+          $ref: "#/components/responses/ResponseDefault"          
           
   /profile:    
     get:
@@ -446,7 +447,7 @@ components:
             principal:
                type: string
                maxLength: 255
-               pattern: ^[\w _\-\.]+$
+               pattern: ^[\w_\-\.]+$
                example: user-1
             full_name:
                type: string
@@ -539,7 +540,7 @@ components:
              type: string
              enum:
                - add
-               - delete
+               - remove
                - replace
              description: Specified operation
              example: add

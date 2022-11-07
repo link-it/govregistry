@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 	}
 	
 	
-	@Bean
+	/*@Bean
 	public MethodValidationPostProcessor methodValidationPostProcessor() {
 		MethodValidationPostProcessor ret = new MethodValidationPostProcessor();
 		
@@ -37,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 		ret.setProxyTargetClass(true);
 		
 		return ret;
-	}
+	}*/
 	
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {

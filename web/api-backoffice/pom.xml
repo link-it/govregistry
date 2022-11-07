@@ -25,6 +25,7 @@
 		<openapi.tool.codegen.version>6.0.0</openapi.tool.codegen.version>
 		<jackson.databind.nullable.version>0.2.1</jackson.databind.nullable.version>
 		<swagger-annotations.version>1.6.2</swagger-annotations.version>
+		<jsonpatch.version>1.13</jsonpatch.version>
 		<jsr305.version>3.0.2</jsr305.version>
 	</properties>
 
@@ -156,6 +157,13 @@
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 			<version>${jsr305.version}</version>
+		</dependency>
+		
+		<!-- JsonPatch -->
+		<dependency>
+			    <groupId>com.github.java-json-tools</groupId>
+			    <artifactId>json-patch</artifactId>
+			    <version>${jsonpatch.version}</version>
 		</dependency>
 
 	</dependencies>
