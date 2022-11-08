@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -96,7 +97,7 @@ public class UserController implements UsersApi {
 		// Dalla entity ripasso al model
 		User ret = this.userAssembler.toModel(newUser);
 		
-		return ResponseEntity.ok(ret);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ret);
 	}
 
 	
@@ -105,7 +106,7 @@ public class UserController implements UsersApi {
 		UserEntity newUser = this.userService.createUser(userCreate);
 
 		User ret = this.userAssembler.toModel(newUser);
-		return ResponseEntity.ok(ret);
+		return ResponseEntity.status(HttpStatus.CREATED).body(ret);
 	}
 
 }
