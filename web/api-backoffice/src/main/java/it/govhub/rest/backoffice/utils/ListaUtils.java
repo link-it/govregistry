@@ -6,8 +6,12 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.data.domain.Page;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
+
+import it.govhub.rest.backoffice.beans.PageInfo;
 
 
 public class ListaUtils {
@@ -19,7 +23,7 @@ public class ListaUtils {
 	 * Mentre il limit non viene toccato.
 	 * 
 	 */
-	public static final <T> T costruisciListaPaginata(
+	public static final <T extends RepresentationModel<T>> T costruisciListaPaginata(
 			Page<?> results, 
 			HttpServletRequest request, 
 			T destList)  {
@@ -28,32 +32,35 @@ public class ListaUtils {
 		long startOffset = results.getNumber() * limit;
 
 		if (!results.isFirst()) {
-			String previousLink = replaceOffset(request, 0);
-			set(destList, "First", previousLink);
+			String firstLink = replaceOffset(request, 0);
+			destList.add(Link.of(firstLink, "first"));
 		}
 		
 		if (results.hasPrevious()) {
 			long prevOffset = startOffset - limit;
 			String previousLink = replaceOffset(request, prevOffset);
-			set(destList, "Prev", previousLink);
+			destList.add(Link.of(previousLink, "prev"));
 		}
 		
 		if (results.hasNext()) {
 			long newOffset = startOffset + limit;
 			String nextLink = replaceOffset(request, newOffset);
-			set(destList, "Next", nextLink);
+			destList.add(Link.of(nextLink, "next"));
 		}
 		
 		if (!results.isLast()) {
 			long endOffset = (results.getTotalPages()-1) * limit;
 			String lastLink = replaceOffset(request, endOffset);
-			set(destList, "Last", lastLink);
+			destList.add(Link.of(lastLink,"last"));
 		}
 		
-		set(destList, "Total", results.getTotalElements());
+		PageInfo pageInfo = new PageInfo();
+		pageInfo.setLimit(limit);
+		pageInfo.setOffset(startOffset);
+		pageInfo.setTotal(results.getTotalElements());
+		set(destList, "Page", pageInfo);
 		
 		return destList;
-		
 	}
 
 	

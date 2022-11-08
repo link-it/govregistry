@@ -40,7 +40,7 @@ import it.govhub.rest.backoffice.utils.RequestUtils;
 
 
 @RestController
-public class UsersController implements UsersApi {
+public class UserController implements UsersApi {
 	
 
 	@Autowired
@@ -89,6 +89,7 @@ public class UsersController implements UsersApi {
 				.currentRequestAttributes()).getRequest();
 		
 		UserList ret = ListaUtils.costruisciListaPaginata(users, curRequest, new UserList());
+		
 		for (UserEntity user : users) {
 			ret.addItemsItem(this.userAssembler.toModel(user));
 		}

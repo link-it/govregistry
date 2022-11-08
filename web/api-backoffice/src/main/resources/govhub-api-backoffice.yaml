@@ -555,12 +555,24 @@ components:
              type: object
              description: updating value.
              
-      ListWithoutTotal:
+      List:
          required:
-         - limit
-         - offset
+         - page
          type: object
          additionalProperties: false
+         properties:
+          page:
+             $ref: "#/components/schemas/PageInfo" 
+          # I links li aggiunge spring hateoas
+          #_links:
+          #   $ref: "#/components/schemas/PaginationLinks"
+                    
+      PageInfo:
+         type: object
+         additionalProperties: false
+         required:
+            - offset
+            - limit
          properties:
            offset:
              type: integer
@@ -574,41 +586,37 @@ components:
              format: int32
              minimum: 0
              maximum: 2147483647
-           first:
-             type: string
-             format: url
-             description: Link to the first results page. Is Null if this is already the first page.
-             maxLength: 2048
-           next:
-             type: string
-             format: url
-             description: Link to the next results page. Null if this is the last page.
-             maxLength: 2048
-           prev:
-             type: string
-             format: url
-             description: Link to the previous results page. Null if this is the first page.
-             maxLength: 2048
-             
-      List:
-         allOf:
-         - $ref: "#/components/schemas/ListWithoutTotal"
-         - required:
-           - total
-           type: object
-           additionalProperties: false
-           properties:
-             total:
+           total:
                minimum: 0
                maximum: 9223372036854775807
                type: integer
                description: Number of found elements.
                format: int64
+         
+      PaginationLinks:
+         type: object
+         additionalProperties: false
+         properties:
+             first:
+                type: string
+                format: url
+                description: Link to the first results page. Is Null if this is already the first page.
+                maxLength: 2048
+             next:
+                type: string
+                format: url
+                description: Link to the next results page. Null if this is the last page.
+                maxLength: 2048
+             prev:
+                type: string
+                format: url
+                description: Link to the previous results page. Null if this is the first page.
+                maxLength: 2048
              last:
-               type: string
-               description: Link to last result page. Null if this is already the last page.
-               format: url
-               maxLength: 2048
+                 type: string
+                 description: Link to last result page. Null if this is already the last page.
+                 format: url
+                 maxLength: 2048
       
       UserList:
          allOf:
