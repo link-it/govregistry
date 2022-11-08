@@ -30,7 +30,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	private static Map<HttpStatus, String> problemTypes = Map.of(
 			HttpStatus.CONFLICT,  "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
 			HttpStatus.NOT_FOUND, "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
-			HttpStatus.BAD_REQUEST,"https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request" 
+			HttpStatus.BAD_REQUEST,"https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request",
+			HttpStatus.UNPROCESSABLE_ENTITY,"https://www.rfc-editor.org/rfc/rfc9110.html#name-422-unprocessable-content"
 		);
 	
 	private Problem buildProblem(HttpStatus status, String detail) {
@@ -68,6 +69,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
 	}
 	
+	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+	@ExceptionHandler(SemanticValidationException.class)
+	public Problem handleConstraintViolation(SemanticValidationException ex) {
+		return buildProblem(HttpStatus.UNPROCESSABLE_ENTITY, ex.getLocalizedMessage());
+	}
+	
+	
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -98,27 +106,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	}
 
 	
-	/*@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-	@ExceptionHandler(SemanticValidationException.class)
-	public ProblemModel handleConstraintViolation(SemanticValidationException ex) {
-		try {
-			return ProblemModel.builder()
-					.status(HttpStatus.UNPROCESSABLE_ENTITY.value())
-					.title(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase())
-					.type(new URI("https://www.rfc-editor.org/rfc/rfc9110.html#name-422-unprocessable-content"))
-					.detail(ex.getLocalizedMessage())
-					.build();
-		} catch (URISyntaxException e) {
-			return ProblemModel.builder()
-					.status(HttpStatus.UNPROCESSABLE_ENTITY.value())
-					.title(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase())
-					.detail(ex.getLocalizedMessage())
-					.build();
-		}
-
-	}
-
-
+/*
 
 
 	

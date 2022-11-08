@@ -22,6 +22,7 @@ import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.exception.BadRequestException;
 import it.govhub.rest.backoffice.exception.ConflictException;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
+import it.govhub.rest.backoffice.exception.SemanticValidationException;
 import it.govhub.rest.backoffice.repository.UserRepository;
 import it.govhub.rest.backoffice.utils.PostgreSQLUtilities;
 import it.govhub.rest.backoffice.utils.RequestUtils;
@@ -50,13 +51,8 @@ public class UserService {
 			throw new ConflictException("User with principal ["+userCreate.getPrincipal()+"] already exists");
 		}
 		
-		UserEntity newUser = UserEntity.builder()
-				.principal(userCreate.getPrincipal())
-				.full_name(userCreate.getFullName())
-				.enabled(userCreate.isEnabled())
-				.email(userCreate.getEmail())
-				.build();
-		
+		UserEntity newUser = this.userAssembler.toEntity(userCreate);
+				
 		return this.userRepo.save(newUser);
 	}
 	
@@ -78,10 +74,11 @@ public class UserService {
 			throw new BadRequestException(e.getLocalizedMessage());
 		}
 		
-		// Lo converto nell'oggetto userCreate
-		UserCreate updatedContact;
+		// Lo converto nell'oggetto User, sostituendo l'ID per essere sicuri che la patch
+		// non l'abbia cambiato.
+		User updatedContact;
 		try {
-			updatedContact = this.objectMapper.treeToValue(newJsonUser, UserCreate.class);
+			updatedContact = this.objectMapper.treeToValue(newJsonUser, User.class);
 		} catch (JsonProcessingException e) {
 			throw new BadRequestException(e);
 		}
@@ -89,6 +86,7 @@ public class UserService {
 		if (updatedContact == null) {
 			throw new BadRequestException("PATCH non valida, risulterebbe in un oggetto nullo.");
 		}
+		updatedContact.setId(id);
 		
 		// Faccio partire la validazione
 		Errors errors = new BeanPropertyBindingResult(updatedContact, updatedContact.getClass().getName());
@@ -102,17 +100,18 @@ public class UserService {
 		PostgreSQLUtilities.throwIfContainsNullByte(updatedContact.getFullName(), "full_name");
 		
 		// Dall'oggetto REST passo alla entity
-		UserEntity newUser = UserEntity.builder()
-				.email(updatedContact.getEmail())
-				.enabled(updatedContact.isEnabled())
-				.full_name(updatedContact.getFullName())
-				.id(id)
-				.principal(updatedContact.getPrincipal())
-				.build();
-		
-		newUser = this.userRepo.save(newUser);
+		UserEntity newUser = this.userAssembler.toEntity(updatedContact);
 
-		return newUser;
+		// Controllo eventuali conflitti sugli indici
+		Optional<UserEntity> conflictUser = this.userRepo.findByPrincipal(newUser.getPrincipal())
+				.filter( u -> !u.getId().equals(newUser.getId()));
+		
+		if (conflictUser.isPresent() ) {
+			throw new SemanticValidationException("Utente con principal ["+newUser.getPrincipal()+"] già esistente");
+		}
+				
+		
+		return this.userRepo.save(newUser);
 		
 	}
 

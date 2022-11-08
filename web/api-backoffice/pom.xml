@@ -229,6 +229,9 @@
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<interfaceOnly>true</interfaceOnly>
 								<hateoas>true</hateoas>
+								<!--  Metto il booleanGetterPrefix a get, e.g.: getEnabled invece di isEnabled.
+										!uesto in modo da far riconoscere e copiare le proprietà booleane alla  BeanUtils.copyProperties-->
+								<booleanGetterPrefix>get</booleanGetterPrefix>
 							</configOptions>
 							<output>${project.basedir}/target</output>
 							<generateApiDocumentation>false</generateApiDocumentation>

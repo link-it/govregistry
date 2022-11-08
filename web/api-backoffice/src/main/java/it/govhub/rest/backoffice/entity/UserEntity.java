@@ -32,7 +32,7 @@ public class UserEntity {
 	private String principal;
 
 	@Column(name = "full_name", nullable = false)
-	private String full_name;
+	private String fullName;
 	
 	@Column(name = "email")
 	private String email;
