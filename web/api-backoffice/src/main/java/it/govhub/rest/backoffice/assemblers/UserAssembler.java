@@ -1,10 +1,10 @@
 package it.govhub.rest.backoffice.assemblers;
 
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.stereotype.Component;
-
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.stereotype.Component;
 
 import it.govhub.rest.backoffice.beans.User;
 import it.govhub.rest.backoffice.entity.UserEntity;
@@ -27,10 +27,12 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
 		ret.setId(src.getId());
 		ret.setPrincipal(src.getPrincipal());
 		
+		
 		ret.add(linkTo(
-				methodOn(UserController.class)
-				.readUser(src.getId()))
-				.withSelfRel());
+					methodOn(UserController.class)
+					.readUser(src.getId()))
+				.withSelfRel()
+			) ;
 				
 		return ret;
 	}
