@@ -9,7 +9,5 @@ import it.govhub.rest.backoffice.entity.UserEntity;
 public interface UserRepository extends JpaRepositoryImplementation<UserEntity, Long>{
 	
 	public Optional<UserEntity> findByPrincipal(String principal);
-	
-	
 
 }

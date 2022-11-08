@@ -25,7 +25,7 @@ public class UserFilters {
 	
 	public static Specification<UserEntity> likeFullName(String fullName) {
 		return (Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
-			cb.like(cb.upper(root.get(UserEntity_.full_name)), "%"+fullName.toUpperCase()+"%");
+			cb.like(cb.upper(root.get(UserEntity_.fullName)), "%"+fullName.toUpperCase()+"%");
 	}
 	
 	
