@@ -15,8 +15,7 @@ public class UserFilters {
 		return (Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> null; 
 	}
 	
-	// Facciamo il confronto case insensitive portando in upperCase
-	// i valori
+	// Facciamo il confronto case insensitive portando in upperCase i valori
 	public static Specification<UserEntity> likePrincipal(String principal) {
 		return (Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
 			cb.like(cb.upper(root.get(UserEntity_.principal)), "%"+principal.toUpperCase()+"%");		

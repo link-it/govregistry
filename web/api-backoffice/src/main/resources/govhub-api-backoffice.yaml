@@ -775,7 +775,7 @@ components:
                  - items 
               additionalProperties: false
 
-      OrganizationItem:
+      OrganizationData:
          type: object
          additionalProperties: false
          required:
@@ -786,39 +786,45 @@ components:
              type: string
              minLength: 11
              maxLength: 11
-             format: ^\d+$
+             pattern: ^[0-9]+$
+             example: 01234567890
            legal_name:
              type: string
              maxLength: 80
              pattern: ^([\x20-\xFF]{1,80})$
+             example: Giletti S.R.L.
+           office_at:
+             type: string
+             maxLength: 120
+             pattern: ^.*$
            office_address:
              type: string
              maxLength: 120
-             pattern: ^[\x20-\xFF]+$
+             pattern: ^.*$
            office_address_details:
              type: string
              maxLength: 120
-             pattern: ^[\x20-\xFF]+$
+             pattern: ^.*$
            office_zip:
              type: string
              maxLength: 120
-             pattern: ^[\x20-\xFF]+$
+             pattern: ^.*$
            office_municipality:
              type: string
              maxLength: 120
-             pattern: ^[\x20-\xFF]+$
+             pattern: ^.*$
            office_municipality_details:
              type: string
              maxLength: 120
-             pattern: ^[\x20-\xFF]+$
+             pattern: ^.*$
            office_province:
              type: string
              maxLength: 120
-             pattern: ^[\x20-\xFF]+$
+             pattern: ^.*$
            office_foreign_state:
              type: string
              maxLength: 120
-             pattern: ^[\x20-\xFF]+$
+             pattern: ^.*$
            office_phone_number:
              $ref: "#/components/schemas/PhoneNumber"
            office_email_address:
@@ -826,9 +832,22 @@ components:
            office_pec_address:
               $ref: "#/components/schemas/PhoneNumber"
 
+
+      OrganizationItem:
+         allOf:
+            - $ref: "#/components/schemas/OrganizationData"
+            - type: object
+              additionalProperties: false
+              required: 
+                 - id
+              properties:
+                 id:
+                   $ref: "#/components/schemas/OrganizationId"
+              
+              
       OrganizationCreate:
         allOf:
-          - $ref: "#/components/schemas/OrganizationItem"
+          - $ref: "#/components/schemas/OrganizationData"
           - type: object
             additionalProperties: false
             properties:
