@@ -27,6 +27,8 @@ security:
 tags:
   - name: user
     description: Operations on users
+  - name: organization
+    description: Operations on organizations
   - name: system
     description: System Operations
 
@@ -187,6 +189,133 @@ paths:
           $ref: "#/components/responses/503ServiceUnavailable"
         default:
           $ref: "#/components/responses/ResponseDefault"
+
+  /organizations:
+    post:
+      tags:
+        - organization
+      summary: Create a new organization
+      description: Create a new organization
+      operationId: createOrganization
+      requestBody:
+        content:
+          application/json:
+           schema:
+             $ref: '#/components/schemas/OrganizationCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'          
+        '400':
+          $ref: "#/components/responses/400BadRequest"
+        '401':
+          $ref: "#/components/responses/401Unauthorized"
+        '403':
+          $ref: "#/components/responses/403Forbidden"
+        '429':
+          $ref: "#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/ResponseDefault"
+
+    get:
+      tags:
+         - organization
+      summary: Retrieve the organization list
+      description: Retrieve the organization list
+      operationId: listOrganizations
+      parameters:
+         - $ref: "#/components/parameters/limit"
+         - $ref: "#/components/parameters/offset"
+         - $ref: "#/components/parameters/q_query"
+         - $ref: "#/components/parameters/organization_ordering_query"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                 $ref: "#/components/schemas/OrganizationList"
+        '400':
+          $ref: "#/components/responses/400BadRequest"
+        '401':
+          $ref: "#/components/responses/401Unauthorized"
+        '403':
+          $ref: "#/components/responses/403Forbidden"
+        '429':
+          $ref: "#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/ResponseDefault"       
+ 
+  /organizations/{id}:
+    parameters:
+      - $ref: "#/components/parameters/organization_id"    
+    get:
+      tags:
+        - organization
+      summary: Retrieve an Organization
+      description: Retrieve the Organization with the provided id
+      operationId: readOrganization
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'          
+        '400':
+          $ref: "#/components/responses/400BadRequest"
+        '401':
+          $ref: "#/components/responses/401Unauthorized"
+        '403':
+          $ref: "#/components/responses/403Forbidden"
+        '429':
+          $ref: "#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/ResponseDefault"
+          
+    patch:
+      tags:
+      - organization      
+      summary: Update organization data.
+      description: Update organization data.
+      operationId: updateOrganization
+      requestBody:    
+        required: true
+        content:
+          "application/json-patch+json":
+            schema:
+              $ref: '#/components/schemas/PatchOperations'
+      responses:
+        "200":
+          description: Succsessful operation
+          content:
+             application/json:
+                schema:
+                   $ref: '#/components/schemas/Organization'                             
+        "400":
+          $ref: "#/components/responses/400BadRequest"
+        "401":
+          $ref: "#/components/responses/401Unauthorized"
+        "403":
+          $ref: "#/components/responses/403Forbidden"
+        "404":
+          $ref: "#/components/responses/404NotFound"
+        "429":
+          $ref: "#/components/responses/429TooManyRequests"
+        "503":
+          $ref: "#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/ResponseDefault"   
 
   /status:
     get:
@@ -379,6 +508,13 @@ components:
          required: true
          schema:
             $ref: "#/components/schemas/UserId"
+  
+      organization_id:
+         name: id
+         in: path
+         required: true
+         schema:
+            $ref: "#/components/schemas/OrganizationId"
            
       limit:
          name: limit
@@ -427,6 +563,14 @@ components:
          required: false
          schema:
             $ref: "#/components/schemas/UserOrdering"           
+
+      organization_ordering_query:
+         name: sort
+         in: query
+         description: generic query
+         required: false
+         schema:
+            $ref: "#/components/schemas/OrganizationOrdering"
             
             
    # SCHEMAS ---------------- #
@@ -471,6 +615,8 @@ components:
             - $ref: "#/components/schemas/UserCreate"
             - type: object         
               additionalProperties: false
+              required:
+                - id
               properties:
                   id:
                      $ref: "#/components/schemas/UserId"
@@ -521,6 +667,12 @@ components:
          type: string
          enum:
             - first_name
+            - id
+
+      OrganizationOrdering:
+         type: string
+         enum:
+            - legal_name
             - id
             
       PatchOperations:
@@ -592,32 +744,7 @@ components:
                type: integer
                description: Number of found elements.
                format: int64
-         
-      PaginationLinks:
-         type: object
-         additionalProperties: false
-         properties:
-             first:
-                type: string
-                format: url
-                description: Link to the first results page. Is Null if this is already the first page.
-                maxLength: 2048
-             next:
-                type: string
-                format: url
-                description: Link to the next results page. Null if this is the last page.
-                maxLength: 2048
-             prev:
-                type: string
-                format: url
-                description: Link to the previous results page. Null if this is the first page.
-                maxLength: 2048
-             last:
-                 type: string
-                 description: Link to last result page. Null if this is already the last page.
-                 format: url
-                 maxLength: 2048
-      
+               
       UserList:
          allOf:
             - $ref: "#/components/schemas/List"
@@ -632,5 +759,123 @@ components:
               required:
                  - items 
               additionalProperties: false
-         
+
+      OrganizationList:
+         allOf:
+            - $ref: "#/components/schemas/List"
+            - type: object
+              properties:              
+                 items:
+                    type: array
+                    items:
+                       $ref: "#/components/schemas/OrganizationItem"
+                    minItems: 0
+                    maxItems: 2147483647
+              required:
+                 - items 
+              additionalProperties: false
+
+      OrganizationItem:
+         type: object
+         additionalProperties: false
+         required:
+           - tax_code
+           - legal_name        
+         properties:
+           tax_code:
+             type: string
+             minLength: 11
+             maxLength: 11
+             format: ^\d+$
+           legal_name:
+             type: string
+             maxLength: 80
+             pattern: ^([\x20-\xFF]{1,80})$
+           office_address:
+             type: string
+             maxLength: 120
+             pattern: ^[\x20-\xFF]+$
+           office_address_details:
+             type: string
+             maxLength: 120
+             pattern: ^[\x20-\xFF]+$
+           office_zip:
+             type: string
+             maxLength: 120
+             pattern: ^[\x20-\xFF]+$
+           office_municipality:
+             type: string
+             maxLength: 120
+             pattern: ^[\x20-\xFF]+$
+           office_municipality_details:
+             type: string
+             maxLength: 120
+             pattern: ^[\x20-\xFF]+$
+           office_province:
+             type: string
+             maxLength: 120
+             pattern: ^[\x20-\xFF]+$
+           office_foreign_state:
+             type: string
+             maxLength: 120
+             pattern: ^[\x20-\xFF]+$
+           office_phone_number:
+             $ref: "#/components/schemas/PhoneNumber"
+           office_email_address:
+              $ref: "#/components/schemas/Email"
+           office_pec_address:
+              $ref: "#/components/schemas/PhoneNumber"
+
+      OrganizationCreate:
+        allOf:
+          - $ref: "#/components/schemas/OrganizationItem"
+          - type: object
+            additionalProperties: false
+            properties:
+              logo_miniature:
+               $ref: "#/components/schemas/SmallLogo"
+              logo:
+                $ref: "#/components/schemas/Logo"
+
+      Organization:
+        allOf:
+          - $ref: "#/components/schemas/OrganizationCreate" 
+          - type: object
+            additionalProperties: false
+            required:
+              - id
+            properties:
+              id:
+                $ref: "#/components/schemas/OrganizationId"
+
+      OrganizationId:
+         type: integer
+         format: int64
+         minimum: 0
+         maximum: 9223372036854775807
+         description: User identifier 
+      
+      PhoneNumber:
+        maxLength: 255
+        type: string
+        example: "0124581247"
+        pattern: ^(\+|00)?[0-9 \-\(\)\.]{7,32}$
+
+      Email:
+       maxLength: 255
+       type: string
+       format: email
+       example: "m.rossi@acme.com"
+
+      Logo:
+        type: string
+        format: base64
+        maxLength: 200000
+
+      SmallLogo:
+        type: string
+        format: base64
+        maxLength: 50000
+            
+
          
