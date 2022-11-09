@@ -77,7 +77,7 @@ public class SecurityConfig {
 		
 		.antMatchers(HttpMethod.GET, "/organizations/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR, RUOLO_GOVHUB_ORGANIZATIONS_VIEWER)
 		.antMatchers(HttpMethod.POST, "/organizations").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR)
-		.antMatchers(HttpMethod.PATCH, "/organizations").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR)
+		.antMatchers(HttpMethod.PATCH, "/organizations/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR)
 		
 		.antMatchers(HttpMethod.GET, "/profile").hasAnyRole(ruoliConsentiti.toArray(new String[0]))
 		// richieste GET Schema open-api accessibile a tutti

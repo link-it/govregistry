@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,7 +38,7 @@ public class UserService {
 	private ObjectMapper objectMapper;
 	
 	@Autowired
-	private org.springframework.validation.Validator validator;
+	private Validator validator;
 	
 	@Autowired
 	private UserAssembler userAssembler;
@@ -46,8 +47,7 @@ public class UserService {
 	@Transactional
 	public UserEntity createUser(UserCreate userCreate) {
 		
-		Optional<UserEntity> found = this.userRepo.findByPrincipal(userCreate.getPrincipal());
-		if (found.isPresent()) {
+		if (this.userRepo.findByPrincipal(userCreate.getPrincipal()).isPresent()) {
 			throw new ConflictException("User with principal ["+userCreate.getPrincipal()+"] already exists");
 		}
 		
@@ -107,7 +107,7 @@ public class UserService {
 				.filter( u -> !u.getId().equals(newUser.getId()));
 		
 		if (conflictUser.isPresent() ) {
-			throw new SemanticValidationException("Utente con principal ["+newUser.getPrincipal()+"] già esistente");
+			throw new ConflictException("Utente con principal ["+newUser.getPrincipal()+"] già esistente");
 		}
 				
 		

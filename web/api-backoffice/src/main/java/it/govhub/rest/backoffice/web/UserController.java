@@ -16,7 +16,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.github.fge.jsonpatch.JsonPatch;
 
 import it.govhub.rest.backoffice.api.UsersApi;
-import it.govhub.rest.backoffice.assemblers.LimitOffsetPageRequest;
 import it.govhub.rest.backoffice.assemblers.UserAssembler;
 import it.govhub.rest.backoffice.beans.PatchOp;
 import it.govhub.rest.backoffice.beans.User;
@@ -28,6 +27,7 @@ import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.repository.UserFilters;
 import it.govhub.rest.backoffice.repository.UserRepository;
 import it.govhub.rest.backoffice.services.UserService;
+import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
 import it.govhub.rest.backoffice.utils.ListaUtils;
 import it.govhub.rest.backoffice.utils.RequestUtils;
 
@@ -97,7 +97,7 @@ public class UserController implements UsersApi {
 		// Dalla entity ripasso al model
 		User ret = this.userAssembler.toModel(newUser);
 		
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ret);
+		return ResponseEntity.ok(ret);
 	}
 
 	
