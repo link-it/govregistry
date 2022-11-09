@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.nio.charset.Charset;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.govhub.rest.backoffice.Application;
 import it.govhub.rest.backoffice.beans.User;
 import it.govhub.rest.backoffice.beans.UserCreate;
-import it.govhub.rest.backoffice.test.utils.JsonUtils;
 import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 
 
@@ -45,7 +46,7 @@ public class CrudUserTest {
 	
 		String content = mapper.writeValueAsString(user);
 		
-		MvcResult newOrganizationResult = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post("/users")
 				.with(UserAuthProfilesUtils.utenzaAdmin())
 				.content(content)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -54,7 +55,8 @@ public class CrudUserTest {
 				.andReturn();
 		
 		// Recupero il dettaglio dell'utente e confronto che i campi ci siano tutti
-		User created = JsonUtils.asObject(newOrganizationResult, User.class);
+		String resultString = result.getResponse().getContentAsString(Charset.forName("UTF-8"));
+		User created = mapper.readValue(resultString, User.class);
 		
 		assertEquals(user.getEmail(), created.getEmail());
 		assertEquals(user.getEnabled(), created.getEnabled());
