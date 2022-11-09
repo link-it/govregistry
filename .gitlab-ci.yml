@@ -8,7 +8,7 @@ stages:
 
 variables: 
     MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-    SONAR_HOST_URL: "http://http://localsonarqube:9000/"
+    SONAR_HOST_URL: "http://localsonarqube:9000/"
     SONAR_TOKEN: "squ_35c667f3567119d5702ffa5fb92ca6eaac5889a6"
     SONAR_USER: "gitlab-runner"
     SONAR_PASSWORD: "Password@123"
