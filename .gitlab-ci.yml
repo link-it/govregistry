@@ -8,7 +8,7 @@ stages:
 
 variables: 
     MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-    SONAR_HOST_URL: "http://http://localsonarqube:9000/"
+    SONAR_HOST_URL: "http://localsonarqube:9000/"
     SONAR_TOKEN: "squ_35c667f3567119d5702ffa5fb92ca6eaac5889a6"
     SONAR_USER: "gitlab-runner"
     SONAR_PASSWORD: "Password@123"
@@ -26,7 +26,7 @@ test_and_coverage:
         - wget https://raw.githubusercontent.com/rix0rrr/cover2cover/master/cover2cover.py
         - apt-get update
         - apt-get -y install python2 npm
-        - python2 ./cover2cover.py web/api-backoffice/target/site/jacoco/jacoco.xml 
+        - python2 ./cover2cover.py web/api-backoffice/target/site/jacoco/jacoco.xml web/api-backoffice/src/main/java/ > web/api-backoffice/target/site/cobertura.xml
         - mkdir target
         - npx cobertura-merge -o target/cobertura.xml package1=web/api-backoffice/target/site/cobertura.xml
     # dependencies: [] # Per evitare il download di artifact in job precedenti
