@@ -166,35 +166,13 @@
 			    <version>${jsonpatch.version}</version>
 		</dependency>
 		
-		
-		<!--  Generazione MetaModel Hibernate per query JPA -->
-<!-- 		<dependency>
-		    <groupId>org.hibernate</groupId>
-		    <artifactId>hibernate-jpamodelgen</artifactId>
-		</dependency>
- -->
+
 	</dependencies>
 
 	<build>
 		<finalName>api-backoffice</finalName>
 		<plugins>
 
-<!--  <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-compiler-plugin</artifactId>
-	<configuration>
-		<source>11</source>
-		<target>11</target>
-		<annotationProcessorPaths>
-			<path>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-jpamodelgen</artifactId>
-				<version>${hibernate.version}</version>
-			</path>
-			...
-		</annotationProcessorPaths>
-	</configuration>
-</plugin>			 -->
 	
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

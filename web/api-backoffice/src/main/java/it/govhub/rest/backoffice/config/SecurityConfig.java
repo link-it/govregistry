@@ -2,28 +2,41 @@ package it.govhub.rest.backoffice.config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashSet;
+import java.net.URI;
 import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import it.govhub.rest.backoffice.beans.Problem;
 
 
 /**
@@ -39,6 +52,9 @@ public class SecurityConfig {
 
 	@Value("${spring.security.userPropertyFile}")
 	String fileUtenze;
+	
+	@Autowired
+	private ObjectMapper jsonMapper;
 	
 	public static final String REALM_NAME = "govhub";
 	public static final String JSESSIONID_NAME = "GOVHUB-JSESSIONID";
@@ -62,7 +78,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
 		applyAuthRules(http).authorizeRequests()
-			.and().httpBasic().authenticationEntryPoint(new BasicAuthenticationEntryPoint())
+			.and().httpBasic().authenticationEntryPoint(new BasicAuthenticationEntryPoint(jsonMapper))
 			.and().exceptionHandling();  // Gestione degli errori di autenticazione, con entry point che personalizza la risposta inviata 
 		return http.build();
 	}
@@ -102,12 +118,14 @@ public class SecurityConfig {
 	
 	
 	@Bean
-    public InMemoryUserDetailsManager userDetailsService() throws Exception {
+    public InMemoryUserDetailsManager userDetailsService() throws IOException {
 		Properties properties = PropertiesLoaderUtils.loadAllProperties(this.fileUtenze);
-		if(properties == null || properties.size() == 0) {
-			properties.load(new FileInputStream(this.fileUtenze));
-			if(properties == null || properties.size() == 0) {
-				throw new IOException("File " + this.fileUtenze + " non esistente o vuoto");
+		if(properties.size() == 0) {
+			try (FileInputStream fs = new FileInputStream(this.fileUtenze)) {
+				properties.load(fs);
+				if(properties.size() == 0) {
+					throw new IOException("File " + this.fileUtenze + " non esistente o vuoto");
+				}
 			}
 		}
 		return new InMemoryUserDetailsManager(properties);
@@ -124,34 +142,39 @@ public class SecurityConfig {
 	}
 	
 	
-//	private static ObjectMapper mapper = new ObjectMapper();	
 	public class BasicAuthenticationEntryPoint extends org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint {
 		
-		public BasicAuthenticationEntryPoint() {
+		ObjectMapper jsonMapper;
+		
+		public BasicAuthenticationEntryPoint(ObjectMapper jsonMapper) {
 			this.setRealmName(REALM_NAME);
+			this.jsonMapper = jsonMapper;
 		}
 
-//		@Override
-//		public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-//			Problem problemModel = new Problem();
-//			problemModel.status(HttpStatus.UNAUTHORIZED.value());
-//			problemModel.title(HttpStatus.UNAUTHORIZED.getReasonPhrase());
-//			problemModel.detail(authException.getMessage());
-//			
-//			// imposto il content-type della risposta
-//			response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-//			
-//			ServletOutputStream outputStream = null;
-//			try{
-//				response.setStatus(problemModel.getStatus());
-//				outputStream = response.getOutputStream();
-//				mapper.writeValue(outputStream, problemModel);
-//				outputStream.flush();
-//			}catch(Exception e) {
-//
-//			} finally {
-//			}
-//		}
+		@Override
+		public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+			
+			 
+			AuthenticationProblem problem = new AuthenticationProblem();
+			problem.status = HttpStatus.UNAUTHORIZED.value();
+			problem.title = HttpStatus.UNAUTHORIZED.getReasonPhrase();
+			problem.detail = authException.getMessage();
+			
+			// imposto il content-type della risposta
+			response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(problem.status);
+			
+			ServletOutputStream outputStream = null;
+			try{
+				problem.instance = new URI("https://www.rfc-editor.org/rfc/rfc9110.html#name-401-unauthorized");
+				outputStream = response.getOutputStream();
+				this.jsonMapper.writeValue(outputStream, problem);
+				outputStream.flush();
+			}catch(Exception e) {
+
+			} finally {
+			}
+		}
 		
 		
 	}
