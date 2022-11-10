@@ -25,6 +25,7 @@ import it.govhub.rest.backoffice.beans.OrganizationList;
 import it.govhub.rest.backoffice.beans.OrganizationOrdering;
 import it.govhub.rest.backoffice.beans.PatchOp;
 import it.govhub.rest.backoffice.entity.OrganizationEntity;
+import it.govhub.rest.backoffice.messages.OrganizationMessages;
 import it.govhub.rest.backoffice.repository.OrganizationFilters;
 import it.govhub.rest.backoffice.repository.OrganizationRepository;
 import it.govhub.rest.backoffice.services.OrganizationService;
@@ -84,7 +85,7 @@ public class OrganizationController implements OrganizationsApi {
 		
 		Organization ret = this.orgRepo.findById(id)
 			.map( org -> this.orgAssembler.toModel(org))
-			.orElseThrow( () -> new NotFoundException("Organizzazione con identificativo ["+id+"] inesistente."));
+			.orElseThrow( () -> new NotFoundException(OrganizationMessages.notFound(id)));
 		
 		return ResponseEntity.ok(ret);
 	}
