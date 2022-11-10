@@ -193,6 +193,7 @@
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/govhub-api-backoffice.yaml</inputSpec>
 							<generatorName>spring</generatorName>
+							<typeMappings>base64=it.govhub.rest.backoffice.Base64String</typeMappings>							
 							<configOptions>
 								<booleanGetterPrefix>is</booleanGetterPrefix>
 								<dateLibrary>java8</dateLibrary>
