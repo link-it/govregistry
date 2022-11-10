@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import it.govhub.rest.backoffice.Base64String;
 import it.govhub.rest.backoffice.beans.Organization;
 import it.govhub.rest.backoffice.beans.OrganizationCreate;
 import it.govhub.rest.backoffice.entity.OrganizationEntity;
@@ -28,11 +29,11 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 		BeanUtils.copyProperties(src, ret);
 		
 		if (src.getLogo() != null) {
-			ret.setLogo(Base64.encodeBase64String(src.getLogo()));
+			ret.setLogo(new Base64String(src.getLogo()));
 		}
 		
 		if (src.getLogoMiniature() != null) {
-			ret.setLogoMiniature(Base64.encodeBase64String(src.getLogoMiniature()));
+			ret.setLogoMiniature(new Base64String(src.getLogoMiniature()));
 		}
 		
 		ret.add(linkTo(
@@ -51,11 +52,11 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 		BeanUtils.copyProperties(src,  ret);
 		
 		if (src.getLogo() != null) {
-			ret.setLogo(Base64.decodeBase64(src.getLogo()));
+			ret.setLogo(Base64.decodeBase64(src.getLogo().value));
 		}
 		
 		if (src.getLogoMiniature() != null) {
-			ret.setLogoMiniature(Base64.decodeBase64(src.getLogoMiniature()));
+			ret.setLogoMiniature(Base64.decodeBase64(src.getLogoMiniature().value));
 		}
 		
 		return ret;

@@ -2,6 +2,7 @@ package it.govhub.rest.backoffice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.ForwardedHeaderFilter;
@@ -21,15 +22,12 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 		
 
 	/**
-	 * Modifichiamo il serializzatore JSON in due punti:
-	 * 	- Non serializzare proprietà null
-	 * 	- Serializza le Base64String come stringhe normali
+	 * Modifichiamo il serializzatore JSON in  modo da serializza le Base64String come stringhe normali
 	 */
-    /*@Bean
+	@Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-    	
-        return builder -> builder.serializationInclusion(Include.NON_NULL);
-//        		.serializerByType(Base64String.class, new Base64StringSerializer());
-    }*/
-	
+        return builder -> builder
+        		.serializerByType(Base64String.class, new Base64StringSerializer());
+    }
+
 }
