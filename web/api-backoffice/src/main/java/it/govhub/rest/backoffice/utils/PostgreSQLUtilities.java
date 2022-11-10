@@ -3,8 +3,10 @@ package it.govhub.rest.backoffice.utils;
 import it.govhub.rest.backoffice.exception.BadRequestException;
 
 public class PostgreSQLUtilities {
+	
+	private PostgreSQLUtilities() {}
 
-	public static String NULL_BYTE_SEQUENCE = "\u0000";
+	public static final String NULL_BYTE_SEQUENCE = "\u0000";
 	
 	public static boolean isInvalid0x00error(Throwable t) {
 		return t.getMessage()!=null && t.getMessage().contains("invalid byte sequence for encoding \"UTF8\": 0x00");

@@ -27,7 +27,7 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di censimento Utenti")
-public class CrudUserTest {
+class CrudUserTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -37,7 +37,7 @@ public class CrudUserTest {
 	
 	@Test
 	@DisplayName("Creazione di un nuovo utente")
-	public void creazioneUtente() throws Exception {
+	 void creazioneUtente() throws Exception {
 		UserCreate user = new UserCreate();
 		user.setEmail("mimmo@napo.li");
 		user.setEnabled(false);

@@ -53,7 +53,7 @@ public class OrganizationService {
 		}
 		
 		if (this.orgRepo.findByLegalName(org.getLegalName()).isPresent()) {
-			throw new ConflictException("Organizzazione con legalName ["+org.getTaxCode()+"] già presente.");
+			throw new ConflictException("Organizzazione con legalName ["+org.getLegalName()+"] già presente.");
 		}
 
 		OrganizationEntity toCreate = this.orgAssembler.toEntity(org);
@@ -94,13 +94,21 @@ public class OrganizationService {
 		// Faccio partire la validazione
 		Errors errors = new BeanPropertyBindingResult(updatedOrganization, updatedOrganization.getClass().getName());
 		validator.validate(updatedOrganization, errors);
-		if (errors != null && !errors.getAllErrors().isEmpty()) {
+		if (!errors.getAllErrors().isEmpty()) {
 			String msg = "L'oggetto patchato viola i vincoli dello schema: " + RequestUtils.extractValidationError(errors.getAllErrors().get(0));
 			throw new BadRequestException(msg);
 		}
 		
 		// Faccio partire la validazione custom per la stringa \u0000
-		//PostgreSQLUtilities.throwIfContainsNullByte(updatedOrganization.getFullName(), "full_name");
+		PostgreSQLUtilities.throwIfContainsNullByte(updatedOrganization.getOfficeAddress(), "office_address");
+		PostgreSQLUtilities.throwIfContainsNullByte(updatedOrganization.getOfficeAddressDetails(), "office_address_details");
+		PostgreSQLUtilities.throwIfContainsNullByte(updatedOrganization.getOfficeAt(), "office_at");
+		PostgreSQLUtilities.throwIfContainsNullByte(updatedOrganization.getOfficeForeignState(), "office_foreign_state");
+		PostgreSQLUtilities.throwIfContainsNullByte(updatedOrganization.getOfficeMunicipality(), "office_municipality");
+		PostgreSQLUtilities.throwIfContainsNullByte(updatedOrganization.getOfficeMunicipalityDetails(), "office_municipality_details");
+		PostgreSQLUtilities.throwIfContainsNullByte(updatedOrganization.getOfficeProvince(), "office_province");
+		PostgreSQLUtilities.throwIfContainsNullByte(updatedOrganization.getOfficeZip(), "office_zip");
+		
 		
 		// Dall'oggetto REST passo alla entity
 		OrganizationEntity newOrg = this.orgAssembler.toEntity(updatedOrganization);

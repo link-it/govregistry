@@ -830,7 +830,7 @@ components:
            office_email_address:
               $ref: "#/components/schemas/Email"
            office_pec_address:
-              $ref: "#/components/schemas/PhoneNumber"
+              $ref: "#/components/schemas/Email"
 
 
       OrganizationItem:
