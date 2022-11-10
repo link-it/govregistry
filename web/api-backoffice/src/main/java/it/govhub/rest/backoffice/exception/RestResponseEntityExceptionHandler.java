@@ -121,28 +121,4 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	
-/*
-
-
-	
-	@ResponseStatus(HttpStatus.BAD_GATEWAY)
-	@ExceptionHandler(BadGatewayException.class)
-	public ProblemModel handleBadGatewayException(BadGatewayException ex) {
-		return ProblemModel.builder()
-				.status(HttpStatus.BAD_GATEWAY.value())
-				.title(HttpStatus.BAD_GATEWAY.getReasonPhrase())
-				.detail(ex.getMessage())
-				.build();
-	}
-	
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(javax.validation.ConstraintViolationException.class)
-	public ProblemModel handleConstraintViolation(javax.validation.ConstraintViolationException ex) {
-		return ProblemModel.builder()
-				.status(HttpStatus.BAD_REQUEST.value())
-				.title(HttpStatus.BAD_REQUEST.getReasonPhrase())
-				.detail(ex.getMessage())
-				.build();
-	}*/
 }

@@ -18,23 +18,7 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 	public ForwardedHeaderFilter forwardedHeaderFilter() {
 	    return new ForwardedHeaderFilter();
 	}
-	
-	
-	/*@Bean
-	public MethodValidationPostProcessor methodValidationPostProcessor() {
-		MethodValidationPostProcessor ret = new MethodValidationPostProcessor();
 		
-		// BUGFIX Mappatura RestController: 
-		// https://github.com/spring-projects/spring-boot/issues/17000
-		//
-		// I RestController che implementano un'interfaccia	e che hanno @Validated come annotazione
-		// non venivano mappati sugli endpoint, con setProxyTargetClass(true) invece si.
-		
-		ret.setProxyTargetClass(true);
-		
-		return ret;
-	}*/
-	
 
 	/**
 	 * Modifichiamo il serializzatore JSON in due punti:
