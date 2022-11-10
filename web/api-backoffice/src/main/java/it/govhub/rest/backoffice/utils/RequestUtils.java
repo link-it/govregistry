@@ -12,10 +12,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 
 import it.govhub.rest.backoffice.beans.PatchOp;
+import it.govhub.rest.backoffice.exception.UnreachableException;
 
 public class RequestUtils {
-
 	
+	private RequestUtils() {}
 	
 	public static JsonPatch toJsonPatch(List<PatchOp> patchOp) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -26,7 +27,7 @@ public class RequestUtils {
 			patch = JsonPatch.fromJson(bodyPatch);
 		} 
 		catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new UnreachableException("Body of List<PatchOp> should always be convertible to JsonPatch");
 		}
 		return patch;
 	}

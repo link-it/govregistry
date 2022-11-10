@@ -11,6 +11,8 @@ import it.govhub.rest.backoffice.entity.OrganizationEntity_;
 
 public class OrganizationFilters {
 	
+	private OrganizationFilters() {}
+	
 	public static Specification<OrganizationEntity> empty() {
 		return (Root<OrganizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> null; 
 	}

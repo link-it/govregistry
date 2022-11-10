@@ -46,9 +46,9 @@ public class LimitOffsetPageRequest
 		this.pageable = PageRequest.of(getNumeroPagina(), this.limit, sort);
 	}
 	
-	private Integer getNumeroPagina()
+	private int getNumeroPagina()
 	{		
-		return Long.valueOf(Math.floorDiv(this.offset, this.limit)).intValue();
+		return (int) Math.floorDiv(this.offset, this.limit);
 	}
 }
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
@@ -47,7 +48,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			
 		} catch (URISyntaxException e){
 			// Non deve mai fallire la new URI di sopra
-			throw new RuntimeException(e);
+			throw new UnreachableException(e);
 		}
 	}
 
@@ -112,7 +113,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
 		if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
-			request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
+			request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, RequestAttributes.SCOPE_REQUEST);
 		}
 
 		

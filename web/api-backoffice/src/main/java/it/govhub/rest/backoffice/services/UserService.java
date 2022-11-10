@@ -91,7 +91,7 @@ public class UserService {
 		// Faccio partire la validazione
 		Errors errors = new BeanPropertyBindingResult(updatedContact, updatedContact.getClass().getName());
 		validator.validate(updatedContact, errors);
-		if (errors != null && !errors.getAllErrors().isEmpty()) {
+		if (!errors.getAllErrors().isEmpty()) {
 			String msg = "L'oggetto patchato viola i vincoli dello schema: " + RequestUtils.extractValidationError(errors.getAllErrors().get(0));
 			throw new BadRequestException(msg);
 		}

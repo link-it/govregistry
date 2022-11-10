@@ -11,6 +11,8 @@ import it.govhub.rest.backoffice.entity.UserEntity_;
 
 public class UserFilters {
 
+	private UserFilters() {}
+	
 	public static Specification<UserEntity> empty() {
 		return (Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> null; 
 	}

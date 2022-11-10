@@ -12,9 +12,12 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 
 import it.govhub.rest.backoffice.beans.PageInfo;
+import it.govhub.rest.backoffice.exception.UnreachableException;
 
 
 public class ListaUtils {
+	
+	private ListaUtils() {	}
 	
 	/** 
 	 * Costruisce una lista paginata riempiendola con i riferimenti a 
@@ -29,7 +32,7 @@ public class ListaUtils {
 			T destList)  {
 		
 		int limit = results.getNumberOfElements();
-		long startOffset = results.getNumber() * limit;
+		long startOffset = results.getNumber() * (long) limit;
 
 		if (!results.isFirst()) {
 			String firstLink = replaceOffset(request, 0);
@@ -49,7 +52,7 @@ public class ListaUtils {
 		}
 		
 		if (!results.isLast()) {
-			long endOffset = (results.getTotalPages()-1) * limit;
+			long endOffset = (results.getTotalPages()-1) * (long) limit;
 			String lastLink = replaceOffset(request, endOffset);
 			destList.add(Link.of(lastLink,"last"));
 		}
@@ -68,7 +71,9 @@ public class ListaUtils {
 		try {
 			Method method = Class.forName(obj.getClass().getName()).getMethod("set"+field, value.getClass());
 			method.invoke(obj, value);
-		} catch(Exception e) {}
+		} catch(Exception e) {
+			throw new UnreachableException("Check how you called me");
+		}
 	}
 	
 	
@@ -89,14 +94,10 @@ public class ListaUtils {
 		
 		for(Entry<String, String[]> p : request.getParameterMap().entrySet()) {
 			String name = p.getKey();
-			
-			if (name.equalsIgnoreCase("offset")) {
-				continue;
-			} else {							
-					builder.queryParam(name, (Object[])p.getValue());
+			if (!name.equalsIgnoreCase("offset")) {
+				builder.queryParam(name, (Object[])p.getValue());
 			}
 		}
-		
 		return builder.build().toString();
 	}
 	
