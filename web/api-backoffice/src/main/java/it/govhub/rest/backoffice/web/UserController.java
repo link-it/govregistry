@@ -24,6 +24,7 @@ import it.govhub.rest.backoffice.beans.UserList;
 import it.govhub.rest.backoffice.beans.UserOrdering;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
+import it.govhub.rest.backoffice.messages.UserMessages;
 import it.govhub.rest.backoffice.repository.UserFilters;
 import it.govhub.rest.backoffice.repository.UserRepository;
 import it.govhub.rest.backoffice.services.UserService;
@@ -50,7 +51,7 @@ public class UserController implements UsersApi {
 	public ResponseEntity<User> readUser(Long id) {
 		
 		UserEntity user = this.userRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException("User with ID ["+id+"] not found"));
+				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
 		
 		User ret = this.userAssembler.toModel(user);
 		

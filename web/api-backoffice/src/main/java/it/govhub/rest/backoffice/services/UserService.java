@@ -23,10 +23,10 @@ import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.exception.BadRequestException;
 import it.govhub.rest.backoffice.exception.ConflictException;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
-import it.govhub.rest.backoffice.exception.SemanticValidationException;
+import it.govhub.rest.backoffice.messages.PatchMessages;
+import it.govhub.rest.backoffice.messages.UserMessages;
 import it.govhub.rest.backoffice.repository.UserRepository;
 import it.govhub.rest.backoffice.utils.PostgreSQLUtilities;
-import it.govhub.rest.backoffice.utils.RequestUtils;
 
 @Service
 public class UserService {
@@ -48,7 +48,7 @@ public class UserService {
 	public UserEntity createUser(UserCreate userCreate) {
 		
 		if (this.userRepo.findByPrincipal(userCreate.getPrincipal()).isPresent()) {
-			throw new ConflictException("User with principal ["+userCreate.getPrincipal()+"] already exists");
+			throw new ConflictException(UserMessages.conflictPrincipal(userCreate.getPrincipal()));
 		}
 		
 		UserEntity newUser = this.userAssembler.toEntity(userCreate);
@@ -61,7 +61,7 @@ public class UserService {
 	public UserEntity patchUser(Long id, JsonPatch patch) {
 		
 		UserEntity user = this.userRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException("User with ID ["+id+"] not found"));
+				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
 		
 		// Convertiamo la entity in json e applichiamo la patch sul json
 		User restUser = this.userAssembler.toModel(user);
@@ -84,7 +84,7 @@ public class UserService {
 		}
 		
 		if (updatedContact == null) {
-			throw new BadRequestException("PATCH non valida, risulterebbe in un oggetto nullo.");
+			throw new BadRequestException(PatchMessages.voidObjectPatch());
 		}
 		updatedContact.setId(id);
 		
@@ -92,8 +92,7 @@ public class UserService {
 		Errors errors = new BeanPropertyBindingResult(updatedContact, updatedContact.getClass().getName());
 		validator.validate(updatedContact, errors);
 		if (!errors.getAllErrors().isEmpty()) {
-			String msg = "L'oggetto patchato viola i vincoli dello schema: " + RequestUtils.extractValidationError(errors.getAllErrors().get(0));
-			throw new BadRequestException(msg);
+			throw new BadRequestException(PatchMessages.validationFailed(errors));
 		}
 		
 		// Faccio partire la validazione custom per la stringa \u0000
@@ -107,7 +106,7 @@ public class UserService {
 				.filter( u -> !u.getId().equals(newUser.getId()));
 		
 		if (conflictUser.isPresent() ) {
-			throw new ConflictException("Utente con principal ["+newUser.getPrincipal()+"] già esistente");
+			throw new ConflictException(UserMessages.conflictPrincipal(newUser.getPrincipal()));
 		}
 				
 		
