@@ -18,6 +18,7 @@
 	<version>1.0.0</version>
 	<name>GovHub Backoffice - API Monitoraggio</name>
 	<description>API per il backoffice del modulo condiviso di govhub</description>
+	
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -193,7 +194,7 @@
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/govhub-api-backoffice.yaml</inputSpec>
 							<generatorName>spring</generatorName>
-							<typeMappings>base64=it.govhub.rest.backoffice.Base64String</typeMappings>							
+							<typeMappings>base64=it.govhub.rest.backoffice.utils.Base64String</typeMappings>							
 							<configOptions>
 								<booleanGetterPrefix>is</booleanGetterPrefix>
 								<dateLibrary>java8</dateLibrary>

@@ -29,6 +29,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
@@ -79,7 +80,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
 		applyAuthRules(http).authorizeRequests()
 			.and().httpBasic().authenticationEntryPoint(new BasicAuthenticationEntryPoint(jsonMapper))
-			.and().exceptionHandling();  // Gestione degli errori di autenticazione, con entry point che personalizza la risposta inviata 
+			.and().exceptionHandling().accessDeniedHandler(this.accessDeniedHandler());  // Gestione degli errori di autenticazione, con entry point che personalizza la risposta inviata 
 		return http.build();
 	}
 
@@ -99,11 +100,17 @@ public class SecurityConfig {
 		// richieste GET Schema open-api accessibile a tutti
 		.antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() 
 		.antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+		.antMatchers(HttpMethod.GET, "/error").authenticated()
 		.anyRequest().denyAll()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Creazione della sessione in caso non ci sia
 		.and().logout().deleteCookies(JSESSIONID_NAME).invalidateHttpSession(true).logoutSuccessHandler(new DefaultLogoutSuccessHandler()) // Gestione Logout
 		;
 		return http;
+	}
+	
+	@Bean
+	public AccessDeniedHandler accessDeniedHandler() {
+		return new AccessDeniedHandlerImpl(this.jsonMapper);
 	}
 	
 	
@@ -153,7 +160,6 @@ public class SecurityConfig {
 
 		@Override
 		public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-			
 			 
 			AuthenticationProblem problem = new AuthenticationProblem();
 			problem.status = HttpStatus.UNAUTHORIZED.value();

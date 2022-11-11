@@ -7,6 +7,9 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
+import it.govhub.rest.backoffice.utils.Base64String;
+import it.govhub.rest.backoffice.utils.Base64StringSerializer;
+
 	@SpringBootApplication
 	public class Application extends SpringBootServletInitializer {
 

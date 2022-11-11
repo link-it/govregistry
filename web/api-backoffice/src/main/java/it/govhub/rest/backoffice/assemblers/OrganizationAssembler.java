@@ -8,10 +8,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import it.govhub.rest.backoffice.Base64String;
 import it.govhub.rest.backoffice.beans.Organization;
 import it.govhub.rest.backoffice.beans.OrganizationCreate;
 import it.govhub.rest.backoffice.entity.OrganizationEntity;
+import it.govhub.rest.backoffice.utils.Base64String;
 import it.govhub.rest.backoffice.web.OrganizationController;
 
 @Component
