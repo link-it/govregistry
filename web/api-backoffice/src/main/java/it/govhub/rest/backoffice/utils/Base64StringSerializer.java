@@ -1,4 +1,4 @@
-package it.govhub.rest.backoffice;
+package it.govhub.rest.backoffice.utils;
 
 import java.io.IOException;
 

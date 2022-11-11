@@ -1,4 +1,4 @@
-package it.govhub.rest.backoffice;
+package it.govhub.rest.backoffice.utils;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.web.firewall.RequestRejectedException;
