@@ -100,6 +100,7 @@ public class SecurityConfig {
 		// richieste GET Schema open-api accessibile a tutti
 		.antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() 
 		.antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+		.antMatchers(HttpMethod.GET, "/status").authenticated()
 		.antMatchers(HttpMethod.GET, "/error").authenticated()
 		.anyRequest().denyAll()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Creazione della sessione in caso non ci sia

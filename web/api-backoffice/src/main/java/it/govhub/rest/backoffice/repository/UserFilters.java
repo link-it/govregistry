@@ -4,10 +4,13 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import it.govhub.rest.backoffice.beans.UserOrdering;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.entity.UserEntity_;
+import it.govhub.rest.backoffice.exception.UnreachableException;
 
 public class UserFilters {
 
@@ -36,4 +39,20 @@ public class UserFilters {
 	}
 	
 	
+	public static Sort sort(UserOrdering sort) {
+		
+		if (sort == null) {
+			return Sort.unsorted();
+		}
+		
+		switch (sort) {
+		case FULL_NAME:
+			return Sort.by(Sort.Direction.ASC, UserEntity_.FULL_NAME);
+		case ID:
+			return Sort.by(Sort.Direction.ASC, UserEntity_.ID);
+		default:
+			throw new UnreachableException();
+		}
+	}
+
 }

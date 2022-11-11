@@ -37,10 +37,6 @@ public class ProfileController implements ProfileApi {
 		
 		return ResponseEntity.ok(this.userAssembler.toModel(user));
 		
-		/*profilo.setPrincipal(user.getUsername());
-		if(user.getAuthorities() != null) {
-			profilo.setRoles(user.getAuthorities().stream().map(e -> e.getAuthority().substring("ROLE_".length())).collect(Collectors.toList()));
-		}*/
 	}
 
 }

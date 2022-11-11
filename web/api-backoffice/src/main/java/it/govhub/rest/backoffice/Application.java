@@ -3,9 +3,13 @@ package it.govhub.rest.backoffice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.filter.ForwardedHeaderFilter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import it.govhub.rest.backoffice.utils.Base64String;
 import it.govhub.rest.backoffice.utils.Base64StringSerializer;
@@ -32,5 +36,18 @@ import it.govhub.rest.backoffice.utils.Base64StringSerializer;
         return builder -> builder
         		.serializerByType(Base64String.class, new Base64StringSerializer());
     }
-
+	
+	
+	/**
+	 * Questa classe serve per serializzare correttamente gli enum passati via parametro query.
+	 * Altrimenti è necessario passarli in upperCase.
+	 *
+	 */
+	 @Configuration
+    static class MyConfig implements  WebMvcConfigurer {
+        @Override
+        public void addFormatters(FormatterRegistry registry) {
+            ApplicationConversionService.configure(registry);
+           }
+    }
 }
