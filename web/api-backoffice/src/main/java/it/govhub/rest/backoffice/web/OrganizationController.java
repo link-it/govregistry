@@ -60,12 +60,12 @@ public class OrganizationController implements OrganizationsApi {
 	@Override
 	public ResponseEntity<OrganizationList> listOrganizations(Integer limit, Long offset, String q, OrganizationOrdering sort) {
 		
-		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit);
-		
 		Specification<OrganizationEntity> spec = OrganizationFilters.empty();
 		if (q != null) {
 			spec = OrganizationFilters.likeTaxCode(q).or(OrganizationFilters.likeLegalName(q));
 		}
+		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, OrganizationFilters.sort(sort));
+		
 		Page<OrganizationEntity> organizations = this.orgRepo.findAll(spec, pageRequest.pageable);
 		
 		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder

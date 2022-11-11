@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import it.govhub.rest.backoffice.beans.UserCreate;
 import it.govhub.rest.backoffice.beans.UserList;
 import it.govhub.rest.backoffice.beans.UserOrdering;
 import it.govhub.rest.backoffice.entity.UserEntity;
+import it.govhub.rest.backoffice.entity.UserEntity_;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.messages.UserMessages;
 import it.govhub.rest.backoffice.repository.UserFilters;
@@ -62,8 +64,6 @@ public class UserController implements UsersApi {
 	@Override
 	public ResponseEntity<UserList> listUsers(Integer limit, Long offset, String q, Boolean enabled, UserOrdering orderBy) {
 
-		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit);
-		
 		Specification<UserEntity> spec = UserFilters.empty();
 		if (q != null) {
 			spec = UserFilters.likeFullName(q).or(UserFilters.likePrincipal(q));
@@ -71,6 +71,8 @@ public class UserController implements UsersApi {
 		if (enabled != null) {
 			spec = spec.and(UserFilters.byEnabled(enabled));
 		}
+		
+		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, UserFilters.sort(orderBy));
 		
 		Page<UserEntity> users = this.userRepo.findAll(spec, pageRequest.pageable);
 		

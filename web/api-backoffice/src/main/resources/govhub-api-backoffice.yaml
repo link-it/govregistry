@@ -666,7 +666,7 @@ components:
       UserOrdering:
          type: string
          enum:
-            - first_name
+            - full_name
             - id
 
       OrganizationOrdering:
