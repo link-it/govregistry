@@ -6,6 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.nio.charset.Charset;
 
+import javax.json.Json;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,37 +34,31 @@ public class CrudUserTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
-	@Autowired
-	private ObjectMapper mapper;
-	
+
 	@Test
 	@DisplayName("Creazione di un nuovo utente")
 	public void creazioneUtente() throws Exception {
-		UserCreate user = new UserCreate();
-		user.setEmail("mimmo@napo.li");
-		user.setEnabled(false);
-		user.setFullName("Mimmo mariano");
-		user.setPrincipal("mimmo-mariano");
-	
-		String content = mapper.writeValueAsString(user);
-		
+
+		String json = Json.createObjectBuilder()
+				.add("email", "snakamoto@mail.xx")
+				.add("enabled", false)
+				.add("full_name", "Satoshi Nakamoto")
+				.add("principal", "snakamoto")
+				.build()
+				.toString();
+
 		MvcResult result = this.mockMvc.perform(post("/users")
 				.with(UserAuthProfilesUtils.utenzaAdmin())
-				.content(content)
+				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.email", is("snakamoto@mail.xx")))
+				.andExpect(jsonPath("$.enabled", is(false)))
+				.andExpect(jsonPath("$.full_name", is("Satoshi Nakamoto")))
+				.andExpect(jsonPath("$.principal", is("snakamoto")))
 				.andReturn();
-		
-		// Recupero il dettaglio dell'utente e confronto che i campi ci siano tutti
-		String resultString = result.getResponse().getContentAsString(Charset.forName("UTF-8"));
-		User created = mapper.readValue(resultString, User.class);
-		
-		assertEquals(user.getEmail(), created.getEmail());
-		assertEquals(user.getEnabled(), created.getEnabled());
-		assertEquals(user.getFullName(), created.getFullName());
-		assertEquals(user.getPrincipal(), created.getPrincipal());
-	}
 
+	}
 }
