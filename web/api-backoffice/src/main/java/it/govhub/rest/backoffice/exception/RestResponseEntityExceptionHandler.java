@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -114,6 +115,26 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
 	
 	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(
+			NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+		return new ResponseEntity<>(
+				buildProblem(HttpStatus.NOT_FOUND,ex.getLocalizedMessage()),
+				HttpStatus.NOT_FOUND);	
+		}
+	
+	
+	@Override
+	protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
+			HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+		return new ResponseEntity<>(
+				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage()),
+				HttpStatus.BAD_REQUEST);	
+		}
+	
+	
+	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(
 			Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
@@ -124,15 +145,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 				buildProblem(HttpStatus.INTERNAL_SERVER_ERROR,ex.getLocalizedMessage()),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	@Override
-	protected ResponseEntity<Object> handleNoHandlerFoundException(
-			NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-
-		return new ResponseEntity<>(
-				buildProblem(HttpStatus.NOT_FOUND,ex.getLocalizedMessage()),
-				HttpStatus.NOT_FOUND);	
-		}
 	
 
 }

@@ -72,7 +72,9 @@ public class SecurityConfig {
 				RUOLO_GOVHUB_SYSADMIN,
 				RUOLO_GOVHUB_USERS_EDITOR,
 				RUOLO_GOVHUB_USERS_VIEWER,
-				RUOLO_GOVHUB_USER
+				RUOLO_GOVHUB_USER,
+				RUOLO_GOVHUB_ORGANIZATIONS_EDITOR,
+				RUOLO_GOVHUB_ORGANIZATIONS_VIEWER
 			);
 	
 	
@@ -86,7 +88,7 @@ public class SecurityConfig {
 
 	private HttpSecurity applyAuthRules(HttpSecurity http) throws Exception {
 		
-		http.csrf().disable()
+		http
 		.authorizeRequests()
 		.antMatchers(HttpMethod.POST, "/users").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
 		.antMatchers(HttpMethod.PATCH, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
