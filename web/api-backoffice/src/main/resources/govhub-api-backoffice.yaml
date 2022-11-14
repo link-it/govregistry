@@ -607,7 +607,7 @@ components:
                type: boolean
          required:
             - principal
-            - name
+            - full_name
             - enabled            
          
       User:         
