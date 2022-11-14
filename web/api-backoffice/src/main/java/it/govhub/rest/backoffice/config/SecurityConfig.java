@@ -34,6 +34,7 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import it.govhub.rest.backoffice.exception.RestResponseEntityExceptionHandler;
 import it.govhub.rest.backoffice.exception.UnreachableException;
 
 
@@ -172,7 +173,7 @@ public class SecurityConfig {
 			
 			ServletOutputStream outputStream = null;
 			try{
-				problem.instance = new URI("https://www.rfc-editor.org/rfc/rfc9110.html#name-401-unauthorized");
+				problem.instance = new URI(RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.UNAUTHORIZED));
 				outputStream = response.getOutputStream();
 				this.jsonMapper.writeValue(outputStream, problem);
 				outputStream.flush();
