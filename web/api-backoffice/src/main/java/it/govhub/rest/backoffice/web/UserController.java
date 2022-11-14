@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import it.govhub.rest.backoffice.beans.UserCreate;
 import it.govhub.rest.backoffice.beans.UserList;
 import it.govhub.rest.backoffice.beans.UserOrdering;
 import it.govhub.rest.backoffice.entity.UserEntity;
-import it.govhub.rest.backoffice.entity.UserEntity_;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.messages.UserMessages;
 import it.govhub.rest.backoffice.repository.UserFilters;

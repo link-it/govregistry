@@ -26,7 +26,7 @@ public class PostgreSQLUtilities {
 		
 		// invalid byte sequence for encoding "UTF8": 0x00
 		// PostgreSQL non supporta il salvataggio di NULL (\0x00) caratteri nei campi text. 
-		return s.replaceAll(NULL_BYTE_SEQUENCE, "");
+		return s.replace(NULL_BYTE_SEQUENCE, "");
 
 	}
 	

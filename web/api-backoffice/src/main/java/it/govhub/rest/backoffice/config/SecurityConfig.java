@@ -16,12 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,9 +33,8 @@ import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import it.govhub.rest.backoffice.beans.Problem;
+import it.govhub.rest.backoffice.exception.UnreachableException;
 
 
 /**
@@ -179,12 +176,11 @@ public class SecurityConfig {
 				outputStream = response.getOutputStream();
 				this.jsonMapper.writeValue(outputStream, problem);
 				outputStream.flush();
-			}catch(Exception e) {
-
-			} finally {
+			} catch(Exception e) {
+				throw new UnreachableException();
 			}
+			
 		}
-		
 		
 	}
 }
