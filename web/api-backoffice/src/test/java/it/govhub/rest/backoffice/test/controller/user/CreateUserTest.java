@@ -84,6 +84,7 @@ public class CreateUserTest {
 				.add("enabled", false)
 				.add("full_name", "Satoshi Nakamoto")
 				.add("principal", "snakamoto")
+				.add("email", "snakamoto@mail.xx")
 				.build()
 				.toString();
 
