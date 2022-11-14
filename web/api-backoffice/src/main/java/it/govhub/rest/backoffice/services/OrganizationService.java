@@ -86,7 +86,7 @@ public class OrganizationService {
 		}
 		
 		if (updatedOrganization == null) {
-			throw new BadRequestException(PatchMessages.voidObjectPatch());
+			throw new BadRequestException(PatchMessages.voidObjectPatch);
 		}
 		
 		// Faccio partire la validazione

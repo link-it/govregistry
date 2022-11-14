@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -36,13 +35,13 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @DisplayName("Test di censimento Utenti")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-public class PatchUserTest {
+class PatchUserTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Test
-	public void UC_1_6_PatchUser_Enabled() throws Exception {
+	void UC_1_6_PatchUser_Enabled() throws Exception {
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", false)
@@ -94,7 +93,7 @@ public class PatchUserTest {
 	}
 	
 	
-	public void UC_1_6_PatchUser_WrongMediaType() throws Exception {
+	void UC_1_6_PatchUser_WrongMediaType() throws Exception {
 		JsonObjectBuilder patchOp = Json.createObjectBuilder()
 				.add("op", OpEnum.REPLACE.toString())
 				.add("path", "/enabled")

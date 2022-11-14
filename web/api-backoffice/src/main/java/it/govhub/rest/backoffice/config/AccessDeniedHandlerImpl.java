@@ -16,6 +16,9 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import it.govhub.rest.backoffice.exception.RestResponseEntityExceptionHandler;
+import it.govhub.rest.backoffice.exception.UnreachableException;
+
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
 	private ObjectMapper jsonMapper;
@@ -41,14 +44,13 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 		
 		ServletOutputStream outputStream = null;
 		try{
-			problem.instance = new URI("https://www.rfc-editor.org/rfc/rfc9110.html#name-401-unauthorized");
+			problem.instance = new URI(RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.FORBIDDEN));
 			outputStream = response.getOutputStream();
 			this.jsonMapper.writeValue(outputStream, problem);
 			outputStream.flush();
 		}catch(Exception e) {
-
-		} finally {
-		}		
+			throw new UnreachableException();
+		}
 	}
 
 }

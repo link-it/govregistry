@@ -3,7 +3,6 @@ package it.govhub.rest.backoffice.utils;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
@@ -22,7 +21,7 @@ public class Base64StringSerializer extends StdSerializer<Base64String> {
 		@Override
 	    public void serialize(
 	    		Base64String value, JsonGenerator jgen, SerializerProvider provider) 
-	      throws IOException, JsonProcessingException {
+	      throws IOException {
 			
 			jgen.writeString(value.value);
 	    }

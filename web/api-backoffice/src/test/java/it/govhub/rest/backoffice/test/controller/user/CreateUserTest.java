@@ -33,13 +33,13 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @DisplayName("Test di censimento Utenti")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-public class CreateUserTest {
+class CreateUserTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Test
-	public void UC_1_1_CreateUserOk() throws Exception {
+	void UC_1_1_CreateUserOk() throws Exception {
 
 		String json = Json.createObjectBuilder()
 				.add("enabled", false)
@@ -78,7 +78,7 @@ public class CreateUserTest {
 	}
 	
 	@Test
-	public void UC_1_2_CreateUserOk_withEmail() throws Exception {
+	void UC_1_2_CreateUserOk_withEmail() throws Exception {
 
 		String json = Json.createObjectBuilder()
 				.add("enabled", false)

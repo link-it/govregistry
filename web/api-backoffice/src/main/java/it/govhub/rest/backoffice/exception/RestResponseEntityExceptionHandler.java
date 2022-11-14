@@ -32,13 +32,15 @@ import it.govhub.rest.backoffice.utils.RequestUtils;
 @ResponseBody
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 	
-	public static Map<HttpStatus, String> problemTypes = Map.of(
+	public static final Map<HttpStatus, String> problemTypes = Map.of(
 			HttpStatus.CONFLICT,  "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
 			HttpStatus.NOT_FOUND, "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
 			HttpStatus.BAD_REQUEST,"https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request",
 			HttpStatus.UNPROCESSABLE_ENTITY,"https://www.rfc-editor.org/rfc/rfc9110.html#name-422-unprocessable-content",
 			HttpStatus.INTERNAL_SERVER_ERROR, "https://www.rfc-editor.org/rfc/rfc9110.html#name-500-internal-server-error",
-			HttpStatus.OK, "https://www.rfc-editor.org/rfc/rfc9110.html#name-200-ok"
+			HttpStatus.OK, "https://www.rfc-editor.org/rfc/rfc9110.html#name-200-ok",
+			HttpStatus.UNAUTHORIZED, "https://www.rfc-editor.org/rfc/rfc9110.html#name-401-unauthorized",
+			HttpStatus.FORBIDDEN, "https://www.rfc-editor.org/rfc/rfc9110.html#name-403-forbidden"
 		);
 	
 	public static Problem buildProblem(HttpStatus status, String detail) {

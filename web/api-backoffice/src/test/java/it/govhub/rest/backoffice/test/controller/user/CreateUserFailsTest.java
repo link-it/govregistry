@@ -25,13 +25,13 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @AutoConfigureMockMvc
 @DisplayName("Test di censimento Utenti")
 
-public class CreateUserFailsTest {
+class CreateUserFailsTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 	
 	@Test
-	public void UC_1_3_CreateUserFail_MissingPrincipal() throws Exception {
+	void UC_1_3_CreateUserFail_MissingPrincipal() throws Exception {
 
 		String json = Json.createObjectBuilder()
 				.add("enabled", false)
@@ -55,7 +55,7 @@ public class CreateUserFailsTest {
 	}
 	
 	@Test
-	public void UC_1_4_CreateUserFail_MissingFullname() throws Exception {
+	void UC_1_4_CreateUserFail_MissingFullname() throws Exception {
 
 		String json = Json.createObjectBuilder()
 				.add("enabled", false)
