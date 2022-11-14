@@ -80,7 +80,7 @@ class CreateUserFailsTest {
 	
 	
 	@Test
-	public void UC_1_5_CreateUserFail_MissingEnabled() throws Exception {
+	void UC_1_5_CreateUserFail_MissingEnabled() throws Exception {
 
 		String json = Json.createObjectBuilder()
 				.add("email", "snakamoto@mail.xx")
