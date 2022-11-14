@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -21,6 +22,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "organizations")
 public class OrganizationEntity {
 
@@ -29,9 +31,11 @@ public class OrganizationEntity {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_organizations")
 	private Long id;
 
+	@EqualsAndHashCode.Include
 	@Column(name = "tax_code", unique = true, nullable = false, length = 11)
 	private String taxCode;
 
+	@EqualsAndHashCode.Include
 	@Column(name = "legal_name", unique = true, nullable = false, length = 80)
 	private String legalName;
 
