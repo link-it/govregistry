@@ -86,7 +86,7 @@ public class SecurityConfig {
 
 	private HttpSecurity applyAuthRules(HttpSecurity http) throws Exception {
 		
-		http.csrf().disable()
+		http
 		.authorizeRequests()
 		.antMatchers(HttpMethod.POST, "/users").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
 		.antMatchers(HttpMethod.PATCH, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
