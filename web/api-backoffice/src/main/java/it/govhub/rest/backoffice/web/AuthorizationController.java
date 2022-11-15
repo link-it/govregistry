@@ -55,7 +55,7 @@ public class AuthorizationController implements AuthorizationApi {
 				case ID:
 					return Sort.by(Sort.Direction.ASC, RoleAuthorizationEntity_.ID);
 				case ROLE_NAME:
-					return Sort.by(Sort.Direction.ASC, RoleEntity_.NAME);	// TODO deve essere ROLE.ROLE_NAME
+					return Sort.by(Sort.Direction.ASC, RoleAuthorizationEntity_.ROLE+"."+RoleEntity_.NAME);
 				default:
 					throw new UnreachableException();
 				}

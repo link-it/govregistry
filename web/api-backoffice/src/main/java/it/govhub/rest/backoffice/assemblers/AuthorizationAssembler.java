@@ -48,6 +48,7 @@ public class AuthorizationAssembler  extends RepresentationModelAssemblerSupport
 	public Role toModel(RoleEntity role) {
 		Role ret = new Role();
 		BeanUtils.copyProperties(role, ret);
+		ret.setRoleName(role.getName());
 		return ret;
 	}
 	
