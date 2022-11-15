@@ -26,15 +26,17 @@ security:
 
 tags:
   - name: user
-    description: Operations on users
+    description: Operations on users.
   - name: organization
-    description: Operations on organizations
+    description: Operations on organizations.
+  - name: authorization
+    description: Authorizations and roles.
   - name: system
     description: System Operations
 
 paths:
   /users:
-  
+    
     post:
       tags:
         - user
@@ -128,7 +130,7 @@ paths:
           $ref: "#/components/responses/503ServiceUnavailable"
         default:
           $ref: "#/components/responses/ResponseDefault"
-          
+
     patch:
       summary: Update user data.
       description: Update user data.
@@ -138,7 +140,7 @@ paths:
       requestBody:    
         required: true
         content:
-          "application/json-patch+json":
+          application/json-patch+json:
             schema:
               $ref: '#/components/schemas/PatchOperations'
       responses:
@@ -163,10 +165,106 @@ paths:
         default:
           $ref: "#/components/responses/ResponseDefault"          
           
+  /users/{id}/authorizations:
+    parameters:
+      - $ref: "#/components/parameters/user_id"    
+    post:
+      tags:
+        - authorization
+      summary: Assign a new authorization to the user.
+      description: Assign a new authorization to the user.
+      operationId: assignAuthorization
+      requestBody:
+         required: true
+         content:
+            application/json:
+               schema:
+                  $ref: "#/components/schemas/Authorization"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Authorization"          
+        '400':
+          $ref: "#/components/responses/400BadRequest"
+        '401':
+          $ref: "#/components/responses/401Unauthorized"
+        '403':
+          $ref: "#/components/responses/403Forbidden"
+        '404':
+          $ref: "#/components/responses/404NotFound"
+        '429':
+          $ref: "#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/ResponseDefault"
+          
+    get:
+      tags:
+         - authorization
+      summary: Retrieve the user authorizations.
+      description: Retrieve the user authorizations.
+      operationId: listAuthorizations
+      parameters:
+         - $ref: "#/components/parameters/limit"
+         - $ref: "#/components/parameters/offset"
+         - $ref: "#/components/parameters/authorization_ordering_query"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                 $ref: "#/components/schemas/AuthorizationList"
+        '400':
+          $ref: "#/components/responses/400BadRequest"
+        '401':
+          $ref: "#/components/responses/401Unauthorized"
+        '403':
+          $ref: "#/components/responses/403Forbidden"
+        '404':
+          $ref: "#/components/responses/404NotFound"
+        '429':
+          $ref: "#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/ResponseDefault"           
+          
+  /authorizations/{id}:
+    parameters:
+       - $ref: "#/components/parameters/authorization_id"    
+    delete:
+      tags:
+        - authorization
+      summary: Delete the authorization.
+      description: Delete the authorization.
+      operationId: removeAuthorization
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          $ref: "#/components/responses/400BadRequest"
+        '401':
+          $ref: "#/components/responses/401Unauthorized"
+        '403':
+          $ref: "#/components/responses/403Forbidden"
+        '404':
+          $ref: "#/components/responses/404NotFound"
+        '429':
+          $ref: "#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/ResponseDefault"
+          
   /profile:    
     get:
       tags:
-        - user
+        - system
       summary: Get the detail of the authenticated user
       description: Get the detail of the authenticated user
       operationId: profile
@@ -176,7 +274,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/Profile'          
         '400':
           $ref: "#/components/responses/400BadRequest"
         '401':
@@ -276,6 +374,8 @@ paths:
           $ref: "#/components/responses/401Unauthorized"
         '403':
           $ref: "#/components/responses/403Forbidden"
+        '404':
+          $ref: "#/components/responses/404NotFound"
         '429':
           $ref: "#/components/responses/429TooManyRequests"
         '503':
@@ -515,6 +615,13 @@ components:
          required: true
          schema:
             $ref: "#/components/schemas/OrganizationId"
+            
+      authorization_id:
+         name: id
+         in: path
+         required: true
+         schema:
+            $ref: "#/components/schemas/AuthorizationId"
            
       limit:
          name: limit
@@ -559,7 +666,7 @@ components:
       user_ordering_query:
          name: sort
          in: query
-         description: generic query
+         description: Sorting field.
          required: false
          schema:
             $ref: "#/components/schemas/UserOrdering"           
@@ -567,10 +674,18 @@ components:
       organization_ordering_query:
          name: sort
          in: query
-         description: generic query
+         description: Sorting field.
          required: false
          schema:
             $ref: "#/components/schemas/OrganizationOrdering"
+            
+      authorization_ordering_query:
+         name: sort
+         in: query
+         description: Sorting field.
+         required: false
+         schema:
+            $ref: "#/components/schemas/AuthorizationOrdering"            
             
             
    # SCHEMAS ---------------- #
@@ -583,7 +698,40 @@ components:
          format: int64
          minimum: 0
          maximum: 9223372036854775807
+         example: 1
          description: User identifier 
+         
+      OrganizationId:
+         type: integer
+         format: int64
+         minimum: 0
+         maximum: 9223372036854775807
+         example: 1
+         description: Organization identifier 
+      
+      RoleId:
+         type: integer
+         format: int64
+         minimum: 0
+         maximum: 9223372036854775807
+         example: 1
+         description: Organization identifier       
+      
+      AuthorizationId:
+         type: integer
+         format: int64
+         minimum: 0
+         maximum: 9223372036854775807
+         example: 1
+         description: Authorization identifier
+         
+      ServiceId:
+         type: integer
+         format: int64
+         minimum: 0
+         maximum: 9223372036854775807
+         example: 1
+         description: Service identifier
       
       UserCreate:
          type: object
@@ -620,6 +768,56 @@ components:
               properties:
                   id:
                      $ref: "#/components/schemas/UserId"
+                     
+      Profile:
+         allOf:
+            - $ref: "#/components/schemas/User"
+            - type: object
+              additionalProperties: false
+              properties:
+                 authorizations:
+                    type: array
+                    items:
+                       $ref: "#/components/schemas/AuthorizationItem"
+                    minItems: 0
+                    maxItems: 2147483647
+       
+      Role:
+         type: object
+         additionalProperties: false
+         properties:
+            id: 
+               $ref: "#/components/schemas/RoleId"
+            role_name:
+               type: string
+               pattern: .+
+               maxLength: 256
+               example: govhub-sender
+                   
+                     
+      Authorization:
+         type: object
+         additionalProperties: false
+         required:
+            - role
+         properties:
+            role:
+               $ref: "#/components/schemas/RoleId"               
+            organizations:
+               type: array
+               items:
+                  $ref: "#/components/schemas/OrganizationId"
+               minItems: 0
+               maxItems: 2147483647
+            services:
+               type: array
+               items:
+                  $ref: "#/components/schemas/OrganizationId"
+               minItems: 0
+               maxItems: 2147483647            
+            expiration_date:
+               type: string
+               format: date-time
            
       Problem:
          type: object
@@ -648,7 +846,8 @@ components:
              type: string
              description: Short description of the occurred problem.
              maxLength: 255
-             pattern: ^[ -~]+$        
+             pattern: ^[ -~]+$
+             example: Service Unavailable        
            type:
              type: string
              description: Absolute URI for the problem description.
@@ -674,6 +873,12 @@ components:
          enum:
             - legal_name
             - id
+                        
+      AuthorizationOrdering:
+         type: string
+         enum:
+            - id
+            - role_name            
             
       PatchOperations:
          type: "array"
@@ -732,18 +937,21 @@ components:
              format: int64
              minimum: 0
              maximum: 9223372036854775807
+             example: 20
            limit:
              type: integer
              description: numero massimo di elementi restituiti
              format: int32
              minimum: 0
              maximum: 2147483647
+             example: 25
            total:
                minimum: 0
                maximum: 9223372036854775807
                type: integer
                description: Number of found elements.
                format: int64
+               example: 32
                
       UserList:
          allOf:
@@ -774,7 +982,49 @@ components:
               required:
                  - items 
               additionalProperties: false
+              
+      AuthorizationList:
+         allOf:
+            - $ref: "#/components/schemas/List"
+            - type: object
+              properties:              
+                 items:
+                    type: array
+                    items:
+                       $ref: "#/components/schemas/AuthorizationItem"
+                    minItems: 0
+                    maxItems: 2147483647
+              required:
+                 - items 
+              additionalProperties: false              
 
+      AuthorizationItem:
+         type: object
+         additionalProperties: false
+         required:
+            - id
+            - role
+         properties:
+            id:
+               $ref: "#/components/schemas/AuthorizationId"
+            role:
+               $ref: "#/components/schemas/Role"
+            organizations:
+               type: array
+               items:
+                  $ref: "#/components/schemas/OrganizationAuthItem"
+               minItems: 0
+               maxItems: 2147483647
+            services:
+               type: array
+               items:
+                  $ref: "#/components/schemas/ServiceAuthItem"
+               minItems: 0
+               maxItems: 2147483647
+            expiration_date:
+               type: string
+               format: date-time
+            
       OrganizationData:
          type: object
          additionalProperties: false
@@ -783,16 +1033,9 @@ components:
            - legal_name        
          properties:
            tax_code:
-             type: string
-             minLength: 11
-             maxLength: 11
-             pattern: ^[0-9]+$
-             example: 01234567890
+              $ref: "#/components/schemas/TaxCode"
            legal_name:
-             type: string
-             maxLength: 80
-             pattern: ^([\x20-\xFF]{1,80})$
-             example: Giletti S.R.L.
+              $ref: "#/components/schemas/LegalName"
            office_at:
              type: string
              maxLength: 120
@@ -866,14 +1109,33 @@ components:
             properties:
               id:
                 $ref: "#/components/schemas/OrganizationId"
-
-      OrganizationId:
-         type: integer
-         format: int64
-         minimum: 0
-         maximum: 9223372036854775807
-         description: User identifier 
       
+      OrganizationAuthItem:
+         type: object
+         additionalProperties: false
+         required:
+            - id
+            - legal_name
+            - tax_code
+         properties:
+            id:
+               $ref: "#/components/schemas/OrganizationId"
+            legal_name:
+               $ref: "#/components/schemas/LegalName"
+            tax_code:
+               $ref: "#/components/schemas/TaxCode"
+      
+      ServiceAuthItem:
+         type: object
+         additionalProperties: false
+         properties:
+            id: 
+               $ref: "#/components/schemas/ServiceId"         
+            service_name:
+              type: string
+              pattern: .*
+              maxLength: 256
+                  
       PhoneNumber:
         maxLength: 255
         type: string
@@ -896,5 +1158,16 @@ components:
         format: base64
         maxLength: 50000
             
-
+      TaxCode:
+        type: string
+        minLength: 11
+        maxLength: 11
+        pattern: ^[0-9]+$
+        example: "01234567890"
+        
+      LegalName:
+         type: string
+         maxLength: 80
+         pattern: ^([\x20-\xFF]{1,80})$
+         example: Giletti S.R.L.
          

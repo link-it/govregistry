@@ -15,7 +15,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.github.fge.jsonpatch.JsonPatch;
 
-import it.govhub.rest.backoffice.api.UsersApi;
+import it.govhub.rest.backoffice.api.UserApi;
 import it.govhub.rest.backoffice.assemblers.UserAssembler;
 import it.govhub.rest.backoffice.beans.PatchOp;
 import it.govhub.rest.backoffice.beans.User;
@@ -34,7 +34,7 @@ import it.govhub.rest.backoffice.utils.RequestUtils;
 
 
 @RestController
-public class UserController implements UsersApi {
+public class UserController implements UserApi {
 	
 
 	@Autowired
