@@ -20,9 +20,17 @@ public class DefaultResponseErrorHandler extends DefaultErrorAttributes {
         errorAttributes.remove("error");
         errorAttributes.remove("path");
         
-        errorAttributes.put("title", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-        errorAttributes.put("type", RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.INTERNAL_SERVER_ERROR));
-        errorAttributes.put("detail", "Request can't be satisfied at the moment");
+        int status = (Integer) errorAttributes.get("status");
+        
+        if (status == 500) {
+	        errorAttributes.put("title", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+	        errorAttributes.put("type", RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.INTERNAL_SERVER_ERROR));
+	        errorAttributes.put("detail", "Request can't be satisfied at the moment");
+        } else if (status == 404) {
+        	errorAttributes.put("title", HttpStatus.NOT_FOUND.getReasonPhrase());
+	        errorAttributes.put("type", RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.NOT_FOUND));
+	        errorAttributes.put("detail", "Resource not found.");
+        }
         
         return errorAttributes;
     }

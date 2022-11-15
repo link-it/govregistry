@@ -179,7 +179,7 @@ paths:
          content:
             application/json:
                schema:
-                  $ref: "#/components/schemas/Authorization"
+                  $ref: "#/components/schemas/AuthorizationCreate"
       responses:
         '200':
           description: Successful operation
@@ -778,7 +778,7 @@ components:
                  authorizations:
                     type: array
                     items:
-                       $ref: "#/components/schemas/AuthorizationItem"
+                       $ref: "#/components/schemas/Authorization"
                     minItems: 0
                     maxItems: 2147483647
        
@@ -795,7 +795,7 @@ components:
                example: govhub-sender
                    
                      
-      Authorization:
+      AuthorizationCreate:
          type: object
          additionalProperties: false
          required:
@@ -809,12 +809,14 @@ components:
                   $ref: "#/components/schemas/OrganizationId"
                minItems: 0
                maxItems: 2147483647
+               default: []
             services:
                type: array
                items:
                   $ref: "#/components/schemas/OrganizationId"
                minItems: 0
-               maxItems: 2147483647            
+               maxItems: 2147483647
+               default: []            
             expiration_date:
                type: string
                format: date-time
@@ -991,14 +993,14 @@ components:
                  items:
                     type: array
                     items:
-                       $ref: "#/components/schemas/AuthorizationItem"
+                       $ref: "#/components/schemas/Authorization"
                     minItems: 0
                     maxItems: 2147483647
               required:
                  - items 
               additionalProperties: false              
 
-      AuthorizationItem:
+      Authorization:
          type: object
          additionalProperties: false
          required:
