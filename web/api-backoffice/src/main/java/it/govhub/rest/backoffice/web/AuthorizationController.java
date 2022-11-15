@@ -1,15 +1,12 @@
 package it.govhub.rest.backoffice.web;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import it.govhub.rest.backoffice.api.AuthorizationApi;
 import it.govhub.rest.backoffice.assemblers.AuthorizationAssembler;
@@ -26,19 +23,18 @@ import it.govhub.rest.backoffice.messages.RoleMessages;
 import it.govhub.rest.backoffice.repository.RoleAuthorizationRepository;
 import it.govhub.rest.backoffice.services.RoleAuthorizationService;
 import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
-import it.govhub.rest.backoffice.utils.ListaUtils;
 
 @RestController
 public class AuthorizationController implements AuthorizationApi {
 	
 	@Autowired
-	private AuthorizationAssembler authAssembler;
+	public AuthorizationAssembler authAssembler;
 	
 	@Autowired
 	private RoleAuthorizationService authService;
 	
 	@Autowired
-	private RoleAuthorizationRepository authRepo;
+	public RoleAuthorizationRepository authRepo;
 
 	@Override
 	public ResponseEntity<Authorization> assignAuthorization(Long id, AuthorizationCreate authorization) {
@@ -53,35 +49,26 @@ public class AuthorizationController implements AuthorizationApi {
 	@Override
 	public ResponseEntity<AuthorizationList> listAuthorizations(Long id, Integer limit, Long offset, AuthorizationOrdering sort) {
 		
-		Sort orderBy = Sort.unsorted();
-		if (sort != null) {
-			switch(sort) {
-			case ID:
-				orderBy = Sort.by(Sort.Direction.ASC, RoleAuthorizationEntity_.ID);
-			case ROLE_NAME:
-				orderBy = Sort.by(Sort.Direction.ASC, RoleEntity_.NAME);	// TODO deve essere ROLE.ROLE_NAME
-				break;
-			default:
-				throw new UnreachableException();
-			}
-		}
+		Sort orderBy  = Optional.ofNullable(sort)
+			.map( sort1 -> {
+				switch(sort1) {
+				case ID:
+					return Sort.by(Sort.Direction.ASC, RoleAuthorizationEntity_.ID);
+				case ROLE_NAME:
+					return Sort.by(Sort.Direction.ASC, RoleEntity_.NAME);	// TODO deve essere ROLE.ROLE_NAME
+				default:
+					throw new UnreachableException();
+				}
+			}).orElse(Sort.unsorted());
 		
 		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, orderBy);
 		
-		Page<RoleAuthorizationEntity> auths = this.authRepo.findAll(pageRequest.pageable);
-		
-		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
-				.currentRequestAttributes()).getRequest();
-		
-		AuthorizationList ret = ListaUtils.costruisciListaPaginata(auths, curRequest, new AuthorizationList());
-		
-		for (RoleAuthorizationEntity auth : auths) {
-			ret.addItemsItem(this.authAssembler.toModel(auth));
-		}
+		AuthorizationList ret = authService.listUserAuthorizations(id, pageRequest);
 		
 		return ResponseEntity.ok(ret);
 	}
 
+	
 	@Override
 	public ResponseEntity<Void> removeAuthorization(Long id) {
 		
@@ -92,8 +79,6 @@ public class AuthorizationController implements AuthorizationApi {
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-
-
 
 
 }
