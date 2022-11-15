@@ -82,7 +82,8 @@ public class SecurityConfig {
 		.csrf().disable()
 		.authorizeRequests()
 			.and().httpBasic().authenticationEntryPoint(new BasicAuthenticationEntryPoint(jsonMapper))
-			.and().exceptionHandling().accessDeniedHandler(this.accessDeniedHandler());  // Gestione degli errori di autenticazione, con entry point che personalizza la risposta inviata 
+			.and().exceptionHandling()
+					.accessDeniedHandler(this.accessDeniedHandler()); 
 		return http.build();
 	}
 
@@ -90,13 +91,15 @@ public class SecurityConfig {
 		
 		http
 		.authorizeRequests()
-		.antMatchers(HttpMethod.POST, "/users").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
+		.antMatchers(HttpMethod.POST, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
 		.antMatchers(HttpMethod.PATCH, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
 		.antMatchers(HttpMethod.GET, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR, RUOLO_GOVHUB_USERS_VIEWER)
 		
 		.antMatchers(HttpMethod.GET, "/organizations/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR, RUOLO_GOVHUB_ORGANIZATIONS_VIEWER)
 		.antMatchers(HttpMethod.POST, "/organizations").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR)
 		.antMatchers(HttpMethod.PATCH, "/organizations/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR)
+		
+		.antMatchers(HttpMethod.DELETE,  "/authorizations/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
 		
 		.antMatchers(HttpMethod.GET, "/profile").hasAnyRole(ruoliConsentiti.toArray(new String[0]))
 		// richieste GET Schema open-api accessibile a tutti

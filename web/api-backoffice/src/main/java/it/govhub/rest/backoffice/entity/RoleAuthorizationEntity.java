@@ -1,6 +1,7 @@
 package it.govhub.rest.backoffice.entity;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -52,7 +53,7 @@ public class RoleAuthorizationEntity {
 	
 	
 	@Column(name = "expiration_date")
-	private LocalDateTime expirationDate;
+	private OffsetDateTime expirationDate;
 	
 	
 	@ManyToMany

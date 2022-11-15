@@ -1,6 +1,8 @@
 package it.govhub.rest.backoffice.utils;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,10 @@ import it.govhub.rest.backoffice.exception.UnreachableException;
 public class ListaUtils {
 	
 	private ListaUtils() {	}
+	
+	public static <T> List<T> emptyIfNull(List<T> iterable) {
+	    return iterable == null ? Collections.<T>emptyList() : iterable;
+	}
 	
 	/** 
 	 * Costruisce una lista paginata riempiendola con i riferimenti a 
