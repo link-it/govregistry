@@ -6,10 +6,19 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import it.govhub.rest.backoffice.assemblers.AuthorizationAssembler;
 import it.govhub.rest.backoffice.beans.AuthorizationCreate;
+import it.govhub.rest.backoffice.beans.AuthorizationList;
 import it.govhub.rest.backoffice.entity.OrganizationEntity;
 import it.govhub.rest.backoffice.entity.RoleAuthorizationEntity;
 import it.govhub.rest.backoffice.entity.RoleEntity;
@@ -21,9 +30,12 @@ import it.govhub.rest.backoffice.messages.OrganizationMessages;
 import it.govhub.rest.backoffice.messages.RoleMessages;
 import it.govhub.rest.backoffice.messages.UserMessages;
 import it.govhub.rest.backoffice.repository.OrganizationRepository;
+import it.govhub.rest.backoffice.repository.RoleAuthorizationFilters;
 import it.govhub.rest.backoffice.repository.RoleAuthorizationRepository;
 import it.govhub.rest.backoffice.repository.RoleRepository;
 import it.govhub.rest.backoffice.repository.UserRepository;
+import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
+import it.govhub.rest.backoffice.utils.ListaUtils;
 
 @Service
 public class RoleAuthorizationService {
@@ -40,7 +52,10 @@ public class RoleAuthorizationService {
 	@Autowired
 	private RoleAuthorizationRepository authRepo;
 	
+	@Autowired
+	private AuthorizationAssembler authAssembler;
 
+	@Transactional
 	public RoleAuthorizationEntity assignAuthorization(Long id, AuthorizationCreate authorization) {
 		
 		UserEntity principal = this.userRepo.findById(id)
@@ -73,6 +88,24 @@ public class RoleAuthorizationService {
 
 	}
 
-
+	
+	@Transactional
+	public AuthorizationList listUserAuthorizations(Long id, LimitOffsetPageRequest pageRequest) {
+		
+		Specification<RoleAuthorizationEntity> spec = RoleAuthorizationFilters.byUser(id);
+		
+		Page<RoleAuthorizationEntity> auths = this.authRepo.findAll(spec, pageRequest.pageable);
+		
+		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes()).getRequest();
+		
+		AuthorizationList ret = ListaUtils.costruisciListaPaginata(auths, curRequest, new AuthorizationList());
+		
+		for (RoleAuthorizationEntity auth : auths) {
+			ret.addItemsItem(this.authAssembler.toModel(auth));
+		}
+		return ret;
+	}
+	
 
 }
