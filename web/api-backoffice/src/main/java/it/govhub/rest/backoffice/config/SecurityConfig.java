@@ -78,7 +78,9 @@ public class SecurityConfig {
 	
 	@Bean
 	public SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
-		applyAuthRules(http).authorizeRequests()
+		applyAuthRules(http)
+		.csrf().disable()
+		.authorizeRequests()
 			.and().httpBasic().authenticationEntryPoint(new BasicAuthenticationEntryPoint(jsonMapper))
 			.and().exceptionHandling().accessDeniedHandler(this.accessDeniedHandler());  // Gestione degli errori di autenticazione, con entry point che personalizza la risposta inviata 
 		return http.build();

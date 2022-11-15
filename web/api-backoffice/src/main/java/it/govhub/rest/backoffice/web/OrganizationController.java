@@ -16,7 +16,7 @@ import org.webjars.NotFoundException;
 
 import com.github.fge.jsonpatch.JsonPatch;
 
-import it.govhub.rest.backoffice.api.OrganizationsApi;
+import it.govhub.rest.backoffice.api.OrganizationApi;
 import it.govhub.rest.backoffice.assemblers.OrganizationAssembler;
 import it.govhub.rest.backoffice.assemblers.OrganizationItemAssembler;
 import it.govhub.rest.backoffice.beans.Organization;
@@ -34,7 +34,7 @@ import it.govhub.rest.backoffice.utils.ListaUtils;
 import it.govhub.rest.backoffice.utils.RequestUtils;
 
 @RestController
-public class OrganizationController implements OrganizationsApi {
+public class OrganizationController implements OrganizationApi {
 	
 	@Autowired
 	private OrganizationAssembler orgAssembler;
