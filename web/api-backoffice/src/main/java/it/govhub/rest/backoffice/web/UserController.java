@@ -53,9 +53,8 @@ public class UserController implements UserApi {
 		UserEntity user = this.userRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
 		
-		User ret = this.userAssembler.toModel(user);
-		
-		return ResponseEntity.ok(ret);
+		return ResponseEntity.ok(
+				this.userAssembler.toModel(user));
 	}
 
 	
