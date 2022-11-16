@@ -63,6 +63,8 @@ public class SecurityConfig {
 	public static final String RUOLO_GOVHUB_USER = "govhub_user";
 	public static final String RUOLO_GOVHUB_ORGANIZATIONS_EDITOR = "govhub_organizations_editor";
 	public static final String RUOLO_GOVHUB_ORGANIZATIONS_VIEWER = "govhub_organizations_viewer";
+	public static final String RUOLO_GOVHUB_SERVICE_EDITOR = "govhub_service_editor";
+	public static final String RUOLO_GOVHUB_SERVICE_VIEWER = "govhub_service_user";
 
 	// impostarli nel componente jee utilizzando la funzione mappableAuthorities al posto di mappableRoles che aggiunge il prefisso 'ROLE_' ad ogni ruolo
 	public static final Set<String> ruoliConsentiti = Set.of
@@ -72,7 +74,9 @@ public class SecurityConfig {
 				RUOLO_GOVHUB_USERS_VIEWER,
 				RUOLO_GOVHUB_USER,
 				RUOLO_GOVHUB_ORGANIZATIONS_EDITOR,
-				RUOLO_GOVHUB_ORGANIZATIONS_VIEWER
+				RUOLO_GOVHUB_ORGANIZATIONS_VIEWER,
+				RUOLO_GOVHUB_SERVICE_EDITOR,
+				RUOLO_GOVHUB_SERVICE_VIEWER
 			);
 	
 	
@@ -100,6 +104,10 @@ public class SecurityConfig {
 		.antMatchers(HttpMethod.PATCH, "/organizations/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR)
 		
 		.antMatchers(HttpMethod.DELETE,  "/authorizations/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
+		
+		.antMatchers(HttpMethod.GET, "/services/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICE_EDITOR, RUOLO_GOVHUB_USERS_EDITOR)
+		.antMatchers(HttpMethod.POST, "/services").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICE_EDITOR)
+		.antMatchers(HttpMethod.PATCH, "/services/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICE_EDITOR)
 		
 		.antMatchers(HttpMethod.GET, "/profile").hasAnyRole(ruoliConsentiti.toArray(new String[0]))
 		// richieste GET Schema open-api accessibile a tutti
