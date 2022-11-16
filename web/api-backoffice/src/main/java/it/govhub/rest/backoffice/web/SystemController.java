@@ -9,23 +9,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.govhub.rest.backoffice.api.SystemApi;
-import it.govhub.rest.backoffice.assemblers.UserAssembler;
 import it.govhub.rest.backoffice.beans.Problem;
 import it.govhub.rest.backoffice.beans.Profile;
-import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.exception.RestResponseEntityExceptionHandler;
-import it.govhub.rest.backoffice.exception.UnreachableException;
-import it.govhub.rest.backoffice.messages.SecurityMessages;
-import it.govhub.rest.backoffice.repository.UserRepository;
+import it.govhub.rest.backoffice.services.UserService;
 
 @RestController
-public class StatusController implements SystemApi {
+public class SystemController implements SystemApi {
 	
 	@Autowired
-	private UserRepository userRepo;
-
-	@Autowired
-	private UserAssembler userAssembler;
+	private UserService userService;
 	
 
 	@Override
@@ -45,11 +38,8 @@ public class StatusController implements SystemApi {
 		
 		UserDetails principal = (UserDetails) authentication.getPrincipal();
 		
-		UserEntity user = this.userRepo.findByPrincipal(principal.getUsername())
-			.orElseThrow( () -> new UnreachableException(SecurityMessages.authorizedUserNotInDb(principal.getUsername())));
-		
-		return (ResponseEntity<Profile>) ResponseEntity.ok(); //this.userAssembler.toModel(user));
-		
+		return ResponseEntity.ok(
+				this.userService.getProfile(principal.getUsername()));
 	}
 
 }
