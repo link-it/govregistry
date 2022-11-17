@@ -95,7 +95,7 @@ public class OrganizationController implements OrganizationApi {
 		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
 				.currentRequestAttributes()).getRequest();
 		
-		OrganizationList ret = ListaUtils.costruisciListaPaginata(organizations, curRequest, new OrganizationList());
+		OrganizationList ret = ListaUtils.costruisciListaPaginata(organizations, pageRequest.limit, curRequest, new OrganizationList());
 		for (OrganizationEntity org : organizations) {
 			ret.addItemsItem(this.orgItemAssembler.toModel(org));
 		}

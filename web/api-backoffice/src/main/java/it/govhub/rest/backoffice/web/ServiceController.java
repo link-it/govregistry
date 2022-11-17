@@ -3,7 +3,6 @@ package it.govhub.rest.backoffice.web;
 import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SERVICES_EDITOR;
 import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SERVICES_VIEWER;
 import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SYSADMIN;
-import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_USERS_EDITOR;
 
 import java.util.List;
 
@@ -87,7 +86,7 @@ public class ServiceController implements ServiceApi {
 		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
 				.currentRequestAttributes()).getRequest();
 		
-		ServiceList ret = ListaUtils.costruisciListaPaginata(services, curRequest, new ServiceList());
+		ServiceList ret = ListaUtils.costruisciListaPaginata(services, pageRequest.limit, curRequest, new ServiceList());
 		
 		for (ServiceEntity service : services) {
 			ret.addItemsItem(this.serviceAssembler.toModel(service));

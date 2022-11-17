@@ -33,11 +33,11 @@ public class ListaUtils {
 	 * 
 	 */
 	public static final <T extends RepresentationModel<T>> T costruisciListaPaginata(
-			Page<?> results, 
+			Page<?> results,
+			int limit,
 			HttpServletRequest request, 
 			T destList)  {
 		
-		int limit = results.getNumberOfElements();
 		long startOffset = results.getNumber() * (long) limit;
 
 		if (!results.isFirst()) {
