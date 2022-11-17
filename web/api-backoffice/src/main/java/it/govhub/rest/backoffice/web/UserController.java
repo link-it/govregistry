@@ -1,5 +1,9 @@
 package it.govhub.rest.backoffice.web;
 
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SYSADMIN;
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_USERS_EDITOR;
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_USERS_VIEWER;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +31,7 @@ import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.messages.UserMessages;
 import it.govhub.rest.backoffice.repository.UserFilters;
 import it.govhub.rest.backoffice.repository.UserRepository;
+import it.govhub.rest.backoffice.services.SecurityService;
 import it.govhub.rest.backoffice.services.UserService;
 import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
 import it.govhub.rest.backoffice.utils.ListaUtils;
@@ -46,9 +51,13 @@ public class UserController implements UserApi {
 	@Autowired
 	private UserAssembler userAssembler;
 	
-
+	@Autowired
+	private SecurityService authService;
+	
 	@Override
 	public ResponseEntity<User> readUser(Long id) {
+		
+		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR, RUOLO_GOVHUB_USERS_VIEWER);
 		
 		UserEntity user = this.userRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
@@ -60,7 +69,9 @@ public class UserController implements UserApi {
 	
 	@Override
 	public ResponseEntity<UserList> listUsers(Integer limit, Long offset, String q, Boolean enabled, UserOrdering orderBy) {
-
+		
+		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR, RUOLO_GOVHUB_USERS_VIEWER);
+		
 		Specification<UserEntity> spec = UserFilters.empty();
 		if (q != null) {
 			spec = UserFilters.likeFullName(q).or(UserFilters.likePrincipal(q));
@@ -89,6 +100,8 @@ public class UserController implements UserApi {
 	@Override
 	public ResponseEntity<User> updateUser(Long id, List<PatchOp> patchOp) {
 		
+		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR);
+		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);
 		
@@ -103,6 +116,9 @@ public class UserController implements UserApi {
 	
 	@Override
 	public ResponseEntity<User> createUser(UserCreate userCreate) {
+		
+		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR);
+		
 		UserEntity newUser = this.userService.createUser(userCreate);
 
 		User ret = this.userAssembler.toModel(newUser);

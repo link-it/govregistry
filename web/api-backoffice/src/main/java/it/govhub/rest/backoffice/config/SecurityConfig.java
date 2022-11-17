@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.govhub.rest.backoffice.exception.RestResponseEntityExceptionHandler;
 import it.govhub.rest.backoffice.exception.UnreachableException;
+import it.govhub.rest.backoffice.security.GovhubUserDetailService;
 
 
 /**
@@ -63,8 +64,8 @@ public class SecurityConfig {
 	public static final String RUOLO_GOVHUB_USER = "govhub_user";
 	public static final String RUOLO_GOVHUB_ORGANIZATIONS_EDITOR = "govhub_organizations_editor";
 	public static final String RUOLO_GOVHUB_ORGANIZATIONS_VIEWER = "govhub_organizations_viewer";
-	public static final String RUOLO_GOVHUB_SERVICE_EDITOR = "govhub_service_editor";
-	public static final String RUOLO_GOVHUB_SERVICE_VIEWER = "govhub_service_user";
+	public static final String RUOLO_GOVHUB_SERVICES_EDITOR = "govhub_services_editor";
+	public static final String RUOLO_GOVHUB_SERVICES_VIEWER = "govhub_services_user";
 
 	// impostarli nel componente jee utilizzando la funzione mappableAuthorities al posto di mappableRoles che aggiunge il prefisso 'ROLE_' ad ogni ruolo
 	public static final Set<String> ruoliConsentiti = Set.of
@@ -75,8 +76,8 @@ public class SecurityConfig {
 				RUOLO_GOVHUB_USER,
 				RUOLO_GOVHUB_ORGANIZATIONS_EDITOR,
 				RUOLO_GOVHUB_ORGANIZATIONS_VIEWER,
-				RUOLO_GOVHUB_SERVICE_EDITOR,
-				RUOLO_GOVHUB_SERVICE_VIEWER
+				RUOLO_GOVHUB_SERVICES_EDITOR,
+				RUOLO_GOVHUB_SERVICES_VIEWER
 			);
 	
 	
@@ -95,7 +96,7 @@ public class SecurityConfig {
 		
 		http
 		.authorizeRequests()
-		.antMatchers(HttpMethod.POST, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
+	/*	.antMatchers(HttpMethod.POST, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
 		.antMatchers(HttpMethod.PATCH, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
 		.antMatchers(HttpMethod.GET, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR, RUOLO_GOVHUB_USERS_VIEWER)
 		
@@ -114,8 +115,8 @@ public class SecurityConfig {
 		.antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() 
 		.antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
 		.antMatchers(HttpMethod.GET, "/status").authenticated()
-		.antMatchers(HttpMethod.GET, "/error").authenticated()
-		.anyRequest().denyAll()
+		.antMatchers(HttpMethod.GET, "/error").authenticated()*/
+		.anyRequest().authenticated()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Creazione della sessione in caso non ci sia
 		.and().logout().deleteCookies(JSESSIONID_NAME).invalidateHttpSession(true).logoutSuccessHandler(new DefaultLogoutSuccessHandler()) // Gestione Logout
 		;
@@ -138,7 +139,7 @@ public class SecurityConfig {
 	}
 	
 	
-	@Bean
+	/*@Bean
     public InMemoryUserDetailsManager userDetailsService() throws IOException {
 		Properties properties = PropertiesLoaderUtils.loadAllProperties(this.fileUtenze);
 		if(properties.size() == 0) {
@@ -150,6 +151,11 @@ public class SecurityConfig {
 			}
 		}
 		return new InMemoryUserDetailsManager(properties);
+	}*/
+	
+	@Bean
+	public GovhubUserDetailService userDetailsService() {
+		return new GovhubUserDetailService();
 	}
 	
 	
