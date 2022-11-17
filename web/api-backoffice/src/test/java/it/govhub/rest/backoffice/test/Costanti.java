@@ -1,6 +1,7 @@
 package it.govhub.rest.backoffice.test;
 
 import it.govhub.rest.backoffice.entity.UserEntity;
+import it.govhub.rest.backoffice.security.GovhubPrincipal;
 import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
 
 public class Costanti {
@@ -41,5 +42,17 @@ public class Costanti {
 		userEntity.setPrincipal(Costanti.PRINCIPAL_VBUTERIN);
 		userEntity.setEmail(Costanti.EMAIL_VBUTERIN);
 		return userEntity;
+	}
+	
+	public static GovhubPrincipal getPrincipal_Admin() {
+		UserEntity userEntity = UserEntity.builder()
+				.enabled(true)
+				.email(Costanti.EMAIL_SNAKAMOTO)
+				.principal("amministratore")
+				.id(1L)
+				.build();
+		
+		return new GovhubPrincipal(userEntity);
+				
 	}
 }
