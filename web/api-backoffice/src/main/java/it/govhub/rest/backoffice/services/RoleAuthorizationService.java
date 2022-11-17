@@ -99,7 +99,7 @@ public class RoleAuthorizationService {
 		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
 				.currentRequestAttributes()).getRequest();
 		
-		AuthorizationList ret = ListaUtils.costruisciListaPaginata(auths, curRequest, new AuthorizationList());
+		AuthorizationList ret = ListaUtils.costruisciListaPaginata(auths,  pageRequest.limit, curRequest, new AuthorizationList());
 		
 		for (RoleAuthorizationEntity auth : auths) {
 			ret.addItemsItem(this.authAssembler.toModel(auth));
