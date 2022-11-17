@@ -18,6 +18,8 @@ public class LimitOffsetPageRequest
 	public final long offset;
 	public final int limit;
 	
+	public static final Integer LIMIT_DEFAULT_VALUE = 25;
+	
 	public LimitOffsetPageRequest(Long offset, Integer limit)
 	{
 		this(offset, limit, Sort.unsorted());
@@ -27,7 +29,7 @@ public class LimitOffsetPageRequest
 	{
 		// default per limit a 25
 		if (limit == null ) {
-			limit = 25;
+			limit = LIMIT_DEFAULT_VALUE;
 		}
 		
 		if (limit <= 0) {
