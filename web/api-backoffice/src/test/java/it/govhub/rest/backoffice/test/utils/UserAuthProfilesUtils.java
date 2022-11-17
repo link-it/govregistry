@@ -5,12 +5,14 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import it.govhub.rest.backoffice.config.SecurityConfig;
+import it.govhub.rest.backoffice.test.Costanti;
 
 
 public class UserAuthProfilesUtils {
 
 	public static RequestPostProcessor utenzaAdmin() {
-	    return user("username").password("password").roles(SecurityConfig.RUOLO_GOVHUB_SYSADMIN);
+	    //return user("username").password("password").roles(SecurityConfig.RUOLO_GOVHUB_SYSADMIN);
+		return user(Costanti.getPrincipal_Admin());
 	}
 
 	public static RequestPostProcessor utenzaUserViewer() {
