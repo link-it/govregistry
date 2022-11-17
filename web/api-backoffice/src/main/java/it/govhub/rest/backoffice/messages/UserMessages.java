@@ -11,5 +11,10 @@ public class UserMessages {
 	public static String notFound(Long id) {
 		return "User with id  ["+id+"] not found.";
 	}
+	
+	
+	public static String notFound(String principal) {
+		return "User with principal ["+principal+"] not found.";
+	}
 
 }

@@ -1,5 +1,10 @@
 package it.govhub.rest.backoffice.web;
 
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SERVICES_EDITOR;
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SERVICES_VIEWER;
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SYSADMIN;
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_USERS_EDITOR;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +32,7 @@ import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.messages.ServiceMessages;
 import it.govhub.rest.backoffice.repository.ServiceFilters;
 import it.govhub.rest.backoffice.repository.ServiceRepository;
+import it.govhub.rest.backoffice.services.SecurityService;
 import it.govhub.rest.backoffice.services.ServiceService;
 import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
 import it.govhub.rest.backoffice.utils.ListaUtils;
@@ -45,9 +51,14 @@ public class ServiceController implements ServiceApi {
 	@Autowired
 	private ServiceRepository serviceRepo;
 	
+	@Autowired
+	private SecurityService authService;
+	
 	
 	@Override
 	public ResponseEntity<Service> createService(ServiceCreate serviceCreate) {
+		
+		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getServiceName(), "service_name");
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getDescription(), "description");
@@ -62,6 +73,8 @@ public class ServiceController implements ServiceApi {
 	
 	@Override
 	public ResponseEntity<ServiceList> listServices(Integer limit, Long offset, String q, ServiceOrdering sort) {
+		
+		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICES_VIEWER, RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		Specification<ServiceEntity> spec = ServiceFilters.empty();
 		if (q != null) {
@@ -87,6 +100,8 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> readService(Long id) {
 		
+		this.authService.hasAnyServiceAuthority(id, RUOLO_GOVHUB_SERVICES_VIEWER, RUOLO_GOVHUB_SERVICES_EDITOR);
+		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
 		
@@ -96,6 +111,8 @@ public class ServiceController implements ServiceApi {
 
 	@Override
 	public ResponseEntity<Service> updateService(Long id, List<PatchOp> patchOp) {
+		
+		this.authService.hasAnyServiceAuthority(id,  RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);

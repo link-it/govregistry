@@ -87,6 +87,12 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	}
 	
 	
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ExceptionHandler(NotAuthorizedException.class)
+	public Problem handleConstraintViolation(NotAuthorizedException ex) {
+		return buildProblem(HttpStatus.UNAUTHORIZED, ex.getLocalizedMessage());
+	}
+	
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

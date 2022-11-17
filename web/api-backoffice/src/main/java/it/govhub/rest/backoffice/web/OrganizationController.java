@@ -1,5 +1,9 @@
 package it.govhub.rest.backoffice.web;
 
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR;
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER;
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SYSADMIN;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +33,7 @@ import it.govhub.rest.backoffice.messages.OrganizationMessages;
 import it.govhub.rest.backoffice.repository.OrganizationFilters;
 import it.govhub.rest.backoffice.repository.OrganizationRepository;
 import it.govhub.rest.backoffice.services.OrganizationService;
+import it.govhub.rest.backoffice.services.SecurityService;
 import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
 import it.govhub.rest.backoffice.utils.ListaUtils;
 import it.govhub.rest.backoffice.utils.PostgreSQLUtilities;
@@ -48,9 +53,14 @@ public class OrganizationController implements OrganizationApi {
 	
 	@Autowired
 	private OrganizationService orgService;
+	
+	@Autowired
+	private SecurityService authService;
 
 	@Override
 	public ResponseEntity<Organization> createOrganization(OrganizationCreate org) {
+		
+		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddress(), "office_address");
 		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddressDetails(), "office_address_details");
@@ -67,8 +77,12 @@ public class OrganizationController implements OrganizationApi {
 	}
 
 	
+	// TODO: Qui va filtrato per le organizzazioni per le quali si hanno authorities con ruoli govhub_organization_viewer e 
+	//	govhub_organization_editor
 	@Override
 	public ResponseEntity<OrganizationList> listOrganizations(Integer limit, Long offset, String q, OrganizationOrdering sort) {
+		
+		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_VIEWER, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
 		
 		Specification<OrganizationEntity> spec = OrganizationFilters.empty();
 		if (q != null) {
@@ -93,6 +107,8 @@ public class OrganizationController implements OrganizationApi {
 	@Override
 	public ResponseEntity<Organization> readOrganization(Long id) {
 		
+		this.authService.hasAnyOrganizationAuthority(id, RUOLO_GOVHUB_ORGANIZATIONS_VIEWER, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+
 		Organization ret = this.orgRepo.findById(id)
 			.map( org -> this.orgAssembler.toModel(org))
 			.orElseThrow( () -> new NotFoundException(OrganizationMessages.notFound(id)));
@@ -103,6 +119,9 @@ public class OrganizationController implements OrganizationApi {
 	
 	@Override
 	public ResponseEntity<Organization> updateOrganization(Long id, List<PatchOp> patchOp) {
+		
+		this.authService.hasAnyOrganizationAuthority(id, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);
 		
