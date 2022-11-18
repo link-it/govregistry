@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,7 +81,7 @@ public class OrganizationController implements OrganizationApi {
 	// TODO: Qui va filtrato per le organizzazioni per le quali si hanno authorities con ruoli govhub_organization_viewer e 
 	//	govhub_organization_editor
 	@Override
-	public ResponseEntity<OrganizationList> listOrganizations(Integer limit, Long offset, String q, OrganizationOrdering sort) {
+	public ResponseEntity<OrganizationList> listOrganizations(Direction sortDirection, Integer limit, Long offset, String q, OrganizationOrdering sort) {
 		
 		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_VIEWER, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
 		
@@ -88,7 +89,7 @@ public class OrganizationController implements OrganizationApi {
 		if (q != null) {
 			spec = OrganizationFilters.likeTaxCode(q).or(OrganizationFilters.likeLegalName(q));
 		}
-		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, OrganizationFilters.sort(sort));
+		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, OrganizationFilters.sort(sort, sortDirection));
 		
 		Page<OrganizationEntity> organizations = this.orgRepo.findAll(spec, pageRequest.pageable);
 		

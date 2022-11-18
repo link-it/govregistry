@@ -5,6 +5,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 
 import it.govhub.rest.backoffice.beans.UserOrdering;
@@ -39,7 +40,8 @@ public class UserFilters {
 	}
 	
 	
-	public static Sort sort(UserOrdering sort) {
+
+	public static Sort sort(UserOrdering sort, Direction direction) {
 		
 		if (sort == null) {
 			return Sort.unsorted();
@@ -47,9 +49,9 @@ public class UserFilters {
 		
 		switch (sort) {
 		case FULL_NAME:
-			return Sort.by(Sort.Direction.ASC, UserEntity_.FULL_NAME);
+			return Sort.by(direction, UserEntity_.FULL_NAME);
 		case ID:
-			return Sort.by(Sort.Direction.ASC, UserEntity_.ID);
+			return Sort.by(direction, UserEntity_.ID);
 		default:
 			throw new UnreachableException();
 		}

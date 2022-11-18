@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,7 +69,7 @@ public class UserController implements UserApi {
 
 	
 	@Override
-	public ResponseEntity<UserList> listUsers(Integer limit, Long offset, String q, Boolean enabled, UserOrdering orderBy) {
+	public ResponseEntity<UserList> listUsers(Direction sortDirection, Integer limit, Long offset, String q, Boolean enabled, UserOrdering orderBy) {
 		
 		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR, RUOLO_GOVHUB_USERS_VIEWER);
 		
@@ -80,7 +81,7 @@ public class UserController implements UserApi {
 			spec = spec.and(UserFilters.byEnabled(enabled));
 		}
 		
-		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, UserFilters.sort(orderBy));
+		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, UserFilters.sort(orderBy,sortDirection));
 		
 		Page<UserEntity> users = this.userRepo.findAll(spec, pageRequest.pageable);
 		

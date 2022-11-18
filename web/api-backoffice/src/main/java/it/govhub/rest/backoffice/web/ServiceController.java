@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +72,7 @@ public class ServiceController implements ServiceApi {
 
 	
 	@Override
-	public ResponseEntity<ServiceList> listServices(Integer limit, Long offset, String q, ServiceOrdering sort) {
+	public ResponseEntity<ServiceList> listServices(Direction sortDirection, Integer limit, Long offset, String q, ServiceOrdering sort) {
 		
 		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICES_VIEWER, RUOLO_GOVHUB_SERVICES_EDITOR);
 		
@@ -79,7 +80,7 @@ public class ServiceController implements ServiceApi {
 		if (q != null) {
 			spec = ServiceFilters.likeDescription(q).or(ServiceFilters.likeName(q));
 		}
-		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, ServiceFilters.sort(sort));
+		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, ServiceFilters.sort(sort,sortDirection));
 		
 		Page<ServiceEntity> services = this.serviceRepo.findAll(spec, pageRequest.pageable);
 		

@@ -5,6 +5,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 
 import it.govhub.rest.backoffice.beans.ServiceOrdering;
@@ -35,7 +36,7 @@ public class ServiceFilters {
 	}		
 		
 	
-	public static Sort sort(ServiceOrdering sort) {
+	public static Sort sort(ServiceOrdering sort, Direction direction) {
 		
 		if (sort == null) {
 			return Sort.unsorted();
@@ -43,9 +44,9 @@ public class ServiceFilters {
 		
 		switch (sort) {
 		case SERVICE_NAME:
-			return Sort.by(Sort.Direction.ASC, ServiceEntity_.NAME);
+			return Sort.by(direction, ServiceEntity_.NAME);
 		case ID:
-			return Sort.by(Sort.Direction.ASC, ServiceEntity_.ID);
+			return Sort.by(direction, ServiceEntity_.ID);
 		default:
 			throw new UnreachableException();
 		}

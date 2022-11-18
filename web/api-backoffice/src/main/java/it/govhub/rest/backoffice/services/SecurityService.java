@@ -91,6 +91,7 @@ public class SecurityService {
 		}
 	}
 	
+	
 	private static UserEntity getPrincipal() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
