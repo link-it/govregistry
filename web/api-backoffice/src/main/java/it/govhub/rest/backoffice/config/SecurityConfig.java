@@ -1,9 +1,7 @@
 package it.govhub.rest.backoffice.config;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -15,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,7 +21,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -137,21 +132,7 @@ public class SecurityConfig {
 		serializer.setDomainNamePattern("^.+?\\.(\\w+\\.[a-z]+)$"); 
 		return serializer;
 	}
-	
-	
-	/*@Bean
-    public InMemoryUserDetailsManager userDetailsService() throws IOException {
-		Properties properties = PropertiesLoaderUtils.loadAllProperties(this.fileUtenze);
-		if(properties.size() == 0) {
-			try (FileInputStream fs = new FileInputStream(this.fileUtenze)) {
-				properties.load(fs);
-				if(properties.size() == 0) {
-					throw new IOException("File " + this.fileUtenze + " non esistente o vuoto");
-				}
-			}
-		}
-		return new InMemoryUserDetailsManager(properties);
-	}*/
+
 	
 	@Bean
 	public GovhubUserDetailService userDetailsService() {

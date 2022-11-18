@@ -23,8 +23,8 @@ import it.govhub.rest.backoffice.beans.UserCreate;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.exception.BadRequestException;
 import it.govhub.rest.backoffice.exception.ConflictException;
+import it.govhub.rest.backoffice.exception.ForbiddenException;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
-import it.govhub.rest.backoffice.exception.UnreachableException;
 import it.govhub.rest.backoffice.messages.PatchMessages;
 import it.govhub.rest.backoffice.messages.SecurityMessages;
 import it.govhub.rest.backoffice.messages.UserMessages;
@@ -119,7 +119,7 @@ public class UserService {
 	@Transactional
 	public Profile getProfile(String principal) {
 		UserEntity user = this.userRepo.findByPrincipal(principal)
-				.orElseThrow( () -> new UnreachableException(SecurityMessages.authorizedUserNotInDb(principal)));
+				.orElseThrow( () -> new ForbiddenException(SecurityMessages.authorizedUserNotInDb(principal)));
 		
 		return this.userAssembler.toProfileModel(user);
 	}
