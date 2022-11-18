@@ -156,7 +156,7 @@ class UC_4_FindUsersTest {
 		
 		// Controlli sulla paginazione
 		JsonObject page = userList.getJsonObject("page");
-		assertEquals(1, page.getInt("offset"));
+		assertEquals(0, page.getInt("offset"));
 		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
 		assertEquals(8, page.getInt("total"));
 		
