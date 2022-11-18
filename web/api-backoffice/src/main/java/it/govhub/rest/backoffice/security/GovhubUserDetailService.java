@@ -21,7 +21,7 @@ public class GovhubUserDetailService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		UserEntity user = this.userRepo.findByPrincipal(username)
-				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(username)));
+				.orElseThrow( () -> new ResourceNotFoundException("Credenziali non Valide"));
 		
 		return new GovhubPrincipal(user);
 	}
