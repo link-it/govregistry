@@ -72,7 +72,7 @@ public class ServiceController implements ServiceApi {
 
 	
 	@Override
-	public ResponseEntity<ServiceList> listServices(Direction sortDirection, Integer limit, Long offset, String q, ServiceOrdering sort) {
+	public ResponseEntity<ServiceList> listServices(ServiceOrdering sort, Direction sortDirection, Integer limit, Long offset, String q) {
 		
 		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICES_VIEWER, RUOLO_GOVHUB_SERVICES_EDITOR);
 		

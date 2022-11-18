@@ -38,15 +38,13 @@ public class ServiceFilters {
 	
 	public static Sort sort(ServiceOrdering sort, Direction direction) {
 		
-		if (sort == null) {
-			return Sort.unsorted();
-		}
-		
 		switch (sort) {
 		case SERVICE_NAME:
 			return Sort.by(direction, ServiceEntity_.NAME);
 		case ID:
 			return Sort.by(direction, ServiceEntity_.ID);
+		case UNSORTED:
+			return Sort.unsorted();
 		default:
 			throw new UnreachableException();
 		}

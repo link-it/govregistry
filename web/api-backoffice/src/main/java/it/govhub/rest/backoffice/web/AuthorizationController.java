@@ -48,19 +48,22 @@ public class AuthorizationController implements AuthorizationApi {
 	}
 
 	@Override
-	public ResponseEntity<AuthorizationList> listAuthorizations(Long id, Direction sortDirection, Integer limit, Long offset, AuthorizationOrdering sort) {
+	public ResponseEntity<AuthorizationList> listAuthorizations(Long id, AuthorizationOrdering sort,  Direction sortDirection, Integer limit, Long offset) {
 		
-		Sort orderBy  = Optional.ofNullable(sort)
-			.map( sort1 -> {
-				switch(sort1) {
-				case ID:
-					return Sort.by(sortDirection, RoleAuthorizationEntity_.ID);
-				case ROLE_NAME:
-					return Sort.by(sortDirection, RoleAuthorizationEntity_.ROLE+"."+RoleEntity_.NAME);
-				default:
-					throw new UnreachableException();
-				}
-			}).orElse(Sort.unsorted());
+		Sort orderBy;
+		switch(sort) {
+			case ID:
+				orderBy = Sort.by(sortDirection, RoleAuthorizationEntity_.ID);
+				break;
+			case ROLE_NAME:
+				orderBy = Sort.by(sortDirection, RoleAuthorizationEntity_.ROLE+"."+RoleEntity_.NAME);
+				break;
+			case UNSORTED:
+				orderBy = Sort.unsorted();
+				break;
+			default:
+				throw new UnreachableException();
+		}
 		
 		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, orderBy);
 		
