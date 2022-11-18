@@ -1,5 +1,6 @@
 package it.govhub.rest.backoffice.test;
 
+import it.govhub.rest.backoffice.entity.OrganizationEntity;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.security.GovhubPrincipal;
 import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
@@ -18,6 +19,9 @@ public class Costanti {
 	public static final String PRINCIPAL_VBUTERIN = "vbuterin";
 	public static final String EMAIL_VBUTERIN = "vbuterin@mail.xx";
 	
+	public static final String TAX_CODE_ENTE_CREDITORE_3 = "12345678903";
+	public static final String LEGALNAME_ENTE_CREDITORE_3 = "Ente Creditore 3";
+	
 	public static final String USERS_QUERY_PARAM_LIMIT = "limit";
 	public static final String USERS_QUERY_PARAM_OFFSET = "offset";
 	public static final String USERS_QUERY_PARAM_Q = "q";
@@ -30,21 +34,25 @@ public class Costanti {
 	public static final String QUERY_PARAM_SORT_DIRECTION_ASC = "asc";
 	public static final String QUERY_PARAM_SORT_DIRECTION_DESC = "desc";
 	
+	/* USERS */
+	
 	public static UserEntity getUser_Snakamoto() {
-		UserEntity userEntity = new UserEntity();
-		userEntity.setEnabled(false);
-		userEntity.setFullName(Costanti.FULL_NAME_SATOSHI_NAKAMOTO);
-		userEntity.setPrincipal(Costanti.PRINCIPAL_SNAKAMOTO);
-		userEntity.setEmail(Costanti.EMAIL_SNAKAMOTO);
+		UserEntity userEntity = UserEntity.builder()
+				.enabled(false)
+				.fullName(Costanti.FULL_NAME_SATOSHI_NAKAMOTO)
+				.principal(Costanti.PRINCIPAL_SNAKAMOTO)
+				.email(Costanti.EMAIL_SNAKAMOTO)
+				.build();
 		return userEntity;
 	}
 	
 	public static UserEntity getUser_Vbuterin() {
-		UserEntity userEntity = new UserEntity();
-		userEntity.setEnabled(false);
-		userEntity.setFullName(Costanti.FULL_NAME_VITALIY_BUTERIN);
-		userEntity.setPrincipal(Costanti.PRINCIPAL_VBUTERIN);
-		userEntity.setEmail(Costanti.EMAIL_VBUTERIN);
+		UserEntity userEntity = UserEntity.builder()
+				.enabled(false)
+				.fullName(Costanti.FULL_NAME_VITALIY_BUTERIN)
+				.principal(Costanti.PRINCIPAL_VBUTERIN)
+				.email(Costanti.EMAIL_VBUTERIN)
+				.build();
 		return userEntity;
 	}
 	
@@ -58,5 +66,14 @@ public class Costanti {
 		
 		return new GovhubPrincipal(userEntity);
 				
+	}
+	
+	/* ORGANIZATIONS */
+	
+	public static OrganizationEntity getEnteCreditore3() {
+		return OrganizationEntity.builder()
+				.taxCode(Costanti.TAX_CODE_ENTE_CREDITORE_3)
+				.legalName(Costanti.LEGALNAME_ENTE_CREDITORE_3)
+				.build();
 	}
 }
