@@ -4,9 +4,8 @@ INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (3, '
 INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (4, 'user_editor', 'User Editor', 'user_admin@govhub.it', true);
 INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (5, 'org_viewer', 'Visore Antonio', 'org_viewer@govhub.it', true);
 INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (6, 'org_editor', 'Giovanni Mele', 'org_editor@govhub.it', true);
-INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (7, 'username', 'password', 'org_editor@govhub.it', true);
 
-ALTER SEQUENCE SEQ_USERS RESTART WITH 8;
+ALTER SEQUENCE SEQ_USERS RESTART WITH 7;
 
 
 INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (1, 1, 'govhub_sysadmin');
