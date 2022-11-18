@@ -69,7 +69,7 @@ public class UserController implements UserApi {
 
 	
 	@Override
-	public ResponseEntity<UserList> listUsers(Direction sortDirection, Integer limit, Long offset, String q, Boolean enabled, UserOrdering orderBy) {
+	public ResponseEntity<UserList> listUsers(UserOrdering orderBy, Direction sortDirection, Integer limit, Long offset, String q, Boolean enabled) {
 		
 		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR, RUOLO_GOVHUB_USERS_VIEWER);
 		

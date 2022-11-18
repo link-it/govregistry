@@ -35,15 +35,14 @@ public class OrganizationFilters {
 	}
 
 	public static Sort sort(OrganizationOrdering sort, Direction sortDirection) {
-		if (sort == null) {
-			return Sort.unsorted();
-		}
-		
+
 		switch (sort) {
 		case ID:
-			return Sort.by(Sort.Direction.ASC, OrganizationEntity_.ID);
+			return Sort.by(sortDirection, OrganizationEntity_.ID);
 		case LEGAL_NAME:
-			return Sort.by(Sort.Direction.ASC, OrganizationEntity_.LEGAL_NAME);
+			return Sort.by(sortDirection, OrganizationEntity_.LEGAL_NAME);
+		case UNSORTED:
+			return Sort.unsorted();
 		default:
 			throw new UnreachableException();		
 		}
