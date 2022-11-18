@@ -48,10 +48,10 @@ class UC_5_GetUsersTest {
 	
 	@BeforeEach
 	private void caricaUtenti() {
-		UserEntity user = Costanti.getUser_Vbuterin();
+		UserEntity user = Costanti.getUser_Snakamoto();
 		this.userRepository.save(user);
 		
-		UserEntity user2 = Costanti.getUser_Snakamoto();
+		UserEntity user2 = Costanti.getUser_Vbuterin();
 		this.userRepository.save(user2);
 	}
 	
@@ -70,9 +70,9 @@ class UC_5_GetUsersTest {
 		
 		// Controlli sugli items
 		JsonArray items = userList.getJsonArray("items");
-		assertEquals(2, items.size());
+		assertEquals(8, items.size());
 		
-		JsonObject item1 = items.getJsonObject(0);
+		JsonObject item1 = items.getJsonObject(7); 
 		int idUser1 = item1.getInt("id");
 		
 		result = this.mockMvc.perform(get("/users/{id}",idUser1)

@@ -31,7 +31,6 @@ import it.govhub.rest.backoffice.config.SecurityConfig;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.repository.UserRepository;
 import it.govhub.rest.backoffice.test.Costanti;
-import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -57,7 +56,6 @@ public class UC_1_GetProfileTest {
 	@Test
 	void UC_1_01_GetProfile_UtenzaAdmin_NotAuthorized() throws Exception {
 		this.mockMvc.perform(get("/profile")
-				.with(user("utenza_non_registrata").password("password"))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.status", is(401)))
@@ -70,7 +68,7 @@ public class UC_1_GetProfileTest {
 	@Test
 	void UC_1_02_GetProfile_UtenzaAdmin_Forbidden() throws Exception {
 		this.mockMvc.perform(get("/profile")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(user("utenza_non_registrata").password("password"))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isForbidden())
 				.andExpect(jsonPath("$.status", is(403)))
@@ -99,8 +97,5 @@ public class UC_1_GetProfileTest {
 		assertEquals(user.getFullName(), item.getString("full_name"));
 		assertEquals(user.getPrincipal(), item.getString("principal"));
 		assertEquals(0, authorizations.size());
-		
 	}
-	
-	
 }
