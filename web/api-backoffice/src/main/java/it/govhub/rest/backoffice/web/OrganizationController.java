@@ -81,7 +81,7 @@ public class OrganizationController implements OrganizationApi {
 	// TODO: Qui va filtrato per le organizzazioni per le quali si hanno authorities con ruoli govhub_organization_viewer e 
 	//	govhub_organization_editor
 	@Override
-	public ResponseEntity<OrganizationList> listOrganizations(Direction sortDirection, Integer limit, Long offset, String q, OrganizationOrdering sort) {
+	public ResponseEntity<OrganizationList> listOrganizations(OrganizationOrdering sort, Direction sortDirection, Integer limit, Long offset, String q) {
 		
 		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_VIEWER, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
 		

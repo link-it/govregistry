@@ -43,15 +43,13 @@ public class UserFilters {
 
 	public static Sort sort(UserOrdering sort, Direction direction) {
 		
-		if (sort == null) {
-			return Sort.unsorted();
-		}
-		
 		switch (sort) {
 		case FULL_NAME:
 			return Sort.by(direction, UserEntity_.FULL_NAME);
 		case ID:
 			return Sort.by(direction, UserEntity_.ID);
+		case UNSORTED:
+			return Sort.unsorted();
 		default:
 			throw new UnreachableException();
 		}

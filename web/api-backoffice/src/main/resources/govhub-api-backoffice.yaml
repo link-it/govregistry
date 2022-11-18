@@ -822,7 +822,7 @@ components:
          name: sort
          in: query
          description: Sorting field.
-         required: false
+         required: true
          schema:
             $ref: "#/components/schemas/UserOrdering"           
 
@@ -830,7 +830,7 @@ components:
          name: sort
          in: query
          description: Sorting field.
-         required: false
+         required: true
          schema:
             $ref: "#/components/schemas/OrganizationOrdering"
             
@@ -838,7 +838,7 @@ components:
          name: sort
          in: query
          description: Sorting field.
-         required: false
+         required: true
          schema:
             $ref: "#/components/schemas/AuthorizationOrdering"
             
@@ -847,7 +847,7 @@ components:
          name: sort
          in: query
          description: Sorting field.
-         required: false
+         required: true
          schema:
             $ref: "#/components/schemas/ServiceOrdering"            
             
@@ -1038,27 +1038,35 @@ components:
       UserOrdering:
          type: string
          enum:
+            - unsorted
             - full_name
             - id
+         default: unsorted
 
       OrganizationOrdering:
          type: string
          enum:
+            - unsorted
             - legal_name
             - id
+         default: unsorted          
                         
       AuthorizationOrdering:
          type: string
          enum:
+            - unsorted
             - id
             - role_name            
-      
+         default: unsorted
+               
       ServiceOrdering:
          type: string
          enum:
+            - unsorted
             - id
             - service_name      
-      
+         default: unsorted
+               
       PatchOperations:
          type: "array"
          minItems: 1
