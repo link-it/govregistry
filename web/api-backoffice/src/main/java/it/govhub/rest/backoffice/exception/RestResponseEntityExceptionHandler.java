@@ -93,6 +93,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		return buildProblem(HttpStatus.UNAUTHORIZED, ex.getLocalizedMessage());
 	}
 	
+	
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	@ExceptionHandler(ForbiddenException.class)
+	public Problem handleConstraintViolation(ForbiddenException ex) {
+		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage());
+	}
+	
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
