@@ -5,6 +5,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 
 import it.govhub.rest.backoffice.beans.OrganizationOrdering;
@@ -33,7 +34,7 @@ public class OrganizationFilters {
 			cb.like(cb.upper(root.get(OrganizationEntity_.legalName)), "%"+legalName.toUpperCase()+"%");		
 	}
 
-	public static Sort sort(OrganizationOrdering sort) {
+	public static Sort sort(OrganizationOrdering sort, Direction sortDirection) {
 		if (sort == null) {
 			return Sort.unsorted();
 		}

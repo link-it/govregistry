@@ -85,6 +85,7 @@ paths:
          - $ref: "#/components/parameters/q_query"
          - $ref: "#/components/parameters/enabled_query"
          - $ref: "#/components/parameters/user_ordering_query"
+         - $ref: "#/components/parameters/sort_direction_query"
       responses:
         '200':
           description: Successful operation
@@ -219,6 +220,7 @@ paths:
          - $ref: "#/components/parameters/limit"
          - $ref: "#/components/parameters/offset"
          - $ref: "#/components/parameters/authorization_ordering_query"
+         - $ref: "#/components/parameters/sort_direction_query"
       responses:
         '200':
           description: Successful operation
@@ -339,6 +341,7 @@ paths:
          - $ref: "#/components/parameters/offset"
          - $ref: "#/components/parameters/q_query"
          - $ref: "#/components/parameters/organization_ordering_query"
+         - $ref: "#/components/parameters/sort_direction_query"
       responses:
         '200':
           description: Successful operation
@@ -468,6 +471,7 @@ paths:
          - $ref: "#/components/parameters/offset"
          - $ref: "#/components/parameters/q_query"
          - $ref: "#/components/parameters/service_ordering_query"
+         - $ref: "#/components/parameters/sort_direction_query"
       responses:
         '200':
           description: Successful operation
@@ -804,7 +808,15 @@ components:
          description: filter by status
          required: false
          schema:
-            type: boolean                      
+            type: boolean
+            
+      sort_direction_query:
+         name: sort_direction
+         in: query
+         description: Direction Sorting field.
+         required: true
+         schema:
+            $ref: "#/components/schemas/Direction"                      
            
       user_ordering_query:
          name: sort
@@ -1015,6 +1027,14 @@ components:
          example: "user_1"
          pattern: ^[^\u0000]*$
          
+         
+      Direction:
+         type: string
+         enum:
+            - asc
+            - desc
+         default: asc  
+                  
       UserOrdering:
          type: string
          enum:

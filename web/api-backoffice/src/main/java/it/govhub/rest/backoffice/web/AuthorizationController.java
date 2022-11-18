@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,15 +48,15 @@ public class AuthorizationController implements AuthorizationApi {
 	}
 
 	@Override
-	public ResponseEntity<AuthorizationList> listAuthorizations(Long id, Integer limit, Long offset, AuthorizationOrdering sort) {
+	public ResponseEntity<AuthorizationList> listAuthorizations(Long id, Direction sortDirection, Integer limit, Long offset, AuthorizationOrdering sort) {
 		
 		Sort orderBy  = Optional.ofNullable(sort)
 			.map( sort1 -> {
 				switch(sort1) {
 				case ID:
-					return Sort.by(Sort.Direction.ASC, RoleAuthorizationEntity_.ID);
+					return Sort.by(sortDirection, RoleAuthorizationEntity_.ID);
 				case ROLE_NAME:
-					return Sort.by(Sort.Direction.ASC, RoleAuthorizationEntity_.ROLE+"."+RoleEntity_.NAME);
+					return Sort.by(sortDirection, RoleAuthorizationEntity_.ROLE+"."+RoleEntity_.NAME);
 				default:
 					throw new UnreachableException();
 				}
