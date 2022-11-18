@@ -18,6 +18,11 @@ INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (6, 1, 
 ALTER SEQUENCE SEQ_GOVHUB_ROLES RESTART WITH 7;
 
 
+INSERT INTO public.organizations (id, tax_code, legal_name) VALUES (1, '12345678901', 'Ente Creditore');
+INSERT INTO public.organizations (id, tax_code, legal_name) VALUES (2, '12345678902', 'Ente Creditore 2');
+
+ALTER SEQUENCE SEQ_ORGANIZATIONS RESTART WITH 3;
+
 -- amministratore -> govhub_sysadming
 
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (1, 1, 1);

@@ -23,8 +23,12 @@ public class Costanti {
 	public static final String USERS_QUERY_PARAM_Q = "q";
 	public static final String USERS_QUERY_PARAM_ENABLED = "enabled";
 	public static final String USERS_QUERY_PARAM_SORT = "sort";
+	public static final String USERS_QUERY_PARAM_SORT_DIRECTION = "sort_direction";
 	
 	public static final Integer USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE = LimitOffsetPageRequest.LIMIT_DEFAULT_VALUE;
+	
+	public static final String QUERY_PARAM_SORT_DIRECTION_ASC = "asc";
+	public static final String QUERY_PARAM_SORT_DIRECTION_DESC = "desc";
 	
 	public static UserEntity getUser_Snakamoto() {
 		UserEntity userEntity = new UserEntity();
