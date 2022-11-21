@@ -37,7 +37,7 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @DisplayName("Test di censimento Utenti")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-class UC_1_CreateUserTest {
+class User_UC_1_CreateUserTest {
 
 	@Autowired
 	private MockMvc mockMvc;
