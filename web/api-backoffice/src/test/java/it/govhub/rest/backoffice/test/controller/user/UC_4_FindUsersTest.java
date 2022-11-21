@@ -349,9 +349,6 @@ class UC_4_FindUsersTest {
 	
 	@Test
 	void UC_4_11_FindAllOk_OffsetLimit() throws Exception {
-		UserEntity user = Costanti.getUser_Snakamoto();		
-		UserEntity user2 = Costanti.getUser_Vbuterin();
-		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "3");
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "2");
@@ -377,5 +374,81 @@ class UC_4_FindUsersTest {
 		
 		assertEquals("user_viewer", items.getJsonObject(0).getString("principal"));
 		assertEquals("user_editor", items.getJsonObject(1).getString("principal"));
+	}
+	
+	@Test
+	void UC_4_12_FindAllOk_SortFullnameDesc() throws Exception {
+		UserEntity user = Costanti.getUser_Snakamoto();
+		UserEntity user2 = Costanti.getUser_Vbuterin();
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add(Costanti.USERS_QUERY_PARAM_SORT, "full_name");
+		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
+		
+		MvcResult result = this.mockMvc.perform(get("/users").params(params )
+				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		JsonObject userList = reader.readObject();
+		
+		// Controlli sulla paginazione
+		JsonObject page = userList.getJsonObject("page");
+		assertEquals(0, page.getInt("offset"));
+		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
+		assertEquals(8, page.getInt("total"));
+		
+		// Controlli sugli items
+		JsonArray items = userList.getJsonArray("items");
+		assertEquals(8, items.size());
+
+		assertEquals(user2.getPrincipal(), items.getJsonObject(0).getString("principal"));
+		assertEquals("org_viewer", items.getJsonObject(1).getString("principal"));
+		assertEquals("user_editor", items.getJsonObject(2).getString("principal"));
+		assertEquals(user.getPrincipal(), items.getJsonObject(3).getString("principal"));
+		assertEquals("ospite", items.getJsonObject(4).getString("principal"));
+		assertEquals("user_viewer", items.getJsonObject(5).getString("principal"));
+		assertEquals("org_editor", items.getJsonObject(6).getString("principal"));
+		assertEquals("amministratore", items.getJsonObject(7).getString("principal"));
+	}
+	
+	@Test
+	void UC_4_13_FindAllOk_SortIdDesc() throws Exception {
+		UserEntity user = Costanti.getUser_Snakamoto();
+		UserEntity user2 = Costanti.getUser_Vbuterin();
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add(Costanti.USERS_QUERY_PARAM_SORT, "id");
+		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
+		
+		MvcResult result = this.mockMvc.perform(get("/users").params(params )
+				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		JsonObject userList = reader.readObject();
+		
+		// Controlli sulla paginazione
+		JsonObject page = userList.getJsonObject("page");
+		assertEquals(0, page.getInt("offset"));
+		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
+		assertEquals(8, page.getInt("total"));
+		
+		// Controlli sugli items
+		JsonArray items = userList.getJsonArray("items");
+		assertEquals(8, items.size());
+
+		assertEquals(user2.getPrincipal(), items.getJsonObject(0).getString("principal"));
+		assertEquals(user.getPrincipal(), items.getJsonObject(1).getString("principal"));
+		assertEquals("org_editor", items.getJsonObject(2).getString("principal"));
+		assertEquals("org_viewer", items.getJsonObject(3).getString("principal"));
+		assertEquals("user_editor", items.getJsonObject(4).getString("principal"));
+		assertEquals("user_viewer", items.getJsonObject(5).getString("principal"));
+		assertEquals("ospite", items.getJsonObject(6).getString("principal"));
+		assertEquals("amministratore", items.getJsonObject(7).getString("principal"));
 	}
 }
