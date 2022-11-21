@@ -948,6 +948,9 @@ components:
       Role:
          type: object
          additionalProperties: false
+         required:
+            - id
+            - role_name
          properties:
             id: 
                $ref: "#/components/schemas/RoleId"
@@ -956,6 +959,13 @@ components:
                pattern: .+
                maxLength: 256
                example: govhub-sender
+            assignable_roles:
+               type: array
+               items:
+                  type: string
+                  pattern: .+
+                  maxLength: 256
+                  example: govhub-sender                  
                    
                      
       AuthorizationCreate:
@@ -963,6 +973,8 @@ components:
          additionalProperties: false
          required:
             - role
+            - organizations
+            - services
          properties:
             role:
                $ref: "#/components/schemas/RoleId"               

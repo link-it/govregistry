@@ -14,11 +14,14 @@ INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (3, 1, 
 INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (4, 1, 'govhub_user');
 INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (5, 1, 'govhub_organizations_editor');
 INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (6, 1, 'govhub_organizations_viewer');
+INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (7, 1, 'govhub_role_assigner');
 
-ALTER SEQUENCE SEQ_GOVHUB_ROLES RESTART WITH 7;
+ALTER SEQUENCE SEQ_GOVHUB_ROLES RESTART WITH 8;
+
+INSERT INTO public.govhub_assignable_roles (role_id, assignable_role_id) VALUES (7, 6);
 
 
--- amministratore -> govhub_sysadming
+-- amministratore -> govhub_sysadmin
 
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (1, 1, 1);
 

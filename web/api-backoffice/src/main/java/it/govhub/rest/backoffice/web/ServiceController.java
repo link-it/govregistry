@@ -80,6 +80,18 @@ public class ServiceController implements ServiceApi {
 		if (q != null) {
 			spec = ServiceFilters.likeDescription(q).or(ServiceFilters.likeName(q));
 		}
+
+		// TODO: Filtrare per autorizzazione
+		// Due metodi:
+		// (1) :
+		//		Faccio prima una query per recuperare gli id dei servizi sui quali ho accesso in lettura.
+		//		Poi faccio un in(readableIds) se questa lista non è vuota, altrimenti posso leggere tutto.
+		
+		// (2):
+		//	Faccio Unica Query con Subquery
+		
+		
+		
 		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, ServiceFilters.sort(sort,sortDirection));
 		
 		Page<ServiceEntity> services = this.serviceRepo.findAll(spec, pageRequest.pageable);

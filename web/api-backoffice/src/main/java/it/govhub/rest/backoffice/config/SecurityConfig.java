@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -45,9 +45,6 @@ import it.govhub.rest.backoffice.security.GovhubUserDetailService;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Value("${spring.security.userPropertyFile}")
-	String fileUtenze;
-	
 	@Autowired
 	private ObjectMapper jsonMapper;
 	
@@ -91,6 +88,9 @@ public class SecurityConfig {
 		
 		http
 		.authorizeRequests()
+		// richieste GET Schema open-api accessibile a tutti
+		.antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() 
+		.antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
 	/*	.antMatchers(HttpMethod.POST, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
 		.antMatchers(HttpMethod.PATCH, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR)
 		.antMatchers(HttpMethod.GET, "/users/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_USERS_EDITOR, RUOLO_GOVHUB_USERS_VIEWER)
@@ -106,9 +106,7 @@ public class SecurityConfig {
 		.antMatchers(HttpMethod.PATCH, "/services/**").hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICE_EDITOR)
 		
 		.antMatchers(HttpMethod.GET, "/profile").hasAnyRole(ruoliConsentiti.toArray(new String[0]))
-		// richieste GET Schema open-api accessibile a tutti
-		.antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() 
-		.antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+
 		.antMatchers(HttpMethod.GET, "/status").authenticated()
 		.antMatchers(HttpMethod.GET, "/error").authenticated()*/
 		.anyRequest().authenticated()

@@ -54,6 +54,9 @@ public class SecurityService {
 		
 		UserEntity user = getPrincipal();
 		
+		// L'admin lavora automaticamente su tutte le organizzazioni e servizi, per cui non serve controllare
+		// puntualmente il servizio
+		
 		Specification<RoleAuthorizationEntity> adminSpec =  RoleAuthorizationFilters.byRoleName(SecurityConfig.RUOLO_GOVHUB_SYSADMIN)
 				.and(RoleAuthorizationFilters.byUser(user.getId()))
 				.and(RoleAuthorizationFilters.expiresAfter(OffsetDateTime.now()));
@@ -75,6 +78,9 @@ public class SecurityService {
 	
 		UserEntity user = getPrincipal();
 		
+		// L'admin lavora automaticamente su tutte le organizzazioni e servizi, per cui non serve controllare
+		// puntualmente l'organizzazione
+		
 		Specification<RoleAuthorizationEntity> adminSpec =  RoleAuthorizationFilters.byRoleName(SecurityConfig.RUOLO_GOVHUB_SYSADMIN)
 				.and(RoleAuthorizationFilters.byUser(user.getId()))
 				.and(RoleAuthorizationFilters.expiresAfter(OffsetDateTime.now()));
@@ -92,7 +98,7 @@ public class SecurityService {
 	}
 	
 	
-	private static UserEntity getPrincipal() {
+	public static UserEntity getPrincipal() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
 		return  principal.getUser();
