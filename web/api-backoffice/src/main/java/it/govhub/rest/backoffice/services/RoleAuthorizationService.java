@@ -1,8 +1,7 @@
 package it.govhub.rest.backoffice.services;
 
-import static it.govhub.rest.backoffice.utils.ListaUtils.emptyIfNull;
-
-import java.util.Collections;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,22 +16,27 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import it.govhub.rest.backoffice.assemblers.AuthorizationAssembler;
+import it.govhub.rest.backoffice.beans.Authorization;
 import it.govhub.rest.backoffice.beans.AuthorizationCreate;
 import it.govhub.rest.backoffice.beans.AuthorizationList;
+import it.govhub.rest.backoffice.config.SecurityConfig;
 import it.govhub.rest.backoffice.entity.OrganizationEntity;
 import it.govhub.rest.backoffice.entity.RoleAuthorizationEntity;
 import it.govhub.rest.backoffice.entity.RoleEntity;
 import it.govhub.rest.backoffice.entity.ServiceEntity;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.exception.BadRequestException;
+import it.govhub.rest.backoffice.exception.NotAuthorizedException;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.messages.OrganizationMessages;
 import it.govhub.rest.backoffice.messages.RoleMessages;
+import it.govhub.rest.backoffice.messages.ServiceMessages;
 import it.govhub.rest.backoffice.messages.UserMessages;
 import it.govhub.rest.backoffice.repository.OrganizationRepository;
 import it.govhub.rest.backoffice.repository.RoleAuthorizationFilters;
 import it.govhub.rest.backoffice.repository.RoleAuthorizationRepository;
 import it.govhub.rest.backoffice.repository.RoleRepository;
+import it.govhub.rest.backoffice.repository.ServiceRepository;
 import it.govhub.rest.backoffice.repository.UserRepository;
 import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
 import it.govhub.rest.backoffice.utils.ListaUtils;
@@ -50,42 +54,73 @@ public class RoleAuthorizationService {
 	private RoleRepository roleRepo;
 	
 	@Autowired
+	private ServiceRepository serviceRepo;
+	
+	@Autowired
 	private RoleAuthorizationRepository authRepo;
 	
 	@Autowired
 	private AuthorizationAssembler authAssembler;
 
 	@Transactional
-	public RoleAuthorizationEntity assignAuthorization(Long id, AuthorizationCreate authorization) {
+	public Authorization assignAuthorization(Long id, AuthorizationCreate authorization) {
 		
-		UserEntity principal = this.userRepo.findById(id)
+		UserEntity assignee = this.userRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
 		
 		RoleEntity role = this.roleRepo.findById(authorization.getRole())
 				.orElseThrow( () -> new BadRequestException(RoleMessages.notFound(id)));
 		
-		Set<OrganizationEntity> organizations = emptyIfNull(authorization.getOrganizations())
-				.stream()
-				.map( orgId -> {
-						var org = this.orgRepo.findById(orgId);
-						if (org.isEmpty()) {
-							throw new BadRequestException(OrganizationMessages.notFound(orgId));
-						}						
-						return org.get();
-				}).collect(Collectors.toSet());
+		UserEntity principal = SecurityService.getPrincipal();
 		
-		Set<ServiceEntity> services = Collections.emptySet();		// TODO
+		// In quanto principal posso assegnare solo i ruoli che sono fra i mei assignable_roles
+		// Posso assegnarli se il principal ha una expiration_date superiore a quella da assegnare
+		// rispetto al ruolo che ha fra gli assignable_roles il ruolo da assegnare
+		// Devo cercare una RoleAuthorizationEntity che me lo fa fare
+		
+		Specification<RoleAuthorizationEntity> spec = RoleAuthorizationFilters.byUser(principal.getId())
+				.and(RoleAuthorizationFilters.byAssignableRole(authorization.getRole()))
+				.and(RoleAuthorizationFilters.onServices(authorization.getServices()))
+				.and(RoleAuthorizationFilters.onOrganizations(authorization.getOrganizations()))
+				.and(RoleAuthorizationFilters.expiresAfter(authorization.getExpirationDate()));
+		
+		Specification<RoleAuthorizationEntity> adminSpec = RoleAuthorizationFilters.byAdmin(principal.getId());
+		
+		if (this.authRepo.findAll(spec.or(adminSpec)).isEmpty()) {
+			throw new NotAuthorizedException();
+		}
+
+		// Colleziono organizzazioni e servizi
+		
+		Set<OrganizationEntity> organizations = new HashSet<>(this.orgRepo.findAllById(authorization.getOrganizations()));
+		Set<Long> orgIds = organizations.stream().map(OrganizationEntity::getId).collect(Collectors.toSet());
+		
+		for (Long oid: authorization.getOrganizations()) {
+			if (!orgIds.contains(oid)) {
+				throw new BadRequestException(OrganizationMessages.notFound(oid));
+			}
+		}
+	
+		Set<ServiceEntity> services  = new HashSet<>(this.serviceRepo.findAllById(authorization.getServices()));
+		Set<Long> foundIds = services.stream().map(ServiceEntity::getId).collect(Collectors.toSet());
+		
+		for (Long sid : authorization.getServices()) {
+			if (!foundIds.contains(sid)) {
+				throw new BadRequestException(ServiceMessages.notFound(sid));
+			}			
+		}
 		
 		RoleAuthorizationEntity newAuthorization = RoleAuthorizationEntity.builder()
-			.user(principal)
+			.user(assignee)
 			.role(role)
 			.organizations(organizations)
 			.services(services)
 			.expirationDate(authorization.getExpirationDate())
 			.build();
 		
-		return this.authRepo.save(newAuthorization);
-
+		newAuthorization = this.authRepo.save(newAuthorization);
+		
+		return this.authAssembler.toModel(newAuthorization);
 	}
 
 	

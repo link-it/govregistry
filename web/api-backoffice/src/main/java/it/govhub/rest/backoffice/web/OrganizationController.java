@@ -78,12 +78,21 @@ public class OrganizationController implements OrganizationApi {
 	}
 
 	
-	// TODO: Qui va filtrato per le organizzazioni per le quali si hanno authorities con ruoli govhub_organization_viewer e 
-	//	govhub_organization_editor
 	@Override
 	public ResponseEntity<OrganizationList> listOrganizations(OrganizationOrdering sort, Direction sortDirection, Integer limit, Long offset, String q) {
 		
 		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_VIEWER, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+
+		
+		// TODO: Qui va filtrato per le organizzazioni per le quali si hanno authorities con ruoli govhub_organization_viewer e 
+		//	govhub_organization_editor
+		// Due metodi:
+		// (1) :
+		//		Faccio prima una query per recuperare gli id dei servizi sui quali ho accesso in lettura.
+		//		Poi faccio un in(readableIds) se questa lista non è vuota, altrimenti posso leggere tutto.
+		
+		// (2):
+		//	Faccio Unica Query+Subquery
 		
 		Specification<OrganizationEntity> spec = OrganizationFilters.empty();
 		if (q != null) {

@@ -1,10 +1,9 @@
 package it.govhub.rest.backoffice.web;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,12 +16,17 @@ import it.govhub.rest.backoffice.beans.AuthorizationList;
 import it.govhub.rest.backoffice.beans.AuthorizationOrdering;
 import it.govhub.rest.backoffice.entity.RoleAuthorizationEntity;
 import it.govhub.rest.backoffice.entity.RoleAuthorizationEntity_;
+import it.govhub.rest.backoffice.entity.RoleEntity;
 import it.govhub.rest.backoffice.entity.RoleEntity_;
+import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.exception.UnreachableException;
 import it.govhub.rest.backoffice.messages.RoleMessages;
+import it.govhub.rest.backoffice.repository.RoleAuthorizationFilters;
 import it.govhub.rest.backoffice.repository.RoleAuthorizationRepository;
+import it.govhub.rest.backoffice.repository.RoleRepository;
 import it.govhub.rest.backoffice.services.RoleAuthorizationService;
+import it.govhub.rest.backoffice.services.SecurityService;
 import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
 
 @RestController
@@ -36,13 +40,14 @@ public class AuthorizationController implements AuthorizationApi {
 	
 	@Autowired
 	public RoleAuthorizationRepository authRepo;
+	
+	@Autowired
+	public RoleRepository roleRepo;
 
 	@Override
 	public ResponseEntity<Authorization> assignAuthorization(Long id, AuthorizationCreate authorization) {
 		
-		RoleAuthorizationEntity newAuthorization = this.authService.assignAuthorization(id, authorization);
-		
-		Authorization ret = this.authAssembler.toModel(newAuthorization);
+		Authorization ret =  this.authService.assignAuthorization(id, authorization);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(ret);
 	}

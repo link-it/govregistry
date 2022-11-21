@@ -49,6 +49,11 @@ public class AuthorizationAssembler  extends RepresentationModelAssemblerSupport
 		Role ret = new Role();
 		BeanUtils.copyProperties(role, ret);
 		ret.setRoleName(role.getName());
+		ret.setAssignableRoles(
+				role.getAssignableRoles().stream()
+					.map(RoleEntity::getName)
+					.collect(Collectors.toList())
+				);
 		return ret;
 	}
 	

@@ -54,7 +54,7 @@ public class RoleEntity {
 	@JoinTable(
 			name = "govhub_assignable_roles", 
 			joinColumns = @JoinColumn(name = "role_id"),
-			inverseJoinColumns = @JoinColumn(name = "assignable_role_id" )	)
+			inverseJoinColumns = @JoinColumn(name = "assignable_role_id" ))
 	private Set<RoleEntity> assignableRoles;
 	
 }
