@@ -74,6 +74,17 @@ public class Costanti {
 		return OrganizationEntity.builder()
 				.taxCode(Costanti.TAX_CODE_ENTE_CREDITORE_3)
 				.legalName(Costanti.LEGALNAME_ENTE_CREDITORE_3)
+				.officeAddress("Piazza Italia 1")
+				.officeAddressDetails("Piazza Italia 1")
+				.officeAt("Interno 1")
+				.officeEmailAddress("entecreditore3@email.com")
+				.officeForeignState("Italy")
+				.officeMunicipality("Roma")
+				.officeMunicipalityDetails("Municipio 3")
+				.officePecAddress("entecreditore3@pec.it")
+				.officePhoneNumber("00 1234 5678")
+				.officeProvince("RO")
+				.officeZip("0000")
 				.build();
 	}
 }
