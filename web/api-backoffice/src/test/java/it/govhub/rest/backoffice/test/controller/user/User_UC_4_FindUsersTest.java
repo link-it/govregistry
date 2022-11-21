@@ -40,7 +40,7 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @DisplayName("Test di lettura degli Utenti")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-class UC_4_FindUsersTest {
+class User_UC_4_FindUsersTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -450,5 +450,22 @@ class UC_4_FindUsersTest {
 		assertEquals("user_viewer", items.getJsonObject(5).getString("principal"));
 		assertEquals("ospite", items.getJsonObject(6).getString("principal"));
 		assertEquals("amministratore", items.getJsonObject(7).getString("principal"));
+	}
+	
+	@Test
+	void UC_4_14_FindAllOk_InvalidSortParam() throws Exception {
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add(Costanti.USERS_QUERY_PARAM_SORT, "XXX");
+		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
+		
+		this.mockMvc.perform(get("/users").params(params )
+				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.status", is(400)))
+				.andExpect(jsonPath("$.title", is("Bad Request")))
+				.andExpect(jsonPath("$.type").isString())
+				.andExpect(jsonPath("$.detail").isString())
+				.andReturn();
 	}
 }
