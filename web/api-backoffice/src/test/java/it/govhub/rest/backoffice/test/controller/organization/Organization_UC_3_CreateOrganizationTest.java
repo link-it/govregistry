@@ -1,6 +1,7 @@
 package it.govhub.rest.backoffice.test.controller.organization;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -13,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import javax.json.Json;
 import javax.json.JsonReader;
 
+import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,8 +180,8 @@ public class Organization_UC_3_CreateOrganizationTest {
 				.add("office_phone_number", ente.getOfficePhoneNumber())
 				.add("office_province", ente.getOfficeProvince())
 				.add("office_zip", ente.getOfficeZip())
-				.add("logo", new String(ente.getLogo()))
-				.add("logo_miniature", new String(ente.getLogoMiniature()))
+				.add("logo", new String(Base64.encodeBase64(ente.getLogo())))
+				.add("logo_miniature", new String(Base64.encodeBase64(ente.getLogoMiniature())))
 				.build()
 				.toString();
 		
@@ -205,8 +207,8 @@ public class Organization_UC_3_CreateOrganizationTest {
 				.andExpect(jsonPath("$.office_phone_number", is(ente.getOfficePhoneNumber())))
 				.andExpect(jsonPath("$.office_province", is(ente.getOfficeProvince())))
 				.andExpect(jsonPath("$.office_zip", is(ente.getOfficeZip())))
-				.andExpect(jsonPath("$.logo", is(new String(ente.getLogo()))))
-				.andExpect(jsonPath("$.logo_miniature", is(new String(ente.getLogoMiniature()))))
+				.andExpect(jsonPath("$.logo", is(Base64.encodeBase64String(ente.getLogo()))))
+				.andExpect(jsonPath("$.logo_miniature", is(Base64.encodeBase64String(ente.getLogoMiniature()))))
 				.andReturn();
 		
 		// Leggo l'organization dal servizio e verifico
@@ -218,8 +220,6 @@ public class Organization_UC_3_CreateOrganizationTest {
 		assertEquals(id, organizationEntity.getId());
 		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
 		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
 		assertEquals(ente.getOfficeAddress(), organizationEntity.getOfficeAddress());
 		assertEquals(ente.getOfficeAddressDetails(), organizationEntity.getOfficeAddressDetails());
 		assertEquals(ente.getOfficeAt(), organizationEntity.getOfficeAt());
@@ -231,8 +231,8 @@ public class Organization_UC_3_CreateOrganizationTest {
 		assertEquals(ente.getOfficePhoneNumber(), organizationEntity.getOfficePhoneNumber());
 		assertEquals(ente.getOfficeProvince(), organizationEntity.getOfficeProvince());
 		assertEquals(ente.getOfficeZip(), organizationEntity.getOfficeZip());
-		assertEquals(ente.getLogo(), organizationEntity.getLogo());
-		assertEquals(ente.getLogoMiniature(), organizationEntity.getLogoMiniature());
+		assertArrayEquals(ente.getLogo(), organizationEntity.getLogo());
+		assertArrayEquals(ente.getLogoMiniature(), organizationEntity.getLogoMiniature());
 		
 	}
 }

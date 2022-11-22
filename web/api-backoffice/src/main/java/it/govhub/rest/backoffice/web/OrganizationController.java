@@ -6,7 +6,6 @@ import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SYSAD
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.webjars.NotFoundException;
 
 import com.github.fge.jsonpatch.JsonPatch;
 
@@ -32,7 +30,7 @@ import it.govhub.rest.backoffice.beans.OrganizationList;
 import it.govhub.rest.backoffice.beans.OrganizationOrdering;
 import it.govhub.rest.backoffice.beans.PatchOp;
 import it.govhub.rest.backoffice.entity.OrganizationEntity;
-import it.govhub.rest.backoffice.entity.UserEntity;
+import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.messages.OrganizationMessages;
 import it.govhub.rest.backoffice.repository.OrganizationFilters;
 import it.govhub.rest.backoffice.repository.OrganizationRepository;
@@ -131,7 +129,7 @@ public class OrganizationController implements OrganizationApi {
 
 		Organization ret = this.orgRepo.findById(id)
 			.map( org -> this.orgAssembler.toModel(org))
-			.orElseThrow( () -> new NotFoundException(OrganizationMessages.notFound(id)));
+			.orElseThrow( () -> new ResourceNotFoundException(OrganizationMessages.notFound(id)));
 		
 		return ResponseEntity.ok(ret);
 	}

@@ -95,7 +95,7 @@ public class RoleAuthorizationFilters {
 		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
 			cb.or(
 					cb.isEmpty(root.get(RoleAuthorizationEntity_.organizations)),
-					cb.literal(id).in(root.join(RoleAuthorizationEntity_.organizations).get(OrganizationEntity_.id)));
+					cb.literal(id).in(root.join(RoleAuthorizationEntity_.organizations, JoinType.LEFT).get(OrganizationEntity_.id)));
 	}
 
 	

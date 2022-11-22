@@ -21,6 +21,6 @@ public class Base64String {
 	 *  
 	 */
 	public Base64String(byte[] value) {
-		
+		this.value = new String(Base64.encodeBase64(value));
 	}
 }

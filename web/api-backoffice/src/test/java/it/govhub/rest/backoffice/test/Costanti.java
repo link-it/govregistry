@@ -1,5 +1,8 @@
 package it.govhub.rest.backoffice.test;
 
+
+import org.apache.commons.codec.binary.Base64;
+
 import it.govhub.rest.backoffice.entity.OrganizationEntity;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.security.GovhubPrincipal;
@@ -87,8 +90,8 @@ public class Costanti {
 				.officePhoneNumber("00 1234 5678")
 				.officeProvince("RO")
 				.officeZip("0000")
-				.logo(LOGO_ENTE_CREDITORE_3)
-				.logoMiniature(LOGO_MINIATURA_ENTE_CREDITORE_3)
+				.logo(Base64.decodeBase64(LOGO_ENTE_CREDITORE_3))
+				.logoMiniature(Base64.decodeBase64(LOGO_MINIATURA_ENTE_CREDITORE_3))
 				.build();
 	}
 }
