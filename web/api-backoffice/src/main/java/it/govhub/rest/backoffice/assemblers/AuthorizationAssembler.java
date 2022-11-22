@@ -1,6 +1,7 @@
 package it.govhub.rest.backoffice.assemblers;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -9,7 +10,9 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.stereotype.Component;
 
 import it.govhub.rest.backoffice.beans.Authorization;
+import it.govhub.rest.backoffice.beans.OrganizationAuthItem;
 import it.govhub.rest.backoffice.beans.Role;
+import it.govhub.rest.backoffice.beans.ServiceAuthItem;
 import it.govhub.rest.backoffice.entity.RoleAuthorizationEntity;
 import it.govhub.rest.backoffice.entity.RoleEntity;
 import it.govhub.rest.backoffice.web.AuthorizationController;
@@ -19,6 +22,9 @@ public class AuthorizationAssembler  extends RepresentationModelAssemblerSupport
 	
 	@Autowired
 	private OrganizationAuthItemAssembler orgAuthItemAssembler;
+	
+	@Autowired
+	private ServiceAuthItemAssembler serviceAuthItemAssembler;
 
 	public AuthorizationAssembler() {
 		super(AuthorizationController.class, Authorization.class);
@@ -32,9 +38,14 @@ public class AuthorizationAssembler  extends RepresentationModelAssemblerSupport
 		ret.setId(auth.getId());
 		ret.setExpirationDate(auth.getExpirationDate());
 		ret.setRole(this.toModel(auth.getRole()));
-		ret.setServices(Collections.emptyList());	// TODO
 		
-		var  organizations = auth.getOrganizations().stream()
+		List<ServiceAuthItem> services = auth.getServices().stream()
+				.map(this.serviceAuthItemAssembler::toModel)
+				.collect(Collectors.toList());
+		
+		ret.setServices(services);
+		
+		List<OrganizationAuthItem> organizations = auth.getOrganizations().stream()
 				.map(this.orgAuthItemAssembler::toModel)
 				.collect(Collectors.toList());
 		

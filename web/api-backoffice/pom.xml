@@ -214,7 +214,6 @@
 							<inputSpec>${project.basedir}/src/main/resources/govhub-api-backoffice.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<typeMappings>base64=it.govhub.rest.backoffice.utils.Base64String</typeMappings>
-							<!-- <languageSpecificPrimitives>Direction</languageSpecificPrimitives> -->
 							<importMappings>
 								<importMapping>Direction=org.springframework.data.domain.Sort.Direction</importMapping>
 							</importMappings>							

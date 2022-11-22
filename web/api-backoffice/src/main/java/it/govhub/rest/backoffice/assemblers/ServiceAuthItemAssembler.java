@@ -5,23 +5,21 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.stereotype.Component;
 
-import it.govhub.rest.backoffice.beans.Service;
-import it.govhub.rest.backoffice.beans.ServiceCreate;
+import it.govhub.rest.backoffice.beans.ServiceAuthItem;
 import it.govhub.rest.backoffice.entity.ServiceEntity;
 import it.govhub.rest.backoffice.web.ServiceController;
 
-@Component
-public class ServiceAssembler extends RepresentationModelAssemblerSupport<ServiceEntity, Service> {
+public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSupport<ServiceEntity, ServiceAuthItem>{
 
-	public ServiceAssembler() {
-		super(ServiceController.class, Service.class);
+	public ServiceAuthItemAssembler() {
+		super(ServiceController.class, ServiceAuthItem.class);
 	}
 
+	
 	@Override
-	public Service toModel(ServiceEntity src) {
-		Service ret = instantiateModel(src);
+	public ServiceAuthItem toModel(ServiceEntity src) {
+		ServiceAuthItem ret = instantiateModel(src);
 		
 		BeanUtils.copyProperties(src, ret);
 		ret.setServiceName(src.getName());
@@ -32,16 +30,7 @@ public class ServiceAssembler extends RepresentationModelAssemblerSupport<Servic
 			.withSelfRel()
 		) ;
 		
-		return ret;
-	}
-
-	public ServiceEntity toEntity(ServiceCreate service) {
-		
-		return ServiceEntity.builder()
-			.name(service.getServiceName())
-			.description(service.getDescription())
-			.build();
-		
+		return ret; 
 	}
 	
 
