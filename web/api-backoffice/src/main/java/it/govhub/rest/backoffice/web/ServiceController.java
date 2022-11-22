@@ -1,10 +1,13 @@
 package it.govhub.rest.backoffice.web;
 
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR;
+import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER;
 import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SERVICES_EDITOR;
 import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SERVICES_VIEWER;
 import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SYSADMIN;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,9 +30,11 @@ import it.govhub.rest.backoffice.beans.Service;
 import it.govhub.rest.backoffice.beans.ServiceCreate;
 import it.govhub.rest.backoffice.beans.ServiceList;
 import it.govhub.rest.backoffice.beans.ServiceOrdering;
+import it.govhub.rest.backoffice.entity.OrganizationEntity;
 import it.govhub.rest.backoffice.entity.ServiceEntity;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.messages.ServiceMessages;
+import it.govhub.rest.backoffice.repository.OrganizationFilters;
 import it.govhub.rest.backoffice.repository.ServiceFilters;
 import it.govhub.rest.backoffice.repository.ServiceRepository;
 import it.govhub.rest.backoffice.services.SecurityService;
@@ -76,22 +81,23 @@ public class ServiceController implements ServiceApi {
 		
 		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICES_VIEWER, RUOLO_GOVHUB_SERVICES_EDITOR);
 		
-		Specification<ServiceEntity> spec = ServiceFilters.empty();
+		
+		Specification<ServiceEntity> spec;
+		
+		if (this.authService.canReadAllServices()) {
+			spec = ServiceFilters.empty();
+		} else {
+			Set<Long> serviceIds = this.authService.listAuthorizedServices(
+					RUOLO_GOVHUB_SERVICES_EDITOR, RUOLO_GOVHUB_SERVICES_VIEWER);
+			
+			spec = ServiceFilters.byId(serviceIds);
+		}
+		
 		if (q != null) {
-			spec = ServiceFilters.likeDescription(q).or(ServiceFilters.likeName(q));
+			spec = spec.and(
+					ServiceFilters.likeDescription(q).or(ServiceFilters.likeName(q)));
 		}
 
-		// TODO: Filtrare per autorizzazione
-		// Due metodi:
-		// (1) :
-		//		Faccio prima una query per recuperare gli id dei servizi sui quali ho accesso in lettura.
-		//		Poi faccio un in(readableIds) se questa lista non è vuota, altrimenti posso leggere tutto.
-		
-		// (2):
-		//	Faccio Unica Query con Subquery
-		
-		
-		
 		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, ServiceFilters.sort(sort,sortDirection));
 		
 		Page<ServiceEntity> services = this.serviceRepo.findAll(spec, pageRequest.pageable);

@@ -5,6 +5,8 @@ import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_ORGAN
 import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SYSADMIN;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,6 +32,7 @@ import it.govhub.rest.backoffice.beans.OrganizationList;
 import it.govhub.rest.backoffice.beans.OrganizationOrdering;
 import it.govhub.rest.backoffice.beans.PatchOp;
 import it.govhub.rest.backoffice.entity.OrganizationEntity;
+import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.messages.OrganizationMessages;
 import it.govhub.rest.backoffice.repository.OrganizationFilters;
 import it.govhub.rest.backoffice.repository.OrganizationRepository;
@@ -82,22 +85,29 @@ public class OrganizationController implements OrganizationApi {
 	public ResponseEntity<OrganizationList> listOrganizations(OrganizationOrdering sort, Direction sortDirection, Integer limit, Long offset, String q) {
 		
 		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_ORGANIZATIONS_VIEWER, RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+		
+		// Posso avere N autorizzazioni valide con ruolo user_viewer o user_editor
+		// Alcune di queste avranno organizzazioni associate, altre no.
+		// Se sono admin o ce n'è una senza organizzazioni associate allora posso vedere tutte
+		// Se tutte le autorizzazioni hanno delle organizzazioni definite allora posso vedere solo quelle definite.
+				
+		Specification<OrganizationEntity> spec;
+		
+		if (this.authService.canReadAllOrganizations()) {
+			spec = OrganizationFilters.empty();
+		} else {
+			Set<Long> orgIds = this.authService.listAuthorizedOrganizations(
+					RUOLO_GOVHUB_ORGANIZATIONS_EDITOR, RUOLO_GOVHUB_ORGANIZATIONS_VIEWER);
+			
+			spec = OrganizationFilters.byId(orgIds);
+		}
 
 		
-		// TODO: Qui va filtrato per le organizzazioni per le quali si hanno authorities con ruoli govhub_organization_viewer e 
-		//	govhub_organization_editor
-		// Due metodi:
-		// (1) :
-		//		Faccio prima una query per recuperare gli id dei servizi sui quali ho accesso in lettura.
-		//		Poi faccio un in(readableIds) se questa lista non è vuota, altrimenti posso leggere tutto.
-		
-		// (2):
-		//	Faccio Unica Query+Subquery
-		
-		Specification<OrganizationEntity> spec = OrganizationFilters.empty();
 		if (q != null) {
-			spec = OrganizationFilters.likeTaxCode(q).or(OrganizationFilters.likeLegalName(q));
+			spec = spec.and(
+					OrganizationFilters.likeTaxCode(q).or(OrganizationFilters.likeLegalName(q)));
 		}
+		
 		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, OrganizationFilters.sort(sort, sortDirection));
 		
 		Page<OrganizationEntity> organizations = this.orgRepo.findAll(spec, pageRequest.pageable);

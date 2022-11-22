@@ -1,5 +1,7 @@
 package it.govhub.rest.backoffice.repository;
 
+import java.util.Collection;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -33,7 +35,8 @@ public class OrganizationFilters {
 		return (Root<OrganizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
 			cb.like(cb.upper(root.get(OrganizationEntity_.legalName)), "%"+legalName.toUpperCase()+"%");		
 	}
-
+	
+	
 	public static Sort sort(OrganizationOrdering sort, Direction sortDirection) {
 
 		switch (sort) {
@@ -46,6 +49,11 @@ public class OrganizationFilters {
 		default:
 			throw new UnreachableException();		
 		}
+	}
+
+	public static Specification<OrganizationEntity> byId(Collection<Long> orgIds) {
+		return (Root<OrganizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->			
+			root.get(OrganizationEntity_.id).in(orgIds);
 	}
 	
 	
