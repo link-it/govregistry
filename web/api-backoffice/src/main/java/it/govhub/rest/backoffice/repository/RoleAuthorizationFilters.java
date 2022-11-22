@@ -7,16 +7,13 @@ import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.SetJoin;
 import javax.persistence.criteria.Subquery;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import it.govhub.rest.backoffice.config.SecurityConfig;
-import it.govhub.rest.backoffice.entity.OrganizationEntity;
 import it.govhub.rest.backoffice.entity.OrganizationEntity_;
 import it.govhub.rest.backoffice.entity.RoleAuthorizationEntity;
 import it.govhub.rest.backoffice.entity.RoleAuthorizationEntity_;
@@ -118,7 +115,7 @@ public class RoleAuthorizationFilters {
 						
 				subQuery.select(subQueryRoot.join(RoleAuthorizationEntity_.services).get(ServiceEntity_.id));
 				
-				ArrayList<Predicate> preds = new ArrayList<Predicate>();
+				ArrayList<Predicate> preds = new ArrayList<>();
 				for (Long id : services) {
 					preds.add(cb.in(cb.literal(id)).value(subQuery));
 				}
@@ -148,7 +145,7 @@ public class RoleAuthorizationFilters {
 						
 				subQuery.select(subQueryRoot.join(RoleAuthorizationEntity_.organizations).get(OrganizationEntity_.id));
 				
-				ArrayList<Predicate> preds = new ArrayList<Predicate>();
+				ArrayList<Predicate> preds = new ArrayList<>();
 				for (Long id : organizations) {
 					preds.add(cb.in(cb.literal(id)).value(subQuery));
 				}

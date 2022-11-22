@@ -2,6 +2,8 @@ package it.govhub.rest.backoffice.messages;
 
 public class RoleMessages {
 
+	private RoleMessages() {}
+	
 	public static String notFound(Long id) {
 		return "Role with ID ["+id+"] not found.";
 	}

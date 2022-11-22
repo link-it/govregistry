@@ -140,7 +140,7 @@ public class SecurityService {
 		Specification<RoleAuthorizationEntity> spec = RoleAuthorizationFilters.byRoleName(RUOLO_GOVHUB_ORGANIZATIONS_EDITOR, RUOLO_GOVHUB_ORGANIZATIONS_VIEWER)
 				.and(RoleAuthorizationFilters.expiresAfter(OffsetDateTime.now()))
 				.and(RoleAuthorizationFilters.byUser(user.getId()))
-				.and(RoleAuthorizationFilters.onOrganizations(new ArrayList<Long>()));
+				.and(RoleAuthorizationFilters.onOrganizations(new ArrayList<>()));
 		
 		return this.authRepo.exists(spec.or(RoleAuthorizationFilters.byAdmin(user.getId())));
 	}
@@ -182,12 +182,10 @@ public class SecurityService {
 		
 		List<RoleAuthorizationEntity> authorizations = this.authRepo.findAll(spec);
 		
-		Set<Long> organizationIds = authorizations.stream()
-			.flatMap( auth -> auth.getOrganizations().stream())
+		return authorizations.stream()
+			.flatMap(auth -> auth.getOrganizations().stream())
 			.map(OrganizationEntity::getId)
 			.collect(Collectors.toSet());
-		
-		return organizationIds;
 	}
 
 
@@ -207,12 +205,10 @@ public class SecurityService {
 		
 		List<RoleAuthorizationEntity> authorizations = this.authRepo.findAll(spec);
 		
-		Set<Long> serviceIds = authorizations.stream()
+		return  authorizations.stream()
 			.flatMap( auth -> auth.getServices().stream())
 			.map(ServiceEntity::getId)
 			.collect(Collectors.toSet());
-		
-		return serviceIds;
 	}
 
 }
