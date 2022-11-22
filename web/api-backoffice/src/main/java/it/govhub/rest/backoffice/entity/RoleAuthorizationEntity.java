@@ -1,6 +1,5 @@
 package it.govhub.rest.backoffice.entity;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
