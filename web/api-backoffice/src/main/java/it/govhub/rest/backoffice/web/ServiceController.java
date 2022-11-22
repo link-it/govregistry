@@ -1,7 +1,5 @@
 package it.govhub.rest.backoffice.web;
 
-import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR;
-import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER;
 import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SERVICES_EDITOR;
 import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SERVICES_VIEWER;
 import static it.govhub.rest.backoffice.config.SecurityConfig.RUOLO_GOVHUB_SYSADMIN;
@@ -30,11 +28,9 @@ import it.govhub.rest.backoffice.beans.Service;
 import it.govhub.rest.backoffice.beans.ServiceCreate;
 import it.govhub.rest.backoffice.beans.ServiceList;
 import it.govhub.rest.backoffice.beans.ServiceOrdering;
-import it.govhub.rest.backoffice.entity.OrganizationEntity;
 import it.govhub.rest.backoffice.entity.ServiceEntity;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.messages.ServiceMessages;
-import it.govhub.rest.backoffice.repository.OrganizationFilters;
 import it.govhub.rest.backoffice.repository.ServiceFilters;
 import it.govhub.rest.backoffice.repository.ServiceRepository;
 import it.govhub.rest.backoffice.services.SecurityService;

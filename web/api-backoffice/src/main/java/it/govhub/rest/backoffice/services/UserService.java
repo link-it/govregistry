@@ -87,7 +87,7 @@ public class UserService {
 		}
 		
 		if (updatedContact == null) {
-			throw new BadRequestException(PatchMessages.voidObjectPatch);
+			throw new BadRequestException(PatchMessages.VoidObjectPatch);
 		}
 		updatedContact.setId(id);
 		

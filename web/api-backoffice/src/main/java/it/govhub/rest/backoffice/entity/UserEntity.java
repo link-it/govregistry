@@ -1,5 +1,6 @@
 package it.govhub.rest.backoffice.entity;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -26,7 +27,9 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "users")
-public class UserEntity {
+public class UserEntity implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@SequenceGenerator(name="seq_users",sequenceName="seq_users", initialValue=1, allocationSize=1)
