@@ -51,7 +51,7 @@ public class Organization_UC_2_GetOrganizationTest {
 	}
 	
 	@Test
-	void UC_5_01_GetOrganizationOk() throws Exception {
+	void UC_2_01_GetOrganizationOk() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 		
 		MvcResult result = this.mockMvc.perform(get("/organizations/")
@@ -96,7 +96,7 @@ public class Organization_UC_2_GetOrganizationTest {
 	}
 	
 	@Test
-	void UC_5_02_GetOrganization_NotFound() throws Exception {
+	void UC_2_02_GetOrganization_NotFound() throws Exception {
 		int idUser1 = 10000;
 		
 		this.mockMvc.perform(get("/organizations/{id}",idUser1)
@@ -111,7 +111,7 @@ public class Organization_UC_2_GetOrganizationTest {
 	}
 	
 	@Test	
-	void UC_5_03_GetOrganization_InvalidId() throws Exception {
+	void UC_2_03_GetOrganization_InvalidId() throws Exception {
 		String idUser1 = "XXX";
 		
 		this.mockMvc.perform(get("/organizations/{id}",idUser1)
