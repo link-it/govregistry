@@ -77,4 +77,5 @@ public class OrganizationEntity {
 
 	@Lob
 	private byte[] logo;
+	
 }
