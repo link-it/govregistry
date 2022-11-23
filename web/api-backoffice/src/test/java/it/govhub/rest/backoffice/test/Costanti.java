@@ -4,6 +4,7 @@ package it.govhub.rest.backoffice.test;
 import org.apache.commons.codec.binary.Base64;
 
 import it.govhub.rest.backoffice.entity.OrganizationEntity;
+import it.govhub.rest.backoffice.entity.ServiceEntity;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.security.GovhubPrincipal;
 import it.govhub.rest.backoffice.utils.LimitOffsetPageRequest;
@@ -38,6 +39,10 @@ public class Costanti {
 	
 	public static final String QUERY_PARAM_SORT_DIRECTION_ASC = "asc";
 	public static final String QUERY_PARAM_SORT_DIRECTION_DESC = "desc";
+	
+	
+	public static final String SERVICE_NAME_TEST = "Servizio Test";
+	public static final String SERVICE_DESCRIPTION_TEST = "Generica descrizione per un servizio di test";
 	
 	/* USERS */
 	
@@ -92,6 +97,15 @@ public class Costanti {
 				.officeZip("0000")
 				.logo(Base64.decodeBase64(LOGO_ENTE_CREDITORE_3))
 				.logoMiniature(Base64.decodeBase64(LOGO_MINIATURA_ENTE_CREDITORE_3))
+				.build();
+	}
+	
+	/* SERVICES */
+	
+	public static ServiceEntity getServizioTest() {
+		return ServiceEntity.builder()
+				.name(Costanti.SERVICE_NAME_TEST)
+				.description(Costanti.SERVICE_DESCRIPTION_TEST)
 				.build();
 	}
 }
