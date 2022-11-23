@@ -74,8 +74,8 @@ public class RoleAuthorizationService {
 		UserEntity principal = SecurityService.getPrincipal();
 		
 		// In quanto principal posso assegnare solo i ruoli che sono fra i mei assignable_roles
-		// Posso assegnarli se il principal ha una expiration_date superiore a quella da assegnare
-		// rispetto al ruolo che ha fra gli assignable_roles il ruolo da assegnare
+		// Posso assegnarli se il principal ha una autorizzazione con un ruolo che ha fra gli assignable_roles il ruolo da assegnare
+		// e la cui expiration_date è superiore a quella del ruolo da assegnare
 		// Devo cercare una RoleAuthorizationEntity che me lo fa fare
 		
 		Specification<RoleAuthorizationEntity> spec = RoleAuthorizationFilters.byUser(principal.getId())
