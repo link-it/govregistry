@@ -26,7 +26,7 @@ import lombok.ToString;
 public class ServiceEntity {
 
 	@Id
-	@SequenceGenerator(name = "govhub_services", sequenceName = "seq_govhub_services", initialValue = 1, allocationSize = 1)
+	@SequenceGenerator(name = "seq_govhub_services", sequenceName = "seq_govhub_services", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_govhub_services")
 	private Long id;
 	

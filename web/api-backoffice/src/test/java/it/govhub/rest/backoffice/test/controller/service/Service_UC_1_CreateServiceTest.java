@@ -52,7 +52,7 @@ class Service_UC_1_CreateServiceTest {
 				.build()
 				.toString();
 
-		// Creo una organization e verifico la risposta
+		// Creo un service e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/services")
 				.with(UserAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())

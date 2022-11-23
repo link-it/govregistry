@@ -34,7 +34,7 @@ INSERT INTO public.govhub_services (id, name, description) VALUES (8, 'Servizi T
 
 ALTER SEQUENCE SEQ_GOVHUB_SERVICES RESTART WITH 9;
 
--- amministratore -> govhub_sysadming
+-- amministratore -> govhub_sysadmin
 
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (1, 1, 1);
 
