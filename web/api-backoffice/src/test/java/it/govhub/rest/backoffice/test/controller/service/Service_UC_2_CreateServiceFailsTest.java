@@ -28,7 +28,7 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @DisplayName("Test di creazione dei Services")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-public class Service_UC_2_CreateServiceFailsTest {
+class Service_UC_2_CreateServiceFailsTest {
 
 	@Autowired
 	private MockMvc mockMvc;

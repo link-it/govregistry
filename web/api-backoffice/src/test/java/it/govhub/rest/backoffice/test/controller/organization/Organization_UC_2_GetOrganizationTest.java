@@ -36,7 +36,7 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @DisplayName("Test di lettura delle Organizations")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-public class Organization_UC_2_GetOrganizationTest {
+class Organization_UC_2_GetOrganizationTest {
 
 	@Autowired
 	private MockMvc mockMvc;

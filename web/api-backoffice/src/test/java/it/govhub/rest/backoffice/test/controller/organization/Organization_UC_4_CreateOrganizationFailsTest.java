@@ -28,7 +28,7 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @DisplayName("Test di validazione delle creazioni delle Organizations")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-public class Organization_UC_4_CreateOrganizationFailsTest {
+class Organization_UC_4_CreateOrganizationFailsTest {
 
 	@Autowired
 	private MockMvc mockMvc;
