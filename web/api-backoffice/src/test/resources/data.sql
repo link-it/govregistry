@@ -23,6 +23,17 @@ INSERT INTO public.organizations (id, tax_code, legal_name) VALUES (2, '12345678
 
 ALTER SEQUENCE SEQ_ORGANIZATIONS RESTART WITH 3;
 
+INSERT INTO public.govhub_services (id, name, description) VALUES (1, 'Servizio Generico', 'Esempio di servizio');
+INSERT INTO public.govhub_services (id, name, description) VALUES (2, 'Servizio senza autorizzazioni', 'Servizio non autorizzato');
+INSERT INTO public.govhub_services (id, name, description) VALUES (3, 'SUAP-Integrazione', 'Service for customer management');
+INSERT INTO public.govhub_services (id, name, description) VALUES (4, 'IMU-ImpostaMunicipaleUnica', 'Imposta municipale unica');
+INSERT INTO public.govhub_services (id, name, description) VALUES (5, 'TARI', 'Tassa sui rifiuti');
+INSERT INTO public.govhub_services (id, name, description) VALUES (6, 'Portale ZTL', 'Servizio di registrazione accessi ZTL comunale');
+INSERT INTO public.govhub_services (id, name, description) VALUES (7, 'Variazione Residenza', 'Richieste di variazione residenza');
+INSERT INTO public.govhub_services (id, name, description) VALUES (8, 'Servizi Turistici', 'Portale di riferimento per i turisti');
+
+ALTER SEQUENCE SEQ_GOVHUB_SERVICES RESTART WITH 9;
+
 -- amministratore -> govhub_sysadming
 
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (1, 1, 1);

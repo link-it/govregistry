@@ -696,4 +696,59 @@ class User_UC_3_PatchUserTest {
 		// Email non e' stata cambiata deve essere ancora null
 		assertNull(userEntity.getEmail());
 	}
+	
+	@Test
+	void UC_3_13_PatchUser_ConflictPrincipal() throws Exception {
+		UserEntity user = Costanti.getUser_Snakamoto();
+
+		String createUser = Json.createObjectBuilder()
+				.add("enabled", user.getEnabled())
+				.add("full_name", user.getFullName())
+				.add("principal", user.getPrincipal())
+				.build()
+				.toString();
+
+		// Creo un utente
+		MvcResult result = this.mockMvc.perform(post("/users")
+				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(createUser)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andReturn();
+
+		// Modifico l'utente
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		int id = reader.readObject().getInt("id");
+
+		JsonObjectBuilder patchOp = Json.createObjectBuilder()
+				.add("op", OpEnum.REPLACE.toString())
+				.add("path", "/principal")
+				.add("value", "amministratore");
+
+		String patchUser = Json.createArrayBuilder()
+				.add(patchOp)
+				.build()
+				.toString();
+
+		this.mockMvc.perform(patch("/users/{id}", id)
+				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(patchUser)
+				.contentType("application/json-patch+json")
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isConflict())
+		.andExpect(jsonPath("$.status", is(409)))
+		.andExpect(jsonPath("$.title", is("Conflict")))
+		.andExpect(jsonPath("$.type").isString())
+		.andExpect(jsonPath("$.detail").isString())
+		.andReturn();
+
+		UserEntity userEntity = this.userRepository.findById((long) id).get();
+
+		assertEquals(id, userEntity.getId());
+		assertEquals(user.getEnabled(), userEntity.getEnabled());
+		assertEquals(user.getFullName(), userEntity.getFullName());
+		assertEquals(user.getPrincipal(), userEntity.getPrincipal());
+	}
 }
