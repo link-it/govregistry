@@ -36,7 +36,7 @@ import it.govhub.rest.backoffice.test.Costanti;
 @AutoConfigureMockMvc
 @DisplayName("Test di lettura degli Utenti")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class System_UC_1_GetProfileTest {
+class System_UC_1_GetProfileTest {
 
 	@Autowired
 	private MockMvc mockMvc;

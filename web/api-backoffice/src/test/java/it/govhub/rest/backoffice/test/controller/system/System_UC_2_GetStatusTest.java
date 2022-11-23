@@ -21,7 +21,7 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @AutoConfigureMockMvc
 @DisplayName("Test di lettura degli Utenti")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class System_UC_2_GetStatusTest {
+class System_UC_2_GetStatusTest {
 
 	@Autowired
 	private MockMvc mockMvc;

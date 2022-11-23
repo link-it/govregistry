@@ -40,7 +40,7 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @DisplayName("Test di censimento Organization")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-public class Organization_UC_5_PatchOrganizationTest {
+class Organization_UC_5_PatchOrganizationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
