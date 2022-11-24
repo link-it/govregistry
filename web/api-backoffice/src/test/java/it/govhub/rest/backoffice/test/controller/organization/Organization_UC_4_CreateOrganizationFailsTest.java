@@ -33,6 +33,9 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 	@Autowired
 	private MockMvc mockMvc;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 	@Test
 	void UC_4_01_CreateOrganizationFail_MissingTaxCode() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
@@ -44,7 +47,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +71,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +107,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -141,7 +144,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -178,7 +181,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -215,7 +218,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -252,7 +255,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -289,7 +292,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -326,7 +329,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -363,7 +366,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -400,7 +403,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -437,7 +440,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -474,7 +477,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -511,7 +514,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 		
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -537,7 +540,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -556,7 +559,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -581,7 +584,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -600,7 +603,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 
 		// Creo una organization e verifico la risposta
 		this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)

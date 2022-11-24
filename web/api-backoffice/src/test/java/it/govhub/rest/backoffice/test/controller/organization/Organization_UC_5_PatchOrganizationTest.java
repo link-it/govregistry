@@ -47,7 +47,10 @@ class Organization_UC_5_PatchOrganizationTest {
 
 	@Autowired
 	private OrganizationRepository organizationRepository;
-
+	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 
 	@Test
 	void UC_5_01_PatchOrganization_WrongMediaType() throws Exception {
@@ -62,7 +65,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", 1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -86,7 +89,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +112,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -151,7 +154,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -179,7 +182,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -222,7 +225,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -248,7 +251,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -292,7 +295,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -320,7 +323,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -363,7 +366,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -389,7 +392,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -434,7 +437,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -464,7 +467,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -508,7 +511,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -537,7 +540,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -582,7 +585,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -608,7 +611,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -651,7 +654,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -677,7 +680,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -722,7 +725,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -752,7 +755,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -796,7 +799,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -825,7 +828,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -870,7 +873,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -896,7 +899,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -939,7 +942,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -965,7 +968,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1010,7 +1013,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1040,7 +1043,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1084,7 +1087,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1113,7 +1116,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1158,7 +1161,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1184,7 +1187,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1227,7 +1230,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1253,7 +1256,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1298,7 +1301,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1328,7 +1331,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1372,7 +1375,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1401,7 +1404,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1446,7 +1449,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1472,7 +1475,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1515,7 +1518,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1541,7 +1544,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1586,7 +1589,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1616,7 +1619,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1660,7 +1663,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1689,7 +1692,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1734,7 +1737,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1760,7 +1763,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1803,7 +1806,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1829,7 +1832,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1874,7 +1877,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1904,7 +1907,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -1948,7 +1951,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -1977,7 +1980,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2022,7 +2025,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2048,7 +2051,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2091,7 +2094,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2117,7 +2120,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2162,7 +2165,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2192,7 +2195,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2236,7 +2239,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2265,7 +2268,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2310,7 +2313,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2336,7 +2339,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2379,7 +2382,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2405,7 +2408,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2450,7 +2453,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2480,7 +2483,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2524,7 +2527,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2553,7 +2556,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2598,7 +2601,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2624,7 +2627,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2667,7 +2670,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2693,7 +2696,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2738,7 +2741,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2768,7 +2771,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2812,7 +2815,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2841,7 +2844,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2886,7 +2889,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2912,7 +2915,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -2955,7 +2958,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -2981,7 +2984,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3026,7 +3029,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3056,7 +3059,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3100,7 +3103,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3129,7 +3132,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3174,7 +3177,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3200,7 +3203,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3243,7 +3246,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3269,7 +3272,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3314,7 +3317,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3344,7 +3347,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3388,7 +3391,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3417,7 +3420,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3462,7 +3465,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3488,7 +3491,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3531,7 +3534,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3557,7 +3560,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3602,7 +3605,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3632,7 +3635,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3676,7 +3679,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3705,7 +3708,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3750,7 +3753,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3776,7 +3779,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3819,7 +3822,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3845,7 +3848,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3890,7 +3893,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3920,7 +3923,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -3964,7 +3967,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3993,7 +3996,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -4038,7 +4041,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -4064,7 +4067,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -4107,7 +4110,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -4133,7 +4136,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -4177,7 +4180,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -4203,7 +4206,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")
@@ -4247,7 +4250,7 @@ class Organization_UC_5_PatchOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -4273,7 +4276,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
 				.contentType("application/json-patch+json")

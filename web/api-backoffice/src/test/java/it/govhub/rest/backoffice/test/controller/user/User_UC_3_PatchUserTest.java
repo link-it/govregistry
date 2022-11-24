@@ -47,6 +47,9 @@ class User_UC_3_PatchUserTest {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
 
 	@Test
 	void UC_3_01_PatchUser_WrongMediaType() throws Exception {
@@ -61,7 +64,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", 1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -86,7 +89,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -105,7 +108,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -136,7 +139,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -160,7 +163,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -194,7 +197,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -216,7 +219,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -249,7 +252,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -273,7 +276,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -307,7 +310,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -329,7 +332,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -362,7 +365,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -386,7 +389,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -420,7 +423,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -442,7 +445,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -476,7 +479,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -500,7 +503,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -535,7 +538,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -559,7 +562,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -594,7 +597,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -618,7 +621,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -651,7 +654,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -675,7 +678,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")
@@ -710,7 +713,7 @@ class User_UC_3_PatchUserTest {
 
 		// Creo un utente
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -732,7 +735,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
 				.contentType("application/json-patch+json")

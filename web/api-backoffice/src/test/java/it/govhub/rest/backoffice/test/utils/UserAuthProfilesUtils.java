@@ -2,17 +2,27 @@ package it.govhub.rest.backoffice.test.utils;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import it.govhub.rest.backoffice.config.SecurityConfig;
-import it.govhub.rest.backoffice.test.Costanti;
+import it.govhub.rest.backoffice.entity.UserEntity;
+import it.govhub.rest.backoffice.repository.UserRepository;
+import it.govhub.rest.backoffice.security.GovhubPrincipal;
+import it.govhub.rest.backoffice.security.GovhubUserDetailService;
 
-
+@Component
 public class UserAuthProfilesUtils {
+	
+	@Autowired
+	private GovhubUserDetailService userDetailService;
 
-	public static RequestPostProcessor utenzaAdmin() {
-	    //return user("username").password("password").roles(SecurityConfig.RUOLO_GOVHUB_SYSADMIN);
-		return user(Costanti.getPrincipal_Admin());
+	@Transactional
+	public RequestPostProcessor utenzaAdmin() {
+		return user(this.userDetailService.loadUserByUsername("amministratore"));
 	}
 
 	public static RequestPostProcessor utenzaUserViewer() {

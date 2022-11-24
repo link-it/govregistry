@@ -45,6 +45,9 @@ class User_UC_1_CreateUserTest {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 	@Test
 	void UC_1_01_CreateUserOk() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
@@ -58,7 +61,7 @@ class User_UC_1_CreateUserTest {
 
 		// Creo un utente e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -98,7 +101,7 @@ class User_UC_1_CreateUserTest {
 
 		// Creo un utente e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -139,7 +142,7 @@ class User_UC_1_CreateUserTest {
 
 		// Creo un utente e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)

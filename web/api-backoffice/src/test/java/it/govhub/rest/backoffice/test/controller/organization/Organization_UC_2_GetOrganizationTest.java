@@ -44,6 +44,9 @@ class Organization_UC_2_GetOrganizationTest {
 	@Autowired
 	private OrganizationRepository organizationRepository;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 	@BeforeEach
 	private void caricaUtenti() {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
@@ -55,7 +58,7 @@ class Organization_UC_2_GetOrganizationTest {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 		
 		MvcResult result = this.mockMvc.perform(get("/organizations/")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -71,7 +74,7 @@ class Organization_UC_2_GetOrganizationTest {
 		int idUser1 = item1.getInt("id");
 		
 		result = this.mockMvc.perform(get("/organizations/{id}",idUser1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -100,7 +103,7 @@ class Organization_UC_2_GetOrganizationTest {
 		int idUser1 = 10000;
 		
 		this.mockMvc.perform(get("/organizations/{id}",idUser1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
 				.andExpect(jsonPath("$.status", is(404)))
@@ -115,7 +118,7 @@ class Organization_UC_2_GetOrganizationTest {
 		String idUser1 = "XXX";
 		
 		this.mockMvc.perform(get("/organizations/{id}",idUser1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.status", is(400)))

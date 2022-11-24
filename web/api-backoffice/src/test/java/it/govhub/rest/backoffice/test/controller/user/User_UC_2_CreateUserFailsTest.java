@@ -34,6 +34,9 @@ class User_UC_2_CreateUserFailsTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
 		
 	@Test
 	void UC_2_01_CreateUserFail_MissingPrincipal() throws Exception {
@@ -47,7 +50,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creo un utente e verifico la risposta
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -72,7 +75,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creo un utente e verifico la risposta
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -98,7 +101,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creo un utente e verifico la risposta
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -124,7 +127,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creo un utente e verifico la risposta
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -151,7 +154,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creo un utente e verifico la risposta
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -178,7 +181,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creo un utente e verifico la risposta
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -205,7 +208,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creo un utente e verifico la risposta
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -233,7 +236,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creo un utente e verifico la risposta
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -261,7 +264,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creo un utente e verifico la risposta
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -288,7 +291,7 @@ class User_UC_2_CreateUserFailsTest {
 		
 		// Creazione OK
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -302,7 +305,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creazione Utente gia' presente.
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -328,7 +331,7 @@ class User_UC_2_CreateUserFailsTest {
 
 		// Creo un utente e verifico la risposta
 		this.mockMvc.perform(post("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
