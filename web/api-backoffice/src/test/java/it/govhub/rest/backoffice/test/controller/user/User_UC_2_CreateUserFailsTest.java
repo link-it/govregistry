@@ -314,4 +314,29 @@ class User_UC_2_CreateUserFailsTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 	}
+	
+	@Test
+	void UC_2_11_CreateUserFail_MissingCsrf() throws Exception {
+		UserEntity user = Costanti.getUser_Snakamoto();
+
+		String json = Json.createObjectBuilder()
+				.add("enabled", user.getEnabled())
+				.add("full_name", user.getFullName())
+				.add("principal", user.getPrincipal())
+				.build()
+				.toString();
+
+		// Creo un utente e verifico la risposta
+		this.mockMvc.perform(post("/users")
+				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isForbidden())
+				.andExpect(jsonPath("$.status", is(403)))
+				.andExpect(jsonPath("$.title", is("Forbidden")))
+				.andExpect(jsonPath("$.type").isString())
+				.andExpect(jsonPath("$.detail").isString())
+				.andReturn();
+	}
 }
