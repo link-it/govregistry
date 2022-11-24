@@ -1047,7 +1047,7 @@ components:
          enum:
             - asc
             - desc
-         default: asc  
+         default: desc  
                   
       UserOrdering:
          type: string
@@ -1055,7 +1055,7 @@ components:
             - unsorted
             - full_name
             - id
-         default: unsorted
+         default: id
 
       OrganizationOrdering:
          type: string
@@ -1063,7 +1063,7 @@ components:
             - unsorted
             - legal_name
             - id
-         default: unsorted          
+         default: id          
                         
       AuthorizationOrdering:
          type: string
@@ -1071,7 +1071,7 @@ components:
             - unsorted
             - id
             - role_name            
-         default: unsorted
+         default: id
                
       ServiceOrdering:
          type: string
@@ -1079,7 +1079,7 @@ components:
             - unsorted
             - id
             - service_name      
-         default: unsorted
+         default: id
                
       PatchOperations:
          type: "array"
