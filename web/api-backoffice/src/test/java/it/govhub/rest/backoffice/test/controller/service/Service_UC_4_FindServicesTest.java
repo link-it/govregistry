@@ -38,7 +38,7 @@ import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 @DisplayName("Test di lettura dei servizi")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-public class Service_UC_4_FindServicesTest {
+class Service_UC_4_FindServicesTest {
 
 	@Autowired
 	private MockMvc mockMvc;
