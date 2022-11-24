@@ -70,18 +70,6 @@ public class Costanti {
 		return userEntity;
 	}
 	
-	/*public static GovhubPrincipal getPrincipal_Admin() {
-		UserEntity userEntity = UserEntity.builder()
-				.enabled(true)
-				.email(Costanti.EMAIL_SNAKAMOTO)
-				.principal("amministratore")
-				.authorizations(new HashSet<>())
-				.id(1L)
-				.build();
-		
-		return new GovhubPrincipal(userEntity);
-				
-	}*/
 	
 	/* ORGANIZATIONS */
 	
