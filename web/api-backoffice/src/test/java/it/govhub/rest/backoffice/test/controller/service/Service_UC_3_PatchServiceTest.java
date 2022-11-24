@@ -400,7 +400,6 @@ class Service_UC_3_PatchServiceTest {
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$.id").isNumber())
 		.andExpect(jsonPath("$.service_name", is(servizio.getName())))
-		.andExpect(jsonPath("$.description", is(servizio.getDescription())))
 		.andReturn();
 
 		ServiceEntity serviceEntity = this.serviceRepository.findById((long) id).get();

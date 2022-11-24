@@ -72,7 +72,7 @@ class User_UC_5_GetUsersTest {
 		JsonArray items = userList.getJsonArray("items");
 		assertEquals(8, items.size());
 		
-		JsonObject item1 = items.getJsonObject(7); 
+		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
 		
 		result = this.mockMvc.perform(get("/users/{id}",idUser1)
