@@ -43,13 +43,19 @@ public class SecurityService {
 	
 	@Autowired
 	private RoleAuthorizationRepository authRepo;
+	
+	
+	public static UserEntity getPrincipal() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
+		return  principal.getUser();
+	}
 
 
 	// Oltre a controllare il ruolo viene controllata l'expiration date
 	public void hasAnyRole(String ...roles) {
 		
 		UserEntity user = getPrincipal();
-		
 		
 		Specification<RoleAuthorizationEntity> spec = RoleAuthorizationFilters.byRoleName(roles)
 				.and(RoleAuthorizationFilters.byUser(user.getId()))
@@ -118,14 +124,6 @@ public class SecurityService {
 			throw new NotAuthorizedException();
 		}
 	}
-	
-	
-	public static UserEntity getPrincipal() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
-		return  principal.getUser();
-	}
-
 
 
 	/**

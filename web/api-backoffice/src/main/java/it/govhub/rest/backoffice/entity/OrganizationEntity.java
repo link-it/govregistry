@@ -23,12 +23,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "organizations")
+@Table(name = "govhub_organizations")
 public class OrganizationEntity {
 
 	@Id
-	@SequenceGenerator(name = "seq_organizations", sequenceName = "seq_organizations", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_organizations")
+	@SequenceGenerator(name = "seq_govhub_organizations", sequenceName = "seq_govhub_organizations", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_govhub_organizations")
 	private Long id;
 
 	@EqualsAndHashCode.Include
