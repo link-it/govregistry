@@ -32,8 +32,8 @@ public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="seq_users",sequenceName="seq_users", initialValue=1, allocationSize=1)
-	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="seq_users")
+	@SequenceGenerator(name="seq_govhub_users",sequenceName="seq_govhub_users", initialValue=1, allocationSize=1)
+	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="seq_govhub_users")
 	private Long id;
 
 	@EqualsAndHashCode.Include

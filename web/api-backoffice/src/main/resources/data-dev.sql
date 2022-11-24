@@ -7,7 +7,7 @@ INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUE
 INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (5, 'org_viewer', 'Visore Antonio', 'org_viewer@govhub.it', true);
 INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (6, 'org_editor', 'Giovanni Mele', 'org_editor@govhub.it', true);
 
-ALTER SEQUENCE SEQ_USERS RESTART WITH 7;
+ALTER SEQUENCE SEQ_GOVHUB_USERS RESTART WITH 7;
 
 
 -- Ruoli
@@ -65,7 +65,7 @@ INSERT INTO public.govhub_services (id, name, description) VALUES (16, 'service-
 INSERT INTO public.govhub_services (id, name, description) VALUES (17, 'service-17', 'Servizio per fare cose');
 INSERT INTO public.govhub_services (id, name, description) VALUES (18, 'service-18', 'Servizio per fare cose');
 
-ALTER SEQUENCE SEQ_GOVHUB_SERVICES RESTART WITH 2;
+ALTER SEQUENCE SEQ_GOVHUB_SERVICES RESTART WITH 19;
 
 INSERT INTO public.govhub_assignable_roles (role_id, assignable_role_id) VALUES (7, 6);
 
