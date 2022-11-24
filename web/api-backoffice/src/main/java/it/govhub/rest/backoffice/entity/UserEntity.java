@@ -26,7 +26,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "users")
+@Table(name = "govhub_users")
 public class UserEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
