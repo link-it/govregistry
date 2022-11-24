@@ -57,7 +57,7 @@ public class SecurityConfig {
 	public static final String RUOLO_GOVHUB_ORGANIZATIONS_EDITOR = "govhub_organizations_editor";
 	public static final String RUOLO_GOVHUB_ORGANIZATIONS_VIEWER = "govhub_organizations_viewer";
 	public static final String RUOLO_GOVHUB_SERVICES_EDITOR = "govhub_services_editor";
-	public static final String RUOLO_GOVHUB_SERVICES_VIEWER = "govhub_services_user";
+	public static final String RUOLO_GOVHUB_SERVICES_VIEWER = "govhub_services_viewer";
 
 	// impostarli nel componente jee utilizzando la funzione mappableAuthorities al posto di mappableRoles che aggiunge il prefisso 'ROLE_' ad ogni ruolo
 	public static final Set<String> ruoliConsentiti = Set.of
@@ -76,7 +76,6 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
 		applyAuthRules(http)
-		.csrf().disable()
 		.authorizeRequests()
 			.and().httpBasic().authenticationEntryPoint(new BasicAuthenticationEntryPoint(jsonMapper))
 			.and().exceptionHandling()

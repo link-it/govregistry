@@ -44,6 +44,9 @@ class Service_UC_5_GetServiceTest {
 	@Autowired
 	private ServiceRepository serviceRepository;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 	@BeforeEach
 	private void caricaServizi() {
 		ServiceEntity servizio = Costanti.getServizioTest();
@@ -55,7 +58,7 @@ class Service_UC_5_GetServiceTest {
 		ServiceEntity servizio = Costanti.getServizioTest();
 		
 		MvcResult result = this.mockMvc.perform(get("/services/")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -71,7 +74,7 @@ class Service_UC_5_GetServiceTest {
 		int idService1 = item1.getInt("id");
 		
 		result = this.mockMvc.perform(get("/services/{id}",idService1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -89,7 +92,7 @@ class Service_UC_5_GetServiceTest {
 		int idService1 = 10000;
 		
 		this.mockMvc.perform(get("/services/{id}",idService1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
 				.andExpect(jsonPath("$.status", is(404)))
@@ -104,7 +107,7 @@ class Service_UC_5_GetServiceTest {
 		String idService1 = "XXX";
 		
 		this.mockMvc.perform(get("/services/{id}",idService1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.status", is(400)))

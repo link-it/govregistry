@@ -26,10 +26,13 @@ class System_UC_2_GetStatusTest {
 	@Autowired
 	private MockMvc mockMvc;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 	@Test
 	void UC_2_01_GetStatusOk() throws Exception {
 		this.mockMvc.perform(get("/status")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept("application/problem+json"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.status", is(200)))

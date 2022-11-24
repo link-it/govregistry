@@ -48,6 +48,9 @@ class User_UC_4_FindUsersTest {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 	@BeforeEach
 	private void caricaUtenti() {
 		UserEntity user = Costanti.getUser_Snakamoto();
@@ -63,7 +66,7 @@ class User_UC_4_FindUsersTest {
 		UserEntity user2 = Costanti.getUser_Vbuterin();
 		
 		MvcResult result = this.mockMvc.perform(get("/users")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -102,7 +105,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "3");
 		
 		MvcResult result = this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -134,7 +137,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "XXX");
 		
 		this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.status", is(400)))
@@ -153,7 +156,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "1");
 		
 		MvcResult result = this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -187,7 +190,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "XXX");
 		
 		this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.status", is(400)))
@@ -205,7 +208,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_Q, "naka");
 		
 		MvcResult result = this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -236,7 +239,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_ENABLED, "true");
 		
 		MvcResult result = this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -270,7 +273,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_ENABLED, "XXX");
 		
 		this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.status", is(400)))
@@ -290,7 +293,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
 		MvcResult result = this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -329,7 +332,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
 		MvcResult result = this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -364,7 +367,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "2");
 		
 		MvcResult result = this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -396,7 +399,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
 		MvcResult result = this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -434,7 +437,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
 		MvcResult result = this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -469,7 +472,7 @@ class User_UC_4_FindUsersTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
 		this.mockMvc.perform(get("/users").params(params )
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.status", is(400)))

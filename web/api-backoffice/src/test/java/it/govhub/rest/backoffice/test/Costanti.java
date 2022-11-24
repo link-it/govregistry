@@ -1,6 +1,8 @@
 package it.govhub.rest.backoffice.test;
 
 
+import java.util.HashSet;
+
 import org.apache.commons.codec.binary.Base64;
 
 import it.govhub.rest.backoffice.entity.OrganizationEntity;
@@ -52,6 +54,7 @@ public class Costanti {
 				.fullName(Costanti.FULL_NAME_SATOSHI_NAKAMOTO)
 				.principal(Costanti.PRINCIPAL_SNAKAMOTO)
 				.email(Costanti.EMAIL_SNAKAMOTO)
+				.authorizations(new HashSet<>())
 				.build();
 		return userEntity;
 	}
@@ -62,21 +65,23 @@ public class Costanti {
 				.fullName(Costanti.FULL_NAME_VITALIY_BUTERIN)
 				.principal(Costanti.PRINCIPAL_VBUTERIN)
 				.email(Costanti.EMAIL_VBUTERIN)
+				.authorizations(new HashSet<>())
 				.build();
 		return userEntity;
 	}
 	
-	public static GovhubPrincipal getPrincipal_Admin() {
+	/*public static GovhubPrincipal getPrincipal_Admin() {
 		UserEntity userEntity = UserEntity.builder()
 				.enabled(true)
 				.email(Costanti.EMAIL_SNAKAMOTO)
 				.principal("amministratore")
+				.authorizations(new HashSet<>())
 				.id(1L)
 				.build();
 		
 		return new GovhubPrincipal(userEntity);
 				
-	}
+	}*/
 	
 	/* ORGANIZATIONS */
 	

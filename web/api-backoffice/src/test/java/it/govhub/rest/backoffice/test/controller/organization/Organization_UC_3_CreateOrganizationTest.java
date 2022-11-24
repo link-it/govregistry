@@ -45,6 +45,10 @@ class Organization_UC_3_CreateOrganizationTest {
 	@Autowired
 	private OrganizationRepository organizationRepository;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
+
 	@Test
 	void UC_3_01_CreateOrganizationOk() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
@@ -57,7 +61,7 @@ class Organization_UC_3_CreateOrganizationTest {
 
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -115,7 +119,7 @@ class Organization_UC_3_CreateOrganizationTest {
 		
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -187,7 +191,7 @@ class Organization_UC_3_CreateOrganizationTest {
 		
 		// Creo una organization e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)

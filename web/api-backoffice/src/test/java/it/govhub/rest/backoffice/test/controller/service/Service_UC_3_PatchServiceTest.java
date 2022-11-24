@@ -46,6 +46,9 @@ class Service_UC_3_PatchServiceTest {
 	@Autowired
 	private ServiceRepository serviceRepository;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 	@Test
 	void UC_3_01_PatchService_WrongMediaType() throws Exception {
 		JsonObjectBuilder patchOp = Json.createObjectBuilder()
@@ -59,7 +62,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/services/{id}", 1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -83,7 +86,7 @@ class Service_UC_3_PatchServiceTest {
 
 		// Creo un service e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -106,7 +109,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/services/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
 				.contentType("application/json-patch+json")
@@ -135,7 +138,7 @@ class Service_UC_3_PatchServiceTest {
 
 		// Creo un service e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -163,7 +166,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/services/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
 				.contentType("application/json-patch+json")
@@ -193,7 +196,7 @@ class Service_UC_3_PatchServiceTest {
 
 		// Creo un service e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -219,7 +222,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/services/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
 				.contentType("application/json-patch+json")
@@ -250,7 +253,7 @@ class Service_UC_3_PatchServiceTest {
 
 		// Creo un service e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -278,7 +281,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/services/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
 				.contentType("application/json-patch+json")
@@ -308,7 +311,7 @@ class Service_UC_3_PatchServiceTest {
 
 		// Creo un service e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -336,7 +339,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/services/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
 				.contentType("application/json-patch+json")
@@ -366,7 +369,7 @@ class Service_UC_3_PatchServiceTest {
 
 		// Creo un service e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -392,7 +395,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/services/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
 				.contentType("application/json-patch+json")
@@ -421,7 +424,7 @@ class Service_UC_3_PatchServiceTest {
 
 		// Creo un service e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -446,7 +449,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		this.mockMvc.perform(patch("/services/{id}", id)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
 				.contentType("application/json-patch+json")

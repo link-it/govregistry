@@ -33,6 +33,9 @@ class Service_UC_2_CreateServiceFailsTest {
 	@Autowired
 	private MockMvc mockMvc;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 	@Test
 	void UC_2_01_CreateServiceFail_MissingServiceName() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
@@ -44,7 +47,7 @@ class Service_UC_2_CreateServiceFailsTest {
 
 		// Creo un service e verifico la risposta
 		this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +72,7 @@ class Service_UC_2_CreateServiceFailsTest {
 
 		// Creo un service e verifico la risposta
 		this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -99,7 +102,7 @@ class Service_UC_2_CreateServiceFailsTest {
 
 		// Creo un service e verifico la risposta
 		this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)

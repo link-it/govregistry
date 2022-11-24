@@ -6,8 +6,9 @@ INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUE
 INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (4, 'user_editor', 'User Editor', 'user_admin@govhub.it', true);
 INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (5, 'org_viewer', 'Visore Antonio', 'org_viewer@govhub.it', true);
 INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (6, 'org_editor', 'Giovanni Mele', 'org_editor@govhub.it', true);
+INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (7, 'service_viewer', 'Antonio Servizio', 'service_viewer@govhub.it', true);
 
-ALTER SEQUENCE SEQ_GOVHUB_USERS RESTART WITH 7;
+ALTER SEQUENCE SEQ_GOVHUB_USERS RESTART WITH 8;
 
 
 -- Ruoli
@@ -19,8 +20,10 @@ INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (4, 1, 
 INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (5, 1, 'govhub_organizations_editor');
 INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (6, 1, 'govhub_organizations_viewer');
 INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (7, 1, 'govhub_role_assigner');
+INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (8, 1, 'govhub_services_viewer');
+INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (9, 1, 'govhub_services_editor');
 
-ALTER SEQUENCE SEQ_GOVHUB_ROLES RESTART WITH 8;
+ALTER SEQUENCE SEQ_GOVHUB_ROLES RESTART WITH 10;
 
 
 -- Organizzazioni
@@ -77,5 +80,17 @@ INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VA
 
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (2, 3, 3);
 
-ALTER SEQUENCE SEQ_GOVHUB_AUTHORIZATIONS RESTART WITH 3;
+-- service_viewer -> govhub_services_viewer
+
+INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (3, 7, 8);
+
+
+-- organization_editor -> govhub_organizations_editor
+
+INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (4, 6, 5);
+
+-- Questo limita l'utente org_viewer a lavorare sulla organizzazione 1
+-- INSERT INTO public.govhub_auth_organizations(id_govhub_authorization, id_govhub_organization) VALUES(4,1);
+
+ALTER SEQUENCE SEQ_GOVHUB_AUTHORIZATIONS RESTART WITH 5;
 

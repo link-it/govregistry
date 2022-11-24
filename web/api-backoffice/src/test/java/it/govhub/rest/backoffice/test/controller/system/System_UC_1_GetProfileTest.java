@@ -31,6 +31,7 @@ import it.govhub.rest.backoffice.config.SecurityConfig;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.repository.UserRepository;
 import it.govhub.rest.backoffice.test.Costanti;
+import it.govhub.rest.backoffice.test.utils.UserAuthProfilesUtils;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -43,6 +44,9 @@ class System_UC_1_GetProfileTest {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
 	
 	@BeforeEach
 	private void caricaUtenti() {

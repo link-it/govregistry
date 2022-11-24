@@ -46,6 +46,9 @@ class User_UC_5_GetUsersTest {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 	@BeforeEach
 	private void caricaUtenti() {
 		UserEntity user = Costanti.getUser_Snakamoto();
@@ -60,7 +63,7 @@ class User_UC_5_GetUsersTest {
 		UserEntity user = Costanti.getUser_Vbuterin();
 		
 		MvcResult result = this.mockMvc.perform(get("/users/")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -76,7 +79,7 @@ class User_UC_5_GetUsersTest {
 		int idUser1 = item1.getInt("id");
 		
 		result = this.mockMvc.perform(get("/users/{id}",idUser1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -95,7 +98,7 @@ class User_UC_5_GetUsersTest {
 		int idUser1 = 10000;
 		
 		this.mockMvc.perform(get("/users/{id}",idUser1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
 				.andExpect(jsonPath("$.status", is(404)))
@@ -110,7 +113,7 @@ class User_UC_5_GetUsersTest {
 		String idUser1 = "XXX";
 		
 		this.mockMvc.perform(get("/users/{id}",idUser1)
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.status", is(400)))

@@ -42,6 +42,9 @@ class Service_UC_1_CreateServiceTest {
 	@Autowired
 	private ServiceRepository serviceRepository;
 	
+	@Autowired
+	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
 	@Test
 	void UC_1_01_CreateServiceOk() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
@@ -54,7 +57,7 @@ class Service_UC_1_CreateServiceTest {
 
 		// Creo un service e verifico la risposta
 		MvcResult result = this.mockMvc.perform(post("/services")
-				.with(UserAuthProfilesUtils.utenzaAdmin())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)
