@@ -185,58 +185,8 @@ class User_UC_3_PatchUserTest {
 
 	@Test
 	void UC_3_04_PatchUser_RemoveEnabled() throws Exception {
-		UserEntity user = Costanti.getUser_Snakamoto();
-
-		String createUser = Json.createObjectBuilder()
-				.add("enabled", user.getEnabled())
-				.add("full_name", user.getFullName())
-				.add("principal", user.getPrincipal())
-				.add("email", user.getEmail())
-				.build()
-				.toString();
-
-		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(createUser)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andReturn();
-
-		// Modifico l'utente cancellando il principal
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REMOVE.toString())
-				.add("path", "/enabled")
-				.add("value", "");
-
-		String patchUser = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(patchUser)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		UserEntity userEntity = this.userRepository.findById((long) id).get();
-
-		assertEquals(id, userEntity.getId());
-		assertEquals(user.getEnabled(), userEntity.getEnabled());
-		assertEquals(user.getFullName(), userEntity.getFullName());
-		assertEquals(user.getPrincipal(), userEntity.getPrincipal());
+		String patchField = "/enabled";
+		patchRemoveRequiredField(patchField);
 	}
 
 	@Test
@@ -298,58 +248,8 @@ class User_UC_3_PatchUserTest {
 
 	@Test
 	void UC_3_06_PatchUser_RemoveFullname() throws Exception {
-		UserEntity user = Costanti.getUser_Snakamoto();
-
-		String createUser = Json.createObjectBuilder()
-				.add("enabled", user.getEnabled())
-				.add("full_name", user.getFullName())
-				.add("principal", user.getPrincipal())
-				.add("email", user.getEmail())
-				.build()
-				.toString();
-
-		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(createUser)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andReturn();
-
-		// Modifico l'utente cancellando il principal
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REMOVE.toString())
-				.add("path", "/full_name")
-				.add("value", "");
-
-		String patchUser = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(patchUser)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		UserEntity userEntity = this.userRepository.findById((long) id).get();
-
-		assertEquals(id, userEntity.getId());
-		assertEquals(user.getEnabled(), userEntity.getEnabled());
-		assertEquals(user.getFullName(), userEntity.getFullName());
-		assertEquals(user.getPrincipal(), userEntity.getPrincipal());
+		String patchField = "/full_name";
+		patchRemoveRequiredField(patchField);
 	}
 
 	@Test
@@ -411,58 +311,8 @@ class User_UC_3_PatchUserTest {
 
 	@Test
 	void UC_3_08_PatchUser_RemovePrincipal() throws Exception {
-		UserEntity user = Costanti.getUser_Snakamoto();
-
-		String createUser = Json.createObjectBuilder()
-				.add("enabled", user.getEnabled())
-				.add("full_name", user.getFullName())
-				.add("principal", user.getPrincipal())
-				.add("email", user.getEmail())
-				.build()
-				.toString();
-
-		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(createUser)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andReturn();
-
-		// Modifico l'utente cancellando il principal
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REMOVE.toString())
-				.add("path", "/principal")
-				.add("value", "");
-
-		String patchUser = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/users/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(patchUser)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		UserEntity userEntity = this.userRepository.findById((long) id).get();
-
-		assertEquals(id, userEntity.getId());
-		assertEquals(user.getEnabled(), userEntity.getEnabled());
-		assertEquals(user.getFullName(), userEntity.getFullName());
-		assertEquals(user.getPrincipal(), userEntity.getPrincipal());
+		String patchField = "/principal";
+		patchRemoveRequiredField(patchField);
 	}
 
 	@Test
@@ -743,6 +593,62 @@ class User_UC_3_PatchUserTest {
 		.andExpect(status().isConflict())
 		.andExpect(jsonPath("$.status", is(409)))
 		.andExpect(jsonPath("$.title", is("Conflict")))
+		.andExpect(jsonPath("$.type").isString())
+		.andExpect(jsonPath("$.detail").isString())
+		.andReturn();
+
+		UserEntity userEntity = this.userRepository.findById((long) id).get();
+
+		assertEquals(id, userEntity.getId());
+		assertEquals(user.getEnabled(), userEntity.getEnabled());
+		assertEquals(user.getFullName(), userEntity.getFullName());
+		assertEquals(user.getPrincipal(), userEntity.getPrincipal());
+	}
+	
+	private void patchRemoveRequiredField(String patchField) throws Exception {
+		UserEntity user = Costanti.getUser_Snakamoto();
+
+		String createUser = Json.createObjectBuilder()
+				.add("enabled", user.getEnabled())
+				.add("full_name", user.getFullName())
+				.add("principal", user.getPrincipal())
+				.add("email", user.getEmail())
+				.build()
+				.toString();
+
+		// Creo un utente
+		MvcResult result = this.mockMvc.perform(post("/users")
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(createUser)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andReturn();
+
+		// Modifico l'utente cancellando il principal
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		int id = reader.readObject().getInt("id");
+
+		
+		JsonObjectBuilder patchOp = Json.createObjectBuilder()
+				.add("op", OpEnum.REMOVE.toString())
+				.add("path", patchField)
+				.add("value", "");
+
+		String patchUser = Json.createArrayBuilder()
+				.add(patchOp)
+				.build()
+				.toString();
+
+		this.mockMvc.perform(patch("/users/{id}", id)
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(patchUser)
+				.contentType("application/json-patch+json")
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isBadRequest())
+		.andExpect(jsonPath("$.status", is(400)))
+		.andExpect(jsonPath("$.title", is("Bad Request")))
 		.andExpect(jsonPath("$.type").isString())
 		.andExpect(jsonPath("$.detail").isString())
 		.andReturn();

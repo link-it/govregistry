@@ -71,7 +71,7 @@ public class ServiceService {
 		}
 		
 		if (updatedService == null) {
-			throw new BadRequestException(PatchMessages.VoidObjectPatch);
+			throw new BadRequestException(PatchMessages.VOID_OBJECT_PATCH);
 		}
 		
 		// Faccio partire la validazione
