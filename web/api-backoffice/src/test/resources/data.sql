@@ -1,11 +1,11 @@
-INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (1, 'amministratore', 'Amministratore Vanguard', 'admin@govhub.it', true);
-INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (2, 'ospite', 'Ospite Calmo', 'ospite@govhub.it', true);
-INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (3, 'user_viewer', 'Lurker Skywalker', 'user_viewer@govhub.it', true);
-INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (4, 'user_editor', 'User Editor', 'user_admin@govhub.it', true);
-INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (5, 'org_viewer', 'Visore Antonio', 'org_viewer@govhub.it', true);
-INSERT INTO public.users (id, principal, full_name, email, enabled) VALUES (6, 'org_editor', 'Giovanni Mele', 'org_editor@govhub.it', true);
+INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (1, 'amministratore', 'Amministratore Vanguard', 'admin@govhub.it', true);
+INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (2, 'ospite', 'Ospite Calmo', 'ospite@govhub.it', true);
+INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (3, 'user_viewer', 'Lurker Skywalker', 'user_viewer@govhub.it', true);
+INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (4, 'user_editor', 'User Editor', 'user_admin@govhub.it', true);
+INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (5, 'org_viewer', 'Visore Antonio', 'org_viewer@govhub.it', true);
+INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (6, 'org_editor', 'Giovanni Mele', 'org_editor@govhub.it', true);
 
-ALTER SEQUENCE SEQ_USERS RESTART WITH 7;
+ALTER SEQUENCE SEQ_GOVHUB_USERS RESTART WITH 7;
 
 
 INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (1, 1, 'govhub_sysadmin');
@@ -18,10 +18,10 @@ INSERT INTO public.govhub_roles (id, id_govhub_application, name) VALUES (6, 1, 
 ALTER SEQUENCE SEQ_GOVHUB_ROLES RESTART WITH 7;
 
 
-INSERT INTO public.organizations (id, tax_code, legal_name) VALUES (1, '12345678901', 'Ente Creditore');
-INSERT INTO public.organizations (id, tax_code, legal_name) VALUES (2, '12345678902', 'Ente Creditore 2');
+INSERT INTO public.govhub_organizations (id, tax_code, legal_name) VALUES (1, '12345678901', 'Ente Creditore');
+INSERT INTO public.govhub_organizations (id, tax_code, legal_name) VALUES (2, '12345678902', 'Ente Creditore 2');
 
-ALTER SEQUENCE SEQ_ORGANIZATIONS RESTART WITH 3;
+ALTER SEQUENCE SEQ_GOVHUB_ORGANIZATIONS RESTART WITH 3;
 
 INSERT INTO public.govhub_services (id, name, description) VALUES (1, 'Servizio Generico', 'Esempio di servizio');
 INSERT INTO public.govhub_services (id, name, description) VALUES (2, 'Servizio senza autorizzazioni', 'Servizio non autorizzato');
