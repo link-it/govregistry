@@ -217,6 +217,7 @@ public class Service_UC_4_FindServicesTest {
 		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "service_name");
+		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
 		MvcResult result = this.mockMvc.perform(get("/services").params(params )
 				.with(UserAuthProfilesUtils.utenzaAdmin())
@@ -254,6 +255,7 @@ public class Service_UC_4_FindServicesTest {
 		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "id");
+		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
 		MvcResult result = this.mockMvc.perform(get("/services").params(params )
 				.with(UserAuthProfilesUtils.utenzaAdmin())
@@ -290,8 +292,6 @@ public class Service_UC_4_FindServicesTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "3");
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "2");
-		params.add(Costanti.USERS_QUERY_PARAM_SORT, "id");
-		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
 		MvcResult result = this.mockMvc.perform(get("/services").params(params )
 				.with(UserAuthProfilesUtils.utenzaAdmin())

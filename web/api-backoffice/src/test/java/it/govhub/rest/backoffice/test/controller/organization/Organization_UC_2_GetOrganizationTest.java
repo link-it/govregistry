@@ -67,7 +67,7 @@ class Organization_UC_2_GetOrganizationTest {
 		JsonArray items = userList.getJsonArray("items");
 		assertEquals(3, items.size());
 		
-		JsonObject item1 = items.getJsonObject(2); 
+		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
 		
 		result = this.mockMvc.perform(get("/organizations/{id}",idUser1)
