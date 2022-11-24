@@ -75,13 +75,17 @@ class Organization_UC_1_FindOrganizationsTest {
 		JsonArray items = userList.getJsonArray("items");
 		assertEquals(3, items.size());
 		
-		assertEquals("12345678901", items.getJsonObject(0).getString("tax_code"));
+		// ordinamento di default ID desc
+		
+		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getString("tax_code"));
 		assertEquals("12345678902", items.getJsonObject(1).getString("tax_code"));
-		assertEquals(ente.getTaxCode(), items.getJsonObject(2).getString("tax_code"));
+		assertEquals("12345678901", items.getJsonObject(2).getString("tax_code"));
 	}
 	
 	@Test
 	void UC_1_02_FindAllOk_Limit() throws Exception {
+		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "1");
 		
@@ -104,7 +108,9 @@ class Organization_UC_1_FindOrganizationsTest {
 		JsonArray items = userList.getJsonArray("items");
 		assertEquals(1, items.size());
 		
-		assertEquals("12345678901", items.getJsonObject(0).getString("tax_code"));
+		// ordinamento di default ID desc
+		
+		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getString("tax_code"));
 	}
 	
 	@Test
@@ -201,8 +207,6 @@ class Organization_UC_1_FindOrganizationsTest {
 	
 	@Test
 	void UC_1_07_FindAllOk_OffsetLimit() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "2");
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "2");
@@ -226,7 +230,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		JsonArray items = userList.getJsonArray("items");
 		assertEquals(1, items.size());
 		
-		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getString("tax_code"));
+		assertEquals("12345678901", items.getJsonObject(0).getString("tax_code"));
 	}
 	
 	@Test

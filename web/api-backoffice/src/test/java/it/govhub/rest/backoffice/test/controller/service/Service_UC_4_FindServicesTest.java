@@ -75,19 +75,23 @@ public class Service_UC_4_FindServicesTest {
 		JsonArray items = userList.getJsonArray("items");
 		assertEquals(9, items.size());
 		
-		assertEquals("Servizio Generico", items.getJsonObject(0).getString("service_name"));
-		assertEquals("Servizio senza autorizzazioni", items.getJsonObject(1).getString("service_name"));
-		assertEquals("SUAP-Integrazione", items.getJsonObject(2).getString("service_name"));
-		assertEquals("IMU-ImpostaMunicipaleUnica", items.getJsonObject(3).getString("service_name"));
+		// ordinamento di default ID desc
+		
+		assertEquals(servizio.getName(), items.getJsonObject(0).getString("service_name"));
+		assertEquals("Servizi Turistici", items.getJsonObject(1).getString("service_name"));
+		assertEquals("Variazione Residenza", items.getJsonObject(2).getString("service_name"));
+		assertEquals("Portale ZTL", items.getJsonObject(3).getString("service_name"));
 		assertEquals("TARI", items.getJsonObject(4).getString("service_name"));
-		assertEquals("Portale ZTL", items.getJsonObject(5).getString("service_name"));
-		assertEquals("Variazione Residenza", items.getJsonObject(6).getString("service_name"));
-		assertEquals("Servizi Turistici", items.getJsonObject(7).getString("service_name"));
-		assertEquals(servizio.getName(), items.getJsonObject(8).getString("service_name"));
+		assertEquals("IMU-ImpostaMunicipaleUnica", items.getJsonObject(5).getString("service_name"));
+		assertEquals("SUAP-Integrazione", items.getJsonObject(6).getString("service_name"));
+		assertEquals("Servizio senza autorizzazioni", items.getJsonObject(7).getString("service_name"));		
+		assertEquals("Servizio Generico", items.getJsonObject(8).getString("service_name"));
 	}
 	
 	@Test
 	void UC_4_02_FindAllOk_Limit() throws Exception {
+		ServiceEntity servizio = Costanti.getServizioTest();
+		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "3");
 		
@@ -110,9 +114,11 @@ public class Service_UC_4_FindServicesTest {
 		JsonArray items = userList.getJsonArray("items");
 		assertEquals(3, items.size());
 		
-		assertEquals("Servizio Generico", items.getJsonObject(0).getString("service_name"));
-		assertEquals("Servizio senza autorizzazioni", items.getJsonObject(1).getString("service_name"));
-		assertEquals("SUAP-Integrazione", items.getJsonObject(2).getString("service_name"));
+		// ordinamento di default ID desc
+		
+		assertEquals(servizio.getName(), items.getJsonObject(0).getString("service_name"));
+		assertEquals("Servizi Turistici", items.getJsonObject(1).getString("service_name"));
+		assertEquals("Variazione Residenza", items.getJsonObject(2).getString("service_name"));
 		
 	}
 	
@@ -306,8 +312,8 @@ public class Service_UC_4_FindServicesTest {
 		JsonArray items = userList.getJsonArray("items");
 		assertEquals(2, items.size());
 		
-		assertEquals("SUAP-Integrazione", items.getJsonObject(0).getString("service_name"));
-		assertEquals("IMU-ImpostaMunicipaleUnica", items.getJsonObject(1).getString("service_name"));
+		assertEquals("Variazione Residenza", items.getJsonObject(0).getString("service_name"));
+		assertEquals("Portale ZTL", items.getJsonObject(1).getString("service_name"));
 	}
 	
 	@Test
