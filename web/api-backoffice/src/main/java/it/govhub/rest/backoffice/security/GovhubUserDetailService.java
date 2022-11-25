@@ -3,10 +3,12 @@ package it.govhub.rest.backoffice.security;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import it.govhub.rest.backoffice.config.Caches;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.repository.UserRepository;
@@ -20,6 +22,7 @@ public class GovhubUserDetailService implements UserDetailsService {
 
 	@Override
 	@Transactional
+	@Cacheable(Caches.PRINCIPALS)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		UserEntity user = this.userRepo.findByPrincipal(username)
@@ -27,8 +30,9 @@ public class GovhubUserDetailService implements UserDetailsService {
 		
 		// Precarico tutte le relazioni lazy necessarie poi alla validazione
 		for(var auth : user.getAuthorizations()) {
-			auth.getServices();
-			auth.getOrganizations();
+			auth.getServices().size();
+			auth.getOrganizations().size();
+			auth.getRole().getAssignableRoles().size();
 		}
 		
 		return new GovhubPrincipal(user);

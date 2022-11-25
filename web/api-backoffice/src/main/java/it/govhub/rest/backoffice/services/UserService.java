@@ -4,7 +4,11 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -20,6 +24,7 @@ import it.govhub.rest.backoffice.assemblers.UserAssembler;
 import it.govhub.rest.backoffice.beans.Profile;
 import it.govhub.rest.backoffice.beans.User;
 import it.govhub.rest.backoffice.beans.UserCreate;
+import it.govhub.rest.backoffice.config.Caches;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.exception.BadRequestException;
 import it.govhub.rest.backoffice.exception.ConflictException;
