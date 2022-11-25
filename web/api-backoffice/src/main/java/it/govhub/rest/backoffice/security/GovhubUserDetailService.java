@@ -25,15 +25,8 @@ public class GovhubUserDetailService implements UserDetailsService {
 	@Cacheable(Caches.PRINCIPALS)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		UserEntity user = this.userRepo.findByPrincipal(username)
+		UserEntity user = this.userRepo.findAndPreloadByPrincipal(username)
 				.orElseThrow( () -> new ResourceNotFoundException("Credenziali non Valide"));
-		
-		// Precarico tutte le relazioni lazy necessarie poi alla validazione
-		for(var auth : user.getAuthorizations()) {
-			auth.getServices().size();
-			auth.getOrganizations().size();
-			auth.getRole().getAssignableRoles().size();
-		}
 		
 		return new GovhubPrincipal(user);
 	}
