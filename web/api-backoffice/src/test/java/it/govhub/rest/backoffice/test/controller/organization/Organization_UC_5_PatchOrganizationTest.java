@@ -19,6 +19,8 @@ import javax.json.JsonReader;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -641,9 +643,22 @@ class Organization_UC_5_PatchOrganizationTest {
 		assertNull(organizationEntity.getOfficeProvince());
 		assertNull(organizationEntity.getOfficeZip());
 	}
-
-	@Test
-	void UC_5_10_PatchOrganization_ReplaceNotExistingOfficeAddress() throws Exception {
+	
+	@ParameterizedTest
+	@CsvSource({
+		"/office_address,Parco della Vittoria 1/A",
+		"/office_address_details,Parco della Vittoria 1/A",
+		"/office_at,Parco della Vittoria 1/A",
+		"/office_zip,56125",
+		"/office_municipality,56125",
+		"/office_municipality_details,56125",
+		"/office_province,PI",
+		"/office_foreign_state,DE",
+		"/office_phone_number,050123456",
+		"/office_email_address,mariorossi@gmail.com",
+		"/office_pec_address,mariorossi@gmail.com"
+    })
+	void UC_5_10_PatchOrganization_ReplaceNotExistingField(String path, String value) throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -668,11 +683,11 @@ class Organization_UC_5_PatchOrganizationTest {
 		// Modifico l'organization
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int id = reader.readObject().getInt("id");
-
+		
 		JsonObjectBuilder patchOp = Json.createObjectBuilder()
 				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_address")
-				.add("value", "Parco della Vittoria 1/A");
+				.add("path", path)
+				.add("value", value);
 
 		String PatchOrganization = Json.createArrayBuilder()
 				.add(patchOp)
@@ -711,7 +726,7 @@ class Organization_UC_5_PatchOrganizationTest {
 		assertNull(organizationEntity.getOfficeProvince());
 		assertNull(organizationEntity.getOfficeZip());
 	}
-	
+
 	@Test
 	void UC_5_11_PatchOrganization_ReplaceOfficeAddressDetails() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
@@ -931,77 +946,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_14_PatchOrganization_ReplaceNotExistingOfficeAddressDetails() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_address_details")
-				.add("value", "Parco della Vittoria 1/A");
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
-	}
-	
-	@Test
-	void UC_5_15_PatchOrganization_ReplaceOfficeAt() throws Exception {
+	void UC_5_14_PatchOrganization_ReplaceOfficeAt() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -1076,7 +1021,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_16_PatchOrganization_AddOfficeAt() throws Exception {
+	void UC_5_15_PatchOrganization_AddOfficeAt() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -1149,7 +1094,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_17_PatchOrganization_RemoveOfficeAt() throws Exception {
+	void UC_5_16_PatchOrganization_RemoveOfficeAt() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -1219,77 +1164,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_18_PatchOrganization_ReplaceNotExistingOfficeAt() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_at")
-				.add("value", "Parco della Vittoria 1/A");
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
-	}
-	
-	@Test
-	void UC_5_19_PatchOrganization_ReplaceOfficeZip() throws Exception {
+	void UC_5_17_PatchOrganization_ReplaceOfficeZip() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -1364,7 +1239,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_20_PatchOrganization_AddOfficeZip() throws Exception {
+	void UC_5_18_PatchOrganization_AddOfficeZip() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -1437,7 +1312,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_21_PatchOrganization_RemoveOfficeZip() throws Exception {
+	void UC_5_19_PatchOrganization_RemoveOfficeZip() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -1507,77 +1382,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_22_PatchOrganization_ReplaceNotExistingOfficeZip() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_zip")
-				.add("value", "56125");
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
-	}
-	
-	@Test
-	void UC_5_23_PatchOrganization_ReplaceOfficeMunicipality() throws Exception {
+	void UC_5_20_PatchOrganization_ReplaceOfficeMunicipality() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -1652,7 +1457,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_24_PatchOrganization_AddOfficeMunicipality() throws Exception {
+	void UC_5_21_PatchOrganization_AddOfficeMunicipality() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -1725,7 +1530,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_25_PatchOrganization_RemoveOfficeMunicipality() throws Exception {
+	void UC_5_22_PatchOrganization_RemoveOfficeMunicipality() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -1795,77 +1600,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_26_PatchOrganization_ReplaceNotExistingOfficeMunicipality() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_municipality")
-				.add("value", "56125");
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
-	}
-	
-	@Test
-	void UC_5_27_PatchOrganization_ReplaceOfficeMunicipalityDetails() throws Exception {
+	void UC_5_23_PatchOrganization_ReplaceOfficeMunicipalityDetails() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -1940,7 +1675,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_28_PatchOrganization_AddOfficeMunicipalityDetails() throws Exception {
+	void UC_5_24_PatchOrganization_AddOfficeMunicipalityDetails() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2013,7 +1748,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_29_PatchOrganization_RemoveOfficeMunicipalityDetails() throws Exception {
+	void UC_5_25_PatchOrganization_RemoveOfficeMunicipalityDetails() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2083,77 +1818,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_30_PatchOrganization_ReplaceNotExistingOfficeMunicipalityDetails() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_municipality_details")
-				.add("value", "56125");
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
-	}
-	
-	@Test
-	void UC_5_31_PatchOrganization_ReplaceOfficeProvince() throws Exception {
+	void UC_5_26_PatchOrganization_ReplaceOfficeProvince() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2228,7 +1893,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_32_PatchOrganization_AddOfficeProvince() throws Exception {
+	void UC_5_27_PatchOrganization_AddOfficeProvince() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2301,7 +1966,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_33_PatchOrganization_RemoveOfficeProvince() throws Exception {
+	void UC_5_28_PatchOrganization_RemoveOfficeProvince() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2371,77 +2036,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_34_PatchOrganization_ReplaceNotExistingOfficeProvince() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_province")
-				.add("value", "PI");
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
-	}
-	
-	@Test
-	void UC_5_35_PatchOrganization_ReplaceOfficeForeignState() throws Exception {
+	void UC_5_29_PatchOrganization_ReplaceOfficeForeignState() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2516,7 +2111,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_36_PatchOrganization_AddOfficeForeignState() throws Exception {
+	void UC_5_30_PatchOrganization_AddOfficeForeignState() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2589,7 +2184,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_37_PatchOrganization_RemoveOfficeForeignState() throws Exception {
+	void UC_5_31_PatchOrganization_RemoveOfficeForeignState() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2659,77 +2254,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_38_PatchOrganization_ReplaceNotExistingOfficeForeignState() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_foreign_state")
-				.add("value", "DE");
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
-	}
-	
-	@Test
-	void UC_5_39_PatchOrganization_ReplaceOfficePhoneNumber() throws Exception {
+	void UC_5_32_PatchOrganization_ReplaceOfficePhoneNumber() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2804,7 +2329,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_40_PatchOrganization_AddOfficePhoneNumber() throws Exception {
+	void UC_5_33_PatchOrganization_AddOfficePhoneNumber() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2877,7 +2402,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_41_PatchOrganization_RemoveOfficePhoneNumber() throws Exception {
+	void UC_5_34_PatchOrganization_RemoveOfficePhoneNumber() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -2947,77 +2472,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_42_PatchOrganization_ReplaceNotExistingOfficePhoneNumber() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_phone_number")
-				.add("value", "050123456");
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
-	}
-	
-	@Test
-	void UC_5_43_PatchOrganization_ReplaceOfficeEmailAddress() throws Exception {
+	void UC_5_35_PatchOrganization_ReplaceOfficeEmailAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3092,7 +2547,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_44_PatchOrganization_AddOfficeEmailAddress() throws Exception {
+	void UC_5_36_PatchOrganization_AddOfficeEmailAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3165,7 +2620,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_45_PatchOrganization_RemoveOfficeEmailAddress() throws Exception {
+	void UC_5_37_PatchOrganization_RemoveOfficeEmailAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3235,77 +2690,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_46_PatchOrganization_ReplaceNotExistingOfficeEmailAddress() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_email_address")
-				.add("value", "mariorossi@gmail.com");
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
-	}
-	
-	@Test
-	void UC_5_47_PatchOrganization_ReplaceOfficePecAddress() throws Exception {
+	void UC_5_38_PatchOrganization_ReplaceOfficePecAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3380,7 +2765,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_48_PatchOrganization_AddOfficePecAddress() throws Exception {
+	void UC_5_39_PatchOrganization_AddOfficePecAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3453,7 +2838,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_49_PatchOrganization_RemoveOfficePecAddress() throws Exception {
+	void UC_5_40_PatchOrganization_RemoveOfficePecAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3523,77 +2908,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_50_PatchOrganization_ReplaceNotExistingOfficePecAddress() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/office_pec_address")
-				.add("value", "mariorossi@gmail.com");
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch("/organizations/{id}", id)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.status", is(400)))
-		.andExpect(jsonPath("$.title", is("Bad Request")))
-		.andExpect(jsonPath("$.type").isString())
-		.andExpect(jsonPath("$.detail").isString())
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
-	}
-	
-	@Test
-	void UC_5_51_PatchOrganization_ReplaceLogoMiniature() throws Exception {
+	void UC_5_41_PatchOrganization_ReplaceLogoMiniature() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3668,7 +2983,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_52_PatchOrganization_AddLogoMiniature() throws Exception {
+	void UC_5_42_PatchOrganization_AddLogoMiniature() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3741,7 +3056,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_53_PatchOrganization_RemoveLogoMiniature() throws Exception {
+	void UC_5_43_PatchOrganization_RemoveLogoMiniature() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3811,7 +3126,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_54_PatchOrganization_ReplaceNotExistingLogoMiniature() throws Exception {
+	void UC_5_44_PatchOrganization_ReplaceNotExistingLogoMiniature() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3881,7 +3196,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 	
 	@Test
-	void UC_5_55_PatchOrganization_ReplaceLogo() throws Exception {
+	void UC_5_45_PatchOrganization_ReplaceLogo() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -3956,7 +3271,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_56_PatchOrganization_AddLogo() throws Exception {
+	void UC_5_46_PatchOrganization_AddLogo() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -4029,7 +3344,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_57_PatchOrganization_RemoveLogo() throws Exception {
+	void UC_5_47_PatchOrganization_RemoveLogo() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -4099,7 +3414,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 
 	@Test
-	void UC_5_58_PatchOrganization_ReplaceNotExistingLogo() throws Exception {
+	void UC_5_48_PatchOrganization_ReplaceNotExistingLogo() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -4169,7 +3484,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 	
 	@Test
-	void UC_5_59_PatchOrganization_ConflictTaxCode() throws Exception {
+	void UC_5_49_PatchOrganization_ConflictTaxCode() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
@@ -4239,7 +3554,7 @@ class Organization_UC_5_PatchOrganizationTest {
 	}
 	
 	@Test
-	void UC_5_60_PatchOrganization_ConflictLegalName() throws Exception {
+	void UC_5_50_PatchOrganization_ConflictLegalName() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
 		String json = Json.createObjectBuilder()
