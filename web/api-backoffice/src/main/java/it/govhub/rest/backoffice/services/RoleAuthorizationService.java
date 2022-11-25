@@ -63,13 +63,13 @@ public class RoleAuthorizationService {
 	private AuthorizationAssembler authAssembler;
 
 	@Transactional
-	public Authorization assignAuthorization(Long id, AuthorizationCreate authorization) {
+	public Authorization assignAuthorization(Long userId, AuthorizationCreate authorization) {
 		
-		UserEntity assignee = this.userRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
+		UserEntity assignee = this.userRepo.findById(userId)
+				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(userId)));
 		
 		RoleEntity role = this.roleRepo.findById(authorization.getRole())
-				.orElseThrow( () -> new BadRequestException(RoleMessages.notFound(id)));
+				.orElseThrow( () -> new BadRequestException(RoleMessages.notFound(userId)));
 		
 		UserEntity principal = SecurityService.getPrincipal();
 		

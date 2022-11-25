@@ -8,6 +8,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -15,6 +16,7 @@ import it.govhub.rest.backoffice.utils.Base64String;
 import it.govhub.rest.backoffice.utils.Base64StringSerializer;
 
 	@SpringBootApplication
+	@EnableScheduling
 	public class Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {

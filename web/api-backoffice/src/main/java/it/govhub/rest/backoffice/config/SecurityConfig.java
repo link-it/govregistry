@@ -75,7 +75,7 @@ public class SecurityConfig {
 	
 	@Bean
 	public SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
-		applyAuthRules(http)
+		applyAuthRules(http).csrf().disable()
 		.authorizeRequests()
 			.and().httpBasic().authenticationEntryPoint(new BasicAuthenticationEntryPoint(jsonMapper))
 			.and().exceptionHandling()

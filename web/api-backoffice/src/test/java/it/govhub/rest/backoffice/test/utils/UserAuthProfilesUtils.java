@@ -9,9 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import it.govhub.rest.backoffice.config.SecurityConfig;
-import it.govhub.rest.backoffice.entity.UserEntity;
-import it.govhub.rest.backoffice.repository.UserRepository;
-import it.govhub.rest.backoffice.security.GovhubPrincipal;
 import it.govhub.rest.backoffice.security.GovhubUserDetailService;
 
 @Component
