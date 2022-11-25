@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -31,10 +32,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "govhub_authorizations")
 public class RoleAuthorizationEntity {
 
+	@EqualsAndHashCode.Include
 	@Id
 	@SequenceGenerator(name = "seq_govhub_authorizations", sequenceName = "seq_govhub_authorizations", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_govhub_authorizations")

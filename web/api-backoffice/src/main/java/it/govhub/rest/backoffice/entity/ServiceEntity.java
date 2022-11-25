@@ -25,6 +25,7 @@ import lombok.ToString;
 @Table(name = "govhub_services")
 public class ServiceEntity {
 
+	@EqualsAndHashCode.Include
 	@Id
 	@SequenceGenerator(name = "seq_govhub_services", sequenceName = "seq_govhub_services", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_govhub_services")
