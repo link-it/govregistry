@@ -17,6 +17,8 @@ import javax.json.JsonReader;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -184,13 +186,7 @@ class User_UC_3_PatchUserTest {
 	}
 
 	@Test
-	void UC_3_04_PatchUser_RemoveEnabled() throws Exception {
-		String patchField = "/enabled";
-		patchRemoveRequiredField(patchField);
-	}
-
-	@Test
-	void UC_3_05_PatchUser_Fullname() throws Exception {
+	void UC_3_04_PatchUser_Fullname() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
 
 		String createUser = Json.createObjectBuilder()
@@ -247,13 +243,7 @@ class User_UC_3_PatchUserTest {
 	}
 
 	@Test
-	void UC_3_06_PatchUser_RemoveFullname() throws Exception {
-		String patchField = "/full_name";
-		patchRemoveRequiredField(patchField);
-	}
-
-	@Test
-	void UC_3_07_PatchUser_Principal() throws Exception {
+	void UC_3_05_PatchUser_Principal() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
 
 		String createUser = Json.createObjectBuilder()
@@ -310,13 +300,7 @@ class User_UC_3_PatchUserTest {
 	}
 
 	@Test
-	void UC_3_08_PatchUser_RemovePrincipal() throws Exception {
-		String patchField = "/principal";
-		patchRemoveRequiredField(patchField);
-	}
-
-	@Test
-	void UC_3_09_PatchUser_ReplaceEmail() throws Exception {
+	void UC_3_06_PatchUser_ReplaceEmail() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
 
 		String createUser = Json.createObjectBuilder()
@@ -375,7 +359,7 @@ class User_UC_3_PatchUserTest {
 	}
 
 	@Test
-	void UC_3_10_PatchUser_AddEmail() throws Exception {
+	void UC_3_07_PatchUser_AddEmail() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
 
 		String createUser = Json.createObjectBuilder()
@@ -434,7 +418,7 @@ class User_UC_3_PatchUserTest {
 	}
 
 	@Test
-	void UC_3_11_PatchUser_RemoveEmail() throws Exception {
+	void UC_3_08_PatchUser_RemoveEmail() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
 
 		String createUser = Json.createObjectBuilder()
@@ -492,7 +476,7 @@ class User_UC_3_PatchUserTest {
 	}
 
 	@Test
-	void UC_3_12_PatchUser_ReplaceNotExistingEmail() throws Exception {
+	void UC_3_09_PatchUser_ReplaceNotExistingEmail() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
 
 		String createUser = Json.createObjectBuilder()
@@ -551,7 +535,7 @@ class User_UC_3_PatchUserTest {
 	}
 	
 	@Test
-	void UC_3_13_PatchUser_ConflictPrincipal() throws Exception {
+	void UC_3_10_PatchUser_ConflictPrincipal() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
 
 		String createUser = Json.createObjectBuilder()
@@ -605,7 +589,9 @@ class User_UC_3_PatchUserTest {
 		assertEquals(user.getPrincipal(), userEntity.getPrincipal());
 	}
 	
-	private void patchRemoveRequiredField(String patchField) throws Exception {
+	@ParameterizedTest
+	@ValueSource(strings = {"/enabled","/full_name","/principal"})
+	void UC_3_11_PatchUserRemoveRequiredField(String patchField) throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
 
 		String createUser = Json.createObjectBuilder()
