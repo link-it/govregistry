@@ -13,7 +13,6 @@ import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.exception.ResourceNotFoundException;
 import it.govhub.rest.backoffice.repository.UserRepository;
 
-//@Service
 public class GovhubUserDetailService implements UserDetailsService {
 	
 	@Autowired

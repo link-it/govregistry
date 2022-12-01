@@ -23,7 +23,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 
@@ -32,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.govhub.rest.backoffice.exception.RestResponseEntityExceptionHandler;
 import it.govhub.rest.backoffice.exception.UnreachableException;
 import it.govhub.rest.backoffice.security.GovhubUserDetailService;
+import it.govhub.rest.backoffice.security.ProblemHttp403ForbiddenEntryPoint;
 
 
 /**
@@ -75,11 +81,23 @@ public class SecurityConfig {
 	
 	@Bean
 	public SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
-		applyAuthRules(http).csrf().disable()
-		.authorizeRequests()
-			.and().httpBasic().authenticationEntryPoint(new BasicAuthenticationEntryPoint(jsonMapper))
+		
+		//.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).
+		
+		applyAuthRules(http)
+		/*.csrf()
+	    	.requireCsrfProtectionMatcher(new AndRequestMatcher(
+	    			CsrfFilter.DEFAULT_CSRF_MATCHER,
+	    			new RequestHeaderRequestMatcher("JSESSIONID")))
+		.and()*/
+				.formLogin()
+					.loginPage("/login")
+					.loginProcessingUrl("/login-do")
+					.failureUrl("/failure")
+					.permitAll()
 			.and().exceptionHandling()
-					.accessDeniedHandler(this.accessDeniedHandler()); 
+					.accessDeniedHandler(this.accessDeniedHandler())
+					.authenticationEntryPoint(new ProblemHttp403ForbiddenEntryPoint(this.jsonMapper));
 		return http.build();
 	}
 
@@ -115,6 +133,7 @@ public class SecurityConfig {
 		return http;
 	}
 	
+	
 	@Bean
 	public AccessDeniedHandler accessDeniedHandler() {
 		return new AccessDeniedHandlerImpl(this.jsonMapper);
@@ -146,39 +165,4 @@ public class SecurityConfig {
 
 	}
 	
-	
-	public class BasicAuthenticationEntryPoint extends org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint {
-		
-		ObjectMapper jsonMapper;
-		
-		public BasicAuthenticationEntryPoint(ObjectMapper jsonMapper) {
-			this.setRealmName(REALM_NAME);
-			this.jsonMapper = jsonMapper;
-		}
-
-		@Override
-		public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-			 
-			AuthenticationProblem problem = new AuthenticationProblem();
-			problem.status = HttpStatus.UNAUTHORIZED.value();
-			problem.title = HttpStatus.UNAUTHORIZED.getReasonPhrase();
-			problem.detail = authException.getMessage();
-			
-			// imposto il content-type della risposta
-			response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-			response.setStatus(problem.status);
-			
-			ServletOutputStream outputStream = null;
-			try{
-				problem.instance = new URI(RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.UNAUTHORIZED));
-				outputStream = response.getOutputStream();
-				this.jsonMapper.writeValue(outputStream, problem);
-				outputStream.flush();
-			} catch(Exception e) {
-				throw new UnreachableException();
-			}
-			
-		}
-		
-	}
 }
