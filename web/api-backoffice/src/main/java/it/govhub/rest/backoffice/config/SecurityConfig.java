@@ -84,7 +84,7 @@ public class SecurityConfig {
 		
 		//.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).
 		
-		applyAuthRules(http)
+		applyAuthRules(http).csrf().disable()
 		/*.csrf()
 	    	.requireCsrfProtectionMatcher(new AndRequestMatcher(
 	    			CsrfFilter.DEFAULT_CSRF_MATCHER,
