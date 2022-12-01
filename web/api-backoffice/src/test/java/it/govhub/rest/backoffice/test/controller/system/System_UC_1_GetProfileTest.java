@@ -2,7 +2,6 @@ package it.govhub.rest.backoffice.test.controller.system;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,7 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.rest.backoffice.Application;
-import it.govhub.rest.backoffice.config.SecurityConfig;
 import it.govhub.rest.backoffice.entity.UserEntity;
 import it.govhub.rest.backoffice.repository.UserRepository;
 import it.govhub.rest.backoffice.test.Costanti;
@@ -70,24 +68,11 @@ class System_UC_1_GetProfileTest {
 	}
 	
 	@Test
-	void UC_1_02_GetProfile_UtenzaAdmin_Forbidden() throws Exception {
-		this.mockMvc.perform(get("/profile")
-				.with(user("utenza_non_registrata").password("password"))
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isForbidden())
-				.andExpect(jsonPath("$.status", is(403)))
-				.andExpect(jsonPath("$.title", is("Forbidden")))
-				.andExpect(jsonPath("$.type").isString())
-				.andExpect(jsonPath("$.detail").isString())
-				.andReturn();
-	}
-	
-	//@Test
-	void UC_1_03_GetProfile_UtenzaAdminOk() throws Exception {
+	void UC_1_02_GetProfile_UtenzaAdminOk() throws Exception {
 		UserEntity user = Costanti.getUser_Vbuterin();
 		
 		MvcResult result = this.mockMvc.perform(get("/profile")
-				.with(user(user.getPrincipal()).password("password").roles(SecurityConfig.RUOLO_GOVHUB_SYSADMIN))
+				.with(this.userAuthProfilesUtils.utenzaPrincipal(user.getPrincipal()))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();

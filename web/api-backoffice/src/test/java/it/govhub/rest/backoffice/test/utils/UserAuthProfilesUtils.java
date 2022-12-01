@@ -19,7 +19,7 @@ public class UserAuthProfilesUtils {
 
 	@Transactional
 	public RequestPostProcessor utenzaAdmin() {
-		return user(this.userDetailService.loadUserByUsername("amministratore"));
+		return utenzaPrincipal("amministratore");
 	}
 
 	public static RequestPostProcessor utenzaUserViewer() {
@@ -34,5 +34,7 @@ public class UserAuthProfilesUtils {
 	    return user("username").password("password").roles(SecurityConfig.RUOLO_GOVHUB_USER);
 	}
 
-
+	public RequestPostProcessor utenzaPrincipal(String principal) {
+		return user(this.userDetailService.loadUserByUsername(principal));
+	}
 }
