@@ -1,9 +1,5 @@
 package it.govhub.govregistry.api.web;
 
-import static it.govhub.govregistry.api.config.SecurityConfig.RUOLO_GOVHUB_SERVICES_EDITOR;
-import static it.govhub.govregistry.api.config.SecurityConfig.RUOLO_GOVHUB_SERVICES_VIEWER;
-import static it.govhub.govregistry.api.config.SecurityConfig.RUOLO_GOVHUB_SYSADMIN;
-
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +23,7 @@ import it.govhub.govregistry.api.beans.Service;
 import it.govhub.govregistry.api.beans.ServiceCreate;
 import it.govhub.govregistry.api.beans.ServiceList;
 import it.govhub.govregistry.api.beans.ServiceOrdering;
+import it.govhub.govregistry.api.config.SecurityConstants;
 import it.govhub.govregistry.api.entity.ServiceEntity;
 import it.govhub.govregistry.api.exception.ResourceNotFoundException;
 import it.govhub.govregistry.api.messages.ServiceMessages;
@@ -59,7 +56,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> createService(ServiceCreate serviceCreate) {
 		
-		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICES_EDITOR);
+		this.authService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getServiceName(), "service_name");
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getDescription(), "description");
@@ -75,7 +72,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<ServiceList> listServices(ServiceOrdering sort, Direction sortDirection, Integer limit, Long offset, String q) {
 		
-		this.authService.hasAnyRole(RUOLO_GOVHUB_SYSADMIN, RUOLO_GOVHUB_SERVICES_VIEWER, RUOLO_GOVHUB_SERVICES_EDITOR);
+		this.authService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_SERVICES_VIEWER, SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		
 		Specification<ServiceEntity> spec;
@@ -84,7 +81,7 @@ public class ServiceController implements ServiceApi {
 			spec = ServiceFilters.empty();
 		} else {
 			Set<Long> serviceIds = this.authService.listAuthorizedServices(
-					RUOLO_GOVHUB_SERVICES_EDITOR, RUOLO_GOVHUB_SERVICES_VIEWER);
+					SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR, SecurityConstants.RUOLO_GOVHUB_SERVICES_VIEWER);
 			
 			spec = ServiceFilters.byId(serviceIds);
 		}
@@ -114,7 +111,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> readService(Long id) {
 		
-		this.authService.hasAnyServiceAuthority(id, RUOLO_GOVHUB_SERVICES_VIEWER, RUOLO_GOVHUB_SERVICES_EDITOR);
+		this.authService.hasAnyServiceAuthority(id, SecurityConstants.RUOLO_GOVHUB_SERVICES_VIEWER, SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
@@ -126,7 +123,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> updateService(Long id, List<PatchOp> patchOp) {
 		
-		this.authService.hasAnyServiceAuthority(id,  RUOLO_GOVHUB_SERVICES_EDITOR);
+		this.authService.hasAnyServiceAuthority(id,  SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);

@@ -15,10 +15,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import it.govhub.govregistry.api.utils.Base64String;
 import it.govhub.govregistry.api.utils.Base64StringSerializer;
 
-	@SpringBootApplication
-	@EnableScheduling
-	public class Application extends SpringBootServletInitializer {
-
+	//@SpringBootApplication
+	//@EnableScheduling
+	public class Application /*extends SpringBootServletInitializer*/ {
+/*
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
@@ -30,9 +30,6 @@ import it.govhub.govregistry.api.utils.Base64StringSerializer;
 	}
 		
 
-	/**
-	 * Modifichiamo il serializzatore JSON in  modo da serializza le Base64String come stringhe normali
-	 */
 	@Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
         return builder -> builder
@@ -40,16 +37,11 @@ import it.govhub.govregistry.api.utils.Base64StringSerializer;
     }
 	
 	
-	/**
-	 * Questa classe serve per serializzare correttamente gli enum passati via parametro query.
-	 * Altrimenti è necessario passarli in upperCase.
-	 *
-	 */
 	 @Configuration
     static class MyConfig implements  WebMvcConfigurer {
         @Override
         public void addFormatters(FormatterRegistry registry) {
             ApplicationConversionService.configure(registry);
            }
-    }
+    }*/
 }

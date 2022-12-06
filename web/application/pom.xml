@@ -13,8 +13,8 @@
 	</parent>
 
 	<groupId>it.govhub.govregistry</groupId>
-	<artifactId>api</artifactId>
-	<packaging>jar</packaging>
+	<artifactId>application</artifactId>
+	<packaging>${packaging.type}</packaging>
 	<version>1.0.0</version>
 	<name>GovRegistry Backoffice - API Monitoraggio</name>
 	<description>API per il backoffice del registro condiviso di GovHub</description>
@@ -55,6 +55,12 @@
 	</profiles>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>it.govhub.govregistry</groupId>
+			<artifactId>api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -108,7 +114,6 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -196,88 +201,14 @@
 	</dependencies>
 
 	<build>
-		<finalName>api-backoffice</finalName>
+		<finalName>govregistry</finalName>
 		<plugins>
 
-		<!-- 	<plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin> -->
+			</plugin>
 		
-			<plugin>
-				<groupId>org.openapitools</groupId>
-				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>${openapi.tool.codegen.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<id>generate-sources-openapi</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/govhub-api-backoffice.yaml</inputSpec>
-							<generatorName>spring</generatorName>
-							<typeMappings>base64=it.govhub.govregistry.api.utils.Base64String</typeMappings>
-							<importMappings>
-								<importMapping>Direction=org.springframework.data.domain.Sort.Direction</importMapping>
-							</importMappings>							
-							<configOptions>
-								<dateLibrary>java8</dateLibrary>
-								<library>spring-boot</library>
-								<sourceFolder>generated-sources/java/</sourceFolder>
-								<basePackage>it.govhub.govregistry.api</basePackage>
-								<apiPackage>it.govhub.govregistry.api.spec</apiPackage>
-								<modelPackage>it.govhub.govregistry.api.beans</modelPackage>
-								<configPackage>it.govhub.govregistry.api.config</configPackage>
-								<useBeanValidation>true</useBeanValidation>
-								 <performBeanValidation>true</performBeanValidation>
-								<skipDefaultInterface>true</skipDefaultInterface>
-								<interfaceOnly>true</interfaceOnly>
-								<hateoas>true</hateoas>
-								<!--  Metto il booleanGetterPrefix a get, e.g.: getEnabled invece di isEnabled.
-										questo in modo da far riconoscere e copiare le proprietà booleane alla  BeanUtils.copyProperties-->
-								<booleanGetterPrefix>get</booleanGetterPrefix>
-								<useTags>true</useTags>
-							</configOptions>
-							<output>${project.basedir}/target</output>
-							<generateApiDocumentation>false</generateApiDocumentation>
-							<generateApiTests>false</generateApiTests>
-							<generateSupportingFiles>false</generateSupportingFiles>
-							<generateModelTests>false</generateModelTests>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			
-			
-			<plugin>
-			    <groupId>org.bsc.maven</groupId>
-			    <artifactId>maven-processor-plugin</artifactId>
-			    <version>4.5</version>
-			    <executions>
-			        <execution>
-			            <id>process</id>
-			            <goals>
-			                <goal>process</goal>
-			            </goals>
-			            <phase>generate-sources</phase>
-			            <configuration>
-			                <processors>
-			                    <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
-			                </processors>
-			            </configuration>
-			        </execution>
-			    </executions>
-			    <dependencies>
-			        <dependency>
-			            <groupId>org.hibernate</groupId>
-			            <artifactId>hibernate-jpamodelgen</artifactId>
-			            <version>${hibernate.version}</version>
-			        </dependency>
-			    </dependencies>
-			</plugin>
-			
 			
 			<plugin>
 				<groupId>org.jacoco</groupId>

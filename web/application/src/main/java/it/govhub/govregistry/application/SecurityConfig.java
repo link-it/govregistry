@@ -1,7 +1,6 @@
-package it.govhub.govregistry.api.config;
+package it.govhub.govregistry.application;
 
 import java.io.IOException;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +28,8 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import it.govhub.govregistry.api.config.AccessDeniedHandlerImpl;
+import it.govhub.govregistry.api.config.SecurityConstants;
 import it.govhub.govregistry.api.security.GovhubUserDetailService;
 import it.govhub.govregistry.api.security.PreAuthenticatedExceptionHandler;
 import it.govhub.govregistry.api.security.ProblemHttp403ForbiddenEntryPoint;
@@ -44,38 +45,12 @@ import it.govhub.govregistry.api.security.ProblemHttp403ForbiddenEntryPoint;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig{
-	
 
 	@Autowired
 	private ObjectMapper jsonMapper;
 	
     @Value("${auth.header}")
-    String headerAuthentication;
-	
-	public static final String REALM_NAME = "govhub";
-	public static final String JSESSIONID_NAME = "GOVHUB-JSESSIONID";
-	public static final String RUOLO_GOVHUB_SYSADMIN = "govhub_sysadmin"; // Accesso a tutte le risorse
-	public static final String RUOLO_GOVHUB_USERS_EDITOR = "govhub_users_editor";
-	public static final String RUOLO_GOVHUB_USERS_VIEWER = "govhub_users_viewer";
-	public static final String RUOLO_GOVHUB_USER = "govhub_user";
-	public static final String RUOLO_GOVHUB_ORGANIZATIONS_EDITOR = "govhub_organizations_editor";
-	public static final String RUOLO_GOVHUB_ORGANIZATIONS_VIEWER = "govhub_organizations_viewer";
-	public static final String RUOLO_GOVHUB_SERVICES_EDITOR = "govhub_services_editor";
-	public static final String RUOLO_GOVHUB_SERVICES_VIEWER = "govhub_services_viewer";
-
-	// impostarli nel componente jee utilizzando la funzione mappableAuthorities al posto di mappableRoles che aggiunge il prefisso 'ROLE_' ad ogni ruolo
-	public static final Set<String> ruoliConsentiti = Set.of
-			( 
-				RUOLO_GOVHUB_SYSADMIN,
-				RUOLO_GOVHUB_USERS_EDITOR,
-				RUOLO_GOVHUB_USERS_VIEWER,
-				RUOLO_GOVHUB_USER,
-				RUOLO_GOVHUB_ORGANIZATIONS_EDITOR,
-				RUOLO_GOVHUB_ORGANIZATIONS_VIEWER,
-				RUOLO_GOVHUB_SERVICES_EDITOR,
-				RUOLO_GOVHUB_SERVICES_VIEWER
-			);
-	
+    private String headerAuthentication;
 	
 	@Autowired
 	public GovhubUserDetailService userDetailService;
@@ -118,7 +93,7 @@ public class SecurityConfig{
 	@Bean
 	public CookieSerializer cookieSerializer() {
 		DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-		serializer.setCookieName(JSESSIONID_NAME); 
+		serializer.setCookieName(SecurityConstants.JSESSIONID_NAME); 
 		serializer.setCookiePath("/"); 
 		serializer.setDomainNamePattern("^.+?\\.(\\w+\\.[a-z]+)$"); 
 		return serializer;
@@ -150,7 +125,7 @@ public class SecurityConfig{
 		.antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
 		.anyRequest().authenticated()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Creazione della sessione in caso non ci sia
-		.and().logout().deleteCookies(JSESSIONID_NAME).invalidateHttpSession(true).logoutSuccessHandler(new DefaultLogoutSuccessHandler()) // Gestione Logout
+		.and().logout().deleteCookies(SecurityConstants.JSESSIONID_NAME).invalidateHttpSession(true).logoutSuccessHandler(new DefaultLogoutSuccessHandler()) // Gestione Logout
 		;
 		return http;
 	}
