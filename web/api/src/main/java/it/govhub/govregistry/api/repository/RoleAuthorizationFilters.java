@@ -13,7 +13,7 @@ import javax.persistence.criteria.Subquery;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import it.govhub.govregistry.api.config.SecurityConfig;
+import it.govhub.govregistry.api.config.SecurityConstants;
 import it.govhub.govregistry.api.entity.OrganizationEntity_;
 import it.govhub.govregistry.api.entity.RoleAuthorizationEntity;
 import it.govhub.govregistry.api.entity.RoleAuthorizationEntity_;
@@ -39,7 +39,7 @@ public class RoleAuthorizationFilters {
 	public static Specification<RoleAuthorizationEntity> byAdmin(Long userId) {
 		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
 		
-		RoleAuthorizationFilters.byRoleName(SecurityConfig.RUOLO_GOVHUB_SYSADMIN)
+		RoleAuthorizationFilters.byRoleName(SecurityConstants.RUOLO_GOVHUB_SYSADMIN)
 			.and(RoleAuthorizationFilters.byUser(userId))
 			.and(RoleAuthorizationFilters.expiresAfter(OffsetDateTime.now()))
 			.toPredicate(root, query, cb);

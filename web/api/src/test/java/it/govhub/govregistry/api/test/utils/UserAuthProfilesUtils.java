@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-import it.govhub.govregistry.api.config.SecurityConfig;
+import it.govhub.govregistry.api.config.SecurityConstants;
 import it.govhub.govregistry.api.security.GovhubUserDetailService;
 
 @Component
@@ -23,15 +23,15 @@ public class UserAuthProfilesUtils {
 	}
 
 	public static RequestPostProcessor utenzaUserViewer() {
-	    return user("username").password("password").roles(SecurityConfig.RUOLO_GOVHUB_USERS_VIEWER);
+	    return user("username").password("password").roles(SecurityConstants.RUOLO_GOVHUB_USERS_VIEWER);
 	}
 
 	public static RequestPostProcessor utenzaUserEditor() {
-	    return user("username").password("password").roles(SecurityConfig.RUOLO_GOVHUB_USERS_EDITOR);
+	    return user("username").password("password").roles(SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
 	}
 
 	public static RequestPostProcessor utenzaOspite() {
-	    return user("username").password("password").roles(SecurityConfig.RUOLO_GOVHUB_USER);
+	    return user("username").password("password").roles(SecurityConstants.RUOLO_GOVHUB_USER);
 	}
 
 	public RequestPostProcessor utenzaPrincipal(String principal) {
