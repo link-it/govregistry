@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 import it.govhub.govregistry.api.beans.Organization;
 import it.govhub.govregistry.api.beans.OrganizationCreate;
 import it.govhub.govregistry.api.entity.OrganizationEntity;
+import it.govhub.govregistry.api.spec.OrganizationApi;
 import it.govhub.govregistry.api.utils.Base64String;
-import it.govhub.govregistry.api.web.OrganizationController;
 
 @Component
 public class OrganizationAssembler extends RepresentationModelAssemblerSupport<OrganizationEntity, Organization> {
 
 	public OrganizationAssembler() {
-		super(OrganizationController.class, Organization.class);
+		super(OrganizationApi.class, Organization.class);
 	}
 	
 
@@ -37,7 +37,7 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 		}
 		
 		ret.add(linkTo(
-				methodOn(OrganizationController.class)
+				methodOn(OrganizationApi.class)
 				.readOrganization(src.getId()))
 			.withSelfRel()
 		) ;

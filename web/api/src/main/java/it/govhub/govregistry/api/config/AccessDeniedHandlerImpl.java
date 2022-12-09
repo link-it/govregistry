@@ -8,25 +8,24 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.govhub.govregistry.api.exception.RestResponseEntityExceptionHandler;
 import it.govhub.govregistry.api.exception.UnreachableException;
 
+@Component
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
+	@Autowired
 	private ObjectMapper jsonMapper;
-	
-	public AccessDeniedHandlerImpl(ObjectMapper jsonMapper) {
-		this.jsonMapper = jsonMapper;
-	}
-	
 	
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
@@ -39,7 +38,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 		problem.detail = accessDeniedException.getMessage();
 		
 		// imposto il content-type della risposta
-		response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+		response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PROBLEM_JSON_VALUE);
 		response.setStatus(problem.status);
 		
 		ServletOutputStream outputStream = null;

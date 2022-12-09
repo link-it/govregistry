@@ -14,7 +14,7 @@ import it.govhub.govregistry.api.beans.Role;
 import it.govhub.govregistry.api.beans.ServiceAuthItem;
 import it.govhub.govregistry.api.entity.RoleAuthorizationEntity;
 import it.govhub.govregistry.api.entity.RoleEntity;
-import it.govhub.govregistry.api.web.AuthorizationController;
+import it.govhub.govregistry.api.spec.AuthorizationApi;
 
 @Component
 public class AuthorizationAssembler  extends RepresentationModelAssemblerSupport<RoleAuthorizationEntity, Authorization> {
@@ -26,7 +26,7 @@ public class AuthorizationAssembler  extends RepresentationModelAssemblerSupport
 	private ServiceAuthItemAssembler serviceAuthItemAssembler;
 
 	public AuthorizationAssembler() {
-		super(AuthorizationController.class, Authorization.class);
+		super(AuthorizationApi.class, Authorization.class);
 	}
 	
 	

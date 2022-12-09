@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 
 import it.govhub.govregistry.api.beans.ServiceAuthItem;
 import it.govhub.govregistry.api.entity.ServiceEntity;
-import it.govhub.govregistry.api.web.ServiceController;
+import it.govhub.govregistry.api.spec.ServiceApi;
 
 @Component
 public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSupport<ServiceEntity, ServiceAuthItem>{
 
 	public ServiceAuthItemAssembler() {
-		super(ServiceController.class, ServiceAuthItem.class);
+		super(ServiceApi.class, ServiceAuthItem.class);
 	}
 
 	
@@ -27,7 +27,7 @@ public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSuppor
 		ret.setServiceName(src.getName());
 		
 		ret.add(linkTo(
-				methodOn(ServiceController.class)
+				methodOn(ServiceApi.class)
 				.readService(src.getId()))
 			.withSelfRel()
 		) ;
