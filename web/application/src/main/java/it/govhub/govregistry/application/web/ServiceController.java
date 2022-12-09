@@ -23,19 +23,19 @@ import it.govhub.govregistry.api.beans.Service;
 import it.govhub.govregistry.api.beans.ServiceCreate;
 import it.govhub.govregistry.api.beans.ServiceList;
 import it.govhub.govregistry.api.beans.ServiceOrdering;
-import it.govhub.govregistry.api.config.SecurityConstants;
 import it.govhub.govregistry.api.entity.ServiceEntity;
 import it.govhub.govregistry.api.exception.ResourceNotFoundException;
 import it.govhub.govregistry.api.messages.ServiceMessages;
 import it.govhub.govregistry.api.repository.ServiceFilters;
 import it.govhub.govregistry.api.repository.ServiceRepository;
+import it.govhub.govregistry.api.security.SecurityConstants;
 import it.govhub.govregistry.api.services.SecurityService;
-import it.govhub.govregistry.api.services.ServiceService;
 import it.govhub.govregistry.api.spec.ServiceApi;
 import it.govhub.govregistry.api.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.api.utils.ListaUtils;
 import it.govhub.govregistry.api.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.api.utils.RequestUtils;
+import it.govhub.govregistry.application.services.ServiceService;
 
 @RestController
 public class ServiceController implements ServiceApi {
