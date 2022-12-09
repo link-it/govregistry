@@ -22,7 +22,6 @@ public class GovhubUserDetailService implements UserDetailsService, Authenticati
 	@Autowired
 	private UserRepository userRepo;
 
-	
 	@Override
 	@Transactional
 	@Cacheable(Caches.PRINCIPALS)
