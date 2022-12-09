@@ -36,6 +36,7 @@ public class GovhubUserDetailService implements UserDetailsService, Authenticati
 
 
 	@Override
+	@Cacheable(cacheNames = Caches.PRINCIPALS, key = "#token.getPrincipal")
 	public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) throws UsernameNotFoundException {
 		return this.loadUserByUsername((String)token.getPrincipal());
 	}
