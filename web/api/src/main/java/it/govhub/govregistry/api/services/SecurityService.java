@@ -10,10 +10,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import it.govhub.govregistry.api.config.SecurityConstants;
 import it.govhub.govregistry.api.entity.UserEntity;
 import it.govhub.govregistry.api.exception.NotAuthorizedException;
 import it.govhub.govregistry.api.security.GovhubPrincipal;
+import it.govhub.govregistry.api.security.SecurityConstants;
 
 
 /**

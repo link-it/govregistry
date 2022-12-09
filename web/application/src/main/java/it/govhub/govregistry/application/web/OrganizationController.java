@@ -24,19 +24,19 @@ import it.govhub.govregistry.api.beans.OrganizationCreate;
 import it.govhub.govregistry.api.beans.OrganizationList;
 import it.govhub.govregistry.api.beans.OrganizationOrdering;
 import it.govhub.govregistry.api.beans.PatchOp;
-import it.govhub.govregistry.api.config.SecurityConstants;
 import it.govhub.govregistry.api.entity.OrganizationEntity;
 import it.govhub.govregistry.api.exception.ResourceNotFoundException;
 import it.govhub.govregistry.api.messages.OrganizationMessages;
 import it.govhub.govregistry.api.repository.OrganizationFilters;
 import it.govhub.govregistry.api.repository.OrganizationRepository;
-import it.govhub.govregistry.api.services.OrganizationService;
+import it.govhub.govregistry.api.security.SecurityConstants;
 import it.govhub.govregistry.api.services.SecurityService;
 import it.govhub.govregistry.api.spec.OrganizationApi;
 import it.govhub.govregistry.api.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.api.utils.ListaUtils;
 import it.govhub.govregistry.api.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.api.utils.RequestUtils;
+import it.govhub.govregistry.application.services.OrganizationService;
 
 @RestController
 public class OrganizationController implements OrganizationApi {

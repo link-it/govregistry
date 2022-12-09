@@ -22,18 +22,18 @@ import it.govhub.govregistry.api.beans.User;
 import it.govhub.govregistry.api.beans.UserCreate;
 import it.govhub.govregistry.api.beans.UserList;
 import it.govhub.govregistry.api.beans.UserOrdering;
-import it.govhub.govregistry.api.config.SecurityConstants;
 import it.govhub.govregistry.api.entity.UserEntity;
 import it.govhub.govregistry.api.exception.ResourceNotFoundException;
 import it.govhub.govregistry.api.messages.UserMessages;
 import it.govhub.govregistry.api.repository.UserFilters;
 import it.govhub.govregistry.api.repository.UserRepository;
+import it.govhub.govregistry.api.security.SecurityConstants;
 import it.govhub.govregistry.api.services.SecurityService;
-import it.govhub.govregistry.api.services.UserService;
 import it.govhub.govregistry.api.spec.UserApi;
 import it.govhub.govregistry.api.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.api.utils.ListaUtils;
 import it.govhub.govregistry.api.utils.RequestUtils;
+import it.govhub.govregistry.application.services.UserService;
 
 
 @RestController

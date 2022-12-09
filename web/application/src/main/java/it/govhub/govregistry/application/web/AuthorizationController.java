@@ -20,9 +20,9 @@ import it.govhub.govregistry.api.exception.UnreachableException;
 import it.govhub.govregistry.api.messages.RoleMessages;
 import it.govhub.govregistry.api.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.api.repository.RoleRepository;
-import it.govhub.govregistry.api.services.RoleAuthorizationService;
 import it.govhub.govregistry.api.spec.AuthorizationApi;
 import it.govhub.govregistry.api.utils.LimitOffsetPageRequest;
+import it.govhub.govregistry.application.services.RoleAuthorizationService;
 
 @RestController
 public class AuthorizationController implements AuthorizationApi {

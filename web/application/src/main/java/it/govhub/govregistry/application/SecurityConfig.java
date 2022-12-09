@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.govhub.govregistry.api.config.AccessDeniedHandlerImpl;
+import it.govhub.govregistry.api.security.AccessDeniedHandlerImpl;
 import it.govhub.govregistry.api.security.GovhubUserDetailService;
 import it.govhub.govregistry.api.security.ProblemHttp403ForbiddenEntryPoint;
 
