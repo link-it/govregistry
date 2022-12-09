@@ -216,7 +216,7 @@
 						<id>generate-sources-openapi</id>
 						<phase>generate-sources</phase>
 						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/govhub-api-backoffice.yaml</inputSpec>
+							<inputSpec>${project.basedir}/src/main/resources/govregistry-api-backoffice.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<typeMappings>base64=it.govhub.govregistry.api.utils.Base64String</typeMappings>
 							<importMappings>

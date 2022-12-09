@@ -270,32 +270,6 @@ paths:
         default:
           $ref: "#/components/responses/ResponseDefault"
           
-  /profile:    
-    get:
-      tags:
-        - system
-      summary: Get the detail of the authenticated user.
-      description: Get the detail of the authenticated user.
-      operationId: profile
-      responses:
-        '200':
-          description: Successful operation.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Profile'          
-        '400':
-          $ref: "#/components/responses/400BadRequest"
-        '401':
-          $ref: "#/components/responses/401Unauthorized"
-        '403':
-          $ref: "#/components/responses/403Forbidden"
-        '429':
-          $ref: "#/components/responses/429TooManyRequests"
-        '503':
-          $ref: "#/components/responses/503ServiceUnavailable"
-        default:
-          $ref: "#/components/responses/ResponseDefault"
 
   /organizations:
     post:
@@ -593,10 +567,7 @@ components:
       header-principal:
          type: apiKey
          in: header
-         name: X-GovHub-Username
-      basic-auth:
-         type: http
-         scheme: basic
+         name: GovHub-Consumer-Principal
 
    # RESPONSES ---------------
    
