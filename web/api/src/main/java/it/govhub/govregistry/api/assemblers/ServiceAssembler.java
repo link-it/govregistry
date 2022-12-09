@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 import it.govhub.govregistry.api.beans.Service;
 import it.govhub.govregistry.api.beans.ServiceCreate;
 import it.govhub.govregistry.api.entity.ServiceEntity;
-import it.govhub.govregistry.api.web.ServiceController;
+import it.govhub.govregistry.api.spec.ServiceApi;
 
 @Component
 public class ServiceAssembler extends RepresentationModelAssemblerSupport<ServiceEntity, Service> {
 
 	public ServiceAssembler() {
-		super(ServiceController.class, Service.class);
+		super(ServiceApi.class, Service.class);
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class ServiceAssembler extends RepresentationModelAssemblerSupport<Servic
 		ret.setServiceName(src.getName());
 		
 		ret.add(linkTo(
-				methodOn(ServiceController.class)
+				methodOn(ServiceApi.class)
 				.readService(src.getId()))
 			.withSelfRel()
 		) ;

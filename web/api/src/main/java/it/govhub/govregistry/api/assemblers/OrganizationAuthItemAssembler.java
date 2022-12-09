@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 
 import it.govhub.govregistry.api.beans.OrganizationAuthItem;
 import it.govhub.govregistry.api.entity.OrganizationEntity;
-import it.govhub.govregistry.api.web.OrganizationController;
+import it.govhub.govregistry.api.spec.OrganizationApi;
 
 @Component
 public class OrganizationAuthItemAssembler  extends RepresentationModelAssemblerSupport<OrganizationEntity, OrganizationAuthItem> {
 	
 	public OrganizationAuthItemAssembler() {
-		super(OrganizationController.class, OrganizationAuthItem.class);
+		super(OrganizationApi.class, OrganizationAuthItem.class);
 	}
 	
 	@Override
@@ -24,7 +24,7 @@ public class OrganizationAuthItemAssembler  extends RepresentationModelAssembler
 		BeanUtils.copyProperties(src, ret);
 		
 		ret.add(linkTo(
-				methodOn(OrganizationController.class)
+				methodOn(OrganizationApi.class)
 				.readOrganization(src.getId()))
 			.withSelfRel()
 		) ;

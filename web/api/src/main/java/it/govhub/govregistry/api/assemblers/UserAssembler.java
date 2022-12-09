@@ -16,7 +16,7 @@ import it.govhub.govregistry.api.beans.Profile;
 import it.govhub.govregistry.api.beans.User;
 import it.govhub.govregistry.api.beans.UserCreate;
 import it.govhub.govregistry.api.entity.UserEntity;
-import it.govhub.govregistry.api.web.UserController;
+import it.govhub.govregistry.api.spec.UserApi;
 
 @Component
 public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEntity, User> {
@@ -25,7 +25,7 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
 	AuthorizationAssembler authAssembler;
 
 	public UserAssembler() {
-		super(UserController.class, User.class);
+		super(UserApi.class, User.class);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
         BeanUtils.copyProperties(src, ret);
 
 		ret.add(linkTo(
-					methodOn(UserController.class)
+					methodOn(UserApi.class)
 					.readUser(src.getId()))
 				.withSelfRel()
 			) ;

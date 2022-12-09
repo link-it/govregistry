@@ -1,4 +1,4 @@
-package it.govhub.govregistry.api.web;
+package it.govhub.govregistry.application.web;
 
 import java.util.List;
 
