@@ -1,8 +1,5 @@
 package it.govhub.govregistry.application;
 
-import java.sql.SQLException;
-
-import org.h2.tools.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
@@ -31,6 +28,10 @@ public class Application extends SpringBootServletInitializer {
 	}
 	
 
+	/**
+	 * Gestisce la famiglia di header X-Forwarded o lo header Forwarded.
+	 * Utile per la scrittura dei link hateoas in modo che tengano conto della presenza del proxy. 
+	 */
 	@Bean
 	public ForwardedHeaderFilter forwardedHeaderFilter() {
 		return new ForwardedHeaderFilter();
