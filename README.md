@@ -5,7 +5,7 @@
 
 Gestione delle anagrafiche di utenti organizzazioni e servizi di GovHub.
 
-L'autenticazione è header-based, al momento la password è uguale per tutti gli utenti:
+L'autenticazione è header-based:
 
 ```bash
  curl -v -H "GOVHUB-CONSUMER-PRINCIPAL: amministratore" -X GET 'http://localhost:10001/users/1'
