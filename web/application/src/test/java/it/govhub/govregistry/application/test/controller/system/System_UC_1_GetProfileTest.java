@@ -55,7 +55,7 @@ class System_UC_1_GetProfileTest {
 		this.userRepository.save(user2);
 	}
 	
-	@Test
+	/*@Test
 	void UC_1_01_GetProfile_UtenzaAdmin_NotAuthorized() throws Exception {
 		this.mockMvc.perform(get("/profile")
 				.accept(MediaType.APPLICATION_JSON))
@@ -86,5 +86,5 @@ class System_UC_1_GetProfileTest {
 		assertEquals(user.getFullName(), item.getString("full_name"));
 		assertEquals(user.getPrincipal(), item.getString("principal"));
 		assertEquals(0, authorizations.size());
-	}
+	}*/
 }
