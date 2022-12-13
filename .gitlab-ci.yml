@@ -28,7 +28,7 @@ test_and_coverage:
         - apt-get -y install python2 npm
         - python2 ./cover2cover.py web/api/target/site/jacoco/jacoco.xml web/api/src/main/java/ > web/api/target/site/cobertura.xml
         - mkdir target
-        - npx cobertura-merge -o target/cobertura.xml package1=web/api-backoffice/target/site/cobertura.xml
+        - npx cobertura-merge -o target/cobertura.xml package1=web/api/target/site/cobertura.xml
     # dependencies: [] # Per evitare il download di artifact in job precedenti
     artifacts:
         untracked: false
