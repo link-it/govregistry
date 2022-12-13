@@ -1,4 +1,4 @@
-package it.govhub.govregistry.application.test.utils;
+package it.govhub.govregistry.api.test.utils;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 

@@ -227,8 +227,8 @@
 							<importMappings>
 								<importMapping>Direction=org.springframework.data.domain.Sort.Direction</importMapping>
 								<importMapping>PageInfo=it.govhub.govregistry.commons.beans.PageInfo</importMapping>
-                                                                <importMapping>PageInfo=it.govhub.govregistry.commons.beans.Problem</importMapping>
-                                                                <importMapping>PageInfo=it.govhub.govregistry.commons.beans.PatchOp</importMapping>
+                                                                <importMapping>Problem=it.govhub.govregistry.commons.beans.Problem</importMapping>
+                                                                <importMapping>PatchOp=it.govhub.govregistry.commons.beans.PatchOp</importMapping>
 
 							</importMappings>
 							<configOptions>

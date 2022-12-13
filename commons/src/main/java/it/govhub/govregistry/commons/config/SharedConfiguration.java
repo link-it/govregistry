@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@ComponentScan( {"it.govhub.govregistry.api"})
-@EnableJpaRepositories("it.govhub.govregistry.api.repository")
-@EntityScan("it.govhub.govregistry.api.entity")
+@ComponentScan( {"it.govhub.govregistry.commons"})
+@EnableJpaRepositories("it.govhub.govregistry.commons.repository")
+@EntityScan("it.govhub.govregistry.commons.entity")
 public class SharedConfiguration {}

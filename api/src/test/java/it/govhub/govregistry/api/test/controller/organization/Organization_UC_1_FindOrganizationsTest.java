@@ -1,4 +1,4 @@
-package it.govhub.govregistry.application.test.controller.organization;
+package it.govhub.govregistry.api.test.controller.organization;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,8 +28,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import it.govhub.govregistry.api.Application;
-import it.govhub.govregistry.application.test.Costanti;
-import it.govhub.govregistry.application.test.utils.UserAuthProfilesUtils;
+import it.govhub.govregistry.api.test.Costanti;
+import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.repository.OrganizationRepository;
 
