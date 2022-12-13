@@ -40,7 +40,7 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	/**
-	 * Modifichiamo il serializzatore JSON in modo da serializza le Base64String
+	 * Modifichiamo il serializzatore JSON in modo da serializzare le Base64String
 	 * come stringhe normali
 	 */
 	@Bean
@@ -49,7 +49,7 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	/**
-	 * Questa classe serve per serializzare correttamente gli enum passati via
+	 * Questa  serve per serializzare correttamente gli enum passati via
 	 * parametro query. Altrimenti è necessario passarli in upperCase.
 	 *
 	 */
