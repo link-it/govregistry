@@ -1,4 +1,4 @@
-package it.govhub.govregistry.application.test;
+package it.govhub.govregistry.api.test;
 
 
 import java.util.HashSet;

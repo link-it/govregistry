@@ -1,4 +1,4 @@
-package it.govhub.govregistry.application.test.controller.user;
+package it.govhub.govregistry.api.test.controller.system;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,19 +26,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
-import it.govhub.govregistry.application.test.Costanti;
-import it.govhub.govregistry.application.test.utils.UserAuthProfilesUtils;
+import it.govhub.govregistry.api.test.Costanti;
+import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.repository.UserRepository;
-
-
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di lettura degli Utenti")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-
-class User_UC_5_GetUsersTest {
+class System_UC_1_GetProfileTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -51,75 +48,43 @@ class User_UC_5_GetUsersTest {
 	
 	@BeforeEach
 	private void caricaUtenti() {
-		UserEntity user = Costanti.getUser_Snakamoto();
+		UserEntity user = Costanti.getUser_Vbuterin();
 		this.userRepository.save(user);
 		
-		UserEntity user2 = Costanti.getUser_Vbuterin();
+		UserEntity user2 = Costanti.getUser_Snakamoto();
 		this.userRepository.save(user2);
 	}
 	
+	/*@Test
+	void UC_1_01_GetProfile_UtenzaAdmin_NotAuthorized() throws Exception {
+		this.mockMvc.perform(get("/profile")
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized())
+				.andExpect(jsonPath("$.status", is(401)))
+				.andExpect(jsonPath("$.title", is("Unauthorized")))
+				.andExpect(jsonPath("$.type").isString())
+				.andExpect(jsonPath("$.detail").isString())
+				.andReturn();
+	}
+	
 	@Test
-	void UC_5_01_GetUserOk() throws Exception {
+	void UC_1_02_GetProfile_UtenzaAdminOk() throws Exception {
 		UserEntity user = Costanti.getUser_Vbuterin();
 		
-		MvcResult result = this.mockMvc.perform(get("/users/")
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
+		MvcResult result = this.mockMvc.perform(get("/profile")
+				.with(this.userAuthProfilesUtils.utenzaPrincipal(user.getPrincipal()))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		JsonObject userList = reader.readObject();
-		
-		// Controlli sugli items
-		JsonArray items = userList.getJsonArray("items");
-		assertEquals(8, items.size());
-		
-		JsonObject item1 = items.getJsonObject(0); 
-		int idUser1 = item1.getInt("id");
-		
-		result = this.mockMvc.perform(get("/users/{id}",idUser1)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-		
 		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		JsonObject item = reader.readObject();
+		JsonArray authorizations = item.getJsonArray("authorizations");
 		
 		assertEquals(user.getEnabled(), Boolean.parseBoolean(item.get("enabled").toString()));
 		assertEquals(user.getFullName(), item.getString("full_name"));
 		assertEquals(user.getPrincipal(), item.getString("principal"));
-		
-	}
-	
-	@Test
-	void UC_5_02_GetUser_NotFound() throws Exception {
-		int idUser1 = 10000;
-		
-		this.mockMvc.perform(get("/users/{id}",idUser1)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isNotFound())
-				.andExpect(jsonPath("$.status", is(404)))
-				.andExpect(jsonPath("$.title", is("Not Found")))
-				.andExpect(jsonPath("$.type").isString())
-				.andExpect(jsonPath("$.detail").isString())
-				.andReturn();
-	}
-	
-	@Test	
-	void UC_5_03_GetUser_InvalidId() throws Exception {
-		String idUser1 = "XXX";
-		
-		this.mockMvc.perform(get("/users/{id}",idUser1)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.status", is(400)))
-				.andExpect(jsonPath("$.title", is("Bad Request")))
-				.andExpect(jsonPath("$.type").isString())
-				.andExpect(jsonPath("$.detail").isString())
-				.andReturn();
-	}
+		assertEquals(0, authorizations.size());
+	}*/
 }

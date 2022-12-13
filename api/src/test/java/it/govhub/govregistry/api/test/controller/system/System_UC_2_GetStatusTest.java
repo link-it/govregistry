@@ -1,4 +1,4 @@
-package it.govhub.govregistry.application.test.controller.system;
+package it.govhub.govregistry.api.test.controller.system;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 
 import it.govhub.govregistry.api.Application;
-import it.govhub.govregistry.application.test.utils.UserAuthProfilesUtils;
+import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
