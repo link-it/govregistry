@@ -37,7 +37,7 @@ test_and_coverage:
           coverage_report:
             coverage_format: cobertura
             path: target/cobertura.xml
-          junit: [ web/api-backoffice/target/surefire-reports/*.xml ]
+          junit: [ web/api/target/surefire-reports/*.xml ]
         expire_in: "1 week"
 
 code_quality:
