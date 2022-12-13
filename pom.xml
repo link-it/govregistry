@@ -7,9 +7,10 @@
 	<artifactId>govregistry</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
-	<name>GovHub Registry</name>
+	<name>GovRegistry</name>
 	<modules>
-		<module>web</module>
+		<module>commons</module>
+		<module>api</module>
 	</modules>
 </project>
 
