@@ -26,9 +26,10 @@ test_and_coverage:
         - wget https://raw.githubusercontent.com/rix0rrr/cover2cover/master/cover2cover.py
         - apt-get update
         - apt-get -y install python2 npm
-        - python2 ./cover2cover.py web/api/target/site/jacoco/jacoco.xml api/src/main/java/ commons/src/main/java > web/api/target/site/cobertura.xml
+        - python2 ./cover2cover.py api/target/site/jacoco/jacoco.xml api/src/main/java/ > api/target/site/cobertura.xml
+        - python2 ./cover2cover.py commons/target/site/jacoco/jacoco.xml commons/src/main/java > commons/target/site/cobertura.xml
         - mkdir target
-        - npx cobertura-merge -o target/cobertura.xml package1=api/target/site/cobertura.xml package2=commmons//target/site/cobertura.xml
+        - npx cobertura-merge -o target/cobertura.xml package1=api/target/site/cobertura.xml package2=commmons/target/site/cobertura.xml
     # dependencies: [] # Per evitare il download di artifact in job precedenti
     artifacts:
         untracked: false
