@@ -10,11 +10,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import it.govhub.govregistry.api.config.Caches;
 import it.govhub.govregistry.api.config.SharedConfiguration;
+import it.govhub.govregistry.api.exception.RequestRejectedExceptionHandler;
 import it.govhub.govregistry.api.utils.Base64String;
 import it.govhub.govregistry.api.utils.Base64StringSerializer;
 
@@ -57,6 +59,16 @@ public class Application extends SpringBootServletInitializer {
 		public void addFormatters(FormatterRegistry registry) {
 			ApplicationConversionService.configure(registry);
 		}
+	}
+	
+	
+	/**
+	 * Questo Bean Restituisce un Problem quando spring-security rifiuta una
+	 * richiesta perchè ritenuta ad esempio non sicura.
+	 */
+	@Bean
+	public RequestRejectedHandler requestRejectedHandler() {
+	   return new RequestRejectedExceptionHandler();
 	}
 	
 	
