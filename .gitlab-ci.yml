@@ -22,13 +22,13 @@ default:
 test_and_coverage:
     stage: test
     script:
-        - mvn clean test
+        - mvn clean verify
         - wget https://raw.githubusercontent.com/rix0rrr/cover2cover/master/cover2cover.py
         - apt-get update
         - apt-get -y install python2 npm
-        - python2 ./cover2cover.py api/target/site/jacoco/jacoco.xml api/src/main/java/ > api/target/site/cobertura.xml
+        - python2 ./cover2cover.py report/target/site/jacoco-aggregate/jacoco.xml api/src/main/java/ commons/src/main/java > report/target/site/cobertura.xml
         - mkdir target
-        - npx cobertura-merge -o target/cobertura.xml package1=api/target/site/cobertura.xml
+        - npx cobertura-merge -o target/cobertura.xml package1=report/target/site/cobertura.xml
     # dependencies: [] # Per evitare il download di artifact in job precedenti
     artifacts:
         untracked: false
