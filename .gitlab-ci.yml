@@ -40,7 +40,7 @@ test_and_coverage:
 
 code_quality:
     stage: sonarqube
-    script: mvn verify sonar:sonar -Dsonar.qualitygate.wait=true -Dsonar.coverage.jacoco.xmlReportPaths=report/target/site/cobertura.xml
+    script: mvn verify sonar:sonar -Dsonar.qualitygate.wait=true -Dsonar.coverage.jacoco.xmlReportPaths=report/target/site/jacoco-aggregate/jacoco.xml
     dependencies: [] # Per evitare il download di artifact in job precedenti
 
 maven_build:
