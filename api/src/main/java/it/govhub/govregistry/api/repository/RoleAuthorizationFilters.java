@@ -18,8 +18,8 @@ import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity_;
 import it.govhub.govregistry.commons.entity.RoleEntity_;
 import it.govhub.govregistry.commons.entity.ServiceEntity_;
 import it.govhub.govregistry.commons.entity.UserEntity_;
+import it.govhub.security.config.SecurityConstants;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
-import it.govhub.govregistry.commons.security.SecurityConstants;
 
 public class RoleAuthorizationFilters {
 	

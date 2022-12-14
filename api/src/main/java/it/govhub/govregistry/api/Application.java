@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import it.govhub.govregistry.commons.config.Caches;
 import it.govhub.govregistry.commons.config.SharedConfiguration;
-import it.govhub.govregistry.commons.exception.RequestRejectedExceptionHandler;
+import it.govhub.govregistry.commons.exception.handlers.RequestRejectedExceptionHandler;
 import it.govhub.govregistry.commons.utils.Base64String;
 import it.govhub.govregistry.commons.utils.Base64StringSerializer;
 

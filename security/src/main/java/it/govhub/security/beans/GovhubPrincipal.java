@@ -1,4 +1,4 @@
-package it.govhub.govregistry.commons.security;
+package it.govhub.security.beans;
 
 import java.util.Collection;
 import java.util.Collections;
