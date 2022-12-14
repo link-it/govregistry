@@ -1,4 +1,4 @@
-package it.govhub.govregistry.commons.exception;
+package it.govhub.govregistry.commons.exception.handlers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,6 +25,13 @@ import org.springframework.web.util.WebUtils;
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 
 import it.govhub.govregistry.commons.beans.Problem;
+import it.govhub.govregistry.commons.exception.BadRequestException;
+import it.govhub.govregistry.commons.exception.ConflictException;
+import it.govhub.govregistry.commons.exception.ForbiddenException;
+import it.govhub.govregistry.commons.exception.NotAuthorizedException;
+import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
+import it.govhub.govregistry.commons.exception.SemanticValidationException;
+import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.utils.RequestUtils;
 
 

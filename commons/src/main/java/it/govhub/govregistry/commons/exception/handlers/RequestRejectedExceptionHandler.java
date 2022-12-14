@@ -1,4 +1,4 @@
-package it.govhub.govregistry.commons.exception;
+package it.govhub.govregistry.commons.exception.handlers;
 
 import java.io.IOException;
 
