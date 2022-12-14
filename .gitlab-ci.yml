@@ -1,6 +1,5 @@
 stages:
     - test
-    - sonarqube
 #    - build
 #    - integration
 
@@ -22,7 +21,7 @@ default:
 test:
     stage: test
     script:
-        - mvn clean test
+      - mvn verify sonar:sonar
     artifacts:
         untracked: false
         name: test_and_coverage_report
@@ -30,7 +29,3 @@ test:
           junit: [ api/target/surefire-reports/*.xml ]
         expire_in: "1 week"
 
-sonarqube:
-    stage: sonarqube
-    script:
-        - mvn sonar:sonar
