@@ -1,4 +1,4 @@
-package it.govhub.govregistry.api;
+package it.govhub.govregistry.api.config;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package it.govhub.govregistry.commons.security;
+package it.govhub.security.services;
 
 import javax.transaction.Transactional;
 
@@ -15,6 +15,7 @@ import it.govhub.govregistry.commons.config.Caches;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.repository.UserRepository;
+import it.govhub.security.beans.GovhubPrincipal;
 
 @Service
 public class GovhubUserDetailService implements UserDetailsService, AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {

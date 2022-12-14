@@ -16,8 +16,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.govhub.govregistry.commons.exception.RestResponseEntityExceptionHandler;
+import it.govhub.govregistry.commons.beans.AuthenticationProblem;
 import it.govhub.govregistry.commons.exception.UnreachableException;
+import it.govhub.govregistry.commons.exception.handlers.RestResponseEntityExceptionHandler;
 
 public class ProblemHttp403ForbiddenEntryPoint implements AuthenticationEntryPoint {
 	

@@ -36,9 +36,9 @@ import it.govhub.govregistry.commons.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.commons.repository.RoleRepository;
 import it.govhub.govregistry.commons.repository.ServiceRepository;
 import it.govhub.govregistry.commons.repository.UserRepository;
-import it.govhub.govregistry.commons.services.SecurityService;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
+import it.govhub.security.services.SecurityService;
 
 @Service
 public class RoleAuthorizationService {
