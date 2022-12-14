@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-import it.govhub.govregistry.commons.security.GovhubUserDetailService;
-import it.govhub.govregistry.commons.security.SecurityConstants;
+import it.govhub.security.config.SecurityConstants;
+import it.govhub.security.services.GovhubUserDetailService;
 
 @Component
 public class UserAuthProfilesUtils {

@@ -1,4 +1,4 @@
-package it.govhub.govregistry.commons.services;
+package it.govhub.security.services;
 
 import java.time.OffsetDateTime;
 import java.util.Set;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
-import it.govhub.govregistry.commons.security.GovhubPrincipal;
-import it.govhub.govregistry.commons.security.SecurityConstants;
+import it.govhub.security.beans.GovhubPrincipal;
+import it.govhub.security.config.SecurityConstants;
 
 
 /**

@@ -30,12 +30,12 @@ import it.govhub.govregistry.commons.beans.PatchOp;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.repository.ServiceRepository;
-import it.govhub.govregistry.commons.security.SecurityConstants;
-import it.govhub.govregistry.commons.services.SecurityService;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.commons.utils.RequestUtils;
+import it.govhub.security.config.SecurityConstants;
+import it.govhub.security.services.SecurityService;
 
 @RestController
 public class ServiceController implements ServiceApi {

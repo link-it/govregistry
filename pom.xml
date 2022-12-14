@@ -12,6 +12,7 @@
 	<modules>
 		<module>report</module>
 		<module>commons</module>
+		<module>security</module>
 		<module>api</module>
 	</modules>
 	<build>

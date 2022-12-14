@@ -1,4 +1,4 @@
-package it.govhub.govregistry.api;
+package it.govhub.govregistry.commons.security.handlers;
 
 import java.io.IOException;
 

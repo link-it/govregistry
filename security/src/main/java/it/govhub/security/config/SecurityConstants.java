@@ -1,4 +1,4 @@
-package it.govhub.govregistry.commons.security;
+package it.govhub.security.config;
 
 import java.util.Set;
 

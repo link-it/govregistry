@@ -1,4 +1,4 @@
-package it.govhub.govregistry.commons.security;
+package it.govhub.govregistry.commons.security.handlers;
 
 import java.io.IOException;
 import java.net.URI;
@@ -18,8 +18,9 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.govhub.govregistry.commons.exception.RestResponseEntityExceptionHandler;
+import it.govhub.govregistry.commons.beans.AuthenticationProblem;
 import it.govhub.govregistry.commons.exception.UnreachableException;
+import it.govhub.govregistry.commons.exception.handlers.RestResponseEntityExceptionHandler;
 
 @Component
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {

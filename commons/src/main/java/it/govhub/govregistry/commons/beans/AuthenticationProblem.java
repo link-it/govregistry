@@ -1,4 +1,4 @@
-package it.govhub.govregistry.commons.security;
+package it.govhub.govregistry.commons.beans;
 
 import java.net.URI;
 
