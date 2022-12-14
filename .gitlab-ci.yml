@@ -1,6 +1,6 @@
 stages:
     - test
-#    - sonarqube
+    - sonarqube
 #    - build
 #    - integration
 
@@ -19,17 +19,18 @@ default:
             - target/
     image: maven:3-openjdk-11
 
-test_and_coverage:
+test:
     stage: test
     script:
-        - mvn clean verify sonar:sonar -Dsonar.qualitygate.wait=true -Dsonar.coverage.jacoco.xmlReportPaths=report/target/site/jacoco-aggregate/jacoco.xml
+        - mvn clean test
     artifacts:
         untracked: false
         name: test_and_coverage_report
         reports:
-          coverage_report:
-            coverage_format: cobertura
-            path: report/target/site/jacoco-aggregate/jacoco.xml
-          junit: [ api/target/surefire-reports/*.xml, commons/target/surefire-reports/*.xml ]
+          junit: [ */target/surefire-reports/*.xml ]
         expire_in: "1 week"
 
+sonarcube:
+    stage: sonarcube
+    script:
+        - mvn sonar:sonar

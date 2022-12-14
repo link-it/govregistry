@@ -25,7 +25,6 @@
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
 		<sonar.language>java</sonar.language>
-		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<dependencies>
@@ -44,6 +43,12 @@
             <artifactId>commons</artifactId>
             <version>1.0.0</version>
     </dependency>
+           <dependency>
+            <groupId>it.govhub.security</groupId>
+            <artifactId>security</artifactId>
+            <version>1.0.0</version>
+    </dependency>
+
     </dependencies>
   <build>
     <plugins>
