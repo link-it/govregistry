@@ -1,8 +1,5 @@
 # GovRegistry
 
-
-## Descrizione
-
 Gestione delle anagrafiche di utenti organizzazioni e servizi di GovHub.
 
 L'autenticazione è header-based:
@@ -10,43 +7,16 @@ L'autenticazione è header-based:
 ```bash
  curl -v -H "GOVHUB-CONSUMER-PRINCIPAL: amministratore" -X GET 'http://localhost:10001/users/1'
 ```
-***
 
-## Get
-
-```
-cd existing_repo
-git remote add origin https://gitlab.link.it/govhub/applications/govshell.git
-git branch -M main
-git push -uf origin main
-```
-
-***
-
-## Installazione
+## Setup
 
 I comandi SQL assumono l'utilizzo di postgres.
 
-Creare l'utenza SQL:
+Creare l'utenza e schema db:
 
 ```bash
-createuser --interactive
-```
-
-- Nome Utente: govhub
-- Password Utente: govhub
-
-
-Creare il database `govhub`
-
-```bash
-createdb 'govhub'
-```
-
-Creare lo schema per govregistry
-
-```bash
-cd web/application
+createuser govhub -P 
+createdb govhub -O govhub
 psql govhub govhub < src/main/resources/govregistry-schema.sql
 psql govhub govhub < src/main/resources/data-dev.sql
 ```
@@ -54,8 +24,12 @@ psql govhub govhub < src/main/resources/data-dev.sql
 Creare la cartella di log:
 
 ```bash
-mkdir /var/log/govregistry
+mkdir /var/log/govhub
 ```
+
+## Build
+
+### Jar
 
 Eseguire l'applicazione:
 
@@ -65,8 +39,7 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev -Dspring-boot.run.arguments=-
 
 L'applicazione verrà deployata di default sulla porta 10001.
 
-***
-## WAR
+## War
 
 Per ottenere un war deployabile su application server:
 
@@ -74,6 +47,4 @@ Per ottenere un war deployabile su application server:
 mvn package -P war -DskipTests
 ```
 
-L'artefatto verrà prodotto sotto
-
-    target/govshell.war
+L'artefatto verrà prodotto in `target/govshell.war`
