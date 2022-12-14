@@ -33,7 +33,3 @@ test_and_coverage:
           junit: [ api/target/surefire-reports/*.xml, commons/target/surefire-reports/*.xml ]
         expire_in: "1 week"
 
-maven_build:
-    stage: build
-    script: mvn package 
-    dependencies: [] # Per evitare il download di artifact in job precedenti
