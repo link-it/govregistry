@@ -27,10 +27,10 @@ test:
         untracked: false
         name: test_and_coverage_report
         reports:
-          junit: [ */target/surefire-reports/*.xml ]
+          junit: [ api/target/surefire-reports/*.xml ]
         expire_in: "1 week"
 
-sonarcube:
-    stage: sonarcube
+sonarqube:
+    stage: sonarqube
     script:
         - mvn sonar:sonar
