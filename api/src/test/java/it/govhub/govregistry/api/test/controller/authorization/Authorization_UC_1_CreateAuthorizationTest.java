@@ -76,7 +76,7 @@ public class Authorization_UC_1_CreateAuthorizationTest {
 	private DateTimeFormatter dt = DateTimeFormatter.ISO_DATE_TIME;
 	
 	@BeforeEach
-	private void configurazDB() {
+	private void configurazioneDB() {
 		UserEntity user = Costanti.getUser_Snakamoto();
 		this.userRepository.save(user);
 		
@@ -293,7 +293,7 @@ public class Authorization_UC_1_CreateAuthorizationTest {
 	
 	@Test
 	@Transactional
-	void UC_1_05_CreateAuthorizationOk() throws Exception {
+	void UC_1_05_CreateAuthorizationOk_NoOrganizationService() throws Exception {
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
@@ -334,4 +334,361 @@ public class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals(0, roleAuthorizationEntity.getServices().size());
 //		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
+	
+	@Test
+	@Transactional
+	void UC_1_06_CreateAuthorizationOk_UserEditor() throws Exception {
+		UserEntity user = leggiUtenteDB("user_viewer");
+		
+		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
+		
+		OffsetDateTime now = OffsetDateTime.now(); 
+		String json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder())
+				.add("services", Json.createArrayBuilder())
+				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaUserEditor())
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
+				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andReturn();
+		
+		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		int id = reader.readObject().getInt("id");
+		
+		RoleAuthorizationEntity roleAuthorizationEntity = this.authRepository.findById((long) id).get();
+		
+		assertEquals(id, roleAuthorizationEntity.getId());
+		assertEquals("govhub_user", roleAuthorizationEntity.getRole().getName());
+		assertEquals(0, roleAuthorizationEntity.getOrganizations().size());
+		assertEquals(0, roleAuthorizationEntity.getServices().size());
+//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+	}
+	
+	@Test
+	@Transactional
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per l'ente[3]
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
+	 * */
+	void UC_1_07_CreateAuthorizationOk_UserEditor_Organization() throws Exception {
+		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
+		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
+		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
+		
+		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
+		
+		OffsetDateTime now = OffsetDateTime.now(); 
+		String json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
+				.add("services", Json.createArrayBuilder())
+//				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
+				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
+				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andReturn();
+		
+		user = leggiUtenteDB("user_viewer");
+		
+		ruoloUser = leggiRuoloDB("govhub_user");
+		
+		json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
+				.add("services", Json.createArrayBuilder())
+//				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
+				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
+				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andReturn();
+		
+		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		int id = reader.readObject().getInt("id");
+		
+		RoleAuthorizationEntity roleAuthorizationEntity = this.authRepository.findById((long) id).get();
+		
+		assertEquals(id, roleAuthorizationEntity.getId());
+		assertEquals("govhub_user", roleAuthorizationEntity.getRole().getName());
+		assertEquals(1, roleAuthorizationEntity.getOrganizations().size());
+		assertEquals(0, roleAuthorizationEntity.getServices().size());
+		assertEquals(ente.getTaxCode(), roleAuthorizationEntity.getOrganizations().toArray(new OrganizationEntity[1])[0].getTaxCode());
+//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+	}
+	
+	@Test
+	@Transactional
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti gli enti
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
+	 * */
+	void UC_1_08_CreateAuthorizationOk_UserEditor_Organization_Ente3() throws Exception {
+		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
+		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
+		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
+		
+		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
+		
+		OffsetDateTime now = OffsetDateTime.now(); 
+		String json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder())
+				.add("services", Json.createArrayBuilder())
+//				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
+				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andReturn();
+		
+		user = leggiUtenteDB("user_viewer");
+		
+		ruoloUser = leggiRuoloDB("govhub_user");
+		
+		json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
+				.add("services", Json.createArrayBuilder())
+//				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
+				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
+				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andReturn();
+		
+		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		int id = reader.readObject().getInt("id");
+		
+		RoleAuthorizationEntity roleAuthorizationEntity = this.authRepository.findById((long) id).get();
+		
+		assertEquals(id, roleAuthorizationEntity.getId());
+		assertEquals("govhub_user", roleAuthorizationEntity.getRole().getName());
+		assertEquals(1, roleAuthorizationEntity.getOrganizations().size());
+		assertEquals(0, roleAuthorizationEntity.getServices().size());
+		assertEquals(ente.getTaxCode(), roleAuthorizationEntity.getOrganizations().toArray(new OrganizationEntity[1])[0].getTaxCode());
+//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+	}
+	
+	@Test
+	@Transactional
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per il servizio[2]
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per il servizio[2]
+	 * */
+	void UC_1_09_CreateAuthorizationOk_UserEditor_Service() throws Exception {
+		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
+		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
+		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
+		
+		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
+		
+		OffsetDateTime now = OffsetDateTime.now(); 
+		String json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder())
+				.add("services", Json.createArrayBuilder().add(servizio.getId()))
+//				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
+				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
+//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andReturn();
+		
+		user = leggiUtenteDB("user_viewer");
+		
+		ruoloUser = leggiRuoloDB("govhub_user");
+		
+		json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder())
+				.add("services", Json.createArrayBuilder().add(servizio.getId()))
+//				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
+				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
+//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andReturn();
+		
+		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		int id = reader.readObject().getInt("id");
+		
+		RoleAuthorizationEntity roleAuthorizationEntity = this.authRepository.findById((long) id).get();
+		
+		assertEquals(id, roleAuthorizationEntity.getId());
+		assertEquals("govhub_user", roleAuthorizationEntity.getRole().getName());
+		assertEquals(0, roleAuthorizationEntity.getOrganizations().size());
+		assertEquals(1, roleAuthorizationEntity.getServices().size());
+		assertEquals(servizio.getName(), roleAuthorizationEntity.getServices().toArray(new ServiceEntity[1])[0].getName());
+//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+	}
+	
+	@Test
+	@Transactional
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti i servizi
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per il servizio2.
+	 * */
+	void UC_1_10_CreateAuthorizationOk_UserEditor_Service_Servizio2() throws Exception {
+		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
+		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
+		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
+		
+		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
+		
+		OffsetDateTime now = OffsetDateTime.now(); 
+		String json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder())
+				.add("services", Json.createArrayBuilder())
+//				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
+				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andReturn();
+		
+		user = leggiUtenteDB("user_viewer");
+		
+		ruoloUser = leggiRuoloDB("govhub_user");
+		
+		json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder())
+				.add("services", Json.createArrayBuilder().add(servizio.getId()))
+//				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
+				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
+//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andReturn();
+		
+		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		int id = reader.readObject().getInt("id");
+		
+		RoleAuthorizationEntity roleAuthorizationEntity = this.authRepository.findById((long) id).get();
+		
+		assertEquals(id, roleAuthorizationEntity.getId());
+		assertEquals("govhub_user", roleAuthorizationEntity.getRole().getName());
+		assertEquals(0, roleAuthorizationEntity.getOrganizations().size());
+		assertEquals(1, roleAuthorizationEntity.getServices().size());
+		assertEquals(servizio.getName(), roleAuthorizationEntity.getServices().toArray(new ServiceEntity[1])[0].getName());
+//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+	}
 }
+
