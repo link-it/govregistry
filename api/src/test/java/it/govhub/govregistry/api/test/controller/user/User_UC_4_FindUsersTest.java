@@ -78,22 +78,24 @@ class User_UC_4_FindUsersTest {
 		JsonObject page = userList.getJsonObject("page");
 		assertEquals(0, page.getInt("offset"));
 		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(8, page.getInt("total"));
+		assertEquals(10, page.getInt("total"));
 		
 		// Controlli sugli items
 		JsonArray items = userList.getJsonArray("items");
-		assertEquals(8, items.size());
+		assertEquals(10, items.size());
 		
 		// ordinamento default ID desc
 		
 		assertEquals(user2.getPrincipal(), items.getJsonObject(0).getString("principal"));
 		assertEquals(user.getPrincipal(), items.getJsonObject(1).getString("principal"));
-		assertEquals("org_editor", items.getJsonObject(2).getString("principal"));
-		assertEquals("org_viewer", items.getJsonObject(3).getString("principal"));
-		assertEquals("user_editor", items.getJsonObject(4).getString("principal"));
-		assertEquals("user_viewer", items.getJsonObject(5).getString("principal"));
-		assertEquals("ospite", items.getJsonObject(6).getString("principal"));
-		assertEquals("amministratore", items.getJsonObject(7).getString("principal"));
+		assertEquals("service_editor", items.getJsonObject(2).getString("principal"));
+		assertEquals("service_viewer", items.getJsonObject(3).getString("principal"));
+		assertEquals("org_editor", items.getJsonObject(4).getString("principal"));
+		assertEquals("org_viewer", items.getJsonObject(5).getString("principal"));
+		assertEquals("user_editor", items.getJsonObject(6).getString("principal"));
+		assertEquals("user_viewer", items.getJsonObject(7).getString("principal"));
+		assertEquals("ospite", items.getJsonObject(8).getString("principal"));
+		assertEquals("amministratore", items.getJsonObject(9).getString("principal"));
 	}
 	
 	@Test
@@ -117,7 +119,7 @@ class User_UC_4_FindUsersTest {
 		JsonObject page = userList.getJsonObject("page");
 		assertEquals(0, page.getInt("offset"));
 		assertEquals(3, page.getInt("limit"));
-		assertEquals(8, page.getInt("total"));
+		assertEquals(10, page.getInt("total"));
 		
 		// Controlli sugli items
 		JsonArray items = userList.getJsonArray("items");
@@ -127,7 +129,7 @@ class User_UC_4_FindUsersTest {
 		
 		assertEquals(user2.getPrincipal(), items.getJsonObject(0).getString("principal"));
 		assertEquals(user.getPrincipal(), items.getJsonObject(1).getString("principal"));
-		assertEquals("org_editor", items.getJsonObject(2).getString("principal"));
+		assertEquals("service_editor", items.getJsonObject(2).getString("principal"));
 		
 	}
 	
@@ -168,7 +170,7 @@ class User_UC_4_FindUsersTest {
 		JsonObject page = userList.getJsonObject("page");
 		assertEquals(0, page.getInt("offset"));
 		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(8, page.getInt("total"));
+		assertEquals(10, page.getInt("total"));
 		
 		// Controlli sugli items
 //		JsonArray items = userList.getJsonArray("items");
@@ -251,20 +253,22 @@ class User_UC_4_FindUsersTest {
 		JsonObject page = userList.getJsonObject("page");
 		assertEquals(0, page.getInt("offset"));
 		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(6, page.getInt("total"));
+		assertEquals(8, page.getInt("total"));
 		
 		// Controlli sugli items
 		JsonArray items = userList.getJsonArray("items");
-		assertEquals(6, items.size());
+		assertEquals(8, items.size());
 		
 		// ordinamento default ID desc
 		
-		assertEquals("org_editor", items.getJsonObject(0).getString("principal"));
-		assertEquals("org_viewer", items.getJsonObject(1).getString("principal"));
-		assertEquals("user_editor", items.getJsonObject(2).getString("principal"));
-		assertEquals("user_viewer", items.getJsonObject(3).getString("principal"));
-		assertEquals("ospite", items.getJsonObject(4).getString("principal"));
-		assertEquals("amministratore", items.getJsonObject(5).getString("principal"));
+		assertEquals("service_editor", items.getJsonObject(0).getString("principal"));
+		assertEquals("service_viewer", items.getJsonObject(1).getString("principal"));
+		assertEquals("org_editor", items.getJsonObject(2).getString("principal"));
+		assertEquals("org_viewer", items.getJsonObject(3).getString("principal"));
+		assertEquals("user_editor", items.getJsonObject(4).getString("principal"));
+		assertEquals("user_viewer", items.getJsonObject(5).getString("principal"));
+		assertEquals("ospite", items.getJsonObject(6).getString("principal"));
+		assertEquals("amministratore", items.getJsonObject(7).getString("principal"));
 	}
 	
 	@Test
@@ -305,20 +309,22 @@ class User_UC_4_FindUsersTest {
 		JsonObject page = userList.getJsonObject("page");
 		assertEquals(0, page.getInt("offset"));
 		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(8, page.getInt("total"));
+		assertEquals(10, page.getInt("total"));
 		
 		// Controlli sugli items
 		JsonArray items = userList.getJsonArray("items");
-		assertEquals(8, items.size());
+		assertEquals(10, items.size());
 		
 		assertEquals("amministratore", items.getJsonObject(0).getString("principal"));
-		assertEquals("org_editor", items.getJsonObject(1).getString("principal"));
-		assertEquals("user_viewer", items.getJsonObject(2).getString("principal"));
-		assertEquals("ospite", items.getJsonObject(3).getString("principal"));
-		assertEquals(user.getPrincipal(), items.getJsonObject(4).getString("principal"));
-		assertEquals("user_editor", items.getJsonObject(5).getString("principal"));
-		assertEquals("org_viewer", items.getJsonObject(6).getString("principal"));
-		assertEquals(user2.getPrincipal(), items.getJsonObject(7).getString("principal"));
+		assertEquals("service_editor", items.getJsonObject(1).getString("principal"));
+		assertEquals("org_editor", items.getJsonObject(2).getString("principal"));
+		assertEquals("service_viewer", items.getJsonObject(3).getString("principal"));
+		assertEquals("user_viewer", items.getJsonObject(4).getString("principal"));
+		assertEquals("ospite", items.getJsonObject(5).getString("principal"));
+		assertEquals(user.getPrincipal(), items.getJsonObject(6).getString("principal"));
+		assertEquals("user_editor", items.getJsonObject(7).getString("principal"));
+		assertEquals("org_viewer", items.getJsonObject(8).getString("principal"));
+		assertEquals(user2.getPrincipal(), items.getJsonObject(9).getString("principal"));
 		
 	}
 	
@@ -344,11 +350,11 @@ class User_UC_4_FindUsersTest {
 		JsonObject page = userList.getJsonObject("page");
 		assertEquals(0, page.getInt("offset"));
 		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(8, page.getInt("total"));
+		assertEquals(10, page.getInt("total"));
 		
 		// Controlli sugli items
 		JsonArray items = userList.getJsonArray("items");
-		assertEquals(8, items.size());
+		assertEquals(10, items.size());
 		
 		assertEquals("amministratore", items.getJsonObject(0).getString("principal"));
 		assertEquals("ospite", items.getJsonObject(1).getString("principal"));
@@ -356,8 +362,10 @@ class User_UC_4_FindUsersTest {
 		assertEquals("user_editor", items.getJsonObject(3).getString("principal"));
 		assertEquals("org_viewer", items.getJsonObject(4).getString("principal"));
 		assertEquals("org_editor", items.getJsonObject(5).getString("principal"));
-		assertEquals(user.getPrincipal(), items.getJsonObject(6).getString("principal"));
-		assertEquals(user2.getPrincipal(), items.getJsonObject(7).getString("principal"));
+		assertEquals("service_viewer", items.getJsonObject(6).getString("principal"));
+		assertEquals("service_editor", items.getJsonObject(7).getString("principal"));
+		assertEquals(user.getPrincipal(), items.getJsonObject(8).getString("principal"));
+		assertEquals(user2.getPrincipal(), items.getJsonObject(9).getString("principal"));
 	}
 	
 	@Test
@@ -379,14 +387,14 @@ class User_UC_4_FindUsersTest {
 		JsonObject page = userList.getJsonObject("page");
 		assertEquals(2, page.getInt("offset"));
 		assertEquals(2, page.getInt("limit"));
-		assertEquals(8, page.getInt("total"));
+		assertEquals(10, page.getInt("total"));
 		
 		// Controlli sugli items
 		JsonArray items = userList.getJsonArray("items");
 		assertEquals(2, items.size());
 		
-		assertEquals("org_editor", items.getJsonObject(0).getString("principal"));
-		assertEquals("org_viewer", items.getJsonObject(1).getString("principal"));
+		assertEquals("service_editor", items.getJsonObject(0).getString("principal"));
+		assertEquals("service_viewer", items.getJsonObject(1).getString("principal"));
 	}
 	
 	@Test
@@ -411,11 +419,11 @@ class User_UC_4_FindUsersTest {
 		JsonObject page = userList.getJsonObject("page");
 		assertEquals(0, page.getInt("offset"));
 		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(8, page.getInt("total"));
+		assertEquals(10, page.getInt("total"));
 		
 		// Controlli sugli items
 		JsonArray items = userList.getJsonArray("items");
-		assertEquals(8, items.size());
+		assertEquals(10, items.size());
 
 		assertEquals(user2.getPrincipal(), items.getJsonObject(0).getString("principal"));
 		assertEquals("org_viewer", items.getJsonObject(1).getString("principal"));
@@ -423,8 +431,10 @@ class User_UC_4_FindUsersTest {
 		assertEquals(user.getPrincipal(), items.getJsonObject(3).getString("principal"));
 		assertEquals("ospite", items.getJsonObject(4).getString("principal"));
 		assertEquals("user_viewer", items.getJsonObject(5).getString("principal"));
-		assertEquals("org_editor", items.getJsonObject(6).getString("principal"));
-		assertEquals("amministratore", items.getJsonObject(7).getString("principal"));
+		assertEquals("service_viewer", items.getJsonObject(6).getString("principal"));
+		assertEquals("org_editor", items.getJsonObject(7).getString("principal"));
+		assertEquals("service_editor", items.getJsonObject(8).getString("principal"));
+		assertEquals("amministratore", items.getJsonObject(9).getString("principal"));
 	}
 	
 	@Test
@@ -449,20 +459,22 @@ class User_UC_4_FindUsersTest {
 		JsonObject page = userList.getJsonObject("page");
 		assertEquals(0, page.getInt("offset"));
 		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(8, page.getInt("total"));
+		assertEquals(10, page.getInt("total"));
 		
 		// Controlli sugli items
 		JsonArray items = userList.getJsonArray("items");
-		assertEquals(8, items.size());
+		assertEquals(10, items.size());
 
 		assertEquals(user2.getPrincipal(), items.getJsonObject(0).getString("principal"));
 		assertEquals(user.getPrincipal(), items.getJsonObject(1).getString("principal"));
-		assertEquals("org_editor", items.getJsonObject(2).getString("principal"));
-		assertEquals("org_viewer", items.getJsonObject(3).getString("principal"));
-		assertEquals("user_editor", items.getJsonObject(4).getString("principal"));
-		assertEquals("user_viewer", items.getJsonObject(5).getString("principal"));
-		assertEquals("ospite", items.getJsonObject(6).getString("principal"));
-		assertEquals("amministratore", items.getJsonObject(7).getString("principal"));
+		assertEquals("service_editor", items.getJsonObject(2).getString("principal"));
+		assertEquals("service_viewer", items.getJsonObject(3).getString("principal"));
+		assertEquals("org_editor", items.getJsonObject(4).getString("principal"));
+		assertEquals("org_viewer", items.getJsonObject(5).getString("principal"));
+		assertEquals("user_editor", items.getJsonObject(6).getString("principal"));
+		assertEquals("user_viewer", items.getJsonObject(7).getString("principal"));
+		assertEquals("ospite", items.getJsonObject(8).getString("principal"));
+		assertEquals("amministratore", items.getJsonObject(9).getString("principal"));
 	}
 	
 	@Test
@@ -482,3 +494,5 @@ class User_UC_4_FindUsersTest {
 				.andReturn();
 	}
 }
+
+
