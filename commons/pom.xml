@@ -14,6 +14,8 @@
 
 	<groupId>it.govhub.govregistry</groupId>
 	<artifactId>commons</artifactId>
+	<version>1.0.0</version>
+	
 	<packaging>jar</packaging>
 	<name>GovRegistry - Libreria comune</name>
 
