@@ -1,7 +1,5 @@
 package it.govhub.security.services;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
@@ -24,7 +22,6 @@ public class GovhubUserDetailService implements UserDetailsService, Authenticati
 	private UserRepository userRepo;
 
 	@Override
-	@Transactional
 	@Cacheable(Caches.PRINCIPALS)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
