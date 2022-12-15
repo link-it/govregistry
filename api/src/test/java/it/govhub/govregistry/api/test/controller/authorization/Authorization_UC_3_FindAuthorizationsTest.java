@@ -51,7 +51,7 @@ import it.govhub.govregistry.commons.repository.UserRepository;
 @AutoConfigureMockMvc
 @DisplayName("Test di ricerca delle Authorization")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class Authorization_UC_3_FindAuthorizationsTest {
+class Authorization_UC_3_FindAuthorizationsTest {
 
 	@Autowired
 	private MockMvc mockMvc;

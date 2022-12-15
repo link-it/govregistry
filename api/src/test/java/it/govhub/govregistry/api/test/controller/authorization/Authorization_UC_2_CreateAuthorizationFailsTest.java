@@ -45,7 +45,7 @@ import it.govhub.govregistry.commons.repository.UserRepository;
 @DisplayName("Test di creazione delle Authorization")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-public class Authorization_UC_2_CreateAuthorizationFailsTest {
+class Authorization_UC_2_CreateAuthorizationFailsTest {
 
 	@Autowired
 	private MockMvc mockMvc;
