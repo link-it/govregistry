@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@ComponentScan( {"it.govhub.govregistry.commons", "it.govhub.security.services"})		// TODO: rivedere in generale questa classe di configurazione. È meglio farla per project?
+@ComponentScan( {"it.govhub.govregistry.commons", "it.govhub.security.services"})
 @EnableJpaRepositories("it.govhub.govregistry.commons.repository")
 @EntityScan("it.govhub.govregistry.commons.entity")
-public class SharedConfiguration {}
+public class CommonsExportedBeans {}

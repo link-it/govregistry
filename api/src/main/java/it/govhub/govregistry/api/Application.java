@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -14,15 +15,16 @@ import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import it.govhub.govregistry.commons.config.Caches;
-import it.govhub.govregistry.commons.config.SharedConfiguration;
+import it.govhub.govregistry.commons.config.CommonsExportedBeans;
 import it.govhub.govregistry.commons.exception.handlers.RequestRejectedExceptionHandler;
 import it.govhub.govregistry.commons.utils.Base64String;
 import it.govhub.govregistry.commons.utils.Base64StringSerializer;
+import it.govhub.security.config.SecurityExportedBeans;
 
 @SpringBootApplication
 @EnableScheduling
-@Import({ SharedConfiguration.class, Caches.class })
+@EnableCaching
+@Import({ CommonsExportedBeans.class, SecurityExportedBeans.class })
 public class Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
