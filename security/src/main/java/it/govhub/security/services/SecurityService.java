@@ -39,11 +39,16 @@ public class SecurityService {
 		OffsetDateTime now = OffsetDateTime.now();
 		
 		// Cerco fra le autorizzazioni una che abbia uno dei ruoli specificati e che non sia scaduta
-		user.getAuthorizations().stream()
+		boolean authorized = user.getAuthorizations().stream()
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 			.filter( auth -> roleList.contains(auth.getRole().getName()))
 			.findAny()
-			.orElseThrow( () -> new NotAuthorizedException());
+			.isPresent();
+			
+		if (!authorized) {
+			throw new NotAuthorizedException();
+		}
+		
 	}
 
 	
@@ -57,7 +62,7 @@ public class SecurityService {
 		Set<String> roleList = Set.of(roles);
 		OffsetDateTime now = OffsetDateTime.now();
 		
-		user.getAuthorizations().stream()
+		boolean authorized = user.getAuthorizations().stream()
 		.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 		.filter( auth -> {
 			
@@ -69,7 +74,11 @@ public class SecurityService {
 			return isAdmin || (hasRole && onService);
 		})
 		.findAny()
-		.orElseThrow( () -> new NotAuthorizedException());
+		.isPresent();
+		
+		if (!authorized) {
+			throw new NotAuthorizedException();
+		}
 	}
 	
 	
@@ -83,7 +92,7 @@ public class SecurityService {
 		Set<String> roleList = Set.of(roles);
 		OffsetDateTime now = OffsetDateTime.now();
 		
-		user.getAuthorizations().stream()
+		boolean authorized = user.getAuthorizations().stream()
 		.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 		.filter( auth -> {
 			
@@ -95,7 +104,11 @@ public class SecurityService {
 			return isAdmin || (hasRole && onOrganization);
 		})
 		.findAny()
-		.orElseThrow( () -> new NotAuthorizedException());
+		.isPresent();
+		
+		if (!authorized) {
+			throw new NotAuthorizedException();
+		}
 	}
 	
 
