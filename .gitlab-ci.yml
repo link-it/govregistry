@@ -1,6 +1,6 @@
 stages:
     - test
-#    - build
+    - build_and_deploy
 #    - integration
 
 
@@ -29,3 +29,12 @@ test:
           junit: [ api/target/surefire-reports/*.xml ]
         expire_in: "1 week"
 
+build_and_deploy:
+    stage: build_and_deploy 
+    script:
+      - mvn build
+      - cp api/target/govregistry.war /opt/wildfly/govhub/deployments/
+      - cd webapp
+      - npm install
+      - npm run production-govregistry
+      - cp -r dist/govregistry-app /opt/wildfly/welcome-content/
