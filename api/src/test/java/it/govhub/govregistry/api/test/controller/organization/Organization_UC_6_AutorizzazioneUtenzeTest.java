@@ -41,7 +41,7 @@ import it.govhub.govregistry.commons.repository.OrganizationRepository;
 @DisplayName("Test di controllo autorizzazioni necessarie all'esecuzione delle operazioni sulle Organizations")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-public class Organization_UC_6_AutorizzazioneUtenzeTest {
+class Organization_UC_6_AutorizzazioneUtenzeTest {
 
 	@Autowired
 	private MockMvc mockMvc;

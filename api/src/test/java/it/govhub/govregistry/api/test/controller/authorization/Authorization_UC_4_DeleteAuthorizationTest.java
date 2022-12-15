@@ -50,7 +50,7 @@ import it.govhub.govregistry.commons.repository.UserRepository;
 @AutoConfigureMockMvc
 @DisplayName("Test di cancellazione delle Authorization")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class Authorization_UC_4_DeleteAuthorizationTest {
+class Authorization_UC_4_DeleteAuthorizationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
