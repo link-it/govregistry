@@ -32,12 +32,12 @@ To configure the application it is necessary to edit the "app-config.jon" file i
 
 ### Host
 
-Change the "HOST" attribute in the "GOVREGISTRY" section:
+Change the "HOST" attribute in the "GOVAPI" section:
 
 ```json
 {
     ...
-    "GOVREGISTRY": {
+    "GOVAPI": {
       "HOST": "http://localhost:5201",
       ...
     },

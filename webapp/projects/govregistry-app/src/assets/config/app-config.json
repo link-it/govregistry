@@ -11,7 +11,7 @@
       "DEVELOP": true
     },
 
-    "GOVREGISTRY": {
+    "GOVAPI": {
       "HOST": "http://localhost:5201",
       "LOGOUT_URL": "/logout"
     },
