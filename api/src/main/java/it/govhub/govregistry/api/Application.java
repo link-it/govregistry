@@ -1,5 +1,6 @@
 package it.govhub.govregistry.api;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
@@ -16,6 +17,7 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import it.govhub.govregistry.commons.config.CommonsExportedBeans;
+import it.govhub.govregistry.commons.config.TimeZoneConfigurer;
 import it.govhub.govregistry.commons.exception.handlers.RequestRejectedExceptionHandler;
 import it.govhub.govregistry.commons.utils.Base64String;
 import it.govhub.govregistry.commons.utils.Base64StringSerializer;
@@ -24,8 +26,11 @@ import it.govhub.security.config.SecurityExportedBeans;
 @SpringBootApplication
 @EnableScheduling
 @EnableCaching
-@Import({ CommonsExportedBeans.class, SecurityExportedBeans.class })
+@Import({ CommonsExportedBeans.class, SecurityExportedBeans.class, TimeZoneConfigurer.class })
 public class Application extends SpringBootServletInitializer {
+	
+	@Value("${govhub.timezone}")
+	String timeZone;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -47,7 +52,9 @@ public class Application extends SpringBootServletInitializer {
 	 */
 	@Bean
 	public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-		return builder -> builder.serializerByType(Base64String.class, new Base64StringSerializer());
+		return builder ->  builder.
+				timeZone(this.timeZone).
+				serializerByType(Base64String.class, new Base64StringSerializer());
 	}
 
 	/**
