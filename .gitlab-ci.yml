@@ -1,7 +1,6 @@
 stages:
     - test
-    - sonarqube
-    - build
+#    - build
 #    - integration
 
 
@@ -19,33 +18,14 @@ default:
             - target/
     image: maven:3-openjdk-11
 
-test_and_coverage:
+test:
     stage: test
     script:
-        - mvn clean test
-        - wget https://raw.githubusercontent.com/rix0rrr/cover2cover/master/cover2cover.py
-        - apt-get update
-        - apt-get -y install python2 npm
-        - python2 ./cover2cover.py web/api-backoffice/target/site/jacoco/jacoco.xml web/api-backoffice/src/main/java/ > web/api-backoffice/target/site/cobertura.xml
-        - mkdir target
-        - npx cobertura-merge -o target/cobertura.xml package1=web/api-backoffice/target/site/cobertura.xml
-    # dependencies: [] # Per evitare il download di artifact in job precedenti
+      - mvn verify sonar:sonar
     artifacts:
         untracked: false
         name: test_and_coverage_report
         reports:
-          coverage_report:
-            coverage_format: cobertura
-            path: target/cobertura.xml
-          junit: [ web/api-backoffice/target/surefire-reports/*.xml ]
+          junit: [ api/target/surefire-reports/*.xml ]
         expire_in: "1 week"
 
-code_quality:
-    stage: sonarqube
-    script: mvn verify sonar:sonar -Dsonar.qualitygate.wait=true -Dsonar.coverage.jacoco.xmlReportPaths=*/*/target/site/cobertura.xml
-    dependencies: [] # Per evitare il download di artifact in job precedenti
-
-maven_build:
-    stage: build
-    script: mvn package 
-    dependencies: [] # Per evitare il download di artifact in job precedenti

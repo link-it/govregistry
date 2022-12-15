@@ -3,13 +3,19 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>it.govhub</groupId>
-	<artifactId>management_bo</artifactId>
+	<groupId>it.govhub.govregistry</groupId>
+	<artifactId>govregistry</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
-	<name>GovHub</name>
+	<name>GovRegistry</name>
+	<properties>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+	</properties>
 	<modules>
-		<module>web</module>
+		<module>report</module>
+		<module>commons</module>
+		<module>security</module>
+		<module>api</module>
 	</modules>
 </project>
 
