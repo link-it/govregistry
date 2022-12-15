@@ -73,7 +73,7 @@ class User_UC_5_GetUsersTest {
 		
 		// Controlli sugli items
 		JsonArray items = userList.getJsonArray("items");
-		assertEquals(8, items.size());
+		assertEquals(10, items.size());
 		
 		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
@@ -123,3 +123,4 @@ class User_UC_5_GetUsersTest {
 				.andReturn();
 	}
 }
+
