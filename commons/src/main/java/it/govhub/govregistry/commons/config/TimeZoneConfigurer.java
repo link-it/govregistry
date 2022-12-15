@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class TimeZoneConfigurer {
 	
-	@Value("${govhub.timezone}")
+	@Value("${govhub.time-zone}")
 	String timezone;
 	
 	Logger logger = LoggerFactory.getLogger(TimeZoneConfigurer.class);

@@ -29,7 +29,7 @@ import it.govhub.security.config.SecurityExportedBeans;
 @Import({ CommonsExportedBeans.class, SecurityExportedBeans.class, TimeZoneConfigurer.class })
 public class Application extends SpringBootServletInitializer {
 	
-	@Value("${govhub.timezone}")
+	@Value("${govhub.time-zone}")
 	String timeZone;
 
 	public static void main(String[] args) {
