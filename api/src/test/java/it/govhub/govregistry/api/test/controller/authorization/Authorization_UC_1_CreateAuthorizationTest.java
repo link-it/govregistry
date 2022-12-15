@@ -1,4 +1,5 @@
-package it.govhub.govregistry.application.test.controller.authorization;
+package it.govhub.govregistry.api.test.controller.authorization;
+
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,19 +31,19 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import it.govhub.govregistry.api.entity.OrganizationEntity;
-import it.govhub.govregistry.api.entity.RoleAuthorizationEntity;
-import it.govhub.govregistry.api.entity.RoleEntity;
-import it.govhub.govregistry.api.entity.ServiceEntity;
-import it.govhub.govregistry.api.entity.UserEntity;
-import it.govhub.govregistry.api.repository.OrganizationRepository;
-import it.govhub.govregistry.api.repository.RoleAuthorizationRepository;
-import it.govhub.govregistry.api.repository.RoleRepository;
-import it.govhub.govregistry.api.repository.ServiceRepository;
-import it.govhub.govregistry.api.repository.UserRepository;
-import it.govhub.govregistry.application.Application;
-import it.govhub.govregistry.application.test.Costanti;
-import it.govhub.govregistry.application.test.utils.UserAuthProfilesUtils;
+import it.govhub.govregistry.api.Application;
+import it.govhub.govregistry.api.test.Costanti;
+import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
+import it.govhub.govregistry.commons.entity.OrganizationEntity;
+import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
+import it.govhub.govregistry.commons.entity.RoleEntity;
+import it.govhub.govregistry.commons.entity.ServiceEntity;
+import it.govhub.govregistry.commons.entity.UserEntity;
+import it.govhub.govregistry.commons.repository.OrganizationRepository;
+import it.govhub.govregistry.commons.repository.RoleAuthorizationRepository;
+import it.govhub.govregistry.commons.repository.RoleRepository;
+import it.govhub.govregistry.commons.repository.ServiceRepository;
+import it.govhub.govregistry.commons.repository.UserRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
