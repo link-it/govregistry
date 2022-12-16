@@ -59,7 +59,7 @@ public class OrganizationController implements OrganizationApi {
 	@Override
 	public ResponseEntity<Organization> createOrganization(OrganizationCreate org) {
 		
-		this.authService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+		this.authService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddress(), "office_address");
 		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddressDetails(), "office_address_details");
@@ -79,7 +79,7 @@ public class OrganizationController implements OrganizationApi {
 	@Override
 	public ResponseEntity<OrganizationList> listOrganizations(OrganizationOrdering sort, Direction sortDirection, Integer limit, Long offset, String q) {
 		
-		this.authService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER, SecurityConstants.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+		this.authService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER, SecurityConstants.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
 		
 		// Posso avere N autorizzazioni valide con ruolo user_viewer o user_editor
 		// Alcune di queste avranno organizzazioni associate, altre no.

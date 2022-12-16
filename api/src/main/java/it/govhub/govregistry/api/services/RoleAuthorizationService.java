@@ -1,5 +1,6 @@
 package it.govhub.govregistry.api.services;
 
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ import it.govhub.govregistry.commons.repository.ServiceRepository;
 import it.govhub.govregistry.commons.repository.UserRepository;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
+import it.govhub.security.config.SecurityConstants;
 import it.govhub.security.services.SecurityService;
 
 @Service
@@ -60,9 +62,14 @@ public class RoleAuthorizationService {
 	
 	@Autowired
 	private AuthorizationAssembler authAssembler;
+	
+	@Autowired
+	SecurityService securityService;
 
 	@Transactional
 	public Authorization assignAuthorization(Long userId, AuthorizationCreate authorization) {
+		
+		this.securityService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
 		
 		UserEntity assignee = this.userRepo.findById(userId)
 				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(userId)));
@@ -70,25 +77,6 @@ public class RoleAuthorizationService {
 		RoleEntity role = this.roleRepo.findById(authorization.getRole())
 				.orElseThrow( () -> new BadRequestException(RoleMessages.notFound(userId)));
 		
-		UserEntity principal = SecurityService.getPrincipal();
-		
-		// In quanto principal posso assegnare solo i ruoli che sono fra i mei assignable_roles
-		// Posso assegnarli se il principal ha una autorizzazione con un ruolo che ha fra gli assignable_roles il ruolo da assegnare
-		// e la cui expiration_date è superiore a quella del ruolo da assegnare
-		// Devo cercare una RoleAuthorizationEntity che me lo fa fare
-		
-		Specification<RoleAuthorizationEntity> spec = RoleAuthorizationFilters.byUser(principal.getId())
-				.and(RoleAuthorizationFilters.byAssignableRole(authorization.getRole()))
-				.and(RoleAuthorizationFilters.onServices(authorization.getServices()))
-				.and(RoleAuthorizationFilters.onOrganizations(authorization.getOrganizations()))
-				.and(RoleAuthorizationFilters.expiresAfter(authorization.getExpirationDate()));
-		
-		Specification<RoleAuthorizationEntity> adminSpec = RoleAuthorizationFilters.byAdmin(principal.getId());
-		
-		if (this.authRepo.findAll(spec.or(adminSpec)).isEmpty()) {
-			throw new NotAuthorizedException();
-		}
-
 		// Colleziono organizzazioni e servizi
 		
 		Set<OrganizationEntity> organizations = new HashSet<>(this.orgRepo.findAllById(authorization.getOrganizations()));
@@ -117,9 +105,30 @@ public class RoleAuthorizationService {
 			.expirationDate(authorization.getExpirationDate())
 			.build();
 		
+		// Autorizzo
+		
+	    if ( !this.securityService.canWriteAuthorization(newAuthorization))  {
+			throw new NotAuthorizedException();
+		}
+		
 		newAuthorization = this.authRepo.save(newAuthorization);
 		
 		return this.authAssembler.toModel(newAuthorization);
+	}
+	
+	
+	@Transactional
+	public void removeAuthorization(Long authId) {
+		this.securityService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
+		
+		RoleAuthorizationEntity auth = this.authRepo.findById(authId)
+			.orElseThrow( () -> new ResourceNotFoundException(RoleMessages.authorizationNotFound(authId)));
+		
+	    if ( !this.securityService.canWriteAuthorization(auth))  {
+			throw new NotAuthorizedException();
+		}
+		
+		this.authRepo.delete(auth);
 	}
 
 	
