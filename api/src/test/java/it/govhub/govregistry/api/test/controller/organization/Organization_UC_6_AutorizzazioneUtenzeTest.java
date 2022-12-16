@@ -439,5 +439,87 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 		
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getString("tax_code"));
 	}
+	
+	//10. GetOrganization con utenza non admin con ruolo govhub_organizations_editor/govhub_organizations_viewer: OK che ha autorizzazione solo su una organization
+	@Test
+	void UC_6_10_GetOrganizationOk_UtenzaConRuolo_GovHub_Organizations_Editor_O_Viewer_Authorization() throws Exception {
+		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_4);
+		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
+		RoleEntity ruoloUser = leggiRuoloDB("govhub_organizations_viewer");
+		
+		String json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
+				.add("services", Json.createArrayBuilder())
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_organizations_viewer")))
+				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
+				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andReturn();
+		
+		result = this.mockMvc.perform(get("/organizations/")
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		JsonObject userList = reader.readObject();
+		JsonArray items = userList.getJsonArray("items");
+		
+		JsonObject item1 = items.getJsonObject(items.size() - 1);  // primo ente creato non Ente4
+		int idUser1 = item1.getInt("id"); // Ente1
+				
+//		// l'utenza puo' vedere solo l'organization che gli e' stata assegnata (Ente 4)
+//		this.mockMvc.perform(get("/organizations/{id}",idUser1)
+//				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
+//				.accept(MediaType.APPLICATION_JSON))
+//				.andExpect(status().isUnauthorized())
+//				.andExpect(jsonPath("$.status", is(401)))
+//				.andExpect(jsonPath("$.title", is("Unauthorized")))
+//				.andExpect(jsonPath("$.type").isString())
+//				.andExpect(jsonPath("$.detail").isString())
+//				.andReturn();
+//		
+//		// leggo la lista delle organizations con l'utenza che puo' visualizzarne solo 1
+//		result = this.mockMvc.perform(get("/organizations")
+//				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
+//				.accept(MediaType.APPLICATION_JSON))
+//				.andExpect(status().isOk())
+//				.andReturn();
+//		
+//		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+//		userList = reader.readObject();
+//		
+//		// Controlli sulla paginazione
+//		JsonObject page = userList.getJsonObject("page");
+//		assertEquals(0, page.getInt("offset"));
+//		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
+//		assertEquals(1, page.getInt("total"));
+//		
+//		// Controlli sugli items
+//		items = userList.getJsonArray("items");
+//		assertEquals(1, items.size());
+//		
+//		item1 = items.getJsonObject(0); 
+//		idUser1 = item1.getInt("id"); // Ente 4
+//				
+//		this.mockMvc.perform(get("/organizations/{id}",idUser1)
+//				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
+//				.accept(MediaType.APPLICATION_JSON))
+//				.andExpect(status().isOk())
+//				.andReturn();
+	}
 }
 
