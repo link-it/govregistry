@@ -397,7 +397,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-				.add("expiration_date", dt.format(now))
+//				.add("expiration_date", dt.format(now))
 				.build()
 				.toString();
 		
@@ -413,7 +413,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
+//				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		user = leggiUtenteDB("user_viewer");
