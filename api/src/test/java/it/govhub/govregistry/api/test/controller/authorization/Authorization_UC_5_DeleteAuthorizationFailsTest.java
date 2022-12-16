@@ -23,6 +23,7 @@ import javax.json.JsonReader;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -271,5 +272,20 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 		assertEquals("govhub_users_viewer", item2.getJsonObject("role").getString("role_name"));
 	}
 	
+	@Test
+	void UC_4_02_DeleteAuthorizationFail_NotFound() throws Exception {
+		int idRole = 10000;
+		// Cancellazione Autorizzazione non esistente
+		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.accept("*/*"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.status", is(404)))
+				.andExpect(jsonPath("$.title", is("Not Found")))
+				.andExpect(jsonPath("$.type").isString())
+				.andExpect(jsonPath("$.detail").isString())
+				.andReturn();
+	}
 }
 
