@@ -58,7 +58,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			ret.setType(new URI(problemTypes.get(status)));
 			ret.setDetail(detail);
 			return ret;
-			
 		} catch (URISyntaxException e){
 			// Non deve mai fallire la new URI di sopra
 			throw new UnreachableException(e);
@@ -93,6 +92,12 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		return buildProblem(HttpStatus.UNPROCESSABLE_ENTITY, ex.getLocalizedMessage());
 	}
 	
+   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+   @ExceptionHandler(Exception.class)
+   public Problem handleConstraintViolation(Exception ex) {
+           return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage());
+   }
+
 	
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(NotAuthorizedException.class)

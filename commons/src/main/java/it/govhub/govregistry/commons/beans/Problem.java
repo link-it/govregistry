@@ -1,7 +1,6 @@
 package it.govhub.govregistry.commons.beans;
 
 import java.net.URI;
-import java.util.Objects;
 
 import javax.annotation.Generated;
 import javax.validation.Valid;
@@ -38,11 +37,6 @@ public class Problem extends RepresentationModel<Problem>  {
   @JsonProperty("type")
   private URI type = URI.create("about:blank");
 
-  public Problem detail(String detail) {
-    this.detail = detail;
-    return this;
-  }
-
   /**
    * A human readable description of the occurred problem.
    * @return detail
@@ -57,11 +51,6 @@ public class Problem extends RepresentationModel<Problem>  {
     this.detail = detail;
   }
 
-  public Problem instance(URI instance) {
-    this.instance = instance;
-    return this;
-  }
-
   /**
    * Link to a specific occurence of the problem.
    * @return instance
@@ -74,11 +63,6 @@ public class Problem extends RepresentationModel<Problem>  {
 
   public void setInstance(URI instance) {
     this.instance = instance;
-  }
-
-  public Problem status(Integer status) {
-    this.status = status;
-    return this;
   }
 
   /**
@@ -97,11 +81,6 @@ public class Problem extends RepresentationModel<Problem>  {
     this.status = status;
   }
 
-  public Problem title(String title) {
-    this.title = title;
-    return this;
-  }
-
   /**
    * Short description of the occurred problem.
    * @return title
@@ -116,11 +95,6 @@ public class Problem extends RepresentationModel<Problem>  {
     this.title = title;
   }
 
-  public Problem type(URI type) {
-    this.type = type;
-    return this;
-  }
-
   /**
    * Absolute URI for the problem description.
    * @return type
@@ -133,50 +107,5 @@ public class Problem extends RepresentationModel<Problem>  {
 
   public void setType(URI type) {
     this.type = type;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Problem problem = (Problem) o;
-    return Objects.equals(this.detail, problem.detail) &&
-        Objects.equals(this.instance, problem.instance) &&
-        Objects.equals(this.status, problem.status) &&
-        Objects.equals(this.title, problem.title) &&
-        Objects.equals(this.type, problem.type);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(detail, instance, status, title, type);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class Problem {\n");
-    sb.append("    detail: ").append(toIndentedString(detail)).append("\n");
-    sb.append("    instance: ").append(toIndentedString(instance)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    title: ").append(toIndentedString(title)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
   }
 }
