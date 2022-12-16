@@ -1,0 +1,29 @@
+{
+  "table":[],
+
+  "simpleItem": {
+    "primaryText": [
+      { "field": "legal_name", "type": "text" }
+    ],
+    "secondaryText": [
+      { "field": "tax_code", "type": "text" }
+    ],
+    "metadata": {
+      "text": [
+        { "field": "office_at", "type": "text" }
+      ],
+      "label": []
+    },
+    "secondaryMetadata": [
+      { "field": "office_email_address", "type": "text" }
+    ]
+  },
+
+  "details": [
+    { "label": "APP.LABEL.LegalName", "field": "legal_name", "type": "text" },
+    { "label": "APP.LABEL.OfficeAddress", "field": "office_address", "type": "text" },
+    { "label": "APP.LABEL.OfficeAt", "field": "office_at", "type": "text" },
+    { "label": "APP.LABEL.OfficeEmailAddress", "field": "office_email_address", "type": "text" },
+    { "label": "APP.LABEL.TaxCode", "field": "tax_code", "type": "text" }
+  ]
+}
