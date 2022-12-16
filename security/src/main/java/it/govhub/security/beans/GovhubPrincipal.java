@@ -29,7 +29,7 @@ public class GovhubPrincipal implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return "{noop}password";	// TODO
+		return "{noop}password";
 	}
 
 	@Override

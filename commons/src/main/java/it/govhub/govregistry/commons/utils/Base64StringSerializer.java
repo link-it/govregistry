@@ -23,7 +23,7 @@ public class Base64StringSerializer extends StdSerializer<Base64String> {
 	    		Base64String value, JsonGenerator jgen, SerializerProvider provider) 
 	      throws IOException {
 			
-			jgen.writeString(value.value);
+			jgen.writeString(value.getValue());
 	    }
 
 }
