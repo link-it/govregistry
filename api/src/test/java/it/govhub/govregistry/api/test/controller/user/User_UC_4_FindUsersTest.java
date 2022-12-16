@@ -493,6 +493,46 @@ class User_UC_4_FindUsersTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 	}
+	
+	@Test
+	void UC_4_15_FindAllOk_Sort_Unsorted() throws Exception {
+		UserEntity user = Costanti.getUser_Snakamoto();
+		UserEntity user2 = Costanti.getUser_Vbuterin();
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add(Costanti.USERS_QUERY_PARAM_SORT, "unsorted");
+		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
+		
+		MvcResult result = this.mockMvc.perform(get("/users").params(params )
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		JsonObject userList = reader.readObject();
+		
+		// Controlli sulla paginazione
+		JsonObject page = userList.getJsonObject("page");
+		assertEquals(0, page.getInt("offset"));
+		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
+		assertEquals(10, page.getInt("total"));
+		
+		// Controlli sugli items
+		JsonArray items = userList.getJsonArray("items");
+		assertEquals(10, items.size());
+		
+		assertEquals("amministratore", items.getJsonObject(0).getString("principal"));
+		assertEquals("ospite", items.getJsonObject(1).getString("principal"));
+		assertEquals("user_viewer", items.getJsonObject(2).getString("principal"));
+		assertEquals("user_editor", items.getJsonObject(3).getString("principal"));
+		assertEquals("org_viewer", items.getJsonObject(4).getString("principal"));
+		assertEquals("org_editor", items.getJsonObject(5).getString("principal"));
+		assertEquals("service_viewer", items.getJsonObject(6).getString("principal"));
+		assertEquals("service_editor", items.getJsonObject(7).getString("principal"));
+		assertEquals(user.getPrincipal(), items.getJsonObject(8).getString("principal"));
+		assertEquals(user2.getPrincipal(), items.getJsonObject(9).getString("principal"));
+	}
 }
 
 

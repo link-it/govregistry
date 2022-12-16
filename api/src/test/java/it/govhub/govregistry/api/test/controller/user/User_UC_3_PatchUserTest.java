@@ -646,4 +646,30 @@ class User_UC_3_PatchUserTest {
 		assertEquals(user.getFullName(), userEntity.getFullName());
 		assertEquals(user.getPrincipal(), userEntity.getPrincipal());
 	}
+	
+	@Test
+	void UC_3_12_PatchUser_WrongOperation() throws Exception {
+		JsonObjectBuilder patchOp = Json.createObjectBuilder()
+				.add("op", "xxx")
+				.add("path", "/enabled")
+				.add("value", true);
+
+		String patchUser = Json.createArrayBuilder()
+				.add(patchOp)
+				.build()
+				.toString();
+
+		this.mockMvc.perform(patch("/users/{id}", 1)
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(patchUser)
+				.contentType("application/json-patch+json")
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.status", is(400)))
+				.andExpect(jsonPath("$.title", is("Bad Request")))
+				.andExpect(jsonPath("$.type").isString())
+				.andExpect(jsonPath("$.detail").isString())
+				.andReturn();
+	}
 }

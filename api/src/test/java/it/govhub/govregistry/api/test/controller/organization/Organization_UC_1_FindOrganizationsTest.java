@@ -315,4 +315,37 @@ class Organization_UC_1_FindOrganizationsTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 	}
+	
+	@Test
+	void UC_1_11_FindAllOk_Sort_Unsorted() throws Exception {
+		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add(Costanti.USERS_QUERY_PARAM_SORT, "unsorted");
+		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
+		
+		MvcResult result = this.mockMvc.perform(get("/organizations").params(params )
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		JsonObject userList = reader.readObject();
+		
+		// Controlli sulla paginazione
+		JsonObject page = userList.getJsonObject("page");
+		assertEquals(0, page.getInt("offset"));
+		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
+		assertEquals(3, page.getInt("total"));
+		
+		// Controlli sugli items
+		JsonArray items = userList.getJsonArray("items");
+		assertEquals(3, items.size());
+
+		
+		assertEquals("12345678901", items.getJsonObject(0).getString("tax_code"));
+		assertEquals("12345678902", items.getJsonObject(1).getString("tax_code"));
+		assertEquals(ente.getTaxCode(), items.getJsonObject(2).getString("tax_code"));
+	}
 }

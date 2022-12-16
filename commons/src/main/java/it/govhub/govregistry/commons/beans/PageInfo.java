@@ -1,13 +1,15 @@
 package it.govhub.govregistry.commons.beans;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
+import javax.annotation.Generated;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.hateoas.RepresentationModel;
 
-import javax.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * PageInfo
@@ -26,11 +28,6 @@ public class PageInfo extends RepresentationModel<PageInfo>  {
   @JsonProperty("total")
   private Long total;
 
-  public PageInfo offset(Long offset) {
-    this.offset = offset;
-    return this;
-  }
-
   /**
    * Offset value (zero-based) for the results.
    * minimum: 0
@@ -45,11 +42,6 @@ public class PageInfo extends RepresentationModel<PageInfo>  {
 
   public void setOffset(Long offset) {
     this.offset = offset;
-  }
-
-  public PageInfo limit(Integer limit) {
-    this.limit = limit;
-    return this;
   }
 
   /**
@@ -68,11 +60,6 @@ public class PageInfo extends RepresentationModel<PageInfo>  {
     this.limit = limit;
   }
 
-  public PageInfo total(Long total) {
-    this.total = total;
-    return this;
-  }
-
   /**
    * Number of found elements.
    * minimum: 0
@@ -87,46 +74,5 @@ public class PageInfo extends RepresentationModel<PageInfo>  {
 
   public void setTotal(Long total) {
     this.total = total;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    PageInfo pageInfo = (PageInfo) o;
-    return Objects.equals(this.offset, pageInfo.offset) &&
-        Objects.equals(this.limit, pageInfo.limit) &&
-        Objects.equals(this.total, pageInfo.total);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(offset, limit, total);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class PageInfo {\n");
-    sb.append("    offset: ").append(toIndentedString(offset)).append("\n");
-    sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
-    sb.append("    total: ").append(toIndentedString(total)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
   }
 }
