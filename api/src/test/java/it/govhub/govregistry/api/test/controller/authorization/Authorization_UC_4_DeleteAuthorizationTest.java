@@ -109,7 +109,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -199,7 +199,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -290,7 +290,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -382,7 +382,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -484,7 +484,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -616,7 +616,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -748,7 +748,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -880,7 +880,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
