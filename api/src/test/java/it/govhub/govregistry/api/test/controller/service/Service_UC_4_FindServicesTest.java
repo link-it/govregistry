@@ -412,4 +412,42 @@ class Service_UC_4_FindServicesTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 	}
+	
+	@Test
+	void UC_4_15_FindAllOk_Sort_Unsorted() throws Exception {
+		ServiceEntity servizio = Costanti.getServizioTest();
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add(Costanti.USERS_QUERY_PARAM_SORT, "unsorted");
+		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
+		
+		MvcResult result = this.mockMvc.perform(get("/services").params(params )
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		JsonObject userList = reader.readObject();
+		
+		// Controlli sulla paginazione
+		JsonObject page = userList.getJsonObject("page");
+		assertEquals(0, page.getInt("offset"));
+		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
+		assertEquals(9, page.getInt("total"));
+		
+		// Controlli sugli items
+		JsonArray items = userList.getJsonArray("items");
+		assertEquals(9, items.size());
+		
+		assertEquals("Servizio Generico", items.getJsonObject(0).getString("service_name"));
+		assertEquals("Servizio senza autorizzazioni", items.getJsonObject(1).getString("service_name"));
+		assertEquals("SUAP-Integrazione", items.getJsonObject(2).getString("service_name"));
+		assertEquals("IMU-ImpostaMunicipaleUnica", items.getJsonObject(3).getString("service_name"));
+		assertEquals("TARI", items.getJsonObject(4).getString("service_name"));
+		assertEquals("Portale ZTL", items.getJsonObject(5).getString("service_name"));
+		assertEquals("Variazione Residenza", items.getJsonObject(6).getString("service_name"));
+		assertEquals("Servizi Turistici", items.getJsonObject(7).getString("service_name"));
+		assertEquals(servizio.getName(), items.getJsonObject(8).getString("service_name"));
+	}
 }

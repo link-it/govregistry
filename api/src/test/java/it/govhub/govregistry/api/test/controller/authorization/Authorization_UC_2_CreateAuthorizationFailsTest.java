@@ -35,7 +35,6 @@ import it.govhub.govregistry.commons.entity.RoleEntity;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.repository.OrganizationRepository;
-import it.govhub.govregistry.commons.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.commons.repository.RoleRepository;
 import it.govhub.govregistry.commons.repository.ServiceRepository;
 import it.govhub.govregistry.commons.repository.UserRepository;
@@ -49,9 +48,6 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
-	@Autowired
-	private RoleAuthorizationRepository authRepository;
 	
 	@Autowired
 	private OrganizationRepository organizationRepository;
@@ -447,6 +443,71 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
 //				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andReturn();
+		
+		user = leggiUtenteDB("user_viewer");
+		
+		ruoloUser = leggiRuoloDB("govhub_user");
+		
+		json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder())
+				.add("services", Json.createArrayBuilder())
+//				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized())
+				.andExpect(jsonPath("$.status", is(401)))
+				.andExpect(jsonPath("$.title", is("Unauthorized")))
+				.andExpect(jsonPath("$.type").isString())
+				.andExpect(jsonPath("$.detail").isString())
+				.andReturn();
+		
+	}
+	
+	@Test
+	@Transactional
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli con scadenza
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer senza scadenza, non e' consentito per la restrizione sulle date
+	 * */
+	void UC_2_11_CreateAuthorizationFail_UserEditor_ExpirationDate() throws Exception {
+		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
+		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
+		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
+		
+		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
+		
+		OffsetDateTime now = OffsetDateTime.now(); 
+		String json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder())
+				.add("services", Json.createArrayBuilder().add(servizio.getId()))
+				.add("expiration_date", dt.format(now))
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
+				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		user = leggiUtenteDB("user_viewer");
