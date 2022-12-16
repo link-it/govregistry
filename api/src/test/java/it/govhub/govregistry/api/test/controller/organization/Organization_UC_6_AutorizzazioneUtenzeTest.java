@@ -11,6 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -18,6 +21,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +38,13 @@ import it.govhub.govregistry.api.beans.PatchOp.OpEnum;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
+import it.govhub.govregistry.commons.entity.RoleEntity;
+import it.govhub.govregistry.commons.entity.ServiceEntity;
+import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.repository.OrganizationRepository;
+import it.govhub.govregistry.commons.repository.RoleRepository;
+import it.govhub.govregistry.commons.repository.ServiceRepository;
+import it.govhub.govregistry.commons.repository.UserRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -50,7 +60,43 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	private OrganizationRepository organizationRepository;
 	
 	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private ServiceRepository serviceRepository;
+	
+	@Autowired
+	public RoleRepository roleRepository;
+	
+	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;
+	
+	@BeforeEach
+	private void configurazioneDB() {
+		UserEntity user = Costanti.getUser_Snakamoto();
+		this.userRepository.save(user);
+		
+		OrganizationEntity ente = Costanti.getEnteCreditore4();
+		this.organizationRepository.save(ente);
+		
+		ServiceEntity servizio = Costanti.getServizioTest();
+		this.serviceRepository.save(servizio);
+	}
+	
+	private RoleEntity leggiRuoloDB(String nomeRuolo) {
+		List<RoleEntity> findAll = this.roleRepository.findAll();
+		return findAll.stream().filter(f -> f.getName().equals(nomeRuolo)).collect(Collectors.toList()).get(0);
+	}
+	
+	private UserEntity leggiUtenteDB(String principal) {
+		List<UserEntity> findAll = this.userRepository.findAll();
+		return findAll.stream().filter(f -> f.getPrincipal().equals(principal)).collect(Collectors.toList()).get(0);
+	}
+	
+	private OrganizationEntity leggiEnteDB(String nome) {
+		List<OrganizationEntity> findAll = this.organizationRepository.findAll();
+		return findAll.stream().filter(f -> f.getTaxCode().equals(nome)).collect(Collectors.toList()).get(0);
+	}
 	
 	//1. CreateOrganization con utenza non admin con ruolo govhub_organizations_editor: OK
 	@Test
@@ -252,6 +298,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.andReturn();
 
 	}
+	
 	//5. FindAllOrganizations con utenza non admin con ruolo govhub_organizations_editor/govhub_organizations_viewer: OK
 	@Test
 	void UC_6_05_FindAllOk_UtenzaConRuolo_GovHub_Organizations_Editor_O_Viewer() throws Exception {
@@ -340,6 +387,57 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.andExpect(jsonPath("$.type").isString())
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
+	}
+	
+	//9. FindAllOrganizations con utenza non admin con ruolo govhub_organizations_editor/govhub_organizations_viewer: OK che ha autorizzazione solo su una organization
+	@Test
+	void UC_6_09_FindAllOk_UtenzaConRuolo_GovHub_Organizations_Editor_O_Viewer_Authorization() throws Exception {
+		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_4);
+		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
+		RoleEntity ruoloUser = leggiRuoloDB("govhub_organizations_viewer");
+		
+		String json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
+				.add("services", Json.createArrayBuilder())
+				.build()
+				.toString();
+		
+		// Creo una organization e verifico la risposta
+		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+				.with(this.userAuthProfilesUtils.utenzaAdmin())
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is("govhub_organizations_viewer")))
+				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
+				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andReturn();
+		
+		// leggo la lista delle organizations con l'utenza che puo' visualizzarne solo 1
+		result = this.mockMvc.perform(get("/organizations")
+				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		JsonObject userList = reader.readObject();
+		
+		// Controlli sulla paginazione
+		JsonObject page = userList.getJsonObject("page");
+		assertEquals(0, page.getInt("offset"));
+		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
+		assertEquals(1, page.getInt("total"));
+		
+		// Controlli sugli items
+		JsonArray items = userList.getJsonArray("items");
+		assertEquals(1, items.size());
+		
+		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getString("tax_code"));
 	}
 }
 
