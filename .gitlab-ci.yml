@@ -9,6 +9,30 @@ variables:
     SONAR_TOKEN: "squ_35c667f3567119d5702ffa5fb92ca6eaac5889a6"
     SONAR_USER: "gitlab-runner"
     SONAR_PASSWORD: "Password@123"
+    SSH_PRIVATE_KEY_STAGING: "-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAksYhjgR2gTMQeCcqJrHZDsj3FLrlhvro8cW9Oz16DYA8KIVANlYIJBorfp0C
+e4S+m0I/WqBzgys6h2ub1FGtJxDxp+RgoidIdbP7ofruOkpMLZGe09aUj+oZRqogPyq7uaM3/hM2
+DIGg6TAdJYzqrIvwhlcMztl2llprBCJ5XC6H31LwU2+Vp6H6EVrx7YTPC07N17x+hGrtMJZDqgls
+IRpmpJY/xMeOdeEsr/U9Fd35aSwOBcczQ2uea42kyI6ApuwqWVULxjSToNKv0i2+Ja3oQt9bTkz/
+IDMM0Ze3bVT5pM67spEIz+0kYaJU+KUw8uXrUTaVc2VKKJnQ1ga4nQIDAQABAoIBAHLgPBcJiy7o
+JrXEAYuzmy2lQS2qckdJTtUcbVVWcpbqjSsxz+Y3Q7vt96jrfqvqY7zlBu0JtB8v0Gl5Yce1/Y4c
+BuffKXsAwAfPzN0kpxxcVm88EFHBGxngodPbB84oxjEvfH2Rz7XOJ4EbtVRUjMBr7t9WdqHXNqfL
+MQNVcCMi37nYMbftOixCuUx7hOP9haX5LmOBO6dfcBzj2cwFigTzDlZgvbJd1RvJWlFzGfTRqzui
+ek98zaVEBQu3bzKKRWA5TgBwjz92SZ98hG79oS3eZRK/jYd7aS9Ad4hSVShbyFu9xanatzb4F0cI
+JVaA8TFZwpUumDs9p3QceI7MNkECgYEA0bn2Y+91xyQWR/DKSCJaKwVVKg4aB8dKE0u+V+JuK8k0
+CQXGzJbPm7GM5Fdc809T7X/gpiMBCSmA/hNT18m9QZAjr6c64/GH6+ikqzEpsSKuUbH4C4ukyRFQ
+cfdQQ1+G5dGDLskG60sgdirBfGKdx8IknUr/tNb78q5EPaZ+X7kCgYEAsyhoBP+dho767wygqsEa
+XMbTspjWCxfn/PU5OpsKpYj+jgtV8U/9CqUdPj2Y64TcmD9EpgMPKi5FVAk6eZaw8je4IM/f7I85
+aUuRhppRW6jqeOKCtwFydN6Yd5LPna8dN/OQskulwluRlnjrgS7qtxDmGPoZyKLFODTaKwzuqgUC
+gYAy7G2IPHejn/6M/0mOlFDCi2vvZzco1loFL2oLWt6XYSZyXmWz/ZZxXn4wX4ohRgzB6T/59xvk
+RqCckMLV7ZU3mzEfEIL7IAV54aZCLxDJgvtCuOzamNCtRbf7xCpIAaT2npW0wXkdnsNGDgGnGybm
+fxx22OQX2++XMHs/YPLkeQKBgQCu5K4O2x4DIocSX8hkiNfcY/h7a7nf4HmGtjkk3f+Zs0+UiLpg
+NQ63mpIelXE30V6rfW/dhDUEn2DsdYnQ8mtQOVaVKXjWbMbF5JBuzyzHBvHGCpFCZ7Y9IqPCbt4g
+d7dVTH8fnrt1LYDFXMvCM3PMPEHzdgs/kq5mfSnRRvGhpQKBgDnkB7xWRN11Cr2Vlez4VShqE0kd
+Den1BTNFT0izRNPyaOgkKuFEMNWZH9f+sOtGYA9njijZSYxzRDtdEG8yTuowixKeTGTjUqgCSiIj
+LuWSPq2B1i7iIozZoBc4C9n1V4GjhK0f/NY83gswvP6KSeBVt1JcncGNTYCY5Sx7P6Na
+-----END RSA PRIVATE KEY-----"
+    DEPLOY_STAGING_SSH_HOST: "172.16.1.121"
 default:
     cache:
         paths:
@@ -45,4 +69,20 @@ build_angular:
       - master
       - pipeline-test
 
-
+deploy_staging:
+  stage: deploy
+  image: kroniak/ssh-client
+  script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - echo "$SSH_PRIVATE_KEY_STAGING" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - scp -r webapp/dist/* $DEPLOY_STAGING_SSH_HOST:/tmp/
+    - scp -r api/target/govregistry.war $DEPLOY_STAGING_SSH_HOST:/tmp/
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo cp -r /tmp/govregistry-app/* /usr/share/nginx/html/govregistry-app/'
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo cp -r /tmp/govregistry.war /opt/wildfly/govhub/deployments/'  
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo systemctl restart wildfly@govhub'
+  only:
+    - master
+    - pipeline-test
