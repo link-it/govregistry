@@ -110,7 +110,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -171,7 +171,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -233,7 +233,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -296,7 +296,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		RoleEntity ruoloUser2 = leggiRuoloDB("govhub_organizations_viewer");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -393,7 +393,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		RoleEntity ruoloUser2 = leggiRuoloDB("govhub_organizations_viewer");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -491,7 +491,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		RoleEntity ruoloUser2 = leggiRuoloDB("govhub_organizations_viewer");
 		
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())

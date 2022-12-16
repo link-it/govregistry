@@ -112,7 +112,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
 		// 1. L'amministratore concede l'autorizzazione a modificare le autorizzazioni all'utenza SNakamoto 
-		OffsetDateTime now = OffsetDateTime.now(); 
+		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
