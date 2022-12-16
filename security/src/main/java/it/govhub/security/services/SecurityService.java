@@ -159,7 +159,7 @@ public class SecurityService {
 		
 		boolean authorized = user.getAuthorizations().stream()
 		.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-		.filter( auth -> {
+		.anyMatch( auth -> {
 			
 			// L'admin non ha bisogno di avere servizi specificati
 			boolean isAdmin = auth.getRole().getName().equals(SecurityConstants.RUOLO_GOVHUB_SYSADMIN);
@@ -167,9 +167,7 @@ public class SecurityService {
 			boolean onOrganization = auth.getOrganizations().isEmpty() ||  auth.getOrganizations().stream().anyMatch( s-> s.getId().equals(organizationId));
 			
 			return isAdmin || (hasRole && onOrganization);
-		})
-		.findAny()
-		.isPresent();
+		});
 		
 		if (!authorized) {
 			throw new NotAuthorizedException();
