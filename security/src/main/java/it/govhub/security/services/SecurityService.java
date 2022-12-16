@@ -46,9 +46,7 @@ public class SecurityService {
 		// Cerco fra le autorizzazioni una che abbia uno dei ruoli specificati e che non sia scaduta
 		return user.getAuthorizations().stream()
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.filter( auth -> roleList.contains(auth.getRole().getName()))
-			.findAny()
-			.isPresent();
+			.anyMatch( auth -> roleList.contains(auth.getRole().getName()));
 	}
 
 
@@ -129,7 +127,7 @@ public class SecurityService {
 		
 		boolean authorized = user.getAuthorizations().stream()
 		.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-		.filter( auth -> {
+		.anyMatch( auth -> {
 			
 			// L'admin non ha bisogno di avere servizi specificati
 			boolean isAdmin = auth.getRole().getName().equals(SecurityConstants.RUOLO_GOVHUB_SYSADMIN);
@@ -137,9 +135,7 @@ public class SecurityService {
 			boolean onService = auth.getServices().isEmpty() ||  auth.getServices().stream().anyMatch( s-> s.getId().equals(serviceId));
 			
 			return isAdmin || (hasRole && onService);
-		})
-		.findAny()
-		.isPresent();
+		});
 		
 		if (!authorized) {
 			throw new NotAuthorizedException();
@@ -188,14 +184,12 @@ public class SecurityService {
 
 		return user.getAuthorizations().stream()
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.filter( auth -> {
+			.anyMatch( auth -> {
 				String role = auth.getRole().getName(); 
 				boolean isAdmin = role.equals(SecurityConstants.RUOLO_GOVHUB_SYSADMIN);
 				boolean hasRole = role.equals(SecurityConstants.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER) || role.equals(SecurityConstants.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
 				return isAdmin || (hasRole && auth.getOrganizations().isEmpty());
-			})
-			.findAny()
-			.isPresent();
+			});
 	}
 
 	
@@ -213,15 +207,12 @@ public class SecurityService {
 
 		return user.getAuthorizations().stream()
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.filter( auth -> {
+			.anyMatch( auth -> {
 				String role = auth.getRole().getName(); 
 				boolean isAdmin = role.equals(SecurityConstants.RUOLO_GOVHUB_SYSADMIN);
 				boolean hasRole = role.equals(SecurityConstants.RUOLO_GOVHUB_SERVICES_VIEWER) || role.equals(SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
 				return isAdmin || (hasRole && auth.getServices().isEmpty());
-			})
-			.findAny()
-			.isPresent();
-		
+			});
 	}
 	
 	
@@ -242,7 +233,7 @@ public class SecurityService {
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 			.filter( auth -> roleList.contains(auth.getRole().getName()))
 			.flatMap( auth -> auth.getOrganizations().stream() )
-			.map( org -> org.getId())
+			.map( OrganizationEntity::getId)	
 			.collect(Collectors.toSet());
 			
 	}
@@ -265,7 +256,7 @@ public class SecurityService {
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 			.filter( auth -> roleList.contains(auth.getRole().getName()))
 			.flatMap( auth -> auth.getServices().stream() )
-			.map( org -> org.getId())
+			.map( ServiceEntity::getId )
 			.collect(Collectors.toSet());
 	}
 
