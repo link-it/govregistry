@@ -454,7 +454,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 		
-		// Creo una organization e verifico la risposta
+		// Autorizzo SNakamoto a vedere l'organization Ente4 
 		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
@@ -479,47 +479,25 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 		JsonArray items = userList.getJsonArray("items");
 		
 		JsonObject item1 = items.getJsonObject(items.size() - 1);  // primo ente creato non Ente4
-		int idUser1 = item1.getInt("id"); // Ente1
+		int idEnte1 = item1.getInt("id"); // Ente1
 				
-//		// l'utenza puo' vedere solo l'organization che gli e' stata assegnata (Ente 4)
-//		this.mockMvc.perform(get("/organizations/{id}",idUser1)
-//				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
-//				.accept(MediaType.APPLICATION_JSON))
-//				.andExpect(status().isUnauthorized())
-//				.andExpect(jsonPath("$.status", is(401)))
-//				.andExpect(jsonPath("$.title", is("Unauthorized")))
-//				.andExpect(jsonPath("$.type").isString())
-//				.andExpect(jsonPath("$.detail").isString())
-//				.andReturn();
-//		
-//		// leggo la lista delle organizations con l'utenza che puo' visualizzarne solo 1
-//		result = this.mockMvc.perform(get("/organizations")
-//				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
-//				.accept(MediaType.APPLICATION_JSON))
-//				.andExpect(status().isOk())
-//				.andReturn();
-//		
-//		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-//		userList = reader.readObject();
-//		
-//		// Controlli sulla paginazione
-//		JsonObject page = userList.getJsonObject("page");
-//		assertEquals(0, page.getInt("offset"));
-//		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-//		assertEquals(1, page.getInt("total"));
-//		
-//		// Controlli sugli items
-//		items = userList.getJsonArray("items");
-//		assertEquals(1, items.size());
-//		
-//		item1 = items.getJsonObject(0); 
-//		idUser1 = item1.getInt("id"); // Ente 4
-//				
-//		this.mockMvc.perform(get("/organizations/{id}",idUser1)
-//				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
-//				.accept(MediaType.APPLICATION_JSON))
-//				.andExpect(status().isOk())
-//				.andReturn();
+		// l'utenza non vede altre organization a parte quella che gli e' stata assegnata (Ente 4)
+		this.mockMvc.perform(get("/organizations/{id}",idEnte1)
+				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized())
+				.andExpect(jsonPath("$.status", is(401)))
+				.andExpect(jsonPath("$.title", is("Unauthorized")))
+				.andExpect(jsonPath("$.type").isString())
+				.andExpect(jsonPath("$.detail").isString())
+				.andReturn();
+		
+		// l'utenza puo' vedere solo l'organization che gli e' stata assegnata (Ente 4)
+		this.mockMvc.perform(get("/organizations/{id}", ente.getId())
+				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
 	}
 }
 
