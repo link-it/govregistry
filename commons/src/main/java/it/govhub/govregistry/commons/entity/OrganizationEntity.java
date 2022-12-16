@@ -1,5 +1,7 @@
 package it.govhub.govregistry.commons.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +26,9 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "govhub_organizations")
-public class OrganizationEntity {
+public class OrganizationEntity implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@SequenceGenerator(name = "seq_govhub_organizations", sequenceName = "seq_govhub_organizations", initialValue = 1, allocationSize = 1)
