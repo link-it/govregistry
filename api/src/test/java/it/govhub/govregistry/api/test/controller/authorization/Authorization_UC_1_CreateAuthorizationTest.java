@@ -380,7 +380,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	}
 	
 	@Test
-	@Transactional
+	//@Transactional
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per l'ente[3]
 	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].

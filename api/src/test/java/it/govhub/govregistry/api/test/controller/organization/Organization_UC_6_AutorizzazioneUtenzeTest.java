@@ -483,7 +483,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				
 		// l'utenza non vede altre organization a parte quella che gli e' stata assegnata (Ente 4)
 		this.mockMvc.perform(get("/organizations/{id}",idEnte1)
-				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
+				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.status", is(401)))
