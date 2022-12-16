@@ -109,12 +109,12 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder())
-				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -130,7 +130,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
@@ -199,12 +199,12 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -220,7 +220,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
@@ -290,12 +290,12 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder().add(servizio.getId()))
-				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -311,7 +311,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
@@ -382,12 +382,12 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder())
-				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -403,7 +403,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -484,12 +484,12 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -505,7 +505,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		user = leggiUtenteDB("user_viewer");
@@ -516,7 +516,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -532,7 +532,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -616,12 +616,12 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -637,7 +637,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		user = leggiUtenteDB("user_viewer");
@@ -648,7 +648,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -664,7 +664,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -748,12 +748,12 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder().add(servizio.getId()))
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -769,7 +769,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		user = leggiUtenteDB("user_viewer");
@@ -796,7 +796,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+//				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -880,12 +880,12 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -901,7 +901,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		user = leggiUtenteDB("user_viewer");
@@ -912,7 +912,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder().add(servizio.getId()))
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -928,7 +928,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
