@@ -57,14 +57,12 @@ build_angular:
     image: node:14.18.2-alpine3.15
     script:
       - cd webapp
-      - npm install -g @angular/cli@v14.1.0
       - npm install
       - npm run production-govregistry
-      - cd dist
-      - zip -r govregistry-app.zip .
+      - tar czf govregistry-app.tgz dist/*  
     artifacts:
         paths:
-          - webapp/dist/govregistry-app.zip
+          - govregistry-app.tgz
     only:
       - master
       - pipeline-test
