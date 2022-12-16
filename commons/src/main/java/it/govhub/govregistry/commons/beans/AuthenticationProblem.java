@@ -14,19 +14,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class AuthenticationProblem {
 
-	 @JsonProperty("detail")
-	  public String detail;
+	@JsonProperty("detail")
+	public String detail;
 
-	  @JsonProperty("instance")
-	  public URI instance;
+	@JsonProperty("instance")
+	public URI instance;
 
-	  @JsonProperty("status")
-	  public Integer status;
+	@JsonProperty("status")
+	public Integer status;
 
-	  @JsonProperty("title")
-	  public String title;
+	@JsonProperty("title")
+	public String title;
 
-	  @JsonProperty("type")
-	  public URI type = URI.create("about:blank");
+	@JsonProperty("type")
+	public URI type = URI.create("about:blank");
 
 }
