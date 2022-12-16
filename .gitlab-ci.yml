@@ -1,9 +1,7 @@
 stages:
     - test
-#    - build
-#    - integration
-
-
+    - build
+      #    - deploy
 
 variables: 
     MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
@@ -29,3 +27,21 @@ test:
           junit: [ api/target/surefire-reports/*.xml ]
         expire_in: "1 week"
 
+build_and_deploy:
+    stage: build
+    script:
+      - mvn verify -Pwar -DskipTests=true 
+      - cd webapp
+      - npm install
+      - npm run production-govregistry
+      - cd dist
+      - zip -r govregistry-app.zip . 
+    artifacts:
+        paths:
+          - api/target/*.war
+          - src/main/resources/*.sql
+          - webapp/dist/govregistry-app.zip
+    only:
+      - master
+      - pipeline-test
+          
