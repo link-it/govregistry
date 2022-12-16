@@ -52,7 +52,7 @@ public class AuthorizationController implements AuthorizationApi {
 	@Override
 	public ResponseEntity<AuthorizationList> listAuthorizations(Long userId, AuthorizationOrdering sort,  Direction sortDirection, Integer limit, Long offset) {
 		
-		this.securityService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
+		this.securityService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR, SecurityConstants.RUOLO_GOVHUB_USERS_VIEWER);
 		
 		Sort orderBy;
 		switch(sort) {
