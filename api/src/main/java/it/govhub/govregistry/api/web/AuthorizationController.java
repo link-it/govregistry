@@ -12,13 +12,10 @@ import it.govhub.govregistry.api.beans.Authorization;
 import it.govhub.govregistry.api.beans.AuthorizationCreate;
 import it.govhub.govregistry.api.beans.AuthorizationList;
 import it.govhub.govregistry.api.beans.AuthorizationOrdering;
-import it.govhub.govregistry.api.messages.RoleMessages;
 import it.govhub.govregistry.api.services.RoleAuthorizationService;
 import it.govhub.govregistry.api.spec.AuthorizationApi;
-import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity_;
 import it.govhub.govregistry.commons.entity.RoleEntity_;
-import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.commons.repository.RoleRepository;
@@ -55,7 +52,7 @@ public class AuthorizationController implements AuthorizationApi {
 	@Override
 	public ResponseEntity<AuthorizationList> listAuthorizations(Long userId, AuthorizationOrdering sort,  Direction sortDirection, Integer limit, Long offset) {
 		
-		this.securityService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
+		this.securityService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
 		
 		Sort orderBy;
 		switch(sort) {
@@ -81,14 +78,9 @@ public class AuthorizationController implements AuthorizationApi {
 
 	
 	@Override
-	public ResponseEntity<Void> removeAuthorization(Long id) {
+	public ResponseEntity<Void> removeAuthorization(Long authId) {
 		
-		this.securityService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
-		
-		RoleAuthorizationEntity auth = this.authRepo.findById(id)
-			.orElseThrow( () -> new ResourceNotFoundException(RoleMessages.authorizationNotFound(id)));
-		
-		this.authRepo.delete(auth);
+		this.authService.removeAuthorization(authId);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

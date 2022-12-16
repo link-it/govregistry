@@ -1,6 +1,7 @@
 package it.govhub.security.services;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import it.govhub.govregistry.commons.entity.OrganizationEntity;
+import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
+import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.security.beans.GovhubPrincipal;
@@ -30,25 +34,86 @@ public class SecurityService {
 		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
 		return  principal.getUser();
 	}
-
-
-	public void hasAnyRole(String ...roles) {
+	
+	
+	public boolean hasAnyRole(String ...roles) {
+		
 		UserEntity user = getPrincipal();
 		
 		Set<String> roleList = Set.of(roles);
 		OffsetDateTime now = OffsetDateTime.now();
 		
 		// Cerco fra le autorizzazioni una che abbia uno dei ruoli specificati e che non sia scaduta
-		boolean authorized = user.getAuthorizations().stream()
+		return user.getAuthorizations().stream()
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 			.filter( auth -> roleList.contains(auth.getRole().getName()))
 			.findAny()
 			.isPresent();
-			
-		if (!authorized) {
+	}
+
+
+	public void expectAnyRole(String ...roles) {
+		if (!hasAnyRole(roles)) {
 			throw new NotAuthorizedException();
 		}
+	}
+	
+	public boolean isAdmin() {
+		return hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN);
+	}
+	
+	
+	/**
+	 * Restituisce true se il principal può assegnare o rimuovere l'autorizzazione argomento.
+	 *
+	 *  In quanto principal posso assegnare solo i ruoli che sono fra i mei assignable_roles.
+	 *  Posso assegnarli se il principal ha una autorizzazione con un ruolo che ha fra gli assignable_roles il ruolo da assegnare
+	 *  e la cui expiration_date è superiore a quella del ruolo da assegnare.
+	 *  Devo cercare le RoleAuthorizationEntity che hanno questa caratteristica.
+	 *  Da queste entità trovate vado a controllare se posso lavorare su tutte le organizzazioni e servizi specificati dalla autorizzazione da creare.
+	 * 
+	 */
+	public boolean canWriteAuthorization(RoleAuthorizationEntity authToEdit) {
+		if (isAdmin()) {
+			return true;
+		}
 		
+		OffsetDateTime now = OffsetDateTime.now();
+
+		UserEntity principal = getPrincipal();
+		
+		Iterable<RoleAuthorizationEntity> validAuths = principal.getAuthorizations().stream()
+				.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
+				.filter( auth -> auth.getRole().getAssignableRoles().contains(authToEdit.getRole()))
+				::iterator;
+				
+		// Assumo di non essere autorizzato per tutte le organizzazioni e servizi e rimuovo mano mano 
+		// quelli che incontro, devo anche avere almeno una validAuths
+		Set<OrganizationEntity> notAuthorizedOrgs = new HashSet<>(authToEdit.getOrganizations());
+		Set<ServiceEntity> notAuthorizedServices = new HashSet<>(authToEdit.getServices());
+		boolean hasValidAuths = false;
+		
+	    for (var auth : validAuths) {
+	    	hasValidAuths = true;
+	    	
+			if (notAuthorizedOrgs.isEmpty() && notAuthorizedServices.isEmpty() )  {
+				break;
+			}
+			
+			if (auth.getOrganizations().isEmpty()) {
+				notAuthorizedOrgs.clear();
+			} else {
+				notAuthorizedOrgs.removeAll(auth.getOrganizations());
+			}
+			
+			if (auth.getServices().isEmpty()) {
+				notAuthorizedServices.clear();
+			} else {
+				notAuthorizedServices.removeAll(auth.getServices());
+			}
+	    }
+	    
+	    return hasValidAuths && notAuthorizedOrgs.isEmpty() && notAuthorizedServices.isEmpty();
 	}
 
 	

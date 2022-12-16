@@ -56,7 +56,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> createService(ServiceCreate serviceCreate) {
 		
-		this.authService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
+		this.authService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getServiceName(), "service_name");
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getDescription(), "description");
@@ -72,7 +72,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<ServiceList> listServices(ServiceOrdering sort, Direction sortDirection, Integer limit, Long offset, String q) {
 		
-		this.authService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_SERVICES_VIEWER, SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
+		this.authService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_SERVICES_VIEWER, SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		
 		Specification<ServiceEntity> spec;
