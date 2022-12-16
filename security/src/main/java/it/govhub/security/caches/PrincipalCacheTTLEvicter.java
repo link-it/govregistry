@@ -11,7 +11,7 @@ import it.govhub.govregistry.commons.cache.Caches;
 @Configuration
 public class PrincipalCacheTTLEvicter {
 	
-	private Logger logger = LoggerFactory.getLogger(Caches.class);
+	private Logger logger = LoggerFactory.getLogger(PrincipalCacheTTLEvicter.class);
 
 	@CacheEvict(value = Caches.PRINCIPALS, allEntries = true)
 	@Scheduled(fixedRateString = "${caching.govhub.principals.TTL}")

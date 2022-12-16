@@ -40,7 +40,7 @@ import it.govhub.govregistry.commons.repository.ServiceRepository;
 @DisplayName("Test di controllo autorizzazioni necessarie all'esecuzione delle operazioni sui Servizi")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
-public class Service_UC_6_AutorizzazioneUtenzeTest {
+class Service_UC_6_AutorizzazioneUtenzeTest {
 
 	@Autowired
 	private MockMvc mockMvc;

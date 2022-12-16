@@ -20,7 +20,6 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +49,7 @@ import it.govhub.govregistry.commons.repository.UserRepository;
 @AutoConfigureMockMvc
 @DisplayName("Test di cancellazione delle Authorization")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class Authorization_UC_4_DeleteAuthorizationTest {
+class Authorization_UC_4_DeleteAuthorizationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
