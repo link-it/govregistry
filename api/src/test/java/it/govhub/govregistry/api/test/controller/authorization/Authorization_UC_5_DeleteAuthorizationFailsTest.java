@@ -112,12 +112,12 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
 		// 1. L'amministratore concede l'autorizzazione a modificare le autorizzazioni all'utenza SNakamoto 
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30);  
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -133,7 +133,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		// 2. Aggiungo un'autorizzazione per l'utenza user_viewer con l'utenza SNakamoto
@@ -145,7 +145,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -161,7 +161,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -175,7 +175,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 				.add("role", ruoloAssegnatoAdmin.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(expirationDate))
 				.build()
 				.toString();
 		
@@ -191,7 +191,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 				.andExpect(jsonPath("$.role.role_name", is(ruoloAssegnatoAdmin.getName())))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
