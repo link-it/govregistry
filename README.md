@@ -24,7 +24,7 @@ psql govhub govhub < src/main/resources/data-dev.sql
 Creare la cartella di log:
 
 ```bash
-mkdir /var/log/govhub
+mkdir /var/log/govregistry
 ```
 
 ## Build

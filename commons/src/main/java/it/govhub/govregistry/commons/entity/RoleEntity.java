@@ -1,5 +1,6 @@
 package it.govhub.govregistry.commons.entity;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -28,7 +29,9 @@ import lombok.ToString;
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "govhub_roles")
-public class RoleEntity {
+public class RoleEntity implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@SequenceGenerator(name = "seq_govhub_roles", sequenceName = "seq_govhub_roles", initialValue = 1, allocationSize = 1)

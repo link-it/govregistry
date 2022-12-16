@@ -23,21 +23,26 @@ import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.commons.repository.RoleRepository;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
+import it.govhub.security.config.SecurityConstants;
+import it.govhub.security.services.SecurityService;
 
 @RestController
 public class AuthorizationController implements AuthorizationApi {
 	
 	@Autowired
-	public AuthorizationAssembler authAssembler;
+	AuthorizationAssembler authAssembler;
 	
 	@Autowired
-	private RoleAuthorizationService authService;
+	RoleAuthorizationService authService;
 	
 	@Autowired
-	public RoleAuthorizationRepository authRepo;
+	RoleAuthorizationRepository authRepo;
 	
 	@Autowired
-	public RoleRepository roleRepo;
+	RoleRepository roleRepo;
+	
+	@Autowired
+	SecurityService securityService;
 
 	@Override
 	public ResponseEntity<Authorization> assignAuthorization(Long id, AuthorizationCreate authorization) {
@@ -48,7 +53,9 @@ public class AuthorizationController implements AuthorizationApi {
 	}
 
 	@Override
-	public ResponseEntity<AuthorizationList> listAuthorizations(Long id, AuthorizationOrdering sort,  Direction sortDirection, Integer limit, Long offset) {
+	public ResponseEntity<AuthorizationList> listAuthorizations(Long userId, AuthorizationOrdering sort,  Direction sortDirection, Integer limit, Long offset) {
+		
+		this.securityService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
 		
 		Sort orderBy;
 		switch(sort) {
@@ -67,7 +74,7 @@ public class AuthorizationController implements AuthorizationApi {
 		
 		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, orderBy);
 		
-		AuthorizationList ret = authService.listUserAuthorizations(id, pageRequest);
+		AuthorizationList ret = authService.listUserAuthorizations(userId, pageRequest);
 		
 		return ResponseEntity.ok(ret);
 	}
@@ -75,6 +82,8 @@ public class AuthorizationController implements AuthorizationApi {
 	
 	@Override
 	public ResponseEntity<Void> removeAuthorization(Long id) {
+		
+		this.securityService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
 		
 		RoleAuthorizationEntity auth = this.authRepo.findById(id)
 			.orElseThrow( () -> new ResourceNotFoundException(RoleMessages.authorizationNotFound(id)));
