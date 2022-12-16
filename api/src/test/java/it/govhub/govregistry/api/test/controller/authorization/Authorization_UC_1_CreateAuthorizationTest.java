@@ -643,7 +643,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.id").isNumber())	
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
