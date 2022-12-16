@@ -18,7 +18,7 @@ public class Base64StringValidator implements ConstraintValidator<Size, Base64St
 	@Override
 	public boolean isValid(Base64String content, ConstraintValidatorContext context) {
 		if (content == null || content.value == null) {
-			return this.minSize == 0 ? true : false;
+			return this.minSize == 0;
 		} else {
 			return content.value.length() <= this.maxSize && content.value.length() >= this.minSize;
 		}
