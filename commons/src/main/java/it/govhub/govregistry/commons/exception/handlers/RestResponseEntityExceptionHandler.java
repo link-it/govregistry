@@ -53,12 +53,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	public static Problem buildProblem(HttpStatus status, String detail) {
 		try {
 			Problem ret = new Problem();
-			ret.setStatus(status.value());
-			ret.setTitle(status.getReasonPhrase());
-			ret.setType(new URI(problemTypes.get(status)));
-			ret.setDetail(detail);
-			return ret;
-			
+			return ret.status(status.value())
+					.title(status.getReasonPhrase())
+					.type(new URI(problemTypes.get(status)))
+					.detail(detail);
 		} catch (URISyntaxException e){
 			// Non deve mai fallire la new URI di sopra
 			throw new UnreachableException(e);

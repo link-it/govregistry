@@ -135,7 +135,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -148,7 +148,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals("govhub_user", roleAuthorizationEntity.getRole().getName());
 		assertEquals(0, roleAuthorizationEntity.getOrganizations().size());
 		assertEquals(0, roleAuthorizationEntity.getServices().size());
-//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
 	
 	@Test
@@ -180,7 +180,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -194,7 +194,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals(1, roleAuthorizationEntity.getOrganizations().size());
 		assertEquals(0, roleAuthorizationEntity.getServices().size());
 		assertEquals(ente.getTaxCode(), roleAuthorizationEntity.getOrganizations().toArray(new OrganizationEntity[1])[0].getTaxCode());
-//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
 	
 	@Test
@@ -226,7 +226,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -240,7 +240,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals(0, roleAuthorizationEntity.getOrganizations().size());
 		assertEquals(1, roleAuthorizationEntity.getServices().size());
 		assertEquals(servizio.getName(), roleAuthorizationEntity.getServices().toArray(new ServiceEntity[1])[0].getName());
-//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
 	
 	@Test
@@ -273,7 +273,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -288,7 +288,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals(1, roleAuthorizationEntity.getServices().size());
 		assertEquals(ente.getTaxCode(), roleAuthorizationEntity.getOrganizations().toArray(new OrganizationEntity[1])[0].getTaxCode());
 		assertEquals(servizio.getName(), roleAuthorizationEntity.getServices().toArray(new ServiceEntity[1])[0].getName());
-//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
 	
 	@Test
@@ -319,7 +319,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -332,7 +332,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals("govhub_user", roleAuthorizationEntity.getRole().getName());
 		assertEquals(0, roleAuthorizationEntity.getOrganizations().size());
 		assertEquals(0, roleAuthorizationEntity.getServices().size());
-//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
 	
 	@Test
@@ -363,7 +363,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -376,7 +376,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals("govhub_user", roleAuthorizationEntity.getRole().getName());
 		assertEquals(0, roleAuthorizationEntity.getOrganizations().size());
 		assertEquals(0, roleAuthorizationEntity.getServices().size());
-//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
 	
 	@Test
@@ -397,7 +397,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(now))
 				.build()
 				.toString();
 		
@@ -413,7 +413,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		user = leggiUtenteDB("user_viewer");
@@ -424,7 +424,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(now))
 				.build()
 				.toString();
 		
@@ -440,7 +440,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -454,7 +454,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals(1, roleAuthorizationEntity.getOrganizations().size());
 		assertEquals(0, roleAuthorizationEntity.getServices().size());
 		assertEquals(ente.getTaxCode(), roleAuthorizationEntity.getOrganizations().toArray(new OrganizationEntity[1])[0].getTaxCode());
-//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
 	
 	@Test
@@ -475,7 +475,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(now))
 				.build()
 				.toString();
 		
@@ -491,7 +491,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		user = leggiUtenteDB("user_viewer");
@@ -502,7 +502,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(now))
 				.build()
 				.toString();
 		
@@ -518,7 +518,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -532,7 +532,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals(1, roleAuthorizationEntity.getOrganizations().size());
 		assertEquals(0, roleAuthorizationEntity.getServices().size());
 		assertEquals(ente.getTaxCode(), roleAuthorizationEntity.getOrganizations().toArray(new OrganizationEntity[1])[0].getTaxCode());
-//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
 	
 	@Test
@@ -569,7 +569,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+//				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		user = leggiUtenteDB("user_viewer");
@@ -580,7 +580,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder().add(servizio.getId()))
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(now))
 				.build()
 				.toString();
 		
@@ -596,7 +596,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -610,7 +610,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals(0, roleAuthorizationEntity.getOrganizations().size());
 		assertEquals(1, roleAuthorizationEntity.getServices().size());
 		assertEquals(servizio.getName(), roleAuthorizationEntity.getServices().toArray(new ServiceEntity[1])[0].getName());
-//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
 	
 	@Test
@@ -631,7 +631,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder())
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(now))
 				.build()
 				.toString();
 		
@@ -647,7 +647,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		user = leggiUtenteDB("user_viewer");
@@ -658,7 +658,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder().add(servizio.getId()))
-//				.add("expiration_date", dt.format(now))
+				.add("expiration_date", dt.format(now))
 				.build()
 				.toString();
 		
@@ -674,7 +674,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
-//				.andExpect(jsonPath("$.expiration_date", is(now)))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
 		
 		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
@@ -688,7 +688,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		assertEquals(0, roleAuthorizationEntity.getOrganizations().size());
 		assertEquals(1, roleAuthorizationEntity.getServices().size());
 		assertEquals(servizio.getName(), roleAuthorizationEntity.getServices().toArray(new ServiceEntity[1])[0].getName());
-//		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
+		assertEquals(now,roleAuthorizationEntity.getExpirationDate());
 	}
 }
 
