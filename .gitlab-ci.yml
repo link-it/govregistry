@@ -62,7 +62,7 @@ build_angular:
       - tar czf govregistry-app.tgz dist/*  
     artifacts:
         paths:
-          - govregistry-app.tgz
+          - webapp/govregistry-app.tgz
     only:
       - master
       - pipeline-test
