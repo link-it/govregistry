@@ -53,7 +53,7 @@ deploy_staging:
     - chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - echo -e "$SSH_PRIVATE_KEY_STAGING" > ~/.ssh/id_rsa
-    - cat $SSH_PRIVATE_KEY_STAGING
+    - cat ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - scp -r webapp/dist/* $DEPLOY_STAGING_SSH_HOST:/tmp/
     - scp -r api/target/govregistry.war $DEPLOY_STAGING_SSH_HOST:/tmp/
