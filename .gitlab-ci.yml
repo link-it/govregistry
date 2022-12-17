@@ -57,9 +57,10 @@ deploy_staging:
     - scp -r webapp/govregistry-app.tgz $DEPLOY_STAGING_SSH_HOST:/tmp/
     - scp -r api/target/govregistry.war $DEPLOY_STAGING_SSH_HOST:/tmp/
     - ssh $DEPLOY_STAGING_SSH_HOST 'sudo tar xvf /tmp/govregistry-app.tgz'
-    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo cp -r /tmp/govregistry-app/* /usr/share/nginx/html/govregistry-app/'
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo cp -r dist/govregistry-app/* /usr/share/nginx/html/govregistry-app/'
     - ssh $DEPLOY_STAGING_SSH_HOST 'sudo cp -r /tmp/govregistry.war /opt/wildfly/govhub/deployments/'  
     - ssh $DEPLOY_STAGING_SSH_HOST 'sudo systemctl restart wildfly@govhub'
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo rm -rf /tmp/govregistry-app.tgz dist /tmp/govregistry.war'
   only:
     - master
     - pipeline-test
