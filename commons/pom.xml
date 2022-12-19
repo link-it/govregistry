@@ -9,13 +9,13 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-dependencies</artifactId>
 		<version>2.7.1</version>
-		<relativePath /> <!-- lookup parent from repository -->		
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<groupId>it.govhub.govregistry</groupId>
 	<artifactId>commons</artifactId>
 	<version>1.0.0</version>
-	
+
 	<packaging>jar</packaging>
 	<name>GovRegistry - Libreria comune</name>
 
@@ -27,7 +27,9 @@
 		<jsonpatch.version>1.13</jsonpatch.version>
 		<springdoc.version>1.6.4</springdoc.version>
 		<jacoco.version>0.8.8</jacoco.version>
-		<maven-processor.version>4.5</maven-processor.version>		
+		<maven-processor.version>4.5</maven-processor.version>
+		<openapi.tool.codegen.version>6.0.0</openapi.tool.codegen.version>
+		<jackson.databind.nullable.version>0.2.1</jackson.databind.nullable.version>
 	</properties>
 
 
@@ -50,7 +52,7 @@
 			<artifactId>spring-boot-starter-cache</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -63,7 +65,7 @@
 			<artifactId>hibernate-validator</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -90,6 +92,11 @@
 			<artifactId>swagger-annotations</artifactId>
 			<version>${swagger-annotations.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>${jackson.databind.nullable.version}</version>
+		</dependency>
 
 
 		<!-- JsonPatch -->
@@ -104,6 +111,55 @@
 	<build>
 		<finalName>govregistry-commons</finalName>
 		<plugins>
+
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>${openapi.tool.codegen.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<id>generate-sources-openapi</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/govhub-api-profile.yaml</inputSpec>
+							<generatorName>spring</generatorName>
+							<typeMappings>base64=it.govhub.govregistry.commons.utils.Base64String</typeMappings>
+							<importMappings>
+								<importMapping>Problem=it.govhub.govregistry.commons.beans.Problem</importMapping>
+							</importMappings>
+							<configOptions>
+								<dateLibrary>java8</dateLibrary>
+								<library>spring-boot</library>
+								<sourceFolder>generated-sources/java/</sourceFolder>
+								<basePackage>it.govhub.commons.profile</basePackage>
+								<apiPackage>it.govhub.commons.profile.api.spec</apiPackage>
+								<modelPackage>it.govhub.commons.profile.api.beans</modelPackage>
+								<useBeanValidation>true</useBeanValidation>
+								<performBeanValidation>true</performBeanValidation>
+								<skipDefaultInterface>true</skipDefaultInterface>
+								<interfaceOnly>true</interfaceOnly>
+								<hateoas>true</hateoas>
+								<!-- Metto il booleanGetterPrefix a get, e.g.: getEnabled invece 
+									di isEnabled. questo in modo da far riconoscere e copiare le proprietà booleane 
+									alla BeanUtils.copyProperties TODO: get dovrebbe essere il default, controlla. -->
+								<booleanGetterPrefix>get</booleanGetterPrefix>
+								<useTags>true</useTags>
+							</configOptions>
+							<output>${project.basedir}/target</output>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApiTests>false</generateApiTests>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<generateModelTests>false</generateModelTests>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>

@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import it.govhub.govregistry.api.beans.Authorization;
-import it.govhub.govregistry.api.beans.Profile;
+import it.govhub.commons.profile.api.beans.Authorization;
+import it.govhub.commons.profile.api.beans.Profile;
 import it.govhub.govregistry.api.beans.User;
 import it.govhub.govregistry.api.beans.UserCreate;
 import it.govhub.govregistry.api.spec.UserApi;

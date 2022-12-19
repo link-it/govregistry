@@ -17,7 +17,7 @@ import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.security.beans.GovhubPrincipal;
-import it.govhub.security.config.SecurityConstants;
+import it.govhub.security.config.GovregistryRoles;
 
 
 /**
@@ -57,7 +57,7 @@ public class SecurityService {
 	}
 	
 	public boolean isAdmin() {
-		return hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN);
+		return hasAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
 	}
 	
 	
@@ -130,7 +130,7 @@ public class SecurityService {
 		.anyMatch( auth -> {
 			
 			// L'admin non ha bisogno di avere servizi specificati
-			boolean isAdmin = auth.getRole().getName().equals(SecurityConstants.RUOLO_GOVHUB_SYSADMIN);
+			boolean isAdmin = auth.getRole().getName().equals(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
 			boolean hasRole = roleList.contains(auth.getRole().getName());
 			boolean onService = auth.getServices().isEmpty() ||  auth.getServices().stream().anyMatch( s-> s.getId().equals(serviceId));
 			
@@ -158,7 +158,7 @@ public class SecurityService {
 		.anyMatch( auth -> {
 			
 			// L'admin non ha bisogno di avere servizi specificati
-			boolean isAdmin = auth.getRole().getName().equals(SecurityConstants.RUOLO_GOVHUB_SYSADMIN);
+			boolean isAdmin = auth.getRole().getName().equals(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
 			boolean hasRole = roleList.contains(auth.getRole().getName());
 			boolean onOrganization = auth.getOrganizations().isEmpty() ||  auth.getOrganizations().stream().anyMatch( s-> s.getId().equals(organizationId));
 			
@@ -186,8 +186,8 @@ public class SecurityService {
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 			.anyMatch( auth -> {
 				String role = auth.getRole().getName(); 
-				boolean isAdmin = role.equals(SecurityConstants.RUOLO_GOVHUB_SYSADMIN);
-				boolean hasRole = role.equals(SecurityConstants.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER) || role.equals(SecurityConstants.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+				boolean isAdmin = role.equals(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
+				boolean hasRole = role.equals(GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER) || role.equals(GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
 				return isAdmin || (hasRole && auth.getOrganizations().isEmpty());
 			});
 	}
@@ -209,8 +209,8 @@ public class SecurityService {
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 			.anyMatch( auth -> {
 				String role = auth.getRole().getName(); 
-				boolean isAdmin = role.equals(SecurityConstants.RUOLO_GOVHUB_SYSADMIN);
-				boolean hasRole = role.equals(SecurityConstants.RUOLO_GOVHUB_SERVICES_VIEWER) || role.equals(SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
+				boolean isAdmin = role.equals(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
+				boolean hasRole = role.equals(GovregistryRoles.RUOLO_GOVHUB_SERVICES_VIEWER) || role.equals(GovregistryRoles.RUOLO_GOVHUB_SERVICES_EDITOR);
 				return isAdmin || (hasRole && auth.getServices().isEmpty());
 			});
 	}
