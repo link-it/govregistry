@@ -31,6 +31,9 @@ test:
 build_java:
     stage: build
     script:
+      - mkdir ~/.ssh
+      - chmod 700 ~/.ssh 
+      - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
       - mvn -s /tmp/maven_settings/settings-repo_linkit.xml deploy -Pwar -DskipTests=true 
     artifacts:
         paths:
