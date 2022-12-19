@@ -1,9 +1,5 @@
 package it.govhub.govregistry.api.web;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -56,7 +52,7 @@ public class AuthorizationController implements AuthorizationApi {
 	@Override
 	public ResponseEntity<AuthorizationList> listAuthorizations(Long userId, AuthorizationOrdering sort,  Direction sortDirection, Integer limit, Long offset) {
 		
-		this.securityService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_USERS_EDITOR);
+		this.securityService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_USERS_EDITOR, GovregistryRoles.RUOLO_GOVHUB_USERS_VIEWER);
 		
 		Sort orderBy;
 		switch(sort) {
