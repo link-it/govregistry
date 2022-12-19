@@ -1,5 +1,9 @@
 package it.govhub.govregistry.api.web;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -7,8 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.govhub.commons.profile.api.beans.Authorization;
 import it.govhub.govregistry.api.assemblers.AuthorizationAssembler;
-import it.govhub.govregistry.api.beans.Authorization;
 import it.govhub.govregistry.api.beans.AuthorizationCreate;
 import it.govhub.govregistry.api.beans.AuthorizationList;
 import it.govhub.govregistry.api.beans.AuthorizationOrdering;
@@ -20,7 +24,7 @@ import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.commons.repository.RoleRepository;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
-import it.govhub.security.config.SecurityConstants;
+import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 @RestController
@@ -42,9 +46,9 @@ public class AuthorizationController implements AuthorizationApi {
 	SecurityService securityService;
 
 	@Override
-	public ResponseEntity<Authorization> assignAuthorization(Long id, AuthorizationCreate authorization) {
+	public ResponseEntity<Authorization> assignAuthorization(Long id, AuthorizationCreate authorizationCreate) {
 		
-		Authorization ret =  this.authService.assignAuthorization(id, authorization);
+		Authorization ret =  this.authService.assignAuthorization(id, authorizationCreate);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(ret);
 	}
@@ -52,7 +56,7 @@ public class AuthorizationController implements AuthorizationApi {
 	@Override
 	public ResponseEntity<AuthorizationList> listAuthorizations(Long userId, AuthorizationOrdering sort,  Direction sortDirection, Integer limit, Long offset) {
 		
-		this.securityService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
+		this.securityService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_USERS_EDITOR);
 		
 		Sort orderBy;
 		switch(sort) {
@@ -84,6 +88,8 @@ public class AuthorizationController implements AuthorizationApi {
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+
+
 
 
 }

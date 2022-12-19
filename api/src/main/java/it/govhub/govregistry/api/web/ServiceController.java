@@ -34,7 +34,7 @@ import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.commons.utils.RequestUtils;
-import it.govhub.security.config.SecurityConstants;
+import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 @RestController
@@ -56,7 +56,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> createService(ServiceCreate serviceCreate) {
 		
-		this.authService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
+		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getServiceName(), "service_name");
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getDescription(), "description");
@@ -72,7 +72,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<ServiceList> listServices(ServiceOrdering sort, Direction sortDirection, Integer limit, Long offset, String q) {
 		
-		this.authService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_SERVICES_VIEWER, SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
+		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_SERVICES_VIEWER, GovregistryRoles.RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		
 		Specification<ServiceEntity> spec;
@@ -81,7 +81,7 @@ public class ServiceController implements ServiceApi {
 			spec = ServiceFilters.empty();
 		} else {
 			Set<Long> serviceIds = this.authService.listAuthorizedServices(
-					SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR, SecurityConstants.RUOLO_GOVHUB_SERVICES_VIEWER);
+					GovregistryRoles.RUOLO_GOVHUB_SERVICES_EDITOR, GovregistryRoles.RUOLO_GOVHUB_SERVICES_VIEWER);
 			
 			spec = ServiceFilters.byId(serviceIds);
 		}
@@ -111,7 +111,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> readService(Long id) {
 		
-		this.authService.hasAnyServiceAuthority(id, SecurityConstants.RUOLO_GOVHUB_SERVICES_VIEWER, SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
+		this.authService.hasAnyServiceAuthority(id, GovregistryRoles.RUOLO_GOVHUB_SERVICES_VIEWER, GovregistryRoles.RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
@@ -123,7 +123,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> updateService(Long id, List<PatchOp> patchOp) {
 		
-		this.authService.hasAnyServiceAuthority(id,  SecurityConstants.RUOLO_GOVHUB_SERVICES_EDITOR);
+		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.RUOLO_GOVHUB_SERVICES_EDITOR);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);

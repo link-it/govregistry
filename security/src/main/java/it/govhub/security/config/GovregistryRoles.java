@@ -2,10 +2,9 @@ package it.govhub.security.config;
 
 import java.util.Set;
 
-public class SecurityConstants {
+public class GovregistryRoles {
 
 	public static final String REALM_NAME = "govhub";
-	public static final String JSESSIONID_NAME = "GOVHUB-JSESSIONID";
 	public static final String RUOLO_GOVHUB_SYSADMIN = "govhub_sysadmin"; // Accesso a tutte le risorse
 	public static final String RUOLO_GOVHUB_USERS_EDITOR = "govhub_users_editor";
 	public static final String RUOLO_GOVHUB_USERS_VIEWER = "govhub_users_viewer";
@@ -30,6 +29,6 @@ public class SecurityConstants {
 			);
 
 	
-	private SecurityConstants() {		}
+	private GovregistryRoles() {		}
 
 }

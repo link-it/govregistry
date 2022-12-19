@@ -18,7 +18,7 @@ import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity_;
 import it.govhub.govregistry.commons.entity.RoleEntity_;
 import it.govhub.govregistry.commons.entity.ServiceEntity_;
 import it.govhub.govregistry.commons.entity.UserEntity_;
-import it.govhub.security.config.SecurityConstants;
+import it.govhub.security.config.GovregistryRoles;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
 
 public class RoleAuthorizationFilters {
@@ -39,7 +39,7 @@ public class RoleAuthorizationFilters {
 	public static Specification<RoleAuthorizationEntity> byAdmin(Long userId) {
 		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
 		
-		RoleAuthorizationFilters.byRoleName(SecurityConstants.RUOLO_GOVHUB_SYSADMIN)
+		RoleAuthorizationFilters.byRoleName(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN)
 			.and(RoleAuthorizationFilters.byUser(userId))
 			.and(RoleAuthorizationFilters.expiresAfter(OffsetDateTime.now()))
 			.toPredicate(root, query, cb);

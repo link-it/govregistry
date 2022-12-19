@@ -1,6 +1,5 @@
 package it.govhub.govregistry.api.services;
 
-import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import it.govhub.commons.profile.api.beans.Authorization;
 import it.govhub.govregistry.api.assemblers.AuthorizationAssembler;
-import it.govhub.govregistry.api.beans.Authorization;
 import it.govhub.govregistry.api.beans.AuthorizationCreate;
 import it.govhub.govregistry.api.beans.AuthorizationList;
 import it.govhub.govregistry.api.messages.OrganizationMessages;
@@ -39,7 +38,7 @@ import it.govhub.govregistry.commons.repository.ServiceRepository;
 import it.govhub.govregistry.commons.repository.UserRepository;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
-import it.govhub.security.config.SecurityConstants;
+import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 @Service
@@ -69,7 +68,7 @@ public class RoleAuthorizationService {
 	@Transactional
 	public Authorization assignAuthorization(Long userId, AuthorizationCreate authorization) {
 		
-		this.securityService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
+		this.securityService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_USERS_EDITOR);
 		
 		UserEntity assignee = this.userRepo.findById(userId)
 				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(userId)));
@@ -119,7 +118,7 @@ public class RoleAuthorizationService {
 	
 	@Transactional
 	public void removeAuthorization(Long authId) {
-		this.securityService.expectAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
+		this.securityService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_USERS_EDITOR);
 		
 		RoleAuthorizationEntity auth = this.authRepo.findById(authId)
 			.orElseThrow( () -> new ResourceNotFoundException(RoleMessages.authorizationNotFound(authId)));
