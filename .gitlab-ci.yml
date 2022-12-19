@@ -37,7 +37,7 @@ build_java:
           - api/target/*.war
           - src/main/resources/*.sql
     only:
-      - master
+      - main
       - pipeline-test
 
 build_angular:
@@ -52,13 +52,14 @@ build_angular:
         paths:
           - webapp/govregistry-app.tgz
     only:
-      - master
+      - main
       - pipeline-test
 
 deploy_staging:
   stage: deploy
-  image: linkit/sshclient
+  image: kroniak/ssh-client
   script:
+    - cp /tmp/ssh/ ~/.ssh
     - scp -r webapp/govregistry-app.tgz $DEPLOY_STAGING_SSH_HOST:/tmp/
     - scp -r api/target/govregistry.war $DEPLOY_STAGING_SSH_HOST:/tmp/
     - ssh $DEPLOY_STAGING_SSH_HOST 'sudo tar xvf /tmp/govregistry-app.tgz'
@@ -67,5 +68,5 @@ deploy_staging:
     - ssh $DEPLOY_STAGING_SSH_HOST 'sudo systemctl restart wildfly@govhub'
     - ssh $DEPLOY_STAGING_SSH_HOST 'sudo rm -rf /tmp/govregistry-app.tgz dist /tmp/govregistry.war'
   only:
-    - master
+    - main
     - pipeline-test
