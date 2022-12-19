@@ -32,7 +32,7 @@ test:
 build_java:
     stage: build
     script:
-      - mvn verify -Pwar -DskipTests=true 
+      - mvn -s /tmp/maven/settings-repo_linkit.xml deploy -Pwar -DskipTests=true 
     artifacts:
         paths:
           - api/target/*.war
