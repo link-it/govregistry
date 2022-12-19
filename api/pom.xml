@@ -20,6 +20,7 @@
 	<description>API per il backoffice del registro di GovHub</description>
 
 	<properties>
+		<maven.deploy.skip>true</maven.deploy.skip>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>11</java.version>
 		<openapi.tool.codegen.version>6.0.0</openapi.tool.codegen.version>
