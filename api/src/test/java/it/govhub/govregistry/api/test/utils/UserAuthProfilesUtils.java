@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-import it.govhub.security.config.SecurityConstants;
 import it.govhub.security.services.GovhubUserDetailService;
 
 @Component
@@ -22,19 +21,36 @@ public class UserAuthProfilesUtils {
 		return utenzaPrincipal("amministratore");
 	}
 
-	public static RequestPostProcessor utenzaUserViewer() {
-	    return user("username").password("password").roles(SecurityConstants.RUOLO_GOVHUB_USERS_VIEWER);
+	public RequestPostProcessor utenzaUserViewer() {
+	    return utenzaPrincipal("user_viewer"); 
 	}
 
-	public static RequestPostProcessor utenzaUserEditor() {
-	    return user("username").password("password").roles(SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
+	public RequestPostProcessor utenzaUserEditor() {
+	    return utenzaPrincipal("user_editor"); 
+	}
+	
+	public RequestPostProcessor utenzaOrganizationViewer() {
+	    return utenzaPrincipal("org_viewer"); 
 	}
 
-	public static RequestPostProcessor utenzaOspite() {
-	    return user("username").password("password").roles(SecurityConstants.RUOLO_GOVHUB_USER);
+	public RequestPostProcessor utenzaOrganizationEditor() {
+	    return utenzaPrincipal("org_editor"); 
+	}
+	
+	public RequestPostProcessor utenzaServiceViewer() {
+	    return utenzaPrincipal("service_viewer"); 
+	}
+
+	public RequestPostProcessor utenzaServiceEditor() {
+	    return utenzaPrincipal("service_editor"); 
+	}
+
+	public RequestPostProcessor utenzaOspite() {
+	    return utenzaPrincipal("ospite"); 
 	}
 
 	public RequestPostProcessor utenzaPrincipal(String principal) {
 		return user(this.userDetailService.loadUserByUsername(principal));
 	}
+
 }
