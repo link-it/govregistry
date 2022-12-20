@@ -19,7 +19,7 @@ public class TimeZoneConfigurer {
 
 	@PostConstruct
 	public void setTimezone() {
-		this.logger.info("Setting Application TimeZone to: {0} ", this.timezone);
+		this.logger.info("Setting Application TimeZone to: {}", this.timezone);
 		TimeZone.setDefault(TimeZone.getTimeZone(this.timezone));
 	}
 	
