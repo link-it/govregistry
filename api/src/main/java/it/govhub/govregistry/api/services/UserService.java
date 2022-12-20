@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
+import it.govhub.commons.profile.api.beans.Profile;
 import it.govhub.govregistry.api.assemblers.UserAssembler;
-import it.govhub.govregistry.api.beans.Profile;
 import it.govhub.govregistry.api.beans.User;
 import it.govhub.govregistry.api.beans.UserCreate;
 import it.govhub.govregistry.api.messages.PatchMessages;

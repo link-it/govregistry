@@ -1,6 +1,5 @@
 package it.govhub.govregistry.api.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,21 +33,9 @@ import it.govhub.security.services.GovhubUserDetailService;
 @EnableWebSecurity
 public class SecurityConfig{
 
-	@Autowired
-	private ObjectMapper jsonMapper;
-	
     @Value("${govshell.auth.header}")
     private String headerAuthentication;
-	
-	@Autowired
-	public GovhubUserDetailService userDetailService;
-	
-    @Autowired
-    private PreAuthenticatedExceptionHandler preAuthenticatedExceptionHandler;
-    
-    @Autowired
-	private AccessDeniedHandlerImpl accessDeniedHandler;
-	
+
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
 			throws Exception {
@@ -56,7 +43,7 @@ public class SecurityConfig{
 	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChainDev(HttpSecurity http, ObjectMapper jsonMapper, PreAuthenticatedExceptionHandler preAuthenticatedExceptionHandler, AccessDeniedHandlerImpl accessDeniedHandler) throws Exception {
 		
 		AuthenticationManager manager = this.authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
 		
@@ -69,8 +56,8 @@ public class SecurityConfig{
 		.addFilterBefore(filter, filter.getClass())																											// Autenticazione per header
 		.addFilterBefore(preAuthenticatedExceptionHandler, LogoutFilter.class)
 		.exceptionHandling()
-				.accessDeniedHandler(this.accessDeniedHandler)																		// Gestisci accessDenied in modo da restituire un problem ben formato
-				.authenticationEntryPoint(new ProblemHttp403ForbiddenEntryPoint(this.jsonMapper))			// Gestisci la mancata autenticazione con un problem ben formato
+				.accessDeniedHandler(accessDeniedHandler)																		// Gestisci accessDenied in modo da restituire un problem ben formato
+				.authenticationEntryPoint(new ProblemHttp403ForbiddenEntryPoint(jsonMapper))				// Gestisci la mancata autenticazione con un problem ben formato
 		.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)  									// Le applicazioni di govhub non usano una sessione, nè fanno login. Arrivano solo richieste autenticate.
 		;
@@ -79,7 +66,7 @@ public class SecurityConfig{
 
 	
 	@Bean
-	public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider() {
+	public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider(GovhubUserDetailService userDetailService) {
 		PreAuthenticatedAuthenticationProvider ret = new PreAuthenticatedAuthenticationProvider();
 		ret.setPreAuthenticatedUserDetailsService(userDetailService);
 		return ret;

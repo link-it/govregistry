@@ -5,7 +5,7 @@ import org.springframework.security.web.firewall.RequestRejectedException;
 
 public class Base64String {
 
-	public String value;
+	private String value;
 
 	public Base64String(String value) {
 		
@@ -22,5 +22,9 @@ public class Base64String {
 	 */
 	public Base64String(byte[] value) {
 		this.value = new String(Base64.encodeBase64(value));
+	}
+
+	public String getValue() {
+		return value;
 	}
 }
