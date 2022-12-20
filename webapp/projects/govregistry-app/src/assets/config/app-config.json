@@ -12,7 +12,7 @@
     },
 
     "GOVREGISTRY": {
-      "HOST": "http://localhost:5201",
+      "HOST": "http://172.16.1.121/govshell-reverse-proxy/govregistry/",
       "LOGOUT_URL": "/logout"
     },
 
@@ -42,7 +42,7 @@
         "logo": "linkit_logo/linkit_logo_2x.png",
         "header": "linkit_logo/linkit_logo_2x.png"
       },
-      "showHeaderBar": true,
+      "showHeaderBar": false,
       "Header": {
         "title": "GovRegistry",
         "logo": "linkit_logo/linkit_logo_2x_reverse.png"
