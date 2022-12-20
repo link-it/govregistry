@@ -68,7 +68,7 @@ public class RoleAuthorizationService {
 	@Transactional
 	public Authorization assignAuthorization(Long userId, AuthorizationCreate authorization) {
 		
-		this.securityService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_USERS_EDITOR);
+		this.securityService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_EDITOR);
 		
 		UserEntity assignee = this.userRepo.findById(userId)
 				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(userId)));
@@ -118,7 +118,7 @@ public class RoleAuthorizationService {
 	
 	@Transactional
 	public void removeAuthorization(Long authId) {
-		this.securityService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_USERS_EDITOR);
+		this.securityService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_EDITOR);
 		
 		RoleAuthorizationEntity auth = this.authRepo.findById(authId)
 			.orElseThrow( () -> new ResourceNotFoundException(RoleMessages.authorizationNotFound(authId)));
