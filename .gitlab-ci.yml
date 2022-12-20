@@ -1,9 +1,7 @@
 stages:
     - test
-    - build_and_deploy
-#    - integration
-
-
+    - build
+    - deploy
 
 variables: 
     MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
@@ -11,6 +9,7 @@ variables:
     SONAR_TOKEN: "squ_35c667f3567119d5702ffa5fb92ca6eaac5889a6"
     SONAR_USER: "gitlab-runner"
     SONAR_PASSWORD: "Password@123"
+    DEPLOY_STAGING_SSH_HOST: "ec2-user@172.16.1.121"
 default:
     cache:
         paths:
@@ -29,12 +28,48 @@ test:
           junit: [ api/target/surefire-reports/*.xml ]
         expire_in: "1 week"
 
-build_and_deploy:
-    stage: build_and_deploy 
+build_java:
+    stage: build
     script:
-      - mvn verify -Pwar -DskipTests=true 
-      - cp api/target/govregistry.war /opt/wildfly/govhub/deployments/
+      - mkdir ~/.ssh
+      - chmod 700 ~/.ssh 
+      - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+      - mvn -s /tmp/maven_settings/settings-repo_linkit.xml deploy -Pwar -DskipTests=true 
+    artifacts:
+        paths:
+          - api/target/*.war
+          - src/main/resources/*.sql
+    only:
+      - main
+      - pipeline-test
+
+build_angular:
+    stage: build
+    image: node:14.18.2-alpine3.15
+    script:
       - cd webapp
       - npm install
       - npm run production-govregistry
-      - cp -r dist/govregistry-app /opt/wildfly/welcome-content/
+      - tar czf govregistry-app.tgz dist/*  
+    artifacts:
+        paths:
+          - webapp/govregistry-app.tgz
+    only:
+      - main
+      - pipeline-test
+
+deploy_staging:
+  stage: deploy
+  image: kroniak/ssh-client
+  script:
+    - cp -r /tmp/ssh/ ~/.ssh
+    - scp -r webapp/govregistry-app.tgz $DEPLOY_STAGING_SSH_HOST:/tmp/
+    - scp -r api/target/govregistry.war $DEPLOY_STAGING_SSH_HOST:/tmp/
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo tar xvf /tmp/govregistry-app.tgz'
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo cp -r dist/govregistry-app/* /usr/share/nginx/html/govregistry-app/'
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo cp -r /tmp/govregistry.war /opt/wildfly/govhub/deployments/'  
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo systemctl restart wildfly@govhub'
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo rm -rf /tmp/govregistry-app.tgz dist /tmp/govregistry.war'
+  only:
+    - main
+    - pipeline-test

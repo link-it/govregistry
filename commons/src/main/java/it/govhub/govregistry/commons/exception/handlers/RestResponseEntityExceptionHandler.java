@@ -58,7 +58,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			ret.setType(new URI(problemTypes.get(status)));
 			ret.setDetail(detail);
 			return ret;
-			
 		} catch (URISyntaxException e){
 			// Non deve mai fallire la new URI di sopra
 			throw new UnreachableException(e);

@@ -1,5 +1,6 @@
 package it.govhub.govregistry.commons.entity;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
@@ -35,7 +36,9 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "govhub_authorizations")
-public class RoleAuthorizationEntity {
+public class RoleAuthorizationEntity implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@EqualsAndHashCode.Include
 	@Id

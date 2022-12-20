@@ -10,6 +10,7 @@
 	<name>GovRegistry</name>
 	<properties>
 		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<maven.deploy.skip>true</maven.deploy.skip>
 	</properties>
 	<modules>
 		<module>report</module>

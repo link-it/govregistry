@@ -8,14 +8,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-dependencies</artifactId>
-		<version>2.7.0</version>
-		<relativePath /> <!-- lookup parent from repository -->		
+		<version>2.7.1</version>
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<groupId>it.govhub.govregistry</groupId>
 	<artifactId>commons</artifactId>
 	<version>1.0.0</version>
-	
+
 	<packaging>jar</packaging>
 	<name>GovRegistry - Libreria comune</name>
 
@@ -27,11 +27,23 @@
 		<jsonpatch.version>1.13</jsonpatch.version>
 		<springdoc.version>1.6.4</springdoc.version>
 		<jacoco.version>0.8.8</jacoco.version>
+		<maven-processor.version>4.5</maven-processor.version>
 	</properties>
 
+	<distributionManagement>
+		<repository>
+			<id>link-repository</id>
+			<name>Linkit Private Repository</name>
+			<url>scpexe://poli-dev.link.it/opt/local/maven/private</url>
+		</repository>
+		<snapshotRepository>
+			<id>link-repository</id>
+			<name>Linkit Private Snapshots Repository</name>
+			<url>scpexe://poli-dev.link.it/opt/local/maven/private-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -49,7 +61,7 @@
 			<artifactId>spring-boot-starter-cache</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -62,7 +74,7 @@
 			<artifactId>hibernate-validator</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -106,7 +118,7 @@
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
-				<version>4.5</version>
+				<version>${maven-processor.version}</version>
 				<executions>
 					<execution>
 						<id>process</id>
@@ -143,5 +155,13 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<extensions>
+			<!-- Enabling the use of SSH -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
 	</build>
 </project>
