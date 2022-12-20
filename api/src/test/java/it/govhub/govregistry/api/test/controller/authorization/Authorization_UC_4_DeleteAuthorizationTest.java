@@ -603,8 +603,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 	}
 	
 	// TODO: Riabilita test
-	//@Test
-	//@Transactional
+	@Test
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti gli enti
 	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
@@ -735,8 +734,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 	}
 	
 	// TODO: Riabilita test
-	//@Test
-	//@Transactional
+	@Test
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per il servizio[2]
 	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per il servizio[2]
@@ -867,8 +865,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 	}
 	
 	// TODO Riabilita test	
-	//@Test
-	//@Transactional
+	@Test
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti i servizi
 	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per il servizio2.
