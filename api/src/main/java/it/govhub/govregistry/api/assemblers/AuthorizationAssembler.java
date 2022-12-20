@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import it.govhub.govregistry.api.beans.Authorization;
-import it.govhub.govregistry.api.beans.OrganizationAuthItem;
-import it.govhub.govregistry.api.beans.Role;
-import it.govhub.govregistry.api.beans.ServiceAuthItem;
+import it.govhub.commons.profile.api.beans.Authorization;
+import it.govhub.commons.profile.api.beans.OrganizationAuthItem;
+import it.govhub.commons.profile.api.beans.Role;
+import it.govhub.commons.profile.api.beans.ServiceAuthItem;
 import it.govhub.govregistry.api.spec.AuthorizationApi;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity;
