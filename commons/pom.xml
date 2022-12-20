@@ -144,7 +144,9 @@
 								<hateoas>true</hateoas>
 								<!-- Metto il booleanGetterPrefix a get, e.g.: getEnabled invece 
 									di isEnabled. questo in modo da far riconoscere e copiare le proprietà booleane 
-									alla BeanUtils.copyProperties TODO: get dovrebbe essere il default, controlla. -->
+									alla BeanUtils.copyProperties:
+									dalla documentazione in 'https://openapi-generator.tech/docs/generators/java/' risulta essere il default
+								 -->
 								<booleanGetterPrefix>get</booleanGetterPrefix>
 								<useTags>true</useTags>
 							</configOptions>
