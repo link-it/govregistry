@@ -59,7 +59,7 @@ public class OrganizationController implements OrganizationApi {
 	@Override
 	public ResponseEntity<Organization> createOrganization(OrganizationCreate org) {
 		
-		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddress(), "office_address");
 		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddressDetails(), "office_address_details");
@@ -79,7 +79,7 @@ public class OrganizationController implements OrganizationApi {
 	@Override
 	public ResponseEntity<OrganizationList> listOrganizations(OrganizationOrdering sort, Direction sortDirection, Integer limit, Long offset, String q) {
 		
-		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER, GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_VIEWER, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
 		// Posso avere N autorizzazioni valide con ruolo user_viewer o user_editor
 		// Alcune di queste avranno organizzazioni associate, altre no.
@@ -92,7 +92,7 @@ public class OrganizationController implements OrganizationApi {
 			spec = OrganizationFilters.empty();
 		} else {
 			Set<Long> orgIds = this.authService.listAuthorizedOrganizations(
-					GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR, GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER);
+					GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_VIEWER);
 			
 			spec = OrganizationFilters.byId(orgIds);
 		}
@@ -122,7 +122,7 @@ public class OrganizationController implements OrganizationApi {
 	@Override
 	public ResponseEntity<Organization> readOrganization(Long id) {
 		
-		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER, GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_VIEWER, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR);
 
 		Organization ret = this.orgRepo.findById(id)
 			.map( org -> this.orgAssembler.toModel(org))
@@ -135,7 +135,7 @@ public class OrganizationController implements OrganizationApi {
 	@Override
 	public ResponseEntity<Organization> updateOrganization(Long id, List<PatchOp> patchOp) {
 		
-		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);

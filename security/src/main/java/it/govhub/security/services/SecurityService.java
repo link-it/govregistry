@@ -187,7 +187,7 @@ public class SecurityService {
 			.anyMatch( auth -> {
 				String role = auth.getRole().getName(); 
 				boolean isAdmin = role.equals(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
-				boolean hasRole = role.equals(GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_VIEWER) || role.equals(GovregistryRoles.RUOLO_GOVHUB_ORGANIZATIONS_EDITOR);
+				boolean hasRole = role.equals(GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_VIEWER) || role.equals(GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR);
 				return isAdmin || (hasRole && auth.getOrganizations().isEmpty());
 			});
 	}
@@ -210,7 +210,7 @@ public class SecurityService {
 			.anyMatch( auth -> {
 				String role = auth.getRole().getName(); 
 				boolean isAdmin = role.equals(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
-				boolean hasRole = role.equals(GovregistryRoles.RUOLO_GOVHUB_SERVICES_VIEWER) || role.equals(GovregistryRoles.RUOLO_GOVHUB_SERVICES_EDITOR);
+				boolean hasRole = role.equals(GovregistryRoles.RUOLO_GOVREGISTRY_SERVICES_VIEWER) || role.equals(GovregistryRoles.RUOLO_GOVREGISTRY_SERVICES_EDITOR);
 				return isAdmin || (hasRole && auth.getServices().isEmpty());
 			});
 	}
