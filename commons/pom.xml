@@ -28,6 +28,8 @@
 		<springdoc.version>1.6.4</springdoc.version>
 		<jacoco.version>0.8.8</jacoco.version>
 		<maven-processor.version>4.5</maven-processor.version>
+		<openapi.tool.codegen.version>6.0.0</openapi.tool.codegen.version>
+		<jackson.databind.nullable.version>0.2.1</jackson.databind.nullable.version>
 	</properties>
 
 	<distributionManagement>
@@ -101,6 +103,11 @@
 			<artifactId>swagger-annotations</artifactId>
 			<version>${swagger-annotations.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>${jackson.databind.nullable.version}</version>
+		</dependency>
 
 
 		<!-- JsonPatch -->
@@ -115,6 +122,57 @@
 	<build>
 		<finalName>govregistry-commons</finalName>
 		<plugins>
+
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>${openapi.tool.codegen.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<id>generate-sources-openapi</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/govhub-api-profile.yaml</inputSpec>
+							<generatorName>spring</generatorName>
+							<typeMappings>base64=it.govhub.govregistry.commons.utils.Base64String</typeMappings>
+							<importMappings>
+								<importMapping>Problem=it.govhub.govregistry.commons.beans.Problem</importMapping>
+							</importMappings>
+							<configOptions>
+								<dateLibrary>java8</dateLibrary>
+								<library>spring-boot</library>
+								<sourceFolder>generated-sources/java/</sourceFolder>
+								<basePackage>it.govhub.commons.profile</basePackage>
+								<apiPackage>it.govhub.commons.profile.api.spec</apiPackage>
+								<modelPackage>it.govhub.commons.profile.api.beans</modelPackage>
+								<useBeanValidation>true</useBeanValidation>
+								<performBeanValidation>true</performBeanValidation>
+								<skipDefaultInterface>true</skipDefaultInterface>
+								<interfaceOnly>true</interfaceOnly>
+								<hateoas>true</hateoas>
+								<!-- Metto il booleanGetterPrefix a get, e.g.: getEnabled invece 
+									di isEnabled. questo in modo da far riconoscere e copiare le proprietà booleane 
+									alla BeanUtils.copyProperties:
+									dalla documentazione in 'https://openapi-generator.tech/docs/generators/java/' risulta essere il default
+								 -->
+								<booleanGetterPrefix>get</booleanGetterPrefix>
+								<useTags>true</useTags>
+							</configOptions>
+							<output>${project.basedir}/target</output>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApiTests>false</generateApiTests>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<generateModelTests>false</generateModelTests>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>

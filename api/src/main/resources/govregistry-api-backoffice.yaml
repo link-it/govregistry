@@ -22,7 +22,6 @@ servers:
 
 security:
    - header-principal: []
-   - basic-auth: []
 
 tags:
   - name: user
@@ -903,19 +902,6 @@ components:
                   id:
                      $ref: "#/components/schemas/UserId"
                      
-      Profile:
-         allOf:
-            - $ref: "#/components/schemas/User"
-            - type: object
-              additionalProperties: false
-              properties:
-                 authorizations:
-                    type: array
-                    items:
-                       $ref: "#/components/schemas/Authorization"
-                    minItems: 0
-                    maxItems: 2147483647
-       
       Role:
          type: object
          additionalProperties: false

@@ -7,23 +7,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.govhub.commons.profile.api.beans.Authorization;
 import it.govhub.govregistry.api.assemblers.AuthorizationAssembler;
-import it.govhub.govregistry.api.beans.Authorization;
 import it.govhub.govregistry.api.beans.AuthorizationCreate;
 import it.govhub.govregistry.api.beans.AuthorizationList;
 import it.govhub.govregistry.api.beans.AuthorizationOrdering;
-import it.govhub.govregistry.api.messages.RoleMessages;
 import it.govhub.govregistry.api.services.RoleAuthorizationService;
 import it.govhub.govregistry.api.spec.AuthorizationApi;
-import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity_;
 import it.govhub.govregistry.commons.entity.RoleEntity_;
-import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.commons.repository.RoleRepository;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
-import it.govhub.security.config.SecurityConstants;
+import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 @RestController
@@ -45,9 +42,9 @@ public class AuthorizationController implements AuthorizationApi {
 	SecurityService securityService;
 
 	@Override
-	public ResponseEntity<Authorization> assignAuthorization(Long id, AuthorizationCreate authorization) {
+	public ResponseEntity<Authorization> assignAuthorization(Long id, AuthorizationCreate authorizationCreate) {
 		
-		Authorization ret =  this.authService.assignAuthorization(id, authorization);
+		Authorization ret =  this.authService.assignAuthorization(id, authorizationCreate);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(ret);
 	}
@@ -55,7 +52,7 @@ public class AuthorizationController implements AuthorizationApi {
 	@Override
 	public ResponseEntity<AuthorizationList> listAuthorizations(Long userId, AuthorizationOrdering sort,  Direction sortDirection, Integer limit, Long offset) {
 		
-		this.securityService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
+		this.securityService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_EDITOR, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_VIEWER);
 		
 		Sort orderBy;
 		switch(sort) {
@@ -81,17 +78,14 @@ public class AuthorizationController implements AuthorizationApi {
 
 	
 	@Override
-	public ResponseEntity<Void> removeAuthorization(Long id) {
+	public ResponseEntity<Void> removeAuthorization(Long authId) {
 		
-		this.securityService.hasAnyRole(SecurityConstants.RUOLO_GOVHUB_SYSADMIN, SecurityConstants.RUOLO_GOVHUB_USERS_EDITOR);
-		
-		RoleAuthorizationEntity auth = this.authRepo.findById(id)
-			.orElseThrow( () -> new ResourceNotFoundException(RoleMessages.authorizationNotFound(id)));
-		
-		this.authRepo.delete(auth);
+		this.authService.removeAuthorization(authId);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+
+
 
 
 }

@@ -7,7 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import it.govhub.govregistry.api.beans.ServiceAuthItem;
+import it.govhub.commons.profile.api.beans.ServiceAuthItem;
 import it.govhub.govregistry.api.spec.ServiceApi;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 
