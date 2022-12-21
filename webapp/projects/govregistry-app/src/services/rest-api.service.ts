@@ -21,7 +21,7 @@ export class RestApiService {
     this.conf = this.configService;
 
     this.conf.getConfig('app').subscribe(
-      (result: any) => this.apiURL = result.AppConfig.GOVREGISTRY.HOST,
+      (result: any) => this.apiURL = result.AppConfig.GOVAPI.HOST,
       (err: any) => console.error(err));
   }
 
