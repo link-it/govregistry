@@ -16,17 +16,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
-import it.govhub.commons.profile.api.beans.Profile;
 import it.govhub.govregistry.api.assemblers.UserAssembler;
 import it.govhub.govregistry.api.beans.User;
 import it.govhub.govregistry.api.beans.UserCreate;
 import it.govhub.govregistry.api.messages.PatchMessages;
-import it.govhub.govregistry.api.messages.SecurityMessages;
 import it.govhub.govregistry.api.messages.UserMessages;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
-import it.govhub.govregistry.commons.exception.ForbiddenException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.repository.UserRepository;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
@@ -114,14 +111,4 @@ public class UserService {
 				
 		return this.userRepo.save(newUser);
 	}
-	
-	
-	@Transactional
-	public Profile getProfile(String principal) {
-		UserEntity user = this.userRepo.findByPrincipal(principal)
-				.orElseThrow( () -> new ForbiddenException(SecurityMessages.authorizedUserNotInDb(principal)));
-		
-		return this.userAssembler.toProfileModel(user);
-	}
-
 }
