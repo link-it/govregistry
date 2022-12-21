@@ -56,8 +56,8 @@ export class AuthenticationService {
     this.appConfig = this.configService.getAppConfig();
     this.authDevelop = this.appConfig.AUTH_SETTINGS ? this.appConfig.AUTH_SETTINGS.DEVELOP : false;
 
-    if (this.appConfig?.GOVREGISTRY?.LOGOUT_URL) {
-      this.API_LOGOUT = this.appConfig.GOVREGISTRY.LOGOUT_URL;
+    if (this.appConfig?.GOVAPI?.LOGOUT_URL) {
+      this.API_LOGOUT = this.appConfig.GOVAPI.LOGOUT_URL;
     }
 
     this.reloadSession();
@@ -76,14 +76,14 @@ export class AuthenticationService {
       withCredentials: true
     };
 
-    let url = `${this.appConfig.GOVREGISTRY['HOST']}${this.API_PROFILE}`;
+    let url = `${this.appConfig.GOVAPI['HOST']}${this.API_PROFILE}`;
 
     return this.http.get(url, httpOptions);
   }
 
   logout() {
     localStorage.removeItem(AUTH_CONST.storageSession);
-    let url = `${this.appConfig.GOVREGISTRY['HOST']}${this.API_LOGOUT}`;
+    let url = `${this.appConfig.GOVAPI['HOST']}${this.API_LOGOUT}`;
     return this.http.get(url);
   }
 
