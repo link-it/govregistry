@@ -32,9 +32,20 @@
 		<jackson.databind.nullable.version>0.2.1</jackson.databind.nullable.version>
 	</properties>
 
+	<distributionManagement>
+		<repository>
+			<id>link-repository</id>
+			<name>Linkit Private Repository</name>
+			<url>scpexe://poli-dev.link.it/opt/local/maven/private</url>
+		</repository>
+		<snapshotRepository>
+			<id>link-repository</id>
+			<name>Linkit Private Snapshots Repository</name>
+			<url>scpexe://poli-dev.link.it/opt/local/maven/private-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -202,5 +213,13 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<extensions>
+			<!-- Enabling the use of SSH -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
 	</build>
 </project>

@@ -111,6 +111,4 @@ public class UserService {
 				
 		return this.userRepo.save(newUser);
 	}
-	
-
 }
