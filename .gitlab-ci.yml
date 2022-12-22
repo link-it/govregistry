@@ -21,6 +21,9 @@ test:
     stage: test
     script:
       - mvn verify sonar:sonar
+    rules:
+      - if: $CI_COMMIT_BRANCH == "staging"
+        allow_failure: true
     artifacts:
         untracked: false
         name: test_and_coverage_report
@@ -41,7 +44,7 @@ build_java:
           - src/main/resources/*.sql
     only:
       - main
-      - pipeline-test
+      - staging
 
 build_angular:
     stage: build
@@ -56,7 +59,7 @@ build_angular:
           - webapp/govregistry-app.tgz
     only:
       - main
-      - pipeline-test
+      - staging
 
 deploy_staging:
   stage: deploy
@@ -71,5 +74,4 @@ deploy_staging:
     - ssh $DEPLOY_STAGING_SSH_HOST 'sudo systemctl restart wildfly@govhub'
     - ssh $DEPLOY_STAGING_SSH_HOST 'sudo rm -rf /tmp/govregistry-app.tgz dist /tmp/govregistry.war'
   only:
-    - main
-    - pipeline-test
+    - staging
