@@ -8,8 +8,10 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.stereotype.Component;
 
 import it.govhub.govregistry.api.beans.OrganizationItem;
-import it.govhub.govregistry.api.spec.OrganizationApi;
+import it.govhub.govregistry.commons.api.spec.OrganizationApi;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
+
+
 
 @Component
 public class OrganizationItemAssembler extends RepresentationModelAssemblerSupport<OrganizationEntity, OrganizationItem> {
