@@ -16,16 +16,16 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.github.fge.jsonpatch.JsonPatch;
 
-import it.govhub.govregistry.api.assemblers.UserAssembler;
-import it.govhub.govregistry.api.beans.User;
-import it.govhub.govregistry.api.beans.UserCreate;
 import it.govhub.govregistry.api.beans.UserList;
 import it.govhub.govregistry.api.beans.UserOrdering;
 import it.govhub.govregistry.api.messages.UserMessages;
 import it.govhub.govregistry.api.repository.UserFilters;
 import it.govhub.govregistry.api.services.UserService;
 import it.govhub.govregistry.api.spec.UserApi;
-import it.govhub.govregistry.commons.beans.PatchOp;
+import it.govhub.govregistry.commons.api.beans.PatchOp;
+import it.govhub.govregistry.commons.api.beans.User;
+import it.govhub.govregistry.commons.api.beans.UserCreate;
+import it.govhub.govregistry.commons.assemblers.UserAssembler;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.repository.UserRepository;
@@ -36,8 +36,9 @@ import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 
+
 @RestController
-public class UserController implements UserApi {
+public class UserController implements UserApi,  it.govhub.govregistry.commons.api.spec.UserApi{
 	
 	@Autowired
 	private UserService userService;
@@ -51,18 +52,6 @@ public class UserController implements UserApi {
 	@Autowired
 	private SecurityService authService;
 	
-	@Override
-	public ResponseEntity<User> readUser(Long id) {
-		
-		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_EDITOR, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_VIEWER);
-		
-		UserEntity user = this.userRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
-		
-		return ResponseEntity.ok(
-				this.userAssembler.toModel(user));
-	}
-
 	
 	@Override
 	public ResponseEntity<UserList> listUsers(UserOrdering orderBy, Direction sortDirection, Integer limit, Long offset, String q, Boolean enabled) {
@@ -108,6 +97,18 @@ public class UserController implements UserApi {
 		User ret = this.userAssembler.toModel(newUser);
 		
 		return ResponseEntity.ok(ret);
+	}
+	
+	@Override
+	public ResponseEntity<User> readUser(Long id) {
+		
+		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_EDITOR, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_VIEWER);
+		
+		UserEntity user = this.userRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
+		
+		return ResponseEntity.ok(
+				this.userAssembler.toModel(user));
 	}
 
 	

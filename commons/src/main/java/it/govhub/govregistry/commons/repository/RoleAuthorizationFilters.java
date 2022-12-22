@@ -1,4 +1,4 @@
-package it.govhub.govregistry.api.repository;
+package it.govhub.govregistry.commons.repository;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -18,7 +18,6 @@ import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity_;
 import it.govhub.govregistry.commons.entity.RoleEntity_;
 import it.govhub.govregistry.commons.entity.ServiceEntity_;
 import it.govhub.govregistry.commons.entity.UserEntity_;
-import it.govhub.security.config.GovregistryRoles;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
 
 public class RoleAuthorizationFilters {
@@ -33,16 +32,6 @@ public class RoleAuthorizationFilters {
 	public static Specification<RoleAuthorizationEntity> byUser(Long userId) {
 		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
 			cb.equal(root.get(RoleAuthorizationEntity_.user).get(UserEntity_.id), userId);
-	}
-	
-	
-	public static Specification<RoleAuthorizationEntity> byAdmin(Long userId) {
-		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
-		
-		RoleAuthorizationFilters.byRoleName(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN)
-			.and(RoleAuthorizationFilters.byUser(userId))
-			.and(RoleAuthorizationFilters.expiresAfter(OffsetDateTime.now()))
-			.toPredicate(root, query, cb);
 	}
 	
 	

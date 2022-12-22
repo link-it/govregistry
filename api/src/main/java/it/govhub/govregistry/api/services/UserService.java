@@ -16,11 +16,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
-import it.govhub.govregistry.api.assemblers.UserAssembler;
-import it.govhub.govregistry.api.beans.User;
-import it.govhub.govregistry.api.beans.UserCreate;
 import it.govhub.govregistry.api.messages.PatchMessages;
 import it.govhub.govregistry.api.messages.UserMessages;
+import it.govhub.govregistry.commons.api.beans.User;
+import it.govhub.govregistry.commons.api.beans.UserCreate;
+import it.govhub.govregistry.commons.assemblers.UserAssembler;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
