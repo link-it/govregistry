@@ -602,7 +602,6 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 	}
 	
-	// TODO: Riabilita test
 	@Test
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti gli enti
@@ -733,7 +732,6 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 	}
 	
-	// TODO: Riabilita test
 	@Test
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per il servizio[2]
@@ -864,7 +862,6 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 	}
 	
-	// TODO Riabilita test	
 	@Test
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti i servizi
