@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * PageInfo
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-12-22T13:18:06.071199+01:00[Europe/Rome]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-12-22T16:28:44.183132+01:00[Europe/Rome]")
 public class PageInfo extends RepresentationModel<PageInfo>  {
 
   @JsonProperty("offset")
