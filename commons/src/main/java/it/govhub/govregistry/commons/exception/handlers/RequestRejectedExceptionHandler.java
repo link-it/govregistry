@@ -14,7 +14,7 @@ import org.springframework.security.web.firewall.RequestRejectedHandler;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.govhub.govregistry.commons.beans.Problem;
+import it.govhub.govregistry.commons.api.beans.Problem;
 
 public class RequestRejectedExceptionHandler implements RequestRejectedHandler {
 

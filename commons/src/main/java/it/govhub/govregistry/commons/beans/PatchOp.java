@@ -1,23 +1,27 @@
 package it.govhub.govregistry.commons.beans;
 
-import javax.annotation.Generated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import java.net.URI;
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import org.springframework.hateoas.RepresentationModel;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.*;
+import javax.annotation.Generated;
 
 /**
  * PatchOp
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-12-13T14:40:47.974452+01:00[Europe/Rome]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-12-22T13:13:51.093792+01:00[Europe/Rome]")
 public class PatchOp extends RepresentationModel<PatchOp>  {
 
   /**
@@ -66,6 +70,11 @@ public class PatchOp extends RepresentationModel<PatchOp>  {
   @JsonProperty("value")
   private Object value;
 
+  public PatchOp op(OpEnum op) {
+    this.op = op;
+    return this;
+  }
+
   /**
    * Specified operation.
    * @return op
@@ -78,6 +87,11 @@ public class PatchOp extends RepresentationModel<PatchOp>  {
 
   public void setOp(OpEnum op) {
     this.op = op;
+  }
+
+  public PatchOp path(String path) {
+    this.path = path;
+    return this;
   }
 
   /**
@@ -94,6 +108,11 @@ public class PatchOp extends RepresentationModel<PatchOp>  {
     this.path = path;
   }
 
+  public PatchOp value(Object value) {
+    this.value = value;
+    return this;
+  }
+
   /**
    * updating value.
    * @return value
@@ -107,4 +126,46 @@ public class PatchOp extends RepresentationModel<PatchOp>  {
   public void setValue(Object value) {
     this.value = value;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    PatchOp patchOp = (PatchOp) o;
+    return Objects.equals(this.op, patchOp.op) &&
+        Objects.equals(this.path, patchOp.path) &&
+        Objects.equals(this.value, patchOp.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(op, path, value);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class PatchOp {\n");
+    sb.append("    op: ").append(toIndentedString(op)).append("\n");
+    sb.append("    path: ").append(toIndentedString(path)).append("\n");
+    sb.append("    value: ").append(toIndentedString(value)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }
+

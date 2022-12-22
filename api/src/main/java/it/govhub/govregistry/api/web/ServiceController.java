@@ -17,16 +17,16 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.github.fge.jsonpatch.JsonPatch;
 
-import it.govhub.govregistry.api.assemblers.ServiceAssembler;
-import it.govhub.govregistry.api.beans.Service;
-import it.govhub.govregistry.api.beans.ServiceCreate;
 import it.govhub.govregistry.api.beans.ServiceList;
 import it.govhub.govregistry.api.beans.ServiceOrdering;
 import it.govhub.govregistry.api.messages.ServiceMessages;
 import it.govhub.govregistry.api.repository.ServiceFilters;
 import it.govhub.govregistry.api.services.ServiceService;
 import it.govhub.govregistry.api.spec.ServiceApi;
-import it.govhub.govregistry.commons.beans.PatchOp;
+import it.govhub.govregistry.commons.api.beans.PatchOp;
+import it.govhub.govregistry.commons.api.beans.Service;
+import it.govhub.govregistry.commons.api.beans.ServiceCreate;
+import it.govhub.govregistry.commons.assemblers.ServiceAssembler;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.repository.ServiceRepository;
@@ -38,7 +38,7 @@ import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 @RestController
-public class ServiceController implements ServiceApi {
+public class ServiceController implements ServiceApi, it.govhub.govregistry.commons.api.spec.ServiceApi {
 	
 	@Autowired
 	private ServiceService serviceService;
@@ -106,8 +106,8 @@ public class ServiceController implements ServiceApi {
 		
 		return ResponseEntity.ok(ret);
 	}
-
-
+	
+	
 	@Override
 	public ResponseEntity<Service> readService(Long id) {
 		
@@ -118,6 +118,7 @@ public class ServiceController implements ServiceApi {
 		
 		return ResponseEntity.ok(this.serviceAssembler.toModel(service));
 	}
+
 
 
 	@Override
