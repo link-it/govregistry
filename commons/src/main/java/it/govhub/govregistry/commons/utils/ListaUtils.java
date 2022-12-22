@@ -13,7 +13,7 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 
-import it.govhub.govregistry.commons.beans.PageInfo;
+import it.govhub.govregistry.commons.api.beans.PageInfo;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 
 

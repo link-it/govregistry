@@ -24,7 +24,7 @@ import org.springframework.web.util.WebUtils;
 
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 
-import it.govhub.govregistry.commons.beans.Problem;
+import it.govhub.govregistry.commons.api.beans.Problem;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
 import it.govhub.govregistry.commons.exception.ForbiddenException;

@@ -17,17 +17,17 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.github.fge.jsonpatch.JsonPatch;
 
-import it.govhub.govregistry.api.assemblers.OrganizationAssembler;
 import it.govhub.govregistry.api.assemblers.OrganizationItemAssembler;
-import it.govhub.govregistry.api.beans.Organization;
-import it.govhub.govregistry.api.beans.OrganizationCreate;
 import it.govhub.govregistry.api.beans.OrganizationList;
 import it.govhub.govregistry.api.beans.OrganizationOrdering;
 import it.govhub.govregistry.api.messages.OrganizationMessages;
 import it.govhub.govregistry.api.repository.OrganizationFilters;
 import it.govhub.govregistry.api.services.OrganizationService;
 import it.govhub.govregistry.api.spec.OrganizationApi;
-import it.govhub.govregistry.commons.beans.PatchOp;
+import it.govhub.govregistry.commons.api.beans.Organization;
+import it.govhub.govregistry.commons.api.beans.OrganizationCreate;
+import it.govhub.govregistry.commons.api.beans.PatchOp;
+import it.govhub.govregistry.commons.assemblers.OrganizationAssembler;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.repository.OrganizationRepository;
@@ -39,7 +39,7 @@ import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 @RestController
-public class OrganizationController implements OrganizationApi {
+public class OrganizationController implements OrganizationApi , it.govhub.govregistry.commons.api.spec.OrganizationApi{
 	
 	@Autowired
 	private OrganizationAssembler orgAssembler;
@@ -132,6 +132,7 @@ public class OrganizationController implements OrganizationApi {
 	}
 
 	
+	
 	@Override
 	public ResponseEntity<Organization> updateOrganization(Long id, List<PatchOp> patchOp) {
 		
@@ -146,5 +147,7 @@ public class OrganizationController implements OrganizationApi {
 		return ResponseEntity.ok(ret);
 	}
 
+	
+	
 
 }

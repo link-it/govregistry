@@ -14,15 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import it.govhub.commons.profile.api.beans.Authorization;
-import it.govhub.govregistry.api.assemblers.AuthorizationAssembler;
 import it.govhub.govregistry.api.beans.AuthorizationCreate;
-import it.govhub.govregistry.api.beans.AuthorizationList;
 import it.govhub.govregistry.api.messages.OrganizationMessages;
 import it.govhub.govregistry.api.messages.RoleMessages;
 import it.govhub.govregistry.api.messages.ServiceMessages;
 import it.govhub.govregistry.api.messages.UserMessages;
 import it.govhub.govregistry.api.repository.RoleAuthorizationFilters;
+import it.govhub.govregistry.commons.api.beans.Authorization;
+import it.govhub.govregistry.commons.api.beans.AuthorizationList;
+import it.govhub.govregistry.commons.assemblers.AuthorizationAssembler;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity;

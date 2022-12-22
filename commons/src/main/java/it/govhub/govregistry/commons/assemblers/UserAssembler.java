@@ -1,4 +1,4 @@
-package it.govhub.govregistry.api.assemblers;
+package it.govhub.govregistry.commons.assemblers;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -11,18 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import it.govhub.commons.profile.api.beans.Authorization;
-import it.govhub.commons.profile.api.beans.Profile;
-import it.govhub.govregistry.api.beans.User;
-import it.govhub.govregistry.api.beans.UserCreate;
-import it.govhub.govregistry.api.spec.UserApi;
+import it.govhub.govregistry.commons.api.beans.Authorization;
+import it.govhub.govregistry.commons.api.beans.Profile;
+import it.govhub.govregistry.commons.api.beans.User;
+import it.govhub.govregistry.commons.api.beans.UserCreate;
+import it.govhub.govregistry.commons.api.spec.UserApi;
 import it.govhub.govregistry.commons.entity.UserEntity;
 
 @Component
 public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEntity, User> {
 	
-	@Autowired
-	AuthorizationAssembler authAssembler;
 
 	public UserAssembler() {
 		super(UserApi.class, User.class);
@@ -40,21 +38,6 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
 				.withSelfRel()
 			) ;
 				
-		return ret;
-	}
-	
-
-	public Profile toProfileModel(UserEntity src) {
-		Profile ret = new Profile();
-		
-		BeanUtils.copyProperties(src, ret);
-		
-		List<Authorization> auths = src.getAuthorizations().stream()
-			.map(this.authAssembler::toModel)
-			.collect(Collectors.toList());
-		
-		ret.setAuthorizations(auths);
-		
 		return ret;
 	}
 	

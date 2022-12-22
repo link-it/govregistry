@@ -124,19 +124,20 @@
 						<id>generate-sources-openapi</id>
 						<phase>generate-sources</phase>
 						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/govhub-api-profile.yaml</inputSpec>
+							<inputSpec>${project.basedir}/src/main/resources/govhub-api-commons.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<typeMappings>base64=it.govhub.govregistry.commons.utils.Base64String</typeMappings>
 							<importMappings>
-								<importMapping>Problem=it.govhub.govregistry.commons.beans.Problem</importMapping>
+								<importMapping>Direction=org.springframework.data.domain.Sort.Direction</importMapping>
 							</importMappings>
+
 							<configOptions>
 								<dateLibrary>java8</dateLibrary>
 								<library>spring-boot</library>
 								<sourceFolder>generated-sources/java/</sourceFolder>
-								<basePackage>it.govhub.commons.profile</basePackage>
-								<apiPackage>it.govhub.commons.profile.api.spec</apiPackage>
-								<modelPackage>it.govhub.commons.profile.api.beans</modelPackage>
+								<basePackage>it.govhub.govregistry.commons.api</basePackage>
+								<apiPackage>it.govhub.govregistry.commons.api.spec</apiPackage>
+								<modelPackage>it.govhub.govregistry.commons.api.beans</modelPackage>
 								<useBeanValidation>true</useBeanValidation>
 								<performBeanValidation>true</performBeanValidation>
 								<skipDefaultInterface>true</skipDefaultInterface>
@@ -144,9 +145,8 @@
 								<hateoas>true</hateoas>
 								<!-- Metto il booleanGetterPrefix a get, e.g.: getEnabled invece 
 									di isEnabled. questo in modo da far riconoscere e copiare le proprietà booleane 
-									alla BeanUtils.copyProperties:
-									dalla documentazione in 'https://openapi-generator.tech/docs/generators/java/' risulta essere il default
-								 -->
+									alla BeanUtils.copyProperties: dalla documentazione in 'https://openapi-generator.tech/docs/generators/java/' 
+									risulta essere il default -->
 								<booleanGetterPrefix>get</booleanGetterPrefix>
 								<useTags>true</useTags>
 							</configOptions>
