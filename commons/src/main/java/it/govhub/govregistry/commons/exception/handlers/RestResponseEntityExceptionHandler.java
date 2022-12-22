@@ -28,6 +28,7 @@ import it.govhub.govregistry.commons.api.beans.Problem;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
 import it.govhub.govregistry.commons.exception.ForbiddenException;
+import it.govhub.govregistry.commons.exception.InternalException;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.exception.SemanticValidationException;
@@ -103,6 +104,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(ForbiddenException.class)
 	public Problem handleConstraintViolation(ForbiddenException ex) {
+		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage());
+	}
+	
+	
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler({InternalException.class})
+	public final Problem handleAllInternalExceptions(InternalException ex, WebRequest request) {
 		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage());
 	}
 	
