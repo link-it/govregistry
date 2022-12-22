@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * Problem
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-12-22T16:28:44.183132+01:00[Europe/Rome]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-12-22T16:51:50.588360+01:00[Europe/Rome]")
 public class Problem extends RepresentationModel<Problem>  {
 
   @JsonProperty("detail")

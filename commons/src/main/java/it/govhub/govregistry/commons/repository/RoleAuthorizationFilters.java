@@ -35,16 +35,6 @@ public class RoleAuthorizationFilters {
 	}
 	
 	
-	/*public static Specification<RoleAuthorizationEntity> byAdmin(Long userId) {
-		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
-		
-		RoleAuthorizationFilters.byRoleName(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN)
-			.and(RoleAuthorizationFilters.byUser(userId))
-			.and(RoleAuthorizationFilters.expiresAfter(OffsetDateTime.now()))
-			.toPredicate(root, query, cb);
-	}*/
-	
-	
 	public static Specification<RoleAuthorizationEntity> byRoleName(String... roles) {
 		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
 			root.get(RoleAuthorizationEntity_.role).get(RoleEntity_.name).in((Object[])roles);
