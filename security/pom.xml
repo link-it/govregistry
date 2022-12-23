@@ -25,6 +25,19 @@
 		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
+	<distributionManagement>
+		<repository>
+			<id>link-repository</id>
+			<name>Linkit Private Repository</name>
+			<url>scpexe://poli-dev.link.it/opt/local/maven/private</url>
+		</repository>
+		<snapshotRepository>
+			<id>link-repository</id>
+			<name>Linkit Private Snapshots Repository</name>
+			<url>scpexe://poli-dev.link.it/opt/local/maven/private-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<dependencyManagement>
 		<dependencies>
 
@@ -69,7 +82,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>govsecurity</finalName>
+		<finalName>govregistry-security</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -85,5 +98,13 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<extensions>
+			<!-- Enabling the use of SSH -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
 	</build>
 </project>
