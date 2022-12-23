@@ -11,54 +11,17 @@
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>it.govhub.security</groupId>
 	<artifactId>security</artifactId>
 	<packaging>jar</packaging>
 	<name>GovRegistry - Security</name>
 	<description>Modulo per l'autorizzazione e sicurezza delle API di GovHub</description>
-
-	<properties>
-		<maven.deploy.skip>false</maven.deploy.skip>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jacoco.version>0.8.8</jacoco.version>	
-		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-	</properties>
-
-	<distributionManagement>
-		<repository>
-			<id>link-repository</id>
-			<name>Linkit Private Repository</name>
-			<url>scpexe://poli-dev.link.it/opt/local/maven/private</url>
-		</repository>
-		<snapshotRepository>
-			<id>link-repository</id>
-			<name>Linkit Private Snapshots Repository</name>
-			<url>scpexe://poli-dev.link.it/opt/local/maven/private-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-	<dependencyManagement>
-		<dependencies>
-
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>2.7.1</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
 
 		<dependency>
 			<groupId>it.govhub.govregistry</groupId>
 			<artifactId>commons</artifactId>
-			<version>0.1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
@@ -84,28 +47,5 @@
 
 	<build>
 		<finalName>govregistry-security</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.version}</version>
-				<executions>
-					<execution>
-						<id>prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-		<extensions>
-			<!-- Enabling the use of SSH -->
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>1.0-beta-6</version>
-			</extension>
-		</extensions>
 	</build>
 </project>
