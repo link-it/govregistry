@@ -20,7 +20,7 @@ default:
 test:
     stage: test
     script:
-      - mvn verify sonar:sonar
+      - mvn verify sonar:sonar -U
     rules:
       - if: $CI_COMMIT_BRANCH == "staging"
         allow_failure: true
@@ -37,7 +37,7 @@ build_java:
       - mkdir ~/.ssh
       - chmod 700 ~/.ssh 
       - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-      - mvn -s /tmp/maven_settings/settings-repo_linkit.xml deploy -Pwar -DskipTests=true 
+      - mvn -s /tmp/maven_settings/settings-repo_linkit.xml -U deploy -Pwar -DskipTests=true 
     artifacts:
         paths:
           - api/target/*.war
