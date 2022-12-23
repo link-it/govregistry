@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 
-import it.govhub.govregistry.commons.beans.PatchOp;
+import it.govhub.govregistry.commons.api.beans.PatchOp;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 
 public class RequestUtils {

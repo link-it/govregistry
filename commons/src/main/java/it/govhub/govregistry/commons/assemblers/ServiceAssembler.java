@@ -1,4 +1,4 @@
-package it.govhub.govregistry.api.assemblers;
+package it.govhub.govregistry.commons.assemblers;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -7,9 +7,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import it.govhub.govregistry.api.beans.Service;
-import it.govhub.govregistry.api.beans.ServiceCreate;
-import it.govhub.govregistry.api.spec.ServiceApi;
+import it.govhub.govregistry.commons.api.beans.Service;
+import it.govhub.govregistry.commons.api.beans.ServiceCreate;
+import it.govhub.govregistry.commons.api.spec.ServiceApi;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 
 @Component

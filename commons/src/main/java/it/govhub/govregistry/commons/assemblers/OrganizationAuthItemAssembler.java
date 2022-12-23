@@ -1,4 +1,4 @@
-package it.govhub.govregistry.api.assemblers;
+package it.govhub.govregistry.commons.assemblers;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -7,9 +7,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import it.govhub.commons.profile.api.beans.OrganizationAuthItem;
-import it.govhub.govregistry.api.spec.OrganizationApi;
+import it.govhub.govregistry.commons.api.beans.OrganizationAuthItem;
+import it.govhub.govregistry.commons.api.spec.OrganizationApi;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
+
 
 @Component
 public class OrganizationAuthItemAssembler  extends RepresentationModelAssemblerSupport<OrganizationEntity, OrganizationAuthItem> {

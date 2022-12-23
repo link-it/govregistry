@@ -1,4 +1,4 @@
-package it.govhub.govregistry.api.assemblers;
+package it.govhub.govregistry.commons.assemblers;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,12 +6,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.stereotype.Component;
 
-import it.govhub.commons.profile.api.beans.Authorization;
-import it.govhub.commons.profile.api.beans.Profile;
-import it.govhub.commons.profile.api.spec.ProfileApi;
+import it.govhub.govregistry.commons.api.beans.Authorization;
+import it.govhub.govregistry.commons.api.beans.Profile;
+import it.govhub.govregistry.commons.api.spec.ProfileApi;
 import it.govhub.govregistry.commons.entity.UserEntity;
 
+@Component
 public class ProfileAssembler extends RepresentationModelAssemblerSupport<UserEntity, Profile> {
 	
 	@Autowired
