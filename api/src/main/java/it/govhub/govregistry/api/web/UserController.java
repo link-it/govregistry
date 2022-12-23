@@ -99,6 +99,7 @@ public class UserController implements UserApi,  it.govhub.govregistry.commons.a
 		return ResponseEntity.ok(ret);
 	}
 	
+	
 	@Override
 	public ResponseEntity<User> readUser(Long id) {
 		
