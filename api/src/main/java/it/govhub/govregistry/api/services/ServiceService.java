@@ -11,11 +11,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
-import it.govhub.govregistry.api.assemblers.ServiceAssembler;
-import it.govhub.govregistry.api.beans.Service;
-import it.govhub.govregistry.api.beans.ServiceCreate;
 import it.govhub.govregistry.api.messages.PatchMessages;
 import it.govhub.govregistry.api.messages.ServiceMessages;
+import it.govhub.govregistry.commons.api.beans.Service;
+import it.govhub.govregistry.commons.api.beans.ServiceCreate;
+import it.govhub.govregistry.commons.assemblers.ServiceAssembler;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;

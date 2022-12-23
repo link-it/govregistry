@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import it.govhub.govregistry.api.Application;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
-import it.govhub.govregistry.commons.beans.PatchOp.OpEnum;
+import it.govhub.govregistry.commons.api.beans.PatchOp.OpEnum;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.repository.ServiceRepository;
 
