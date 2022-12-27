@@ -48,12 +48,12 @@ public class RoleAuthorizationEntity implements Serializable {
 	
 	
 	@ManyToOne
-    @JoinColumn(name = "id_govhub_user")
+    @JoinColumn(name = "id_govhub_user", nullable=false)
 	private UserEntity user;
 	
 	
 	@ManyToOne
-    @JoinColumn(name = "id_govhub_role")
+    @JoinColumn(name = "id_govhub_role", nullable=false)
 	private RoleEntity role;
 	
 	

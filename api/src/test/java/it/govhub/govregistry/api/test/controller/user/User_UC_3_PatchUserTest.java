@@ -33,7 +33,7 @@ import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.api.beans.PatchOp.OpEnum;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.repository.UserRepository;
+import it.govhub.govregistry.readops.api.repository.UserRepository;
 
 
 

@@ -30,7 +30,7 @@ import it.govhub.govregistry.api.Application;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
-import it.govhub.govregistry.commons.repository.OrganizationRepository;
+import it.govhub.govregistry.readops.api.repository.OrganizationRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
