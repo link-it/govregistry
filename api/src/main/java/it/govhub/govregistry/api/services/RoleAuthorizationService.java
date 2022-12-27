@@ -29,12 +29,11 @@ import it.govhub.govregistry.readops.api.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.readops.api.repository.RoleRepository;
 import it.govhub.govregistry.readops.api.repository.ServiceRepository;
 import it.govhub.govregistry.readops.api.repository.UserRepository;
-import it.govhub.govregistry.readops.api.services.ReadRoleAuthorizationService;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 @Service
-public class RoleAuthorizationService extends ReadRoleAuthorizationService {
+public class RoleAuthorizationService {
 	
 	@Autowired
 	private UserRepository userRepo;
