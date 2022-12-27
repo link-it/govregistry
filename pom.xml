@@ -17,22 +17,22 @@
 	<packaging>pom</packaging>
 	<name>GovRegistry</name>
 	<properties>
-		<java.version>11</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<openapi.tool.codegen.version>6.0.0</openapi.tool.codegen.version>
+		<glassfish.version>1.1.4</glassfish.version>
 		<jackson.databind.nullable.version>0.2.1</jackson.databind.nullable.version>
-		<swagger-annotations.version>1.6.2</swagger-annotations.version>
+		<jacoco.version>0.8.8</jacoco.version>
+		<java.version>11</java.version>
 		<jsonpatch.version>1.13</jsonpatch.version>
 		<jsr305.version>3.0.2</jsr305.version>
-		<springdoc.version>1.6.4</springdoc.version>
-		<glassfish.version>1.1.4</glassfish.version>
-		<jacoco.version>0.8.8</jacoco.version>
-		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-		<spring.version>2.7.1</spring.version>
-		<wagon-ssh-external.version>1.0-beta-6</wagon-ssh-external.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven-processor.version>4.5</maven-processor.version>
+		<openapi.tool.codegen.version>6.0.0</openapi.tool.codegen.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<springdoc.version>1.6.4</springdoc.version>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<spring.version>2.7.1</spring.version>		
+		<swagger-annotations.version>1.6.2</swagger-annotations.version>
+		<wagon-ssh-external.version>1.0-beta-6</wagon-ssh-external.version>
 	</properties>
 
 	<modules>
