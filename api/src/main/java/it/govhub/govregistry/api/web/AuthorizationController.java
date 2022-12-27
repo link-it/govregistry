@@ -13,20 +13,20 @@ import it.govhub.govregistry.api.spec.AuthorizationApi;
 import it.govhub.govregistry.commons.api.beans.Authorization;
 import it.govhub.govregistry.commons.api.beans.AuthorizationList;
 import it.govhub.govregistry.commons.api.beans.AuthorizationOrdering;
-import it.govhub.govregistry.commons.assemblers.AuthorizationAssembler;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity_;
 import it.govhub.govregistry.commons.entity.RoleEntity_;
 import it.govhub.govregistry.commons.exception.UnreachableException;
-import it.govhub.govregistry.commons.repository.RoleAuthorizationRepository;
-import it.govhub.govregistry.commons.repository.RoleRepository;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
+import it.govhub.govregistry.readops.api.assemblers.AuthorizationAssembler;
+import it.govhub.govregistry.readops.api.repository.RoleAuthorizationRepository;
+import it.govhub.govregistry.readops.api.repository.RoleRepository;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 
 
 @RestController
-public class AuthorizationController implements AuthorizationApi, it.govhub.govregistry.commons.api.spec.AuthorizationApi {
+public class AuthorizationController implements AuthorizationApi, it.govhub.govregistry.readops.api.spec.AuthorizationApi {
 	
 	@Autowired
 	AuthorizationAssembler authAssembler;

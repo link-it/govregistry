@@ -39,9 +39,9 @@ import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.RoleEntity;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.repository.RoleRepository;
-import it.govhub.govregistry.commons.repository.ServiceRepository;
-import it.govhub.govregistry.commons.repository.UserRepository;
+import it.govhub.govregistry.readops.api.repository.RoleRepository;
+import it.govhub.govregistry.readops.api.repository.ServiceRepository;
+import it.govhub.govregistry.readops.api.repository.UserRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc

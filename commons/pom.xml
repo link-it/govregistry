@@ -124,11 +124,6 @@
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<interfaceOnly>true</interfaceOnly>
 								<hateoas>true</hateoas>
-								<!-- Metto il booleanGetterPrefix a get, e.g.: getEnabled invece 
-									di isEnabled. questo in modo da far riconoscere e copiare le proprietà booleane 
-									alla BeanUtils.copyProperties: dalla documentazione in 'https://openapi-generator.tech/docs/generators/java/' 
-									risulta essere il default -->
-								<booleanGetterPrefix>get</booleanGetterPrefix>
 								<useTags>true</useTags>
 							</configOptions>
 							<output>${project.basedir}/target</output>
@@ -136,12 +131,14 @@
 							<generateApiTests>false</generateApiTests>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<generateModelTests>false</generateModelTests>
+							<generateApis>false</generateApis>
+							<!--  Skippiamo la validazione dell'openapi altrimenti lamenta la mancanza dell'elemento /paths.
+									 Nel commons ci interessa generare solamente i beans.-->
+							<skipValidateSpec>true</skipValidateSpec>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-
-
 
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
@@ -182,6 +179,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 		<extensions>
 			<!-- Enabling the use of SSH -->

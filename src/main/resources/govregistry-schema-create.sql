@@ -25,8 +25,8 @@ create sequence seq_govhub_users start 1 increment 1;
     create table govhub_authorizations (
        id int8 not null,
         expiration_date timestamp,
-        id_govhub_role int8,
-        id_govhub_user int8,
+        id_govhub_role int8 not null,
+        id_govhub_user int8 not null,
         primary key (id)
     );
 
