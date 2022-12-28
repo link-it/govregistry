@@ -40,6 +40,7 @@
 		<module>commons</module>
 		<module>security</module>
 		<module>api</module>
+		<module>read-ops</module>
 	</modules>
 
 	<distributionManagement>

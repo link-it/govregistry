@@ -74,40 +74,7 @@ paths:
         default:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
           
-    get:
-      tags:
-         - user
-      summary: Retrieve the user list.
-      description: Retrieve the user list.
-      operationId: listUsers
-      parameters:
-         - $ref: "govhub-api-commons.yaml#/components/parameters/limit"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
-         - $ref: "#/components/parameters/enabled_query"
-         - $ref: "#/components/parameters/user_ordering_query"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
-      responses:
-        '200':
-          description: Successful operation.
-          content:
-            application/json:
-              schema:
-                 $ref: "#/components/schemas/UserList"
-        '400':
-          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
-        '401':
-          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
-        '403':
-          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
-        '429':
-          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
-        '503':
-          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
-        default:
-          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"       
 
-          
   /users/{id}:
     parameters:
       - $ref: "govhub-api-commons.yaml#/components/parameters/user_id"    
@@ -245,37 +212,6 @@ paths:
         default:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
 
-    get:
-      tags:
-         - organization
-      summary: Retrieve the organization list.
-      description: Retrieve the organization list.
-      operationId: listOrganizations
-      parameters:
-         - $ref: "govhub-api-commons.yaml#/components/parameters/limit"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
-         - $ref: "#/components/parameters/organization_ordering_query"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
-      responses:
-        '200':
-          description: Successful operation.
-          content:
-            application/json:
-              schema:
-                 $ref: "#/components/schemas/OrganizationList"
-        '400':
-          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
-        '401':
-          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
-        '403':
-          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
-        '429':
-          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
-        '503':
-          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
-        default:
-          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"       
  
   /organizations/{id}:
     parameters:
@@ -348,39 +284,7 @@ paths:
         default:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
           
-    get:
-      tags:
-         - service
-      summary: Retrieve the service list.
-      description: Retrieve the service list.
-      operationId: listServices
-      parameters:
-         - $ref: "govhub-api-commons.yaml#/components/parameters/limit"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
-         - $ref: "#/components/parameters/service_ordering_query"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
-      responses:
-        '200':
-          description: Successful operation.
-          content:
-            application/json:
-              schema:
-                 $ref: "#/components/schemas/ServiceList"
-        '400':
-          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
-        '401':
-          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
-        '403':
-          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
-        '429':
-          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
-        '503':
-          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
-        default:
-          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"       
 
-          
   /services/{id}:
     parameters:
       - $ref: "govhub-api-commons.yaml#/components/parameters/service_id"    
@@ -467,37 +371,6 @@ components:
          schema:
             $ref: "govhub-api-commons.yaml#/components/schemas/AuthorizationId"
       
-      enabled_query:
-         name: enabled
-         in: query
-         description: filter by status.
-         required: false
-         schema:
-            type: boolean
-            
-      user_ordering_query:
-         name: sort
-         in: query
-         description: Sorting field.
-         required: true
-         schema:
-            $ref: "#/components/schemas/UserOrdering"           
-
-      organization_ordering_query:
-         name: sort
-         in: query
-         description: Sorting field.
-         required: true
-         schema:
-            $ref: "#/components/schemas/OrganizationOrdering"
-            
-      service_ordering_query:            
-         name: sort
-         in: query
-         description: Sorting field.
-         required: true
-         schema:
-            $ref: "#/components/schemas/ServiceOrdering"            
             
    # SCHEMAS ---------------- #
    
@@ -532,84 +405,5 @@ components:
                type: string
                format: date-time
            
-      UserOrdering:
-         type: string
-         enum:
-            - unsorted
-            - full_name
-            - id
-         default: id
-
-      OrganizationOrdering:
-         type: string
-         enum:
-            - unsorted
-            - legal_name
-            - id
-         default: id          
-                        
-      ServiceOrdering:
-         type: string
-         enum:
-            - unsorted
-            - id
-            - service_name      
-         default: id
-               
-      UserList:
-         allOf:
-            - $ref: "govhub-api-commons.yaml#/components/schemas/List"
-            - type: object
-              properties:              
-                 items:
-                    type: array
-                    items:
-                       $ref: "govhub-api-commons.yaml#/components/schemas/User"
-                    minItems: 0
-                    maxItems: 2147483647
-              required:
-                 - items 
-              additionalProperties: false
-
-      OrganizationList:
-         allOf:
-            - $ref: "govhub-api-commons.yaml#/components/schemas/List"
-            - type: object
-              properties:              
-                 items:
-                    type: array
-                    items:
-                       $ref: "#/components/schemas/OrganizationItem"
-                    minItems: 0
-                    maxItems: 2147483647
-              required:
-                 - items 
-              additionalProperties: false
-              
-      OrganizationItem:
-         allOf:
-            - $ref: "govhub-api-commons.yaml#/components/schemas/OrganizationData"
-            - type: object
-              additionalProperties: false
-              required: 
-                 - id
-              properties:
-                 id:
-                   $ref: "govhub-api-commons.yaml#/components/schemas/OrganizationId"
-              
-      ServiceList:
-         allOf:
-            - $ref: "govhub-api-commons.yaml#/components/schemas/List"
-            - type: object
-              properties:              
-                 items:
-                    type: array
-                    items:
-                       $ref: "govhub-api-commons.yaml#/components/schemas/Service"
-                    minItems: 0
-                    maxItems: 2147483647
-              required:
-                 - items 
-              additionalProperties: false   
       
          
