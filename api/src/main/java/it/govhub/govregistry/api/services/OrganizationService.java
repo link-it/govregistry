@@ -16,17 +16,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
-import it.govhub.govregistry.api.messages.OrganizationMessages;
 import it.govhub.govregistry.api.messages.PatchMessages;
 import it.govhub.govregistry.commons.api.beans.Organization;
 import it.govhub.govregistry.commons.api.beans.OrganizationCreate;
-import it.govhub.govregistry.commons.assemblers.OrganizationAssembler;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
-import it.govhub.govregistry.commons.repository.OrganizationRepository;
+import it.govhub.govregistry.commons.messages.OrganizationMessages;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
+import it.govhub.govregistry.readops.api.assemblers.OrganizationAssembler;
+import it.govhub.govregistry.readops.api.repository.OrganizationRepository;
 
 @Service
 public class OrganizationService {

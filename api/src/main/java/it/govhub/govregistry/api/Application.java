@@ -21,12 +21,13 @@ import it.govhub.govregistry.commons.config.TimeZoneConfigurer;
 import it.govhub.govregistry.commons.exception.handlers.RequestRejectedExceptionHandler;
 import it.govhub.govregistry.commons.utils.Base64String;
 import it.govhub.govregistry.commons.utils.Base64StringSerializer;
+import it.govhub.govregistry.readops.api.config.ReadOpsExportedBeans;
 import it.govhub.security.config.SecurityExportedBeans;
 
 @SpringBootApplication
 @EnableScheduling
 @EnableCaching
-@Import({ CommonsExportedBeans.class, SecurityExportedBeans.class, TimeZoneConfigurer.class })
+@Import({ CommonsExportedBeans.class, ReadOpsExportedBeans.class, SecurityExportedBeans.class, TimeZoneConfigurer.class })
 public class Application extends SpringBootServletInitializer {
 	
 	@Value("${govhub.time-zone}")

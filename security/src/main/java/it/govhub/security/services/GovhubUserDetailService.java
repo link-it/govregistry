@@ -9,17 +9,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import it.govhub.govregistry.commons.cache.Caches;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
-import it.govhub.govregistry.commons.repository.UserRepository;
 import it.govhub.security.beans.GovhubPrincipal;
+import it.govhub.security.cache.Caches;
+import it.govhub.security.repository.SecurityUserRepository;
 
 @Service
 public class GovhubUserDetailService implements UserDetailsService, AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
 	
 	@Autowired
-	private UserRepository userRepo;
+	private SecurityUserRepository userRepo;
 
 	@Override
 	@Cacheable(Caches.PRINCIPALS)

@@ -79,7 +79,7 @@ INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VA
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (
 	nextval('public.seq_govhub_services'),
 	(SELECT id FROM public.govhub_users WHERE principal='user_viewer'),
-	(SELECT id FROM public.govhub_roles WHERE name='govhub_user_viewer')
+	(SELECT id FROM public.govhub_roles WHERE name='govhub_users_viewer')
 );
 
 -- service_viewer -> govhub_services_viewer
@@ -87,7 +87,7 @@ INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VA
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (
 	nextval('public.seq_govhub_services'),
 	(SELECT id FROM public.govhub_users WHERE principal='service_viewer'),
-	(SELECT id FROM public.govhub_roles WHERE name='govhub_service_viewer')
+	(SELECT id FROM public.govhub_roles WHERE name='govhub_services_viewer')
 );
 
 
@@ -96,7 +96,7 @@ INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VA
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (
 	nextval('public.seq_govhub_services'),
 	(SELECT id FROM public.govhub_users WHERE principal='org_editor'),
-	(SELECT id FROM public.govhub_roles WHERE name='govhub_organization_editor')
+	(SELECT id FROM public.govhub_roles WHERE name='govhub_organizations_editor')
 );
 
 -- Questo limita l'utente org_viewer a lavorare sulla organizzazione 1
