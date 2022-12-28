@@ -1,8 +1,6 @@
 package it.govhub.govregistry.api.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,16 +9,9 @@ import it.govhub.govregistry.api.beans.AuthorizationCreate;
 import it.govhub.govregistry.api.services.RoleAuthorizationService;
 import it.govhub.govregistry.api.spec.AuthorizationApi;
 import it.govhub.govregistry.commons.api.beans.Authorization;
-import it.govhub.govregistry.commons.api.beans.AuthorizationList;
-import it.govhub.govregistry.commons.api.beans.AuthorizationOrdering;
-import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity_;
-import it.govhub.govregistry.commons.entity.RoleEntity_;
-import it.govhub.govregistry.commons.exception.UnreachableException;
-import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.readops.api.assemblers.AuthorizationAssembler;
 import it.govhub.govregistry.readops.api.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.readops.api.repository.RoleRepository;
-import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 
