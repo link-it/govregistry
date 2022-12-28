@@ -46,6 +46,12 @@
 			<artifactId>security</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+                <dependency>
+                        <groupId>it.govhub.govregistry</groupId>
+                        <artifactId>readops</artifactId>
+                        <version>${project.version}</version>
+                </dependency>
+		
 	</dependencies>
 	
 	<build>
