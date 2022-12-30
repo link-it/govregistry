@@ -4,6 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +51,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			HttpStatus.UNAUTHORIZED, "https://www.rfc-editor.org/rfc/rfc9110.html#name-401-unauthorized",
 			HttpStatus.FORBIDDEN, "https://www.rfc-editor.org/rfc/rfc9110.html#name-403-forbidden"
 		);
+	
+	private Logger logger = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
 	
 	public static Problem buildProblem(HttpStatus status, String detail) {
 		try {
@@ -106,8 +110,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.");
 	}
 	
+	
 	@ExceptionHandler({RuntimeException.class})
 	public final Problem catchAll(RuntimeException ex, WebRequest request) {
+		logger.warn("Handling Uncaught Runtime Exception: {}", ex);
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.");
+	}
+	
+	
+	@ExceptionHandler({Exception.class})
+	public final Problem catchAll(Exception ex, WebRequest request) {
+		logger.warn("Handling Uncaught Exception: {}", ex);
 		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.");
 	}
 	
