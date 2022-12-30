@@ -14,7 +14,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -66,49 +65,42 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	}
 
 
-	@ResponseStatus(HttpStatus.CONFLICT)
 	@ExceptionHandler(ConflictException.class)
 	public Problem handleConstraintViolation(ConflictException ex) {
 		return buildProblem(HttpStatus.CONFLICT, ex.getLocalizedMessage());
 	}
 	
 	
-	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public Problem handleConstraintViolation(ResourceNotFoundException ex) {
 		return buildProblem(HttpStatus.NOT_FOUND, ex.getLocalizedMessage());
 	}
 	
 	
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({BadRequestException.class, MethodArgumentTypeMismatchException.class})
 	public Problem handleConstraintViolation(RuntimeException ex) {		
 		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
 	}
 	
 
-	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler(SemanticValidationException.class)
 	public Problem handleConstraintViolation(SemanticValidationException ex) {
 		return buildProblem(HttpStatus.UNPROCESSABLE_ENTITY, ex.getLocalizedMessage());
 	}
 	
 	
-	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(NotAuthorizedException.class)
 	public Problem handleConstraintViolation(NotAuthorizedException ex) {
 		return buildProblem(HttpStatus.UNAUTHORIZED, ex.getLocalizedMessage());
 	}
 	
 	
-	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(ForbiddenException.class)
 	public Problem handleConstraintViolation(ForbiddenException ex) {
 		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage());
 	}
 	
 	
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler({InternalException.class})
 	public final Problem handleAllInternalExceptions(InternalException ex, WebRequest request) {
 		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage());
