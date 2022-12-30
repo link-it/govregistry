@@ -103,7 +103,12 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	
 	@ExceptionHandler({InternalException.class})
 	public final Problem handleAllInternalExceptions(InternalException ex, WebRequest request) {
-		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage());
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.");
+	}
+	
+	@ExceptionHandler({RuntimeException.class})
+	public final Problem catchAll(RuntimeException ex, WebRequest request) {
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.");
 	}
 	
 
