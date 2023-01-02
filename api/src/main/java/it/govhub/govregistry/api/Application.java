@@ -30,7 +30,7 @@ import it.govhub.security.config.SecurityExportedBeans;
 @Import({ CommonsExportedBeans.class, ReadOpsExportedBeans.class, SecurityExportedBeans.class, TimeZoneConfigurer.class })
 public class Application extends SpringBootServletInitializer {
 	
-	@Value("${govhub.time-zone}")
+	@Value("${govhub.time-zone:Europe/Rome}")
 	String timeZone;
 
 	public static void main(String[] args) {
