@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import it.govhub.govregistry.api.beans.AuthorizationCreate;
 import it.govhub.govregistry.api.messages.RoleMessages;
+import it.govhub.govregistry.api.repository.RoleAuthorizationRepository;
+import it.govhub.govregistry.api.repository.ServiceRepository;
+import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.commons.api.beans.Authorization;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
@@ -24,11 +27,8 @@ import it.govhub.govregistry.commons.messages.OrganizationMessages;
 import it.govhub.govregistry.commons.messages.ServiceMessages;
 import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.govregistry.readops.api.assemblers.AuthorizationAssembler;
-import it.govhub.govregistry.readops.api.repository.OrganizationRepository;
-import it.govhub.govregistry.readops.api.repository.RoleAuthorizationRepository;
-import it.govhub.govregistry.readops.api.repository.RoleRepository;
-import it.govhub.govregistry.readops.api.repository.ServiceRepository;
-import it.govhub.govregistry.readops.api.repository.UserRepository;
+import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
+import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
@@ -36,25 +36,26 @@ import it.govhub.security.services.SecurityService;
 public class RoleAuthorizationService {
 	
 	@Autowired
-	private UserRepository userRepo;
+	UserRepository userRepo;
 	
 	@Autowired
-	private OrganizationRepository orgRepo;
+	ReadOrganizationRepository orgRepo;
 	
 	@Autowired
-	private RoleRepository roleRepo;
+	ServiceRepository serviceRepo;
 	
 	@Autowired
-	private ServiceRepository serviceRepo;
+	RoleAuthorizationRepository authRepo;
 	
 	@Autowired
-	private RoleAuthorizationRepository authRepo;
+	ReadRoleRepository roleRepo;
 	
 	@Autowired
-	private AuthorizationAssembler authAssembler;
+	AuthorizationAssembler authAssembler;
 	
 	@Autowired
 	SecurityService securityService;
+	
 
 	@Transactional
 	public Authorization assignAuthorization(Long userId, AuthorizationCreate authorization) {
