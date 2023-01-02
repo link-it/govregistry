@@ -14,6 +14,7 @@ import it.govhub.govregistry.api.spec.ServiceApi;
 import it.govhub.govregistry.commons.api.beans.PatchOp;
 import it.govhub.govregistry.commons.api.beans.Service;
 import it.govhub.govregistry.commons.api.beans.ServiceCreate;
+import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.commons.utils.RequestUtils;
@@ -21,7 +22,7 @@ import it.govhub.govregistry.readops.api.assemblers.ServiceAssembler;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
-@RestController
+@V1RestController
 public class ServiceController implements ServiceApi {
 	
 	@Autowired

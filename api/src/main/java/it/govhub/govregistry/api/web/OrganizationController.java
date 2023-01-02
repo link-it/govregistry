@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.github.fge.jsonpatch.JsonPatch;
 
@@ -14,6 +13,7 @@ import it.govhub.govregistry.api.spec.OrganizationApi;
 import it.govhub.govregistry.commons.api.beans.Organization;
 import it.govhub.govregistry.commons.api.beans.OrganizationCreate;
 import it.govhub.govregistry.commons.api.beans.PatchOp;
+import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.commons.utils.RequestUtils;
@@ -21,7 +21,7 @@ import it.govhub.govregistry.readops.api.assemblers.OrganizationAssembler;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
-@RestController
+@V1RestController
 public class OrganizationController implements OrganizationApi {
 	
 	@Autowired

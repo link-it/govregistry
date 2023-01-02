@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 
 import it.govhub.govregistry.commons.api.beans.AuthorizationList;
 import it.govhub.govregistry.commons.api.beans.AuthorizationOrdering;
+import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity_;
 import it.govhub.govregistry.commons.entity.RoleEntity_;
 import it.govhub.govregistry.commons.exception.UnreachableException;
@@ -22,7 +22,7 @@ import it.govhub.security.services.SecurityService;
 
 
 
-@RestController
+@V1RestController
 public class ReadAuthorizationController implements AuthorizationApi {
 	
 	@Autowired
