@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,8 @@ public class SecurityService {
 		return  principal.getUser();
 	}
 	
+	Logger logger = LoggerFactory.getLogger(SecurityService.class);
+	
 	
 	public boolean hasAnyRole(String ...roles) {
 		
@@ -46,7 +50,11 @@ public class SecurityService {
 		// Cerco fra le autorizzazioni una che abbia uno dei ruoli specificati e che non sia scaduta
 		return user.getAuthorizations().stream()
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.anyMatch( auth -> roleList.contains(auth.getRole().getName()));
+			.anyMatch( auth -> {
+						logger.debug("Checking role: {} in roles: {}", auth.getRole().getName(), roleList );
+						return roleList.contains(auth.getRole().getName());
+					});
+		
 	}
 
 
