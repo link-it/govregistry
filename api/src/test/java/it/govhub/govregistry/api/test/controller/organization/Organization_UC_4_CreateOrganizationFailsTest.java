@@ -30,6 +30,8 @@ import it.govhub.govregistry.commons.entity.OrganizationEntity;
 
 class Organization_UC_4_CreateOrganizationFailsTest {
 
+	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -46,7 +48,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -70,7 +72,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -106,7 +108,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -143,7 +145,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -180,7 +182,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -217,7 +219,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -254,7 +256,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -291,7 +293,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -328,7 +330,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -365,7 +367,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -402,7 +404,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -439,7 +441,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -476,7 +478,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -513,7 +515,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -539,7 +541,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -558,7 +560,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -583,7 +585,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -602,7 +604,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)

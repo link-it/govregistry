@@ -39,6 +39,8 @@ import it.govhub.govregistry.readops.api.repository.OrganizationRepository;
 
 class Organization_UC_3_CreateOrganizationTest {
 
+	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -60,7 +62,7 @@ class Organization_UC_3_CreateOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -118,7 +120,7 @@ class Organization_UC_3_CreateOrganizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -190,7 +192,7 @@ class Organization_UC_3_CreateOrganizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)

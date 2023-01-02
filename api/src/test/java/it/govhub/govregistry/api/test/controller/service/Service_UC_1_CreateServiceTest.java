@@ -36,6 +36,8 @@ import it.govhub.govregistry.readops.api.repository.ServiceRepository;
 
 class Service_UC_1_CreateServiceTest {
 
+	private static final String SERVICES_BASE_PATH = "/v1/services";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -56,7 +58,7 @@ class Service_UC_1_CreateServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)

@@ -39,6 +39,8 @@ import it.govhub.govregistry.readops.api.repository.UserRepository;
 
 class User_UC_1_CreateUserTest {
 
+	private static final String USERS_BASE_PATH = "/v1/users";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -60,7 +62,7 @@ class User_UC_1_CreateUserTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -100,7 +102,7 @@ class User_UC_1_CreateUserTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -141,7 +143,7 @@ class User_UC_1_CreateUserTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)

@@ -40,6 +40,8 @@ import it.govhub.govregistry.readops.api.repository.ServiceRepository;
 
 class Service_UC_4_FindServicesTest {
 
+	private static final String SERVICES_BASE_PATH = "/v1/services";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -59,7 +61,7 @@ class Service_UC_4_FindServicesTest {
 	void UC_4_01_FindAllOk() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
 		
-		MvcResult result = this.mockMvc.perform(get("/services")
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -98,7 +100,7 @@ class Service_UC_4_FindServicesTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "3");
 		
-		MvcResult result = this.mockMvc.perform(get("/services").params(params )
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -130,7 +132,7 @@ class Service_UC_4_FindServicesTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "XXX");
 		
-		this.mockMvc.perform(get("/services").params(params )
+		this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
@@ -146,7 +148,7 @@ class Service_UC_4_FindServicesTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "1");
 		
-		MvcResult result = this.mockMvc.perform(get("/services").params(params )
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -171,7 +173,7 @@ class Service_UC_4_FindServicesTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "XXX");
 		
-		this.mockMvc.perform(get("/services").params(params )
+		this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
@@ -189,7 +191,7 @@ class Service_UC_4_FindServicesTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_Q, "Generica");
 		
-		MvcResult result = this.mockMvc.perform(get("/services").params(params )
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -222,7 +224,7 @@ class Service_UC_4_FindServicesTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "service_name");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
-		MvcResult result = this.mockMvc.perform(get("/services").params(params )
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -260,7 +262,7 @@ class Service_UC_4_FindServicesTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "id");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
-		MvcResult result = this.mockMvc.perform(get("/services").params(params )
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -296,7 +298,7 @@ class Service_UC_4_FindServicesTest {
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "3");
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "2");
 		
-		MvcResult result = this.mockMvc.perform(get("/services").params(params )
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -327,7 +329,7 @@ class Service_UC_4_FindServicesTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "service_name");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		MvcResult result = this.mockMvc.perform(get("/services").params(params )
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -365,7 +367,7 @@ class Service_UC_4_FindServicesTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "id");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		MvcResult result = this.mockMvc.perform(get("/services").params(params )
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -402,7 +404,7 @@ class Service_UC_4_FindServicesTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "XXX");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		this.mockMvc.perform(get("/services").params(params )
+		this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
@@ -421,7 +423,7 @@ class Service_UC_4_FindServicesTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "unsorted");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
-		MvcResult result = this.mockMvc.perform(get("/services").params(params )
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
