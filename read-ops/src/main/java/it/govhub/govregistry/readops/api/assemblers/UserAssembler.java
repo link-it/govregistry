@@ -3,16 +3,15 @@ package it.govhub.govregistry.readops.api.assemblers;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import it.govhub.govregistry.commons.api.beans.Authorization;
-import it.govhub.govregistry.commons.api.beans.Profile;
 import it.govhub.govregistry.commons.api.beans.User;
 import it.govhub.govregistry.commons.api.beans.UserCreate;
 import it.govhub.govregistry.commons.entity.UserEntity;
@@ -36,8 +35,14 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
 					methodOn(UserApi.class)
 					.readUser(src.getId()))
 				.withSelfRel()
-			) ;
-				
+			);
+		
+		if (src.getEmail() != null) {
+			String md5 = DigestUtils.md5Hex(src.getEmail());
+			ret.add(
+					Link.of("https://gravatar.com/avatar/"+md5+"/s=100&d=identicon", LinkRelation.of("avatar")));
+		}
+		
 		return ret;
 	}
 	
