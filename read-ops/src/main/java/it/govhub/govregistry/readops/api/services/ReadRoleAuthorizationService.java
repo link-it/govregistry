@@ -16,13 +16,13 @@ import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.AuthorizationAssembler;
 import it.govhub.govregistry.readops.api.repository.RoleAuthorizationFilters;
-import it.govhub.govregistry.readops.api.repository.RoleAuthorizationRepository;
+import it.govhub.govregistry.readops.api.repository.ReadRoleAuthorizationRepository;
 
 @Service
 public class ReadRoleAuthorizationService {
 	
 	@Autowired
-	private RoleAuthorizationRepository authRepo;
+	private ReadRoleAuthorizationRepository authRepo;
 	
 	@Autowired
 	private AuthorizationAssembler authAssembler;

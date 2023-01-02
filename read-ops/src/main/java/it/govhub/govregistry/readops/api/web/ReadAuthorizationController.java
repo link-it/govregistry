@@ -13,8 +13,8 @@ import it.govhub.govregistry.commons.entity.RoleEntity_;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.readops.api.assemblers.AuthorizationAssembler;
-import it.govhub.govregistry.readops.api.repository.RoleAuthorizationRepository;
-import it.govhub.govregistry.readops.api.repository.RoleRepository;
+import it.govhub.govregistry.readops.api.repository.ReadRoleAuthorizationRepository;
+import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 import it.govhub.govregistry.readops.api.services.ReadRoleAuthorizationService;
 import it.govhub.govregistry.readops.api.spec.AuthorizationApi;
 import it.govhub.security.config.GovregistryRoles;
@@ -32,10 +32,10 @@ public class ReadAuthorizationController implements AuthorizationApi {
 	ReadRoleAuthorizationService authService;
 	
 	@Autowired
-	RoleAuthorizationRepository authRepo;
+	ReadRoleAuthorizationRepository authRepo;
 	
 	@Autowired
-	RoleRepository roleRepo;
+	ReadRoleRepository roleRepo;
 	
 	@Autowired
 	SecurityService securityService;
