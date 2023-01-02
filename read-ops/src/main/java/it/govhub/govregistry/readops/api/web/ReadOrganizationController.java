@@ -24,7 +24,7 @@ import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.OrganizationAssembler;
 import it.govhub.govregistry.readops.api.assemblers.OrganizationItemAssembler;
 import it.govhub.govregistry.readops.api.repository.OrganizationFilters;
-import it.govhub.govregistry.readops.api.repository.OrganizationRepository;
+import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
 import it.govhub.govregistry.readops.api.spec.OrganizationApi;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
@@ -40,7 +40,7 @@ public class ReadOrganizationController implements OrganizationApi {
 	OrganizationItemAssembler orgItemAssembler;
 	
 	@Autowired
-	OrganizationRepository orgRepo;
+	ReadOrganizationRepository orgRepo;
 	
 	@Autowired
 	SecurityService authService;

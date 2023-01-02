@@ -20,8 +20,8 @@ import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.UserAssembler;
+import it.govhub.govregistry.readops.api.repository.ReadUserRepository;
 import it.govhub.govregistry.readops.api.repository.UserFilters;
-import it.govhub.govregistry.readops.api.repository.UserRepository;
 import it.govhub.govregistry.readops.api.spec.UserApi;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
@@ -31,7 +31,7 @@ import it.govhub.security.services.SecurityService;
 public class ReadUserController implements UserApi{
 	
 	@Autowired
-	private UserRepository userRepo;
+	private ReadUserRepository userRepo;
 	
 	@Autowired
 	private UserAssembler userAssembler;
