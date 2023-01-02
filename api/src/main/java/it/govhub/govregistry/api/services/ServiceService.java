@@ -12,6 +12,7 @@ import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
 import it.govhub.govregistry.api.messages.PatchMessages;
+import it.govhub.govregistry.api.repository.ServiceRepository;
 import it.govhub.govregistry.commons.api.beans.Service;
 import it.govhub.govregistry.commons.api.beans.ServiceCreate;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
@@ -20,7 +21,6 @@ import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.ServiceMessages;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.readops.api.assemblers.ServiceAssembler;
-import it.govhub.govregistry.readops.api.repository.ServiceRepository;
 
 @org.springframework.stereotype.Service
 public class ServiceService {

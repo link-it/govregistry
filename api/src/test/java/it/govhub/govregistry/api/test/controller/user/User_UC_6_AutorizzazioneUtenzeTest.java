@@ -31,10 +31,10 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
 import it.govhub.govregistry.api.beans.PatchOp.OpEnum;
+import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.readops.api.repository.UserRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -65,7 +65,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post("/v1/users")
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)

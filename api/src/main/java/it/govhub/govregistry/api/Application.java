@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
@@ -28,6 +29,7 @@ import it.govhub.security.config.SecurityExportedBeans;
 @EnableScheduling
 @EnableCaching
 @Import({ CommonsExportedBeans.class, ReadOpsExportedBeans.class, SecurityExportedBeans.class, TimeZoneConfigurer.class })
+@EnableJpaRepositories("it.govhub.govregistry.api.repository")
 public class Application extends SpringBootServletInitializer {
 	
 	@Value("${govhub.time-zone:Europe/Rome}")
