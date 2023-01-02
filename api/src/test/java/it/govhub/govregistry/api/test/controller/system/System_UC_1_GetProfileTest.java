@@ -37,6 +37,8 @@ import it.govhub.govregistry.readops.api.repository.UserRepository;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class System_UC_1_GetProfileTest {
 
+	private static final String PROFILE_BASE_PATH = "/v1/profile";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -57,7 +59,7 @@ class System_UC_1_GetProfileTest {
 	
 	@Test
 	void UC_1_01_GetProfile_UtenzaAdmin_NotAuthorized() throws Exception {
-		this.mockMvc.perform(get("/profile")
+		this.mockMvc.perform(get(PROFILE_BASE_PATH)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.status", is(401)))
@@ -71,7 +73,7 @@ class System_UC_1_GetProfileTest {
 	void UC_1_02_GetProfile_UtenzaAdminOk() throws Exception {
 		UserEntity user = Costanti.getUser_Vbuterin();
 		
-		MvcResult result = this.mockMvc.perform(get("/profile")
+		MvcResult result = this.mockMvc.perform(get(PROFILE_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(user.getPrincipal()))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())

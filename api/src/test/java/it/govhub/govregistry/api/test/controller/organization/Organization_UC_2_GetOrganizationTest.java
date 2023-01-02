@@ -38,6 +38,9 @@ import it.govhub.govregistry.readops.api.repository.OrganizationRepository;
 
 class Organization_UC_2_GetOrganizationTest {
 
+	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
+	private static final String ORGANIZATIONS_BASE_PATH_DETAIL_ID = ORGANIZATIONS_BASE_PATH + "/{id}";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -57,7 +60,7 @@ class Organization_UC_2_GetOrganizationTest {
 	void UC_2_01_GetOrganizationOk() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 		
-		MvcResult result = this.mockMvc.perform(get("/organizations/")
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -73,7 +76,7 @@ class Organization_UC_2_GetOrganizationTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
 		
-		result = this.mockMvc.perform(get("/organizations/{id}",idUser1)
+		result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -102,7 +105,7 @@ class Organization_UC_2_GetOrganizationTest {
 	void UC_2_02_GetOrganization_NotFound() throws Exception {
 		int idUser1 = 10000;
 		
-		this.mockMvc.perform(get("/organizations/{id}",idUser1)
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
@@ -117,7 +120,7 @@ class Organization_UC_2_GetOrganizationTest {
 	void UC_2_03_GetOrganization_InvalidId() throws Exception {
 		String idUser1 = "XXX";
 		
-		this.mockMvc.perform(get("/organizations/{id}",idUser1)
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
