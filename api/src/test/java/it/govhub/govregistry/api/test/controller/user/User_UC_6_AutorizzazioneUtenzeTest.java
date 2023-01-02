@@ -65,7 +65,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post("/v1/users")
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
