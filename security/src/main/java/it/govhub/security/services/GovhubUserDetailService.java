@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.stereotype.Service;
 
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.exception.NotAuthorizedException;
+import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.security.beans.GovhubPrincipal;
 import it.govhub.security.cache.Caches;
 import it.govhub.security.repository.SecurityUserRepository;
@@ -26,7 +26,7 @@ public class GovhubUserDetailService implements UserDetailsService, Authenticati
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		UserEntity user = this.userRepo.findAndPreloadByPrincipal(username)
-				.orElseThrow( () -> new NotAuthorizedException("Credenziali non Valide"));
+				.orElseThrow( () -> new UsernameNotFoundException(UserMessages.notFound(username)));
 		
 		return new GovhubPrincipal(user);
 	}
