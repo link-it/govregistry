@@ -10,8 +10,8 @@ import it.govhub.govregistry.api.spec.AuthorizationApi;
 import it.govhub.govregistry.commons.api.beans.Authorization;
 import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.readops.api.assemblers.AuthorizationAssembler;
-import it.govhub.govregistry.readops.api.repository.RoleAuthorizationRepository;
-import it.govhub.govregistry.readops.api.repository.RoleRepository;
+import it.govhub.govregistry.readops.api.repository.ReadRoleAuthorizationRepository;
+import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 import it.govhub.security.services.SecurityService;
 
 
@@ -25,10 +25,7 @@ public class AuthorizationController implements AuthorizationApi {
 	RoleAuthorizationService authService;
 	
 	@Autowired
-	RoleAuthorizationRepository authRepo;
-	
-	@Autowired
-	RoleRepository roleRepo;
+	ReadRoleAuthorizationRepository authRepo;
 	
 	@Autowired
 	SecurityService securityService;

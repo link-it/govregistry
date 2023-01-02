@@ -22,8 +22,8 @@ import it.govhub.govregistry.commons.messages.ServiceMessages;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.ServiceAssembler;
+import it.govhub.govregistry.readops.api.repository.ReadServiceRepository;
 import it.govhub.govregistry.readops.api.repository.ServiceFilters;
-import it.govhub.govregistry.readops.api.repository.ServiceRepository;
 import it.govhub.govregistry.readops.api.spec.ServiceApi;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
@@ -36,11 +36,10 @@ public class ReadServiceController implements ServiceApi {
 	private ServiceAssembler serviceAssembler;
 	
 	@Autowired
-	private ServiceRepository serviceRepo;
+	private ReadServiceRepository serviceRepo;
 	
 	@Autowired
 	private SecurityService authService;
-	
 	
 	
 	@Override
