@@ -7,31 +7,31 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import it.govhub.govregistry.commons.api.beans.User;
 import it.govhub.govregistry.commons.api.beans.UserList;
 import it.govhub.govregistry.commons.api.beans.UserOrdering;
+import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.UserAssembler;
+import it.govhub.govregistry.readops.api.repository.ReadUserRepository;
 import it.govhub.govregistry.readops.api.repository.UserFilters;
-import it.govhub.govregistry.readops.api.repository.UserRepository;
 import it.govhub.govregistry.readops.api.spec.UserApi;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 
-@RestController
+@V1RestController
 public class ReadUserController implements UserApi{
 	
 	@Autowired
-	private UserRepository userRepo;
+	private ReadUserRepository userRepo;
 	
 	@Autowired
 	private UserAssembler userAssembler;

@@ -3,7 +3,10 @@ package it.govhub.govregistry.readops.api.assemblers;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +33,14 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
 					methodOn(UserApi.class)
 					.readUser(src.getId()))
 				.withSelfRel()
-			) ;
-				
+			);
+		
+		if (src.getEmail() != null) {
+			String md5 = DigestUtils.md5Hex(src.getEmail());
+			ret.add(
+					Link.of("https://gravatar.com/avatar/"+md5+"/s=100&d=identicon", LinkRelation.of("avatar")));
+		}
+		
 		return ret;
 	}
 	

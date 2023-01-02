@@ -31,16 +31,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
+import it.govhub.govregistry.api.repository.OrganizationRepository;
+import it.govhub.govregistry.api.repository.ServiceRepository;
+import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.readops.api.repository.OrganizationRepository;
-import it.govhub.govregistry.readops.api.repository.RoleRepository;
-import it.govhub.govregistry.readops.api.repository.ServiceRepository;
-import it.govhub.govregistry.readops.api.repository.UserRepository;
+import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -59,7 +59,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 	private ServiceRepository serviceRepository;
 	
 	@Autowired
-	public RoleRepository roleRepository;
+	public ReadRoleRepository roleRepository;
 	
 	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;

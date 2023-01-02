@@ -9,13 +9,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import it.govhub.govregistry.commons.api.beans.Organization;
 import it.govhub.govregistry.commons.api.beans.OrganizationList;
 import it.govhub.govregistry.commons.api.beans.OrganizationOrdering;
+import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.OrganizationMessages;
@@ -24,13 +24,13 @@ import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.OrganizationAssembler;
 import it.govhub.govregistry.readops.api.assemblers.OrganizationItemAssembler;
 import it.govhub.govregistry.readops.api.repository.OrganizationFilters;
-import it.govhub.govregistry.readops.api.repository.OrganizationRepository;
+import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
 import it.govhub.govregistry.readops.api.spec.OrganizationApi;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 
-@RestController
+@V1RestController
 public class ReadOrganizationController implements OrganizationApi {
 	
 	@Autowired
@@ -40,7 +40,7 @@ public class ReadOrganizationController implements OrganizationApi {
 	OrganizationItemAssembler orgItemAssembler;
 	
 	@Autowired
-	OrganizationRepository orgRepo;
+	ReadOrganizationRepository orgRepo;
 	
 	@Autowired
 	SecurityService authService;

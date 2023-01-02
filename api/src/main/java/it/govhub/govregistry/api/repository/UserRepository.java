@@ -1,4 +1,4 @@
-package it.govhub.govregistry.readops.api.repository;
+package it.govhub.govregistry.api.repository;
 
 import java.util.Optional;
 
