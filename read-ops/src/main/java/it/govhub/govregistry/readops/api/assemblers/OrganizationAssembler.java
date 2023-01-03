@@ -52,11 +52,11 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 		BeanUtils.copyProperties(src,  ret);
 		
 		if (src.getLogo() != null) {
-			ret.setLogo(Base64.decodeBase64(src.getLogo().getValue()));
+			ret.setLogo(src.getLogo().getDecodedValue());
 		}
 		
 		if (src.getLogoMiniature() != null) {
-			ret.setLogoMiniature(Base64.decodeBase64(src.getLogoMiniature().getValue()));
+			ret.setLogoMiniature(src.getLogoMiniature().getDecodedValue());
 		}
 		
 		return ret;
