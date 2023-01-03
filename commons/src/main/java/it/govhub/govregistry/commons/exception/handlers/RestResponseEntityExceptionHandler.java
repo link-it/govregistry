@@ -8,11 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,7 +53,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			HttpStatus.INTERNAL_SERVER_ERROR, "https://www.rfc-editor.org/rfc/rfc9110.html#name-500-internal-server-error",
 			HttpStatus.OK, "https://www.rfc-editor.org/rfc/rfc9110.html#name-200-ok",
 			HttpStatus.UNAUTHORIZED, "https://www.rfc-editor.org/rfc/rfc9110.html#name-401-unauthorized",
-			HttpStatus.FORBIDDEN, "https://www.rfc-editor.org/rfc/rfc9110.html#name-403-forbidden"
+			HttpStatus.FORBIDDEN, "https://www.rfc-editor.org/rfc/rfc9110.html#name-403-forbidden",
+			HttpStatus.NOT_ACCEPTABLE, "https://www.rfc-editor.org/rfc/rfc9110.html#name-406-not-acceptable"
 		);
 	
 	private Logger logger = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
@@ -89,7 +93,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	public Problem handleConstraintViolation(RuntimeException ex) {		
 		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
 	}
-	
+
 	
 	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler(SemanticValidationException.class)
@@ -181,6 +185,30 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage()),
 				HttpStatus.BAD_REQUEST);	
 		}
+
+	
+	@Override
+	protected ResponseEntity<Object> handleMissingServletRequestParameter(
+			MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+		return new ResponseEntity<>(
+				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage()),
+				HttpStatus.BAD_REQUEST);
+	}
+	
+	/**
+	 * Quanto il client ci manda un header Accept non supportato.
+	 * 
+	 * 
+	 */
+	@Override
+	protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
+			HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		return new ResponseEntity<>(
+				"acceptable MIME type:" + MediaType.APPLICATION_JSON_VALUE,
+				HttpStatus.NOT_ACCEPTABLE);
+	}
 	
 	
 	@Override

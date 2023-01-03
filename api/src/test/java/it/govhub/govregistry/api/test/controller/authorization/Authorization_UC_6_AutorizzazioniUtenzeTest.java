@@ -49,6 +49,10 @@ import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 
 class Authorization_UC_6_AutorizzazioniUtenzeTest {
 	
+	private static final String AUTHORIZATIONS_BASE_PATH_DETAIL_ID = "/v1/authorizations/{id}";
+	
+	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
+	
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -109,7 +113,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -142,7 +146,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.with(csrf())
 				.content(json)
@@ -161,13 +165,13 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 	void UC_6_03_FindAllOk_UtenzaConRuolo_GovHub_Users_Editor() throws Exception {
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
-		this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -179,7 +183,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 	void UC_6_04_FindAllFail_UtenzaSenzaRuolo_GovHub_Users_Editor() throws Exception {
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
-		this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
@@ -208,7 +212,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -226,7 +230,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 		int idRole = reader.readObject().getInt("id");
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.accept("*/*"))
@@ -253,7 +257,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -271,7 +275,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 		int idRole = reader.readObject().getInt("id");
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.with(csrf())
 				.accept("*/*"))

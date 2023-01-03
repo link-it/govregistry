@@ -40,6 +40,9 @@ import it.govhub.govregistry.commons.entity.UserEntity;
 
 class User_UC_5_GetUsersTest {
 
+	private static final String USERS_BASE_PATH = "/v1/users";
+	private static final String USERS_BASE_PATH_DETAIL_ID = USERS_BASE_PATH + "/{id}";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -62,7 +65,7 @@ class User_UC_5_GetUsersTest {
 	void UC_5_01_GetUserOk() throws Exception {
 		UserEntity user = Costanti.getUser_Vbuterin();
 		
-		MvcResult result = this.mockMvc.perform(get("/users/")
+		MvcResult result = this.mockMvc.perform(get(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -78,7 +81,7 @@ class User_UC_5_GetUsersTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}",idUser1)
+		result = this.mockMvc.perform(get(USERS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -97,7 +100,7 @@ class User_UC_5_GetUsersTest {
 	void UC_5_02_GetUser_NotFound() throws Exception {
 		int idUser1 = 10000;
 		
-		this.mockMvc.perform(get("/users/{id}",idUser1)
+		this.mockMvc.perform(get(USERS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
@@ -112,7 +115,7 @@ class User_UC_5_GetUsersTest {
 	void UC_5_03_GetUser_InvalidId() throws Exception {
 		String idUser1 = "XXX";
 		
-		this.mockMvc.perform(get("/users/{id}",idUser1)
+		this.mockMvc.perform(get(USERS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())

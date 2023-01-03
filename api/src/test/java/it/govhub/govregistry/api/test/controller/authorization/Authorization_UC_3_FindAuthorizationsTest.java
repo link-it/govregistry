@@ -52,6 +52,8 @@ import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class Authorization_UC_3_FindAuthorizationsTest {
 
+	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
+	
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -120,7 +122,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -137,7 +139,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -181,7 +183,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -198,7 +200,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -243,7 +245,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -260,7 +262,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -306,7 +308,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -331,7 +333,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 					.build()
 					.toString();
 		
-		 result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		 result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 					.with(this.userAuthProfilesUtils.utenzaAdmin())
 					.with(csrf())
 					.content(json)
@@ -352,7 +354,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "id");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId()).params(params)
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId()).params(params)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -403,7 +405,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -428,7 +430,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 					.build()
 					.toString();
 		
-		 result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		 result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 					.with(this.userAuthProfilesUtils.utenzaAdmin())
 					.with(csrf())
 					.content(json)
@@ -449,7 +451,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "role.name");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId()).params(params)
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId()).params(params)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -501,7 +503,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -526,7 +528,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 					.build()
 					.toString();
 		
-		 result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		 result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 					.with(this.userAuthProfilesUtils.utenzaAdmin())
 					.with(csrf())
 					.content(json)
@@ -547,7 +549,7 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "unsorted");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_ASC);
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId()).params(params)
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId()).params(params)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
