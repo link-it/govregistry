@@ -50,6 +50,10 @@ import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 @DisplayName("Test di cancellazione delle Authorization")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class Authorization_UC_4_DeleteAuthorizationTest {
+	
+	private static final String AUTHORIZATIONS_BASE_PATH_DETAIL_ID = "/v1/authorizations/{id}";
+
+	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -119,7 +123,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -136,7 +140,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -163,7 +167,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -171,7 +175,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -209,7 +213,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -226,7 +230,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -254,7 +258,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -262,7 +266,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -300,7 +304,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -317,7 +321,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -346,7 +350,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		// aggiungere check data dopo che si sistema il servizio
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -354,7 +358,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -392,7 +396,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -410,7 +414,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -438,7 +442,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -446,7 +450,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -494,7 +498,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -521,7 +525,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -539,7 +543,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -568,7 +572,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -576,7 +580,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -624,7 +628,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -651,7 +655,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -669,7 +673,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -698,7 +702,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -706,7 +710,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -754,7 +758,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -781,7 +785,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -799,7 +803,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -828,7 +832,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(servizio.getName(), items.getJsonObject(0).getJsonArray("services").getJsonObject(0).getString("service_name"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -836,7 +840,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -884,7 +888,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -911,7 +915,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -929,7 +933,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -958,7 +962,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(servizio.getName(), items.getJsonObject(0).getJsonArray("services").getJsonObject(0).getString("service_name"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -966,7 +970,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))

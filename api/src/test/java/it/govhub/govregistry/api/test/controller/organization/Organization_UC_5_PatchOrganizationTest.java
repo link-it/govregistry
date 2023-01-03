@@ -44,6 +44,9 @@ import it.govhub.govregistry.commons.entity.OrganizationEntity;
 
 class Organization_UC_5_PatchOrganizationTest {
 
+	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
+	private static final String ORGANIZATIONS_BASE_PATH_DETAIL_ID = ORGANIZATIONS_BASE_PATH + "/{id}";
+
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -66,7 +69,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", 1)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, 1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -90,7 +93,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -113,7 +116,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -155,7 +158,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -183,7 +186,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -226,7 +229,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -252,7 +255,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -296,7 +299,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -324,7 +327,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -367,7 +370,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -393,7 +396,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -438,7 +441,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -468,7 +471,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -512,7 +515,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -541,7 +544,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -586,7 +589,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -612,7 +615,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -668,7 +671,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -694,7 +697,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -739,7 +742,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -769,7 +772,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -813,7 +816,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -842,7 +845,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -887,7 +890,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -913,7 +916,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -957,7 +960,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -987,7 +990,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1031,7 +1034,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1060,7 +1063,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1105,7 +1108,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1131,7 +1134,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1175,7 +1178,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1205,7 +1208,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1249,7 +1252,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1278,7 +1281,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1323,7 +1326,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1349,7 +1352,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1393,7 +1396,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1423,7 +1426,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1467,7 +1470,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1496,7 +1499,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1541,7 +1544,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1567,7 +1570,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1611,7 +1614,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1641,7 +1644,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1685,7 +1688,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1714,7 +1717,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1759,7 +1762,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1785,7 +1788,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1829,7 +1832,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1859,7 +1862,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1903,7 +1906,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1932,7 +1935,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1977,7 +1980,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2003,7 +2006,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2047,7 +2050,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2077,7 +2080,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2121,7 +2124,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2150,7 +2153,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2195,7 +2198,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2221,7 +2224,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2265,7 +2268,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2295,7 +2298,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2339,7 +2342,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2368,7 +2371,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2413,7 +2416,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2439,7 +2442,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2483,7 +2486,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2513,7 +2516,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2557,7 +2560,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2586,7 +2589,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2631,7 +2634,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2657,7 +2660,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2701,7 +2704,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2731,7 +2734,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2775,7 +2778,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2804,7 +2807,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2849,7 +2852,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2875,7 +2878,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2919,7 +2922,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2949,7 +2952,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2993,7 +2996,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -3022,7 +3025,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -3067,7 +3070,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -3093,7 +3096,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -3136,7 +3139,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -3162,7 +3165,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -3207,7 +3210,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -3237,7 +3240,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -3281,7 +3284,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -3310,7 +3313,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -3355,7 +3358,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -3381,7 +3384,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -3424,7 +3427,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -3450,7 +3453,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -3494,7 +3497,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -3520,7 +3523,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -3564,7 +3567,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -3590,7 +3593,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)

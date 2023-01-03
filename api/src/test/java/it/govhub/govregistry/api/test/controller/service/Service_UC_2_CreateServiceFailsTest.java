@@ -30,6 +30,8 @@ import it.govhub.govregistry.commons.entity.ServiceEntity;
 
 class Service_UC_2_CreateServiceFailsTest {
 
+	private static final String SERVICES_BASE_PATH = "/v1/services";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -46,7 +48,7 @@ class Service_UC_2_CreateServiceFailsTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		this.mockMvc.perform(post("/services")
+		this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -71,7 +73,7 @@ class Service_UC_2_CreateServiceFailsTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		this.mockMvc.perform(post("/services")
+		this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -101,7 +103,7 @@ class Service_UC_2_CreateServiceFailsTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		this.mockMvc.perform(post("/services")
+		this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)

@@ -45,6 +45,8 @@ import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
 class Authorization_UC_2_CreateAuthorizationFailsTest {
+	
+	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -111,7 +113,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -142,7 +144,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", idUser1)
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -172,7 +174,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -204,7 +206,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -236,7 +238,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -267,7 +269,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.with(csrf())
 				.content(json)
@@ -299,7 +301,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -329,7 +331,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -366,7 +368,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -393,7 +395,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -431,7 +433,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -458,7 +460,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -496,7 +498,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -523,7 +525,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)

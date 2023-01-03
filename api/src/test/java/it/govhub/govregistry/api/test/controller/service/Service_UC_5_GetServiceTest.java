@@ -38,6 +38,9 @@ import it.govhub.govregistry.commons.entity.ServiceEntity;
 
 class Service_UC_5_GetServiceTest {
 
+	private static final String SERVICES_BASE_PATH = "/v1/services";
+	private static final String SERVICES_BASE_PATH_DETAIL_ID = SERVICES_BASE_PATH + "/{id}";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -57,7 +60,7 @@ class Service_UC_5_GetServiceTest {
 	void UC_5_01_GetUserOk() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
 		
-		MvcResult result = this.mockMvc.perform(get("/services/")
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -73,7 +76,7 @@ class Service_UC_5_GetServiceTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idService1 = item1.getInt("id");
 		
-		result = this.mockMvc.perform(get("/services/{id}",idService1)
+		result = this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID,idService1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -91,7 +94,7 @@ class Service_UC_5_GetServiceTest {
 	void UC_5_02_GetUser_NotFound() throws Exception {
 		int idService1 = 10000;
 		
-		this.mockMvc.perform(get("/services/{id}",idService1)
+		this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID,idService1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
@@ -106,7 +109,7 @@ class Service_UC_5_GetServiceTest {
 	void UC_5_03_GetUser_InvalidId() throws Exception {
 		String idService1 = "XXX";
 		
-		this.mockMvc.perform(get("/services/{id}",idService1)
+		this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID,idService1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())

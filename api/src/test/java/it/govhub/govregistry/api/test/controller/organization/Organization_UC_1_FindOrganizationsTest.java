@@ -39,6 +39,8 @@ import it.govhub.govregistry.commons.entity.OrganizationEntity;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class Organization_UC_1_FindOrganizationsTest {
 
+	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -58,7 +60,7 @@ class Organization_UC_1_FindOrganizationsTest {
 	void UC_1_01_FindAllOk() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 		
-		MvcResult result = this.mockMvc.perform(get("/organizations")
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -91,7 +93,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "1");
 		
-		MvcResult result = this.mockMvc.perform(get("/organizations").params(params )
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -120,7 +122,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "XXX");
 		
-		this.mockMvc.perform(get("/organizations").params(params )
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
@@ -136,7 +138,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "1");
 		
-		MvcResult result = this.mockMvc.perform(get("/organizations").params(params )
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -170,7 +172,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "XXX");
 		
-		this.mockMvc.perform(get("/organizations").params(params )
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
@@ -186,7 +188,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_Q, "naka");
 		
-		MvcResult result = this.mockMvc.perform(get("/organizations").params(params )
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -213,7 +215,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "2");
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "2");
 		
-		MvcResult result = this.mockMvc.perform(get("/organizations").params(params )
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -243,7 +245,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "legal_name");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		MvcResult result = this.mockMvc.perform(get("/organizations").params(params )
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -275,7 +277,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "id");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		MvcResult result = this.mockMvc.perform(get("/organizations").params(params )
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -305,7 +307,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "XXX");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		this.mockMvc.perform(get("/organizations").params(params )
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
@@ -324,7 +326,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "unsorted");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		MvcResult result = this.mockMvc.perform(get("/organizations").params(params )
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())

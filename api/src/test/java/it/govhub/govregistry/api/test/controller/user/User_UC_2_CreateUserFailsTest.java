@@ -32,6 +32,8 @@ import it.govhub.govregistry.commons.entity.UserEntity;
 
 class User_UC_2_CreateUserFailsTest {
 
+	private static final String USERS_BASE_PATH = "/v1/users";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -49,7 +51,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -74,7 +76,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -100,7 +102,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -126,7 +128,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -153,7 +155,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -180,7 +182,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -207,7 +209,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -235,7 +237,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -263,7 +265,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -290,7 +292,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 		
 		// Creazione OK
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -304,7 +306,7 @@ class User_UC_2_CreateUserFailsTest {
 				.andReturn();
 
 		// Creazione Utente gia' presente.
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -330,7 +332,7 @@ class User_UC_2_CreateUserFailsTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON)

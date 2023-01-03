@@ -53,6 +53,10 @@ import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 
 class Organization_UC_6_AutorizzazioneUtenzeTest {
 
+	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
+	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
+	private static final String ORGANIZATIONS_BASE_PATH_DETAIL_ID = ORGANIZATIONS_BASE_PATH + "/{id}";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -110,7 +114,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationEditor())
 				.with(csrf())
 				.content(json)
@@ -158,7 +162,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post("/organizations")
+		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
 				.with(csrf())
 				.content(json)
@@ -184,7 +188,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -212,7 +216,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationEditor())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -256,7 +260,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/organizations")
+		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -284,7 +288,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", id)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -302,13 +306,13 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//5. FindAllOrganizations con utenza non admin con ruolo govhub_organizations_editor/govhub_organizations_viewer: OK
 	@Test
 	void UC_6_05_FindAllOk_UtenzaConRuolo_GovHub_Organizations_Editor_O_Viewer() throws Exception {
-		this.mockMvc.perform(get("/organizations")
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationEditor())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		this.mockMvc.perform(get("/organizations")
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -318,7 +322,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//6. FindAllOrganizations con utenza non admin con ruolo non govhub_organizations_editor/govhub_organizations_viewer: NotAuthorized
 	@Test
 	void UC_6_06_FindAllFail_UtenzaSenzaRuolo_GovHub_Organizations_Editor_O_Viewer() throws Exception {
-		this.mockMvc.perform(get("/organizations")
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
@@ -332,7 +336,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//7. GetOrganization con utenza non admin con ruolo govhub_organizations_editor/govhub_organizations_viewer: OK
 	@Test
 	void UC_6_07_GetOrganizationOk_UtenzaConRuolo_GovHub_Organizations_Editor_O_Viewer() throws Exception {
-		MvcResult result = this.mockMvc.perform(get("/organizations/")
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -347,13 +351,13 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
 		
-		this.mockMvc.perform(get("/organizations/{id}",idUser1)
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationEditor())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		this.mockMvc.perform(get("/organizations/{id}",idUser1)
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -363,7 +367,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//8. GetOrganization con utenza non admin con ruolo non govhub_organizations_editor/govhub_organizations_viewer: NotAuthorized
 	@Test
 	void UC_6_08_GetOrganizationFail_UtenzaSenzaRuolo_GovHub_Organizations_Editor_O_Viewer() throws Exception {
-		MvcResult result = this.mockMvc.perform(get("/organizations/")
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -378,7 +382,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
 		
-		this.mockMvc.perform(get("/organizations/{id}",idUser1)
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
@@ -404,7 +408,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -418,7 +422,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.andReturn();
 		
 		// leggo la lista delle organizations con l'utenza che puo' visualizzarne solo 1
-		result = this.mockMvc.perform(get("/organizations")
+		result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -455,7 +459,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 		
 		// Autorizzo SNakamoto a vedere l'organization Ente4 
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -468,7 +472,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
 				.andReturn();
 		
-		result = this.mockMvc.perform(get("/organizations/")
+		result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -482,7 +486,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 		int idEnte1 = item1.getInt("id"); // Ente1
 				
 		// l'utenza non vede altre organization a parte quella che gli e' stata assegnata (Ente 4)
-		this.mockMvc.perform(get("/organizations/{id}",idEnte1)
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idEnte1)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
@@ -493,7 +497,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.andReturn();
 		
 		// l'utenza puo' vedere solo l'organization che gli e' stata assegnata (Ente 4)
-		this.mockMvc.perform(get("/organizations/{id}", ente.getId())
+		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID, ente.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -515,7 +519,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 		
 		// Autorizzo SNakamoto a vedere l'organization Ente4 
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -529,7 +533,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.andReturn();
 		
 		// Prendo la lista delle organization 
-		result = this.mockMvc.perform(get("/organizations/")
+		result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -555,7 +559,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/organizations/{id}", ente.getId())
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, ente.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(PatchOrganization)
@@ -587,7 +591,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 		assertNull(organizationEntity.getOfficeZip());
 		
 		// Patch su un organization per cui non si e' autorizzati fallisce
-		this.mockMvc.perform(patch("/organizations/{id}", idEnte1)
+		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, idEnte1)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(PatchOrganization)
