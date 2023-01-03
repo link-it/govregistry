@@ -30,5 +30,4 @@ public class GovregistryRoles {
 
 	
 	private GovregistryRoles() {		}
-
 }

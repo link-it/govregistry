@@ -13,6 +13,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -89,7 +90,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	public Problem handleConstraintViolation(RuntimeException ex) {		
 		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
 	}
-	
+
 	
 	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler(SemanticValidationException.class)
@@ -181,6 +182,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage()),
 				HttpStatus.BAD_REQUEST);	
 		}
+
+	
+	@Override
+	protected ResponseEntity<Object> handleMissingServletRequestParameter(
+			MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+		return new ResponseEntity<>(
+				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage()),
+				HttpStatus.BAD_REQUEST);
+	}
+
 	
 	
 	@Override
