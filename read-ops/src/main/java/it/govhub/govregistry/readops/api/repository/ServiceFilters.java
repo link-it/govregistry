@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 
 import it.govhub.govregistry.commons.api.beans.ServiceOrdering;
+import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.entity.ServiceEntity_;
 import it.govhub.govregistry.commons.exception.UnreachableException;
@@ -24,6 +25,9 @@ public class ServiceFilters {
 		return (Root<ServiceEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> null; 
 	}
 	
+	public static Specification<ServiceEntity> never() {
+		return (Root<ServiceEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> cb.isTrue(cb.literal(false)); 
+	}
 	
 	// Facciamo il confronto case insensitive portando in upperCase i valori
 	

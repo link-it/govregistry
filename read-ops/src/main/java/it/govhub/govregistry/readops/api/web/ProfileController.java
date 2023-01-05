@@ -30,10 +30,10 @@ public class ProfileController implements ProfileApi {
 		Profile ret = this.profileAssembler.toModel(principal.getUser());
 		
 		// Rimuovo dal body tutte le autorizzazioni che non riguardano i ruoli di GovRegistry
-		ret.setAuthorizations(
+	/*	ret.setAuthorizations(
 				ret.getAuthorizations().stream()
 					.filter( auth -> GovregistryRoles.ruoliConsentiti.contains(auth.getRole().getRoleName()))
-					.collect(Collectors.toList()));
+					.collect(Collectors.toList()));*/
 		
 		return ResponseEntity.ok(ret);
 	}

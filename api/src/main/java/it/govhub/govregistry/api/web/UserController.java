@@ -37,7 +37,7 @@ public class UserController implements UserApi {
 	@Override
 	public ResponseEntity<User> updateUser(Long id, List<PatchOp> patchOp) {
 		
-		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_EDITOR);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);
@@ -54,7 +54,7 @@ public class UserController implements UserApi {
 	@Override
 	public ResponseEntity<User> createUser(UserCreate userCreate) {
 		
-		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_EDITOR);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR);
 		
 		UserEntity newUser = this.userService.createUser(userCreate);
 
