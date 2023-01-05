@@ -38,7 +38,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> createService(ServiceCreate serviceCreate) {
 		
-		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_SERVICES_EDITOR);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getServiceName(), "service_name");
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getDescription(), "description");
@@ -55,7 +55,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> updateService(Long id, List<PatchOp> patchOp) {
 		
-		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.RUOLO_GOVREGISTRY_SERVICES_EDITOR);
+		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);
