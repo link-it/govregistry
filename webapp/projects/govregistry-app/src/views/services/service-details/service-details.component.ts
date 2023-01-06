@@ -193,9 +193,23 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
     );
   }
 
+  __removeEmpty(obj: any) {
+    const $this = this;
+    return Object.keys(obj)
+      .filter(function (k) {
+        return obj[k] != null;
+      })
+      .reduce(function (acc: any, k: string) {
+        acc[k] = typeof obj[k] === "object" ? $this.__removeEmpty(obj[k]) : obj[k];
+        return acc;
+      }, {});
+  }
+
   __onUpdate(id: number, body: any) {
     this._error = false;
-    const _bodyPatch: any[] = jsonpatch.compare(this.service, body);
+    const _service = this.__removeEmpty(this.service);
+    const _body = this.__removeEmpty(body);
+    const _bodyPatch: any[] = jsonpatch.compare(_service, _body);
     if (_bodyPatch) {
       this.apiService.updateElement(this.model, id, _bodyPatch).subscribe(
         (response: any) => {
