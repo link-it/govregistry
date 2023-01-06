@@ -1,14 +1,21 @@
 package it.govhub.govregistry.readops.api.web;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -113,6 +120,58 @@ public class ReadOrganizationController implements OrganizationApi {
 			.orElseThrow( () -> new ResourceNotFoundException(OrganizationMessages.notFound(id)));
 		
 		return ResponseEntity.ok(ret);
+	}
+
+
+	@Override
+	public ResponseEntity<Resource> downloadOrganizationLogo(Long id) {
+		
+		Set<Long> orgIds = this.permissionManager.listReadableOrganizations(SecurityService.getPrincipal());
+		if (orgIds != null && !orgIds.contains(id)) {
+			throw new NotAuthorizedException();
+		}
+		
+		OrganizationEntity org = this.orgRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(OrganizationMessages.notFound(id)));
+		
+		byte[] ret = org.getLogo() != null ? org.getLogo() : new byte[0];
+		
+		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
+		
+		InputStreamResource logoStream = new InputStreamResource(bret);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentLength(ret.length);
+		
+		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
+		
+		return ret2;
+	}
+
+
+	@Override
+	public ResponseEntity<Resource> downloadOrganizationLogoMiniature(Long id) {
+		
+		Set<Long> orgIds = this.permissionManager.listReadableOrganizations(SecurityService.getPrincipal());
+		if (orgIds != null && !orgIds.contains(id)) {
+			throw new NotAuthorizedException();
+		}
+		
+		OrganizationEntity org = this.orgRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(OrganizationMessages.notFound(id)));
+		
+		byte[] ret = org.getLogoMiniature() != null ? org.getLogoMiniature() : new byte[0];
+		
+		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
+		
+		InputStreamResource logoStream = new InputStreamResource(bret);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentLength(ret.length);
+		
+		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
+		
+		return ret2;
 	}
 
 }

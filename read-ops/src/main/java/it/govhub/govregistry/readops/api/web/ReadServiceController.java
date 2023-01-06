@@ -1,14 +1,19 @@
 package it.govhub.govregistry.readops.api.web;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -25,6 +30,7 @@ import it.govhub.govregistry.commons.messages.ServiceMessages;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.ServiceAssembler;
+import it.govhub.govregistry.readops.api.assemblers.ServiceAuthItemAssembler;
 import it.govhub.govregistry.readops.api.repository.ReadServiceRepository;
 import it.govhub.govregistry.readops.api.repository.ServiceFilters;
 import it.govhub.govregistry.readops.api.services.PermissionManager;
@@ -37,6 +43,9 @@ public class ReadServiceController implements ServiceApi {
 	
 	@Autowired
 	private ServiceAssembler serviceAssembler;
+	
+	@Autowired
+	private ServiceAuthItemAssembler serviceItemAssembler;
 	
 	@Autowired
 	private ReadServiceRepository serviceRepo;
@@ -90,7 +99,7 @@ public class ReadServiceController implements ServiceApi {
 		ServiceList ret = ListaUtils.costruisciListaPaginata(services, pageRequest.limit, curRequest, new ServiceList());
 		
 		for (ServiceEntity service : services) {
-			ret.addItemsItem(this.serviceAssembler.toModel(service));
+			ret.addItemsItem(this.serviceItemAssembler.toModel(service));
 		}
 		
 		return ResponseEntity.ok(ret);
@@ -109,6 +118,57 @@ public class ReadServiceController implements ServiceApi {
 				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
 		
 		return ResponseEntity.ok(this.serviceAssembler.toModel(service));
+	}
+
+
+	@Override
+	public ResponseEntity<Resource> downloadServiceLogo(Long id) {
+		
+		Set<Long> serviceIds = this.permissionManager.listReadableServices(SecurityService.getPrincipal());
+		if (serviceIds != null && !serviceIds.contains(id)) {
+			throw new NotAuthorizedException();
+		}
+		
+		ServiceEntity service = this.serviceRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
+
+		byte[] ret = service.getLogo() != null ? service.getLogo() : new byte[0];
+		
+		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
+		
+		InputStreamResource logoStream = new InputStreamResource(bret);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentLength(ret.length);
+		
+		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
+		
+		return ret2;
+	}
+
+
+	@Override
+	public ResponseEntity<Resource> downloadServiceLogoMiniature(Long id) {
+		Set<Long> serviceIds = this.permissionManager.listReadableServices(SecurityService.getPrincipal());
+		if (serviceIds != null && !serviceIds.contains(id)) {
+			throw new NotAuthorizedException();
+		}
+		
+		ServiceEntity service = this.serviceRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
+
+		byte[] ret = service.getLogoMiniature() != null ? service.getLogoMiniature() : new byte[0];
+		
+		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
+		
+		InputStreamResource logoStream = new InputStreamResource(bret);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentLength(ret.length);
+		
+		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
+		
+		return ret2;
 	}
 
 

@@ -27,7 +27,6 @@ import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.OrganizationMessages;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.readops.api.assemblers.OrganizationAssembler;
-import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
 
 @Service
 public class OrganizationService {
