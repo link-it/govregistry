@@ -418,6 +418,17 @@ components:
               id:
                 $ref: "#/components/schemas/OrganizationId"
                 
+      OrganizationItem:
+        allOf:
+          - $ref: "#/components/schemas/OrganizationData" 
+          - type: object
+            additionalProperties: false
+            required:
+              - id
+            properties:
+              id:
+                $ref: "#/components/schemas/OrganizationId"       
+                
       ServiceCreate:
          type: object
          additionalProperties: false
@@ -431,6 +442,10 @@ components:
               pattern: .*
               maxLength: 4096
               example: Service for customer management.
+            logo_miniature:
+               $ref: "#/components/schemas/SmallLogo"
+            logo:
+             $ref: "#/components/schemas/Logo"                          
               
       Service:
          allOf:
@@ -487,17 +502,7 @@ components:
                  - items 
               additionalProperties: false
               
-      OrganizationItem:
-         allOf:
-            - $ref: "#/components/schemas/OrganizationData"
-            - type: object
-              additionalProperties: false
-              required: 
-                 - id
-              properties:
-                 id:
-                   $ref: "#/components/schemas/OrganizationId"
-              
+
       ServiceList:
          allOf:
             - $ref: "#/components/schemas/List"
@@ -506,7 +511,7 @@ components:
                  items:
                     type: array
                     items:
-                       $ref: "#/components/schemas/Service"
+                       $ref: "#/components/schemas/ServiceAuthItem"
                     minItems: 0
                     maxItems: 2147483647
               required:
@@ -596,6 +601,11 @@ components:
                $ref: "#/components/schemas/ServiceId"         
             service_name:
                $ref: "#/components/schemas/ServiceName"
+            description:
+              type: string
+              pattern: .*
+              maxLength: 4096
+              example: Service for customer management.
                
       ServiceName:
          type: string

@@ -175,6 +175,70 @@ paths:
            default:
              $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
              
+   /organizations/{id}/logo:
+       parameters:
+         - $ref: "govhub-api-commons.yaml#/components/parameters/organization_id"    
+       get:
+         tags:
+           - organization
+         summary: Retrieve the organization logo.
+         description: Retrieve the logo of the organization with the provided id.
+         operationId: downloadOrganizationLogo
+         responses:
+           '200':
+             description: Successful operation.
+             content:
+               application/octet-stream:
+                  schema:
+                     type: string
+                     format: binary
+           '400':
+             $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+           '401':
+             $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+           '403':
+             $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+           '404':
+             $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+           '429':
+             $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+           '503':
+             $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+           default:
+             $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                              
+             
+   /organizations/{id}/logo_miniature:
+       parameters:
+         - $ref: "govhub-api-commons.yaml#/components/parameters/organization_id"    
+       get:
+         tags:
+           - organization
+         summary: Retrieve the organization logo miniature
+         description: Retrieve the logo miniature of the organization with the provided id.
+         operationId: downloadOrganizationLogoMiniature
+         responses:
+           '200':
+             description: Successful operation.
+             content:
+               application/octet-stream:
+                  schema:
+                     type: string
+                     format: binary
+           '400':
+             $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+           '401':
+             $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+           '403':
+             $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+           '404':
+             $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+           '429':
+             $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+           '503':
+             $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+           default:
+             $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                
+             
    /services:
     get:
       tags:
@@ -240,6 +304,72 @@ paths:
              $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
            default:
              $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                
+  
+  
+   /services/{id}/logo:
+       parameters:
+         - $ref: "govhub-api-commons.yaml#/components/parameters/service_id"    
+       get:
+         tags:
+           - service
+         summary: Retrieve the service logo
+         description: Retrieve the logo of the service with the provided id.
+         operationId: downloadServiceLogo
+         responses:
+           '200':
+             description: Successful operation.
+             content:
+               application/octet-stream:
+                  schema:
+                     type: string
+                     format: binary
+           '400':
+             $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+           '401':
+             $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+           '403':
+             $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+           '404':
+             $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+           '429':
+             $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+           '503':
+             $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+           default:
+             $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                              
+             
+   /services/{id}/logo_miniature:
+       parameters:
+         - $ref: "govhub-api-commons.yaml#/components/parameters/service_id"    
+       get:
+         tags:
+           - service
+         summary: Retrieve the service logo miniature
+         description: Retrieve the logo miniature of the service with the provided id.
+         operationId: downloadServiceLogoMiniature
+         responses:
+           '200':
+             description: Successful operation.
+             content:
+               application/octet-stream:
+                  schema:
+                     type: string
+                     format: binary
+           '400':
+             $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+           '401':
+             $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+           '403':
+             $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+           '404':
+             $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+           '429':
+             $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+           '503':
+             $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+           default:
+             $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"   
+  
   
    /users/{id}/authorizations:
       parameters:
