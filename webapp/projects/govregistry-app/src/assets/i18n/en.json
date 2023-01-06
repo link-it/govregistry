@@ -198,7 +198,7 @@
 			},
 			"TITLE": {
 				"GeneralInformations": "General informations",
-				"GeneralInformations_sub": "Lorem ipsum dolor sit amet consectetur adipisicing elit. **Markdown**"
+				"GeneralInformations_sub": ""
 			}
 		},
 		"PDF": {
@@ -229,7 +229,7 @@
 			},
 			"TITLE": {
 				"GeneralInformations": "General informations",
-				"GeneralInformations_sub": "Lorem ipsum dolor sit amet consectetur adipisicing elit. **Markdown**"
+				"GeneralInformations_sub": ""
 			}
 		},
 		"SIDENAV": {
@@ -324,9 +324,9 @@
 			},
 			"TITLE": {
 				"GeneralInformations": "General informations",
-				"GeneralInformations_sub": "Lorem ipsum dolor sit amet consectetur adipisicing elit. **Markdown**",
+				"GeneralInformations_sub": "",
 				"ShowAuthorizations": "Authorizations",
-				"ShowAuthorizations_sub": "Lorem ipsum dolor sit amet consectetur adipisicing elit. **Markdown**"
+				"ShowAuthorizations_sub": ""
 			}
 		}
 	}

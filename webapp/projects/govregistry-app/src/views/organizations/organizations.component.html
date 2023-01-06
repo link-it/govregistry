@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="nav-controls">
-      <div role="group" class="gl-w-full btn-group-" *ngIf="!_spin">
+      <div role="group" class="gl-w-full btn-group- position-relative" *ngIf="!_spin">
         <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'create'"> -->
           <button aria-label="Add payment" type="button" class="btn btn-confirm btn-md gl-button btn-icon" (click)="_onNew()">
             <mat-icon fontSet="material-icons-outlined">add</mat-icon> <span class="ms-2">{{ 'APP.BUTTON.AddOrganization' | translate }}</span>
@@ -74,7 +74,7 @@
       <ui-box-message *ngIf="organizations.length == 0 && !_spin && !_unimplemented"
         [size]="64"
         [icon]="'report_problem'"
-        [image]="'./assets/images/illustrations/users.svg'"
+        [image]="'./assets/images/illustrations/organizations.svg'"
         [message]="_message | translate"
         [subMessage]="_messageHelp | translate">
       </ui-box-message>
@@ -82,18 +82,18 @@
       <ui-box-message *ngIf="_unimplemented && !_spin"
         [size]="64"
         [icon]="'report_problem'"
-        [image]="'./assets/images/illustrations/users.svg'"
+        [image]="'./assets/images/illustrations/organizations.svg'"
         [message]="_messageUnimplemented | translate">
       </ui-box-message>
 
       <div class="col-12">
-        <ui-simple-item class="border-bottom" *ngFor="let jrnl of organizations"
-          [primaryText]="jrnl.primaryText"
-          [secondaryText]="jrnl.secondaryText"
-          [metadata]="jrnl.metadata"
-          [secondaryMetadata]="jrnl.secondaryMetadata"
+        <ui-simple-item class="border-bottom" *ngFor="let org of organizations"
+          [primaryText]="org.primaryText"
+          [secondaryText]="org.secondaryText"
+          [metadata]="org.metadata"
+          [secondaryMetadata]="org.secondaryMetadata"
           [hasLink]="true"
-          (simpleClick)="_onEdit($event, jrnl)">
+          (simpleClick)="_onEdit($event, org)">
         </ui-simple-item>
       </div>
 
