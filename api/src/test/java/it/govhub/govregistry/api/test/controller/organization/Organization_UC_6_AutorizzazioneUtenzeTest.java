@@ -322,15 +322,19 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//6. FindAllOrganizations con utenza non admin con ruolo non govhub_organizations_editor/govhub_organizations_viewer: NotAuthorized
 	@Test
 	void UC_6_06_FindAllFail_UtenzaSenzaRuolo_GovHub_Organizations_Editor_O_Viewer() throws Exception {
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
+		
+		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isUnauthorized())
-				.andExpect(jsonPath("$.status", is(401)))
-				.andExpect(jsonPath("$.title", is("Unauthorized")))
-				.andExpect(jsonPath("$.type").isString())
-				.andExpect(jsonPath("$.detail").isString())
+				.andExpect(status().isOk())
 				.andReturn();
+		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		JsonObject orgList = reader.readObject();
+		
+		// Controlli sugli items
+		JsonArray items = orgList.getJsonArray("items");
+		assertEquals(0, items.size());
 	}
 	
 	//7. GetOrganization con utenza non admin con ruolo govhub_organizations_editor/govhub_organizations_viewer: OK

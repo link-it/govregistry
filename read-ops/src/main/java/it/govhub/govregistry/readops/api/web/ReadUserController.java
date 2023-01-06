@@ -43,7 +43,7 @@ public class ReadUserController implements UserApi{
 	@Override
 	public ResponseEntity<UserList> listUsers(UserOrdering orderBy, Direction sortDirection, Integer limit, Long offset, String q, Boolean enabled) {
 		
-		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_EDITOR, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_VIEWER);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR, GovregistryRoles.GOVREGISTRY_USERS_VIEWER);
 		
 		Specification<UserEntity> spec = UserFilters.empty();
 		if (q != null) {
@@ -74,7 +74,7 @@ public class ReadUserController implements UserApi{
 	@Override
 	public ResponseEntity<User> readUser(Long id) {
 		
-		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_EDITOR, GovregistryRoles.RUOLO_GOVREGISTRY_USERS_VIEWER);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR, GovregistryRoles.GOVREGISTRY_USERS_VIEWER);
 		
 		UserEntity user = this.userRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));

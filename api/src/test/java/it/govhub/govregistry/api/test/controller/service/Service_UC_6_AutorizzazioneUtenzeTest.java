@@ -287,16 +287,18 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	//6. FindAllServices con utenza non admin con ruolo non govhub_services_editor/govhub_services_viewer: NotAuthorized
 	@Test
 	void UC_6_06_FindAllFail_UtenzaSenzaRuolo_GovHub_Services_Editor_O_Viewer() throws Exception {
-		this.mockMvc.perform(get(SERVICES_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isUnauthorized())
-				.andExpect(jsonPath("$.status", is(401)))
-				.andExpect(jsonPath("$.title", is("Unauthorized")))
-				.andExpect(jsonPath("$.type").isString())
-				.andExpect(jsonPath("$.detail").isString())
+				.andExpect(status().isOk())
 				.andReturn();
 		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		JsonObject serviceList = reader.readObject();
+		
+		// Controlli sugli items
+		JsonArray items = serviceList.getJsonArray("items");
+		assertEquals(0, items.size());
 	}
 	
 	//7. GetService con utenza non admin con ruolo govhub_services_editor/govhub_services_viewer: OK

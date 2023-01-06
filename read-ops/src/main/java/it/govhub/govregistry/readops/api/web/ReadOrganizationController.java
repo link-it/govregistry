@@ -1,5 +1,6 @@
 package it.govhub.govregistry.readops.api.web;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,8 @@ import it.govhub.govregistry.commons.api.beans.OrganizationList;
 import it.govhub.govregistry.commons.api.beans.OrganizationOrdering;
 import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
+import it.govhub.govregistry.commons.entity.UserEntity;
+import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.OrganizationMessages;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
@@ -25,8 +28,8 @@ import it.govhub.govregistry.readops.api.assemblers.OrganizationAssembler;
 import it.govhub.govregistry.readops.api.assemblers.OrganizationItemAssembler;
 import it.govhub.govregistry.readops.api.repository.OrganizationFilters;
 import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
+import it.govhub.govregistry.readops.api.services.PermissionManager;
 import it.govhub.govregistry.readops.api.spec.OrganizationApi;
-import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 
@@ -44,29 +47,37 @@ public class ReadOrganizationController implements OrganizationApi {
 	
 	@Autowired
 	SecurityService authService;
-
+	
+	@Autowired
+	PermissionManager permissionManager;
+	
 	
 	@Override
-	public ResponseEntity<OrganizationList> listOrganizations(OrganizationOrdering sort, Direction sortDirection, Integer limit, Long offset, String q) {
+	public ResponseEntity<OrganizationList> listOrganizations(OrganizationOrdering sort, Direction sortDirection, Integer limit, Long offset, String q, List<String> haveRoles) {
 		
-		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_VIEWER, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR);
+		UserEntity principal = SecurityService.getPrincipal();
 		
-		// Posso avere N autorizzazioni valide con ruolo user_viewer o user_editor
-		// Alcune di queste avranno organizzazioni associate, altre no.
-		// Se sono admin o ce n'è una senza organizzazioni associate allora posso vedere tutte
-		// Se tutte le autorizzazioni hanno delle organizzazioni definite allora posso vedere solo quelle definite.
-				
-		Specification<OrganizationEntity> spec;
+		Set<Long> orgIds = this.permissionManager.listReadableOrganizations(principal);
 		
-		if (this.authService.canReadAllOrganizations()) {
-			spec = OrganizationFilters.empty();
-		} else {
-			Set<Long> orgIds = this.authService.listAuthorizedOrganizations(
-					GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_VIEWER);
-			
-			spec = OrganizationFilters.byId(orgIds);
+		if (haveRoles != null && !haveRoles.isEmpty()) {
+			// Recupero Tutte le organizzazioni sulle quali posso lavorare con i ruoli specificati
+			// e faccio l'intersezione con quelle del PermissionManager.
+			Set<Long> orgIdsWithRoles = this.authService.listAuthorizedOrganizations(haveRoles);
+			orgIds = SecurityService.restrictAuthorizations(orgIds, orgIdsWithRoles);
 		}
 
+		Specification<OrganizationEntity> spec;
+		
+		if (orgIds == null) {
+			// Non ho restrizioni
+			spec = OrganizationFilters.empty();
+		} else if (orgIds.isEmpty()) {
+			// Nessuna organizzazione
+			spec = OrganizationFilters.never();
+		} else {
+			// Filtra per le organizzazioni trovate
+			spec = OrganizationFilters.byId(orgIds);
+		}
 		
 		if (q != null) {
 			spec = spec.and(
@@ -92,8 +103,11 @@ public class ReadOrganizationController implements OrganizationApi {
 	@Override
 	public ResponseEntity<Organization> readOrganization(Long id) {
 		
-		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_VIEWER, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR);
-
+		Set<Long> orgIds = this.permissionManager.listReadableOrganizations(SecurityService.getPrincipal());
+		if (orgIds != null && !orgIds.contains(id)) {
+			throw new NotAuthorizedException();
+		}
+		
 		Organization ret = this.orgRepo.findById(id)
 			.map( org -> this.orgAssembler.toModel(org))
 			.orElseThrow( () -> new ResourceNotFoundException(OrganizationMessages.notFound(id)));
