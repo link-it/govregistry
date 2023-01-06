@@ -31,6 +31,17 @@ public class OrganizationItemAssembler extends RepresentationModelAssemblerSuppo
 			.withSelfRel()
 		) ;
 		
+		ret.add(linkTo(
+				methodOn(OrganizationApi.class)
+				.downloadOrganizationLogo(src.getId()))
+				.withRel("logo"));
+		
+		ret.add(linkTo(
+				methodOn(OrganizationApi.class)
+				.downloadOrganizationLogoMiniature(src.getId()))
+			.withRel("logo_small")
+		) ;
+		
 		return ret;
 	}
 
