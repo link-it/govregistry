@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -59,83 +60,92 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	
 	private Logger logger = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
 	
-	public static Problem buildProblem(HttpStatus status, String detail) {
-		try {
-			Problem ret = new Problem();
-			ret.setStatus(status.value());
-			ret.setTitle(status.getReasonPhrase());
-			ret.setType(new URI(problemTypes.get(status)));
-			ret.setDetail(detail);
-			return ret;
-		} catch (URISyntaxException e){
-			// Non deve mai fallire la new URI di sopra
-			throw new UnreachableException(e);
+	public static Object buildProblem(HttpStatus status, String detail, String accept) {
+		
+		if (accept == null || StringUtils.equals(accept, MediaType.ALL_VALUE) ||  StringUtils.endsWith(accept, "/json") || StringUtils.endsWith(accept, "+json")) {
+			try {
+				Problem ret = new Problem();
+				ret.setStatus(status.value());
+				ret.setTitle(status.getReasonPhrase());
+				ret.setType(new URI(problemTypes.get(status)));
+				ret.setDetail(detail);
+				return ret;
+			} catch (URISyntaxException e){
+				// Non deve mai fallire la new URI di sopra
+				throw new UnreachableException(e);
+			}
+		} else {
+			return "HTTP " + status.value() + ": " + detail;
 		}
+	}
+	
+	public static Problem buildProblem(HttpStatus status, String detail) {
+		return (Problem) buildProblem(status, detail, null);
 	}
 
 
 	@ResponseStatus(HttpStatus.CONFLICT)
 	@ExceptionHandler(ConflictException.class)
-	public Problem handleConstraintViolation(ConflictException ex) {
-		return buildProblem(HttpStatus.CONFLICT, ex.getLocalizedMessage());
+	public Object handleConstraintViolation(ConflictException ex, WebRequest request) {
+		return buildProblem(HttpStatus.CONFLICT, ex.getLocalizedMessage(), request.getHeader("Accept") );
 	}
 	
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(ResourceNotFoundException.class)
-	public Problem handleConstraintViolation(ResourceNotFoundException ex) {
-		return buildProblem(HttpStatus.NOT_FOUND, ex.getLocalizedMessage());
+	public Object handleConstraintViolation(ResourceNotFoundException ex, WebRequest request) {
+		return buildProblem(HttpStatus.NOT_FOUND, ex.getLocalizedMessage(), request.getHeader("Accept"));
 	}
 	
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({BadRequestException.class, MethodArgumentTypeMismatchException.class})
-	public Problem handleConstraintViolation(RuntimeException ex) {		
-		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
+	public Object handleConstraintViolation(RuntimeException ex, WebRequest request ) {		
+		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), request.getHeader("Accept"));
 	}
 
 	
 	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler(SemanticValidationException.class)
-	public Problem handleConstraintViolation(SemanticValidationException ex) {
-		return buildProblem(HttpStatus.UNPROCESSABLE_ENTITY, ex.getLocalizedMessage());
+	public Object handleConstraintViolation(SemanticValidationException ex, WebRequest request) {
+		return buildProblem(HttpStatus.UNPROCESSABLE_ENTITY, ex.getLocalizedMessage(), request.getHeader("Accept"));
 	}
 	
 	
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(NotAuthorizedException.class)
-	public Problem handleConstraintViolation(NotAuthorizedException ex) {
-		return buildProblem(HttpStatus.UNAUTHORIZED, ex.getLocalizedMessage());
+	public Object handleConstraintViolation(NotAuthorizedException ex, WebRequest request) {
+		return buildProblem(HttpStatus.UNAUTHORIZED, ex.getLocalizedMessage(), request.getHeader("Accept"));
 	}
 	
 	
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(ForbiddenException.class)
-	public Problem handleConstraintViolation(ForbiddenException ex) {
-		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage());
+	public Object handleConstraintViolation(ForbiddenException ex, WebRequest request) {
+		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage(),request.getHeader("Accept"));
 	}
 	
 	
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler({InternalException.class})
-	public final Problem handleAllInternalExceptions(InternalException ex, WebRequest request) {
-		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.");
+	public final Object handleAllInternalExceptions(InternalException ex, WebRequest request) {
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.", request.getHeader("Accept")) ;
 	}
 	
 	
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler({RuntimeException.class})
-	public final Problem catchAll(RuntimeException ex, WebRequest request) {
+	public final Object catchAll(RuntimeException ex, WebRequest request) {
 		logger.warn("Handling Uncaught Runtime Exception: {}", ex);
-		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.");
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.", request.getHeader("Accept"));
 	}
 	
 	
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler({Exception.class})
-	public final Problem catchAll(Exception ex, WebRequest request) {
+	public final Object catchAll(Exception ex, WebRequest request) {
 		logger.warn("Handling Uncaught Exception: {}", ex);
-		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.");
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.",request.getHeader("Accept"));
 	}
 	
 
@@ -146,7 +156,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		var error = ex.getBindingResult().getAllErrors().get(0);
 
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.BAD_REQUEST, RequestUtils.extractValidationError(error)),
+				buildProblem(HttpStatus.BAD_REQUEST, RequestUtils.extractValidationError(error),request.getHeader("Accept")),
 				HttpStatus.BAD_REQUEST);
 	}
 	
@@ -162,7 +172,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			msg = ex.getLocalizedMessage();
 		}
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.BAD_REQUEST,msg),
+				buildProblem(HttpStatus.BAD_REQUEST,msg, request.getHeader("Accept")),
 				HttpStatus.BAD_REQUEST);
 	}
 
@@ -172,7 +182,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.NOT_FOUND,ex.getLocalizedMessage()),
+				buildProblem(HttpStatus.NOT_FOUND,ex.getLocalizedMessage(), request.getHeader("Accept")),
 				HttpStatus.NOT_FOUND);	
 		}
 	
@@ -182,7 +192,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage()),
+				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage(), request.getHeader("Accept")),
 				HttpStatus.BAD_REQUEST);	
 		}
 
@@ -192,7 +202,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage()),
+				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage(), request.getHeader("Accept")),
 				HttpStatus.BAD_REQUEST);
 	}
 	
@@ -219,7 +229,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, RequestAttributes.SCOPE_REQUEST);
 		}
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.INTERNAL_SERVER_ERROR,ex.getLocalizedMessage()),
+				buildProblem(HttpStatus.INTERNAL_SERVER_ERROR,ex.getLocalizedMessage(), request.getHeader("Accept")) ,
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	

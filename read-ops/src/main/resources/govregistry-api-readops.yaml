@@ -123,6 +123,7 @@ paths:
          - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
          - $ref: "govhub-api-commons.yaml#/components/parameters/organization_ordering_query"
          - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
+         - $ref: "#/components/parameters/have_roles"
       responses:
         '200':
           description: Successful operation.
@@ -187,6 +188,7 @@ paths:
          - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
          - $ref: "govhub-api-commons.yaml#/components/parameters/service_ordering_query"
          - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
+         - $ref: "#/components/parameters/have_roles"
       responses:
         '200':
           description: Successful operation.
@@ -274,4 +276,21 @@ paths:
              $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
            default:
              $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                 
-                                      
+
+components:
+
+   parameters:
+   
+      have_roles:
+         name: have_roles
+         in: query
+         description: Retrieve the organizations for whose the principal has the roles.
+         schema:
+            type: array
+            items:
+               type: string
+               pattern: .*
+               maxLength: 255   
+         
+         
+                                               

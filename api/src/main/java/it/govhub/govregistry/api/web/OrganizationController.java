@@ -36,7 +36,7 @@ public class OrganizationController implements OrganizationApi {
 	@Override
 	public ResponseEntity<Organization> createOrganization(OrganizationCreate org) {
 		
-		this.authService.expectAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddress(), "office_address");
 		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddressDetails(), "office_address_details");
@@ -57,7 +57,7 @@ public class OrganizationController implements OrganizationApi {
 	@Override
 	public ResponseEntity<Organization> updateOrganization(Long id, List<PatchOp> patchOp) {
 		
-		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR);
+		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);
