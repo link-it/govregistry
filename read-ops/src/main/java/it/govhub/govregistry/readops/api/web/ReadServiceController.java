@@ -96,7 +96,7 @@ public class ReadServiceController implements ServiceApi {
 		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
 				.currentRequestAttributes()).getRequest();
 		
-		ServiceList ret = ListaUtils.costruisciListaPaginata(services, pageRequest.limit, curRequest, new ServiceList());
+		ServiceList ret = ListaUtils.buildPaginatedList(services, pageRequest.limit, curRequest, new ServiceList());
 		
 		for (ServiceEntity service : services) {
 			ret.addItemsItem(this.serviceItemAssembler.toModel(service));

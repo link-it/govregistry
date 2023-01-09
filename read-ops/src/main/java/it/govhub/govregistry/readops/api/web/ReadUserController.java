@@ -60,7 +60,7 @@ public class ReadUserController implements UserApi{
 		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
 				.currentRequestAttributes()).getRequest();
 		
-		UserList ret = ListaUtils.costruisciListaPaginata(users, pageRequest.limit, curRequest, new UserList());
+		UserList ret = ListaUtils.buildPaginatedList(users, pageRequest.limit, curRequest, new UserList());
 		
 		for (UserEntity user : users) {
 			ret.addItemsItem(this.userAssembler.toModel(user));
