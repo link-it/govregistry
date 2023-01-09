@@ -32,16 +32,18 @@ public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSuppor
 			.withSelfRel()
 		) ;
 		
-		ret.add(linkTo(
-				methodOn(ServiceApi.class)
-				.downloadServiceLogo(src.getId()))
-				.withRel("logo"));
+		if (src.getLogo() != null) 
+			ret.add(linkTo(
+					methodOn(ServiceApi.class)
+					.downloadServiceLogo(src.getId()))
+					.withRel("logo"));
 		
-		ret.add(linkTo(
-				methodOn(ServiceApi.class)
-				.downloadServiceLogoMiniature(src.getId()))
-			.withRel("logo_small")
-		) ;
+		if (src.getLogoMiniature() != null) 
+			ret.add(linkTo(
+					methodOn(ServiceApi.class)
+					.downloadServiceLogoMiniature(src.getId()))
+				.withRel("logo_small")
+			) ;
 		
 		return ret; 
 	}
