@@ -36,44 +36,44 @@ public class OrganizationEntity implements Serializable {
 	private Long id;
 
 	@EqualsAndHashCode.Include
-	@Column(name = "tax_code", unique = true, nullable = false, length = 11)
+	@Column(name = "tax_code", unique = true, nullable = false)
 	private String taxCode;
 
 	@EqualsAndHashCode.Include
-	@Column(name = "legal_name", unique = true, nullable = false, length = 80)
+	@Column(name = "legal_name", unique = true, nullable = false)
 	private String legalName;
 
-	@Column(name = "office_at", length = 120)
+	@Column(name = "office_at")
   	private String officeAt;
 	  
-	@Column(name = "office_address", length = 120)
+	@Column(name = "office_address")
 	private String officeAddress;
 
-	@Column(name = "office_address_details", length = 120)
+	@Column(name = "office_address_details")
 	private String officeAddressDetails;
 
-	@Column(name = "office_zip", length = 120)
+	@Column(name = "office_zip")
 	private String officeZip;
 
-	@Column(name = "office_municipality", length = 120)
+	@Column(name = "office_municipality")
 	private String officeMunicipality;
 
-	@Column(name = "office_municipality_details", length = 120)
+	@Column(name = "office_municipality_details")
 	private String officeMunicipalityDetails;
 
-	@Column(name = "office_province", length = 120)
+	@Column(name = "office_province")
 	private String officeProvince;
 
-	@Column(name = "office_foreign_state", length = 120)
+	@Column(name = "office_foreign_state")
 	private String officeForeignState;
 
-	@Column(name = "office_phone_number", length = 120)
+	@Column(name = "office_phone_number")
 	private String officePhoneNumber;
 
-	@Column(name = "office_email_address", length = 120)
+	@Column(name = "office_email_address")
 	private String officeEmailAddress;
 
-	@Column(name = "office_pec_address", length = 120)
+	@Column(name = "office_pec_address")
 	private String officePecAddress;
 
 	@Lob
