@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,12 +49,12 @@ public class RoleAuthorizationEntity implements Serializable {
 	
 	
 	@ManyToOne
-    @JoinColumn(name = "id_govhub_user", nullable=false)
+    @JoinColumn(name = "id_govhub_user", nullable=false, foreignKey = @ForeignKey(name = "GovhubAuth_GovhubUser"))
 	private UserEntity user;
 	
 	
 	@ManyToOne
-    @JoinColumn(name = "id_govhub_role", nullable=false)
+    @JoinColumn(name = "id_govhub_role", nullable=false, foreignKey = @ForeignKey(name = "GovhubAuth_GovhubRole"))
 	private RoleEntity role;
 	
 	
@@ -65,7 +66,8 @@ public class RoleAuthorizationEntity implements Serializable {
 	@JoinTable(
 			name = "govhub_auth_services",
 			joinColumns = @JoinColumn(name = "id_govhub_authorization"),
-			inverseJoinColumns = @JoinColumn(name = "id_govhub_service"))
+			inverseJoinColumns = @JoinColumn(name = "id_govhub_service"), 
+			foreignKey = @ForeignKey(name = "GovhubAuthService_GovhubAuth"))
 	private Set<ServiceEntity> services;
 	
 	
@@ -73,7 +75,8 @@ public class RoleAuthorizationEntity implements Serializable {
 	@JoinTable(
 			name = "govhub_auth_organizations",
 			joinColumns = @JoinColumn(name = "id_govhub_authorization"),
-			inverseJoinColumns = @JoinColumn(name = "id_govhub_organization"))
+			inverseJoinColumns = @JoinColumn(name = "id_govhub_organization"),
+			foreignKey = @ForeignKey(name = "GovhubAuthOrganization_GovhubAuth"))
 	private Set<OrganizationEntity> organizations;
 	
 }

@@ -13,7 +13,7 @@ import it.govhub.govregistry.readops.api.spec.OrganizationApi;
 
 
 @Component
-public class OrganizationAuthItemAssembler  extends RepresentationModelAssemblerSupport<OrganizationEntity, OrganizationAuthItem> {
+public class OrganizationAuthItemAssembler extends RepresentationModelAssemblerSupport<OrganizationEntity, OrganizationAuthItem> {
 	
 	public OrganizationAuthItemAssembler() {
 		super(OrganizationApi.class, OrganizationAuthItem.class);
@@ -30,9 +30,21 @@ public class OrganizationAuthItemAssembler  extends RepresentationModelAssembler
 			.withSelfRel()
 		) ;
 		
+		if(src.getLogo() != null)
+			ret.add(linkTo(
+					methodOn(OrganizationApi.class)
+					.downloadOrganizationLogo(src.getId()))
+					.withRel("logo"));
+	
+		if(src.getLogoMiniature() != null)
+			ret.add(linkTo(
+					methodOn(OrganizationApi.class)
+					.downloadOrganizationLogoMiniature(src.getId()))
+				.withRel("logo_small")
+			) ;
+		
 		return ret;
 	}
-
 
 
 }
