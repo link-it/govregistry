@@ -24,6 +24,11 @@ public class OrganizationFilters {
 	}
 	
 	
+	public static Specification<OrganizationEntity> never() {
+		return (Root<OrganizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> cb.isTrue(cb.literal(false)); 
+	}
+	
+	
 	// Facciamo il confronto case insensitive portando in upperCase  i valori
 	public static Specification<OrganizationEntity> likeTaxCode(String taxCode) {
 		return (Root<OrganizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->

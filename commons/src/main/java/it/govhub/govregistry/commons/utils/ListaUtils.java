@@ -32,7 +32,7 @@ public class ListaUtils {
 	 * Mentre il limit non viene toccato.
 	 * 
 	 */
-	public static final <T extends RepresentationModel<T>> T costruisciListaPaginata(
+	public static final <T extends RepresentationModel<T>> T buildPaginatedList(
 			Page<?> results,
 			int limit,
 			HttpServletRequest request, 
