@@ -139,12 +139,10 @@ public class SecurityService {
 		.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 		.anyMatch( auth -> {
 			
-			// L'admin non ha bisogno di avere servizi specificati
-			boolean isAdmin = auth.getRole().getName().equals(GovregistryRoles.GOVREGISTRY_SYSADMIN);
 			boolean hasRole = roleList.contains(auth.getRole().getName());
 			boolean onService = auth.getServices().isEmpty() ||  auth.getServices().stream().anyMatch( s-> s.getId().equals(serviceId));
 			
-			return isAdmin || (hasRole && onService);
+			return hasRole && onService;
 		});
 		
 		if (!authorized) {
@@ -167,12 +165,10 @@ public class SecurityService {
 		.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 		.anyMatch( auth -> {
 			
-			// L'admin non ha bisogno di avere servizi specificati
-			boolean isAdmin = auth.getRole().getName().equals(GovregistryRoles.GOVREGISTRY_SYSADMIN);
 			boolean hasRole = roleList.contains(auth.getRole().getName());
 			boolean onOrganization = auth.getOrganizations().isEmpty() ||  auth.getOrganizations().stream().anyMatch( s-> s.getId().equals(organizationId));
 			
-			return isAdmin || (hasRole && onOrganization);
+			return hasRole && onOrganization;
 		});
 		
 		if (!authorized) {
@@ -181,52 +177,7 @@ public class SecurityService {
 	}
 	
 
-	/**
-	 * Quando si ha una autorizzazione sulle organizzazioni con una lista di organizzazioni vuota, allora il permesso 
-	 * è esteso a tutte le organizzazioni e il metodo restituisce true.
-	 * 
-	 * L'admin può leggere sempre tutto.
-	 */
-	public boolean canReadAllOrganizations() {
-		
-		UserEntity user = getPrincipal();
-		OffsetDateTime now = OffsetDateTime.now();
-
-		return user.getAuthorizations().stream()
-			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.anyMatch( auth -> {
-				String role = auth.getRole().getName(); 
-				boolean isAdmin = role.equals(GovregistryRoles.GOVREGISTRY_SYSADMIN);
-				boolean hasRole = role.equals(GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_VIEWER) || role.equals(GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR);
-				return isAdmin || (hasRole && auth.getOrganizations().isEmpty());
-			});
-	}
-
 	
-	/**
-	 * Quando si ha una autorizzazione con una lista di servizi vuota, allora il permesso è esteso a tutti i servizi e il metodo
-	 * restituisce true.
-	 * 
-	 * L'admin può leggere sempre tutto.
-	 * 
-	 */	
-	public boolean canReadAllServices() {
-		
-		UserEntity user = getPrincipal();
-		OffsetDateTime now = OffsetDateTime.now();
-
-		return user.getAuthorizations().stream()
-			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.anyMatch( auth -> {
-				String role = auth.getRole().getName(); 
-				boolean isAdmin = role.equals(GovregistryRoles.GOVREGISTRY_SYSADMIN);
-				boolean hasRole = role.equals(GovregistryRoles.GOVREGISTRY_SERVICES_VIEWER) || role.equals(GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR);
-				return isAdmin || (hasRole && auth.getServices().isEmpty());
-			});
-	}
-	
-	
-
 	public Set<Long> listAuthorizedOrganizations(String... roles) {
 		return listAuthorizedOrganizations(Set.of(roles));
 	}

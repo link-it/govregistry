@@ -1,6 +1,8 @@
 package it.govhub.govregistry.api.web;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,11 +20,12 @@ import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.commons.utils.RequestUtils;
 import it.govhub.govregistry.readops.api.assemblers.ServiceAssembler;
+import it.govhub.govregistry.readops.api.web.ReadServiceController;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 @V1RestController
-public class ServiceController implements ServiceApi {
+public class ServiceController extends ReadServiceController implements ServiceApi {
 	
 	@Autowired
 	ServiceService serviceService;
@@ -32,6 +35,18 @@ public class ServiceController implements ServiceApi {
 
 	@Autowired
 	SecurityService authService;
+	
+
+	private static Set<String> readServiceRoles = Set.of(
+			GovregistryRoles.GOVREGISTRY_SYSADMIN ,
+			GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR,
+			GovregistryRoles.GOVREGISTRY_SERVICES_VIEWER);
+			
+	
+	@Override
+	protected Set<String> getReadServiceRoles() {
+		return new HashSet<>(readServiceRoles);
+	}
 	
 	
 	@Override
@@ -48,7 +63,6 @@ public class ServiceController implements ServiceApi {
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(ret);
 	}
-
 	
 	
 	@Override

@@ -60,6 +60,5 @@ public class OrganizationFilters {
 		return (Root<OrganizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->			
 			root.get(OrganizationEntity_.id).in(orgIds);
 	}
-	
-	
+
 }

@@ -117,7 +117,18 @@ components:
          description: Sorting field.
          required: true
          schema:
-            $ref: "#/components/schemas/ServiceOrdering"                           
+            $ref: "#/components/schemas/ServiceOrdering"
+            
+      with_roles:
+         name: with_roles
+         in: query
+         description: Retrieve the items for whose the principal has the roles.
+         schema:
+            type: array
+            items:
+               type: string
+               pattern: .*
+               maxLength: 255                                       
 
    responses:
    

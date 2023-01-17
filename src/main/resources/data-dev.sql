@@ -1,3 +1,7 @@
+-- Applicazione
+
+INSERT INTO public.govhub_applications(id, application_id, name, deployed_uri) VALUES (1, 'govregistry', 'GovRegistry', 'http://localhost:10001');
+
 -- Utenti
 
 INSERT INTO public.govhub_users (id, principal, full_name, email, enabled) VALUES (nextval('public.seq_govhub_users'), 'amministratore', 'Amministratore Vanguard', 'admin@govhub.it', true);
