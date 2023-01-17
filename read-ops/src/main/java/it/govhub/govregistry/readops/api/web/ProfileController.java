@@ -1,7 +1,5 @@
 package it.govhub.govregistry.readops.api.web;
 
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,7 +10,6 @@ import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.readops.api.assemblers.ProfileAssembler;
 import it.govhub.govregistry.readops.api.spec.ProfileApi;
 import it.govhub.security.beans.GovhubPrincipal;
-import it.govhub.security.config.GovregistryRoles;
 
 
 @V1RestController

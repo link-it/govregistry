@@ -21,9 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import it.govhub.govregistry.commons.api.beans.Service;
 import it.govhub.govregistry.commons.api.beans.ServiceList;
 import it.govhub.govregistry.commons.api.beans.ServiceOrdering;
-import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
-import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.ServiceMessages;
@@ -33,13 +31,11 @@ import it.govhub.govregistry.readops.api.assemblers.ServiceAssembler;
 import it.govhub.govregistry.readops.api.assemblers.ServiceAuthItemAssembler;
 import it.govhub.govregistry.readops.api.repository.ReadServiceRepository;
 import it.govhub.govregistry.readops.api.repository.ServiceFilters;
-import it.govhub.govregistry.readops.api.services.PermissionManager;
 import it.govhub.govregistry.readops.api.spec.ServiceApi;
 import it.govhub.security.services.SecurityService;
 
 
-@V1RestController
-public class ReadServiceController implements ServiceApi {
+public abstract class ReadServiceController implements ServiceApi {
 	
 	@Autowired
 	private ServiceAssembler serviceAssembler;
@@ -53,23 +49,17 @@ public class ReadServiceController implements ServiceApi {
 	@Autowired
 	private SecurityService authService;
 	
-	@Autowired
-	private PermissionManager permissionManager;
-	
-	
+	protected abstract Set<String> getReadServiceRoles();	
+
 	@Override
-	public ResponseEntity<ServiceList> listServices(ServiceOrdering sort, Direction sortDirection, Integer limit, Long offset, String q, List<String> haveRoles) {
+	public ResponseEntity<ServiceList> listServices(ServiceOrdering sort, Direction sortDirection, Integer limit, Long offset, String q, List<String> withRoles) {
 		
-		UserEntity principal = SecurityService.getPrincipal();
-		
-		Set<Long> serviceIds = this.permissionManager.listReadableServices(principal);
-		
-		if (haveRoles != null && !haveRoles.isEmpty()) {
-			// Recupero tutti i servizi sui quali posso lavorare con i ruoli specificati
-			// e faccio l'intersezione con quelle del PermissionManager.
-			Set<Long> serviceIdsWithRoles = this.authService.listAuthorizedServices(haveRoles);
-			serviceIds = SecurityService.restrictAuthorizations(serviceIds, serviceIdsWithRoles);
+		Set<String> roles = getReadServiceRoles();
+		if (withRoles != null) {
+			roles.retainAll(withRoles);
 		}
+		
+		Set<Long> serviceIds = this.authService.listAuthorizedServices(roles);
 		
 		Specification<ServiceEntity> spec;
 		
@@ -83,21 +73,18 @@ public class ReadServiceController implements ServiceApi {
 			// Filtra per i servizi trovati
 			spec = ServiceFilters.byId(serviceIds);
 		}
-		
 		if (q != null) {
 			spec = spec.and(
 					ServiceFilters.likeDescription(q).or(ServiceFilters.likeName(q)));
 		}
 
 		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, ServiceFilters.sort(sort,sortDirection));
-		
 		Page<ServiceEntity> services = this.serviceRepo.findAll(spec, pageRequest.pageable);
 		
 		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
 				.currentRequestAttributes()).getRequest();
 		
 		ServiceList ret = ListaUtils.buildPaginatedList(services, pageRequest.limit, curRequest, new ServiceList());
-		
 		for (ServiceEntity service : services) {
 			ret.addItemsItem(this.serviceItemAssembler.toModel(service));
 		}
@@ -109,7 +96,7 @@ public class ReadServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> readService(Long id) {
 		
-		Set<Long> serviceIds = this.permissionManager.listReadableServices(SecurityService.getPrincipal());
+		Set<Long> serviceIds = this.authService.listAuthorizedServices(getReadServiceRoles());
 		if (serviceIds != null && !serviceIds.contains(id)) {
 			throw new NotAuthorizedException();
 		}
@@ -124,7 +111,7 @@ public class ReadServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Resource> downloadServiceLogo(Long id) {
 		
-		Set<Long> serviceIds = this.permissionManager.listReadableServices(SecurityService.getPrincipal());
+		Set<Long> serviceIds = this.authService.listAuthorizedServices(getReadServiceRoles());
 		if (serviceIds != null && !serviceIds.contains(id)) {
 			throw new NotAuthorizedException();
 		}
@@ -133,23 +120,21 @@ public class ReadServiceController implements ServiceApi {
 				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
 
 		byte[] ret = service.getLogo() != null ? service.getLogo() : new byte[0];
-		
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
-		
 		InputStreamResource logoStream = new InputStreamResource(bret);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentLength(ret.length);
 		
 		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
-		
 		return ret2;
 	}
 
 
-	@Override
+	@Override 
 	public ResponseEntity<Resource> downloadServiceLogoMiniature(Long id) {
-		Set<Long> serviceIds = this.permissionManager.listReadableServices(SecurityService.getPrincipal());
+		
+		Set<Long> serviceIds = this.authService.listAuthorizedServices(getReadServiceRoles());
 		if (serviceIds != null && !serviceIds.contains(id)) {
 			throw new NotAuthorizedException();
 		}
@@ -158,16 +143,13 @@ public class ReadServiceController implements ServiceApi {
 				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
 
 		byte[] ret = service.getLogoMiniature() != null ? service.getLogoMiniature() : new byte[0];
-		
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
-		
 		InputStreamResource logoStream = new InputStreamResource(bret);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentLength(ret.length);
 		
 		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
-		
 		return ret2;
 	}
 
