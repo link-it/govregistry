@@ -56,7 +56,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			HttpStatus.OK, "https://www.rfc-editor.org/rfc/rfc9110.html#name-200-ok",
 			HttpStatus.UNAUTHORIZED, "https://www.rfc-editor.org/rfc/rfc9110.html#name-401-unauthorized",
 			HttpStatus.FORBIDDEN, "https://www.rfc-editor.org/rfc/rfc9110.html#name-403-forbidden",
-			HttpStatus.NOT_ACCEPTABLE, "https://www.rfc-editor.org/rfc/rfc9110.html#name-406-not-acceptable"
+			HttpStatus.NOT_ACCEPTABLE, "https://www.rfc-editor.org/rfc/rfc9110.html#name-406-not-acceptable",
+			HttpStatus.BAD_GATEWAY, "https://www.rfc-editor.org/rfc/rfc9110.html#name-502-bad-gateway"
 		);
 	
 	private Logger logger = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
