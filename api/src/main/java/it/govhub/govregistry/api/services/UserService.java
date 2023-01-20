@@ -32,23 +32,26 @@ import it.govhub.govregistry.readops.api.assemblers.UserAssembler;
 public class UserService {
 	
 	@Autowired
-	private UserRepository userRepo;
+	UserRepository userRepo;
 	
 	@Autowired
-	private ObjectMapper objectMapper;
+	ObjectMapper objectMapper;
 	
 	@Autowired
-	private Validator validator;
+	Validator validator;
 	
 	@Autowired
-	private UserAssembler userAssembler;
+	UserAssembler userAssembler;
+	
+	@Autowired
+	UserMessages userMessages;
 	
 
 	@Transactional
 	public UserEntity createUser(UserCreate userCreate) {
 		
 		if (this.userRepo.findByPrincipal(userCreate.getPrincipal()).isPresent()) {
-			throw new ConflictException(UserMessages.conflictPrincipal(userCreate.getPrincipal()));
+			throw new ConflictException(this.userMessages.conflictPrincipal(userCreate.getPrincipal()));
 		}
 		
 		UserEntity newUser = this.userAssembler.toEntity(userCreate);
@@ -61,7 +64,7 @@ public class UserService {
 	public UserEntity patchUser(Long id, JsonPatch patch) {
 		
 		UserEntity user = this.userRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
+				.orElseThrow( () -> new ResourceNotFoundException(this.userMessages.idNotFound(id)));
 		
 		// Convertiamo la entity in json e applichiamo la patch sul json
 		User restUser = this.userAssembler.toModel(user);
@@ -106,7 +109,7 @@ public class UserService {
 				.filter( u -> !u.getId().equals(newUser.getId()));
 		
 		if (conflictUser.isPresent() ) {
-			throw new ConflictException(UserMessages.conflictPrincipal(newUser.getPrincipal()));
+			throw new ConflictException(this.userMessages.conflictPrincipal(newUser.getPrincipal()));
 		}
 				
 		return this.userRepo.save(newUser);

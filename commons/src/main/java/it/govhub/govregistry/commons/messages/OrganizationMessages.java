@@ -1,18 +1,18 @@
 package it.govhub.govregistry.commons.messages;
 
-public class OrganizationMessages {
+import org.springframework.stereotype.Component;
 
-	private OrganizationMessages() {}
+@Component
+public class OrganizationMessages extends RestEntityMessageBuilder {
+
+	public OrganizationMessages() { super("Organization"); }
 	
-	public static String conflictTaxCode(String taxCode) {
-		return "Organization with taxCode ["+taxCode+"] already exists.";
+	public String conflictTaxCode(String taxCode) {
+		return conflict("taxcode", taxCode);
 	}
 	
-	public static String conflictLegalName(String legalName) {
-		return "Organizzazione with legalName ["+legalName+"] already exists.";
+	public String conflictLegalName(String legalName) {
+		return conflict("legalName", legalName);
 	}
 
-	public static String notFound(Long id) {
-		return "Organization with id  ["+id+"] not found.";
-	}
 }

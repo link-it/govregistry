@@ -32,26 +32,29 @@ import it.govhub.govregistry.readops.api.assemblers.OrganizationAssembler;
 public class OrganizationService {
 
 	@Autowired
-	private OrganizationAssembler orgAssembler;
+	OrganizationAssembler orgAssembler;
 	
 	@Autowired
-	private OrganizationRepository orgRepo;
+	OrganizationRepository orgRepo;
 	
 	@Autowired
-	private ObjectMapper objectMapper;
+	ObjectMapper objectMapper;
 	
 	@Autowired
-	private Validator validator;
+	Validator validator;
+	
+	@Autowired
+	OrganizationMessages orgMessages;
 	
 	@Transactional
 	public OrganizationEntity createOrganization(OrganizationCreate org) {
 
 		if (this.orgRepo.findByTaxCode(org.getTaxCode()).isPresent()) {
-			throw new ConflictException(OrganizationMessages.conflictTaxCode(org.getTaxCode()));
+			throw new ConflictException(this.orgMessages.conflictTaxCode(org.getTaxCode()));
 		}
 		
 		if (this.orgRepo.findByLegalName(org.getLegalName()).isPresent()) {
-			throw new ConflictException(OrganizationMessages.conflictLegalName(org.getLegalName()));
+			throw new ConflictException(this.orgMessages.conflictLegalName(org.getLegalName()));
 		}
 
 		OrganizationEntity toCreate = this.orgAssembler.toEntity(org);
@@ -63,7 +66,7 @@ public class OrganizationService {
 	public OrganizationEntity patchOrganization(Long id, JsonPatch patch) {
 		
 		OrganizationEntity org = this.orgRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(OrganizationMessages.notFound(id)));
+				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
 		// Convertiamo la entity in json e applichiamo la patch sul json
 		Organization restOrg = this.orgAssembler.toModel(org);
@@ -116,14 +119,14 @@ public class OrganizationService {
 				.filter( o -> !o.getId().equals(newOrg.getId()));
 		
 		if (conflictOrg.isPresent() ) {
-			throw new ConflictException(OrganizationMessages.conflictTaxCode(newOrg.getTaxCode()));
+			throw new ConflictException(this.orgMessages.conflictTaxCode(newOrg.getTaxCode()));
 		}
 		
 		 conflictOrg = this.orgRepo.findByLegalName(newOrg.getLegalName())
 					.filter( o -> !o.getId().equals(newOrg.getId()));
 			
 			if (conflictOrg.isPresent() ) {
-				throw new ConflictException(OrganizationMessages.conflictLegalName(newOrg.getLegalName()));
+				throw new ConflictException(this.orgMessages.conflictLegalName(newOrg.getLegalName()));
 			}
 				
 		return this.orgRepo.save(newOrg);

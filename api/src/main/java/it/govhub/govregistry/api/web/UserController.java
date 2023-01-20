@@ -61,5 +61,6 @@ public class UserController implements UserApi {
 		User ret = this.userAssembler.toModel(newUser);
 		return ResponseEntity.status(HttpStatus.CREATED).body(ret);
 	}
+	
 
 }

@@ -38,16 +38,19 @@ import it.govhub.security.services.SecurityService;
 public abstract class ReadServiceController implements ServiceApi {
 	
 	@Autowired
-	private ServiceAssembler serviceAssembler;
+	ServiceAssembler serviceAssembler;
 	
 	@Autowired
-	private ServiceAuthItemAssembler serviceItemAssembler;
+	ServiceAuthItemAssembler serviceItemAssembler;
 	
 	@Autowired
-	private ReadServiceRepository serviceRepo;
+	ReadServiceRepository serviceRepo;
 	
 	@Autowired
-	private SecurityService authService;
+	SecurityService authService;
+	
+	@Autowired
+	ServiceMessages serviceMessages;
 	
 	protected abstract Set<String> getReadServiceRoles();	
 
@@ -102,7 +105,7 @@ public abstract class ReadServiceController implements ServiceApi {
 		}
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
+				.orElseThrow(() -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
 		
 		return ResponseEntity.ok(this.serviceAssembler.toModel(service));
 	}
@@ -117,7 +120,7 @@ public abstract class ReadServiceController implements ServiceApi {
 		}
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
+				.orElseThrow(() -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
 
 		byte[] ret = service.getLogo() != null ? service.getLogo() : new byte[0];
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
@@ -140,7 +143,7 @@ public abstract class ReadServiceController implements ServiceApi {
 		}
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
+				.orElseThrow(() -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
 
 		byte[] ret = service.getLogoMiniature() != null ? service.getLogoMiniature() : new byte[0];
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);

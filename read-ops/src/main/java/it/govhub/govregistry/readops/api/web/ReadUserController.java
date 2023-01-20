@@ -31,14 +31,16 @@ import it.govhub.security.services.SecurityService;
 public class ReadUserController implements UserApi{
 	
 	@Autowired
-	private ReadUserRepository userRepo;
+	ReadUserRepository userRepo;
 	
 	@Autowired
-	private UserAssembler userAssembler;
+	UserAssembler userAssembler;
 	
 	@Autowired
-	private SecurityService authService;
+	SecurityService authService;
 	
+	@Autowired
+	UserMessages userMessages;
 	
 	@Override
 	public ResponseEntity<UserList> listUsers(UserOrdering orderBy, Direction sortDirection, Integer limit, Long offset, String q, Boolean enabled) {
@@ -77,7 +79,7 @@ public class ReadUserController implements UserApi{
 		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR, GovregistryRoles.GOVREGISTRY_USERS_VIEWER);
 		
 		UserEntity user = this.userRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
+				.orElseThrow( () -> new ResourceNotFoundException(this.userMessages.idNotFound(id)) );
 		
 		return ResponseEntity.ok(
 				this.userAssembler.toModel(user));

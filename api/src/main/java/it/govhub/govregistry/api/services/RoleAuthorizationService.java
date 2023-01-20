@@ -56,6 +56,15 @@ public class RoleAuthorizationService {
 	@Autowired
 	SecurityService securityService;
 	
+	@Autowired
+	UserMessages userMessages;
+	
+	@Autowired
+	OrganizationMessages orgMessages;
+	
+	@Autowired
+	ServiceMessages serviceMessages;
+	
 
 	@Transactional
 	public Authorization assignAuthorization(Long userId, AuthorizationCreate authorization) {
@@ -63,7 +72,7 @@ public class RoleAuthorizationService {
 		this.securityService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR);
 		
 		UserEntity assignee = this.userRepo.findById(userId)
-				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(userId)));
+				.orElseThrow( () -> new ResourceNotFoundException(this.userMessages.idNotFound(userId)));
 		
 		RoleEntity role = this.roleRepo.findById(authorization.getRole())
 				.orElseThrow( () -> new BadRequestException(RoleMessages.notFound(userId)));
@@ -75,7 +84,7 @@ public class RoleAuthorizationService {
 		
 		for (Long oid: authorization.getOrganizations()) {
 			if (!orgIds.contains(oid)) {
-				throw new BadRequestException(OrganizationMessages.notFound(oid));
+				throw new BadRequestException(this.orgMessages.idNotFound(oid));
 			}
 		}
 	
@@ -84,7 +93,7 @@ public class RoleAuthorizationService {
 		
 		for (Long sid : authorization.getServices()) {
 			if (!foundIds.contains(sid)) {
-				throw new BadRequestException(ServiceMessages.notFound(sid));
+				throw new BadRequestException(this.serviceMessages.idNotFound(sid));
 			}			
 		}
 		

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequest;
 
+import it.govhub.govregistry.commons.messages.SystemMessages;
+
 @Component
 public class DefaultResponseErrorHandler extends DefaultErrorAttributes {
 
@@ -25,11 +27,11 @@ public class DefaultResponseErrorHandler extends DefaultErrorAttributes {
         if (status == 500) {
 	        errorAttributes.put("title", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
 	        errorAttributes.put("type", RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.INTERNAL_SERVER_ERROR));
-	        errorAttributes.put("detail", "Request can't be satisfied at the moment");
+	        errorAttributes.put("detail", SystemMessages.internalError());
         } else if (status == 404) {
         	errorAttributes.put("title", HttpStatus.NOT_FOUND.getReasonPhrase());
 	        errorAttributes.put("type", RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.NOT_FOUND));
-	        errorAttributes.put("detail", "Resource not found.");
+	        errorAttributes.put("detail", SystemMessages.endpointNotFound());
         }
         
         return errorAttributes;

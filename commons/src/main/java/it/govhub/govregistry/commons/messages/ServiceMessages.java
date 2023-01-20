@@ -1,11 +1,9 @@
 package it.govhub.govregistry.commons.messages;
 
-public class ServiceMessages {
+import org.springframework.stereotype.Component;
 
-		private ServiceMessages() {}
-		
-		public static String notFound(Long id) {
-			return "Service with ID ["+id+"] not found.";
-		}
-		
+@Component
+public class ServiceMessages extends RestEntityMessageBuilder{
+
+		public ServiceMessages() { super("Service"); }
 }
