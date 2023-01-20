@@ -68,7 +68,7 @@ public class ServiceController extends ReadServiceController implements ServiceA
 	@Override
 	public ResponseEntity<Service> updateService(Long id, List<PatchOp> patchOp) {
 		
-		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR);
+		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);

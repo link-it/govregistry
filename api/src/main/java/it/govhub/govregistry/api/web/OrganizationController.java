@@ -93,7 +93,7 @@ public class OrganizationController  extends ReadOrganizationController implemen
 	@Override
 	public ResponseEntity<Organization> updateOrganization(Long id, List<PatchOp> patchOp) {
 		
-		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR);
+		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);
