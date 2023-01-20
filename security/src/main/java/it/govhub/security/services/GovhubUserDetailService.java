@@ -19,14 +19,17 @@ import it.govhub.security.repository.SecurityUserRepository;
 public class GovhubUserDetailService implements UserDetailsService, AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
 	
 	@Autowired
-	private SecurityUserRepository userRepo;
+	SecurityUserRepository userRepo;
+	
+	@Autowired
+	UserMessages userMessages;
 
 	@Override
 	@Cacheable(Caches.PRINCIPALS)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		UserEntity user = this.userRepo.findAndPreloadByPrincipal(username)
-				.orElseThrow( () -> new UsernameNotFoundException(UserMessages.notFound(username)));
+				.orElseThrow( () -> new UsernameNotFoundException(this.userMessages.principalNotFound(username)));
 		
 		return new GovhubPrincipal(user);
 	}

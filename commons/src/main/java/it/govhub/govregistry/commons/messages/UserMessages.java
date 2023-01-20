@@ -1,20 +1,21 @@
 package it.govhub.govregistry.commons.messages;
 
-public class UserMessages {
-	
-	private UserMessages() {}
+import org.springframework.stereotype.Component;
 
-	public static String conflictPrincipal(String principal) {
-		return "User with principal ["+principal+"] already exists.";
+@Component
+public class UserMessages extends RestEntityMessageBuilder {
+	
+	public UserMessages() {
+		super("User");
+	}
+
+	public String conflictPrincipal(String principal) {
+		return conflict("principal", principal); 
 	}
 	
-	public static String notFound(Long id) {
-		return "User with id  ["+id+"] not found.";
-	}
 	
-	
-	public static String notFound(String principal) {
-		return "User with principal ["+principal+"] not found.";
+	public String principalNotFound(String principal) {
+		return notFound("princpal", principal);
 	}
 
 }

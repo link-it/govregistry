@@ -26,16 +26,19 @@ import it.govhub.govregistry.readops.api.assemblers.ServiceAssembler;
 public class ServiceService {
 	
 	@Autowired
-	private ServiceRepository serviceRepo;
+	ServiceRepository serviceRepo;
 	
 	@Autowired
-	private ServiceAssembler serviceAssembler;
+	ServiceAssembler serviceAssembler;
 	
 	@Autowired
-	private ObjectMapper objectMapper;
+	ObjectMapper objectMapper;
 	
 	@Autowired
-	private Validator validator;
+	Validator validator;
+	
+	@Autowired
+	ServiceMessages serviceMessages;
 	
 	public ServiceEntity createService(ServiceCreate service) {
 	
@@ -48,7 +51,7 @@ public class ServiceService {
 	public ServiceEntity patchService(Long id, JsonPatch patch) {
 		
 		ServiceEntity user = this.serviceRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(ServiceMessages.notFound(id)));
+				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
 		
 		// Convertiamo la entity in json e applichiamo la patch sul json
 		Service restService = this.serviceAssembler.toModel(user);

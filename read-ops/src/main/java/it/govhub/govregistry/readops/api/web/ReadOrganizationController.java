@@ -39,6 +39,9 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 	@Autowired
 	SecurityService authService;	
 	
+	@Autowired
+	OrganizationMessages orgMessages;
+	
 	protected abstract Set<String> getReadOrganizationRoles();	
 
 	@Override
@@ -52,7 +55,7 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 		
 		Organization ret = this.orgRepo.findById(id)
 			.map( org -> this.orgAssembler.toModel(org))
-			.orElseThrow( () -> new ResourceNotFoundException(OrganizationMessages.notFound(id)));
+			.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
 		return ResponseEntity.ok(ret);
 	}
@@ -67,7 +70,7 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 		}
 		
 		OrganizationEntity org = this.orgRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(OrganizationMessages.notFound(id)));
+				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
 		byte[] ret = org.getLogo() != null ? org.getLogo() : new byte[0];
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
@@ -90,7 +93,7 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 		}
 		
 		OrganizationEntity org = this.orgRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(OrganizationMessages.notFound(id)));
+				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
 		byte[] ret = org.getLogoMiniature() != null ? org.getLogoMiniature() : new byte[0];
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);

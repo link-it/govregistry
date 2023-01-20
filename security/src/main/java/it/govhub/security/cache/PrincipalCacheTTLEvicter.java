@@ -12,7 +12,7 @@ public class PrincipalCacheTTLEvicter {
 	private Logger logger = LoggerFactory.getLogger(PrincipalCacheTTLEvicter.class);
 
 	@CacheEvict(value = Caches.PRINCIPALS, allEntries = true)
-	@Scheduled(fixedRateString = "${caching.govhub.principals.TTL}")
+	@Scheduled(fixedRateString = "${caching.govhub.principals.TTL:300000}")
 	public void emptyPrincipalsCache() {
 		logger.info("CLEARING " + Caches.PRINCIPALS + " CACHE.");
 	}

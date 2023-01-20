@@ -39,6 +39,7 @@ import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.exception.SemanticValidationException;
 import it.govhub.govregistry.commons.exception.UnreachableException;
+import it.govhub.govregistry.commons.messages.SystemMessages;
 import it.govhub.govregistry.commons.utils.RequestUtils;
 
 
@@ -129,7 +130,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler({InternalException.class})
 	public final Object handleAllInternalExceptions(InternalException ex, WebRequest request) {
-		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.", request.getHeader("Accept")) ;
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(), request.getHeader("Accept")) ;
 	}
 	
 	
@@ -137,7 +138,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler({RuntimeException.class})
 	public final Object catchAll(RuntimeException ex, WebRequest request) {
 		logger.warn("Handling Uncaught Runtime Exception: {}", ex);
-		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.", request.getHeader("Accept"));
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(), request.getHeader("Accept"));
 	}
 	
 	
@@ -145,7 +146,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler({Exception.class})
 	public final Object catchAll(Exception ex, WebRequest request) {
 		logger.warn("Handling Uncaught Exception: {}", ex);
-		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "La richiesta non può essere soddisfatta al momento.",request.getHeader("Accept"));
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(),request.getHeader("Accept"));
 	}
 	
 
