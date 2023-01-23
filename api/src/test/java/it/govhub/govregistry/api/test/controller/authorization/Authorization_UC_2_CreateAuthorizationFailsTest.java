@@ -32,6 +32,7 @@ import it.govhub.govregistry.api.repository.OrganizationRepository;
 import it.govhub.govregistry.api.repository.ServiceRepository;
 import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
+import it.govhub.govregistry.api.test.utils.Matchers;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity;
@@ -378,7 +379,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
-				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
 //				.andExpect(jsonPath("$.expiration_date", is(now)))
 				.andReturn();
 		
@@ -442,7 +443,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
-				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
 //				.andExpect(jsonPath("$.expiration_date", is(now)))
 				.andReturn();
@@ -507,7 +508,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
-				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(now))))
 				.andReturn();
