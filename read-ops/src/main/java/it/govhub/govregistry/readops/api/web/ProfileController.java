@@ -17,20 +17,23 @@ public class ProfileController implements ProfileApi {
 	
 	@Autowired
 	ProfileAssembler profileAssembler;
+	
+	String applicationId = "govregistry"; // TODO: Cambialo
 
 	@Override
 	public ResponseEntity<Profile> profile() {
+		
+		// TODO: Nella  GET profile dei servizi faccio vedere solo le autorizzazioni che riguardano un certo servizio, anche per govregistry?
+		//		Nella GET /authorizazions 
+		//			-- Su govregistry faccio vedere tutte le autorizzazioni
+		//			-- Su govio ecc.. faccio vedere solo le autorizzazioni dell'applicazione
+		//		Idem per le autorizzazioni della /profile
 	
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
 		
-		Profile ret = this.profileAssembler.toModel(principal.getUser());
+		Profile ret = this.profileAssembler.toModel(principal.getUser(), applicationId);
 		
-		// Rimuovo dal body tutte le autorizzazioni che non riguardano i ruoli di GovRegistry
-	/*	ret.setAuthorizations(
-				ret.getAuthorizations().stream()
-					.filter( auth -> GovregistryRoles.ruoliConsentiti.contains(auth.getRole().getRoleName()))
-					.collect(Collectors.toList()));*/
 		
 		return ResponseEntity.ok(ret);
 	}
