@@ -29,17 +29,17 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
 		
         BeanUtils.copyProperties(src, ret);
 
-		/*ret.add(linkTo(
+		ret.add(linkTo(
 					methodOn(UserApi.class)
 					.readUser(src.getId()))
 				.withSelfRel()
-			);*/
+			);
 		
-		/*if (src.getEmail() != null) {
+		if (src.getEmail() != null) {
 			String md5 = DigestUtils.md5Hex(src.getEmail());
 			ret.add(
 					Link.of("https://gravatar.com/avatar/"+md5+"/s=100&d=identicon", LinkRelation.of("avatar")));
-		}*/
+		}
 		
 		return ret;
 	}
