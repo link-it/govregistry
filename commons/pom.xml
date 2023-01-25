@@ -78,6 +78,15 @@
 			<artifactId>jackson-databind-nullable</artifactId>
 			<version>${jackson.databind.nullable.version}</version>
 		</dependency>
+		
+		
+		<!--  Dipendenze per generatore openapi custom -->
+	      <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator</artifactId>
+			<version>${openapi.tool.codegen.version}</version>
+			<scope>provided</scope>
+        </dependency>		
 
 
 		<!-- JsonPatch -->
@@ -106,7 +115,7 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/govhub-api-commons.yaml</inputSpec>
-							<generatorName>spring</generatorName>
+							<generatorName>govhub-codegen</generatorName>
 							<typeMappings>base64=it.govhub.govregistry.commons.utils.Base64String</typeMappings>
 							<importMappings>
 								<importMapping>Direction=org.springframework.data.domain.Sort.Direction</importMapping>
@@ -120,7 +129,7 @@
 								<apiPackage>it.govhub.govregistry.commons.api.spec</apiPackage>
 								<modelPackage>it.govhub.govregistry.commons.api.beans</modelPackage>
 								<useBeanValidation>true</useBeanValidation>
-								<performBeanValidation>true</performBeanValidation>
+								<!-- <performBeanValidation>true</performBeanValidation> -->
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<interfaceOnly>true</interfaceOnly>
 								<hateoas>true</hateoas>
@@ -138,6 +147,13 @@
 						</configuration>
 					</execution>
 				</executions>
+								<dependencies>
+					<dependency>
+						<groupId>it.govhub.govregistry</groupId>
+						<artifactId>govhub-openapi-codegen</artifactId>
+						<version>0.1.0-SNAPSHOT</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 
 			<plugin>

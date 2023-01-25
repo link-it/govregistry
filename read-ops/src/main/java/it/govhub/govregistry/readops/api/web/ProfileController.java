@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import it.govhub.govregistry.commons.api.beans.Profile;
+import it.govhub.govregistry.commons.config.ApplicationConfig;
 import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.readops.api.assemblers.ProfileAssembler;
 import it.govhub.govregistry.readops.api.spec.ProfileApi;
@@ -18,23 +19,16 @@ public class ProfileController implements ProfileApi {
 	@Autowired
 	ProfileAssembler profileAssembler;
 	
-	String applicationId = "govregistry"; // TODO: Cambialo
-
+	@Autowired
+	ApplicationConfig appConfig;
+	
 	@Override
 	public ResponseEntity<Profile> profile() {
 		
-		// TODO: Nella  GET profile dei servizi faccio vedere solo le autorizzazioni che riguardano un certo servizio, anche per govregistry?
-		//		Nella GET /authorizazions 
-		//			-- Su govregistry faccio vedere tutte le autorizzazioni
-		//			-- Su govio ecc.. faccio vedere solo le autorizzazioni dell'applicazione
-		//		Idem per le autorizzazioni della /profile
-	
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
 		
-		Profile ret = this.profileAssembler.toModel(principal.getUser(), applicationId);
-		
-		
+		Profile ret = this.profileAssembler.toModel(principal.getUser(), this.appConfig.getApplicationId());
 		return ResponseEntity.ok(ret);
 	}
 

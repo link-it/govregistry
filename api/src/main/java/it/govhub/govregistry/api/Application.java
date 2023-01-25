@@ -8,6 +8,7 @@ import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -30,6 +31,7 @@ import it.govhub.security.config.SecurityExportedBeans;
 @EnableCaching
 @Import({ CommonsExportedBeans.class, ReadOpsExportedBeans.class, SecurityExportedBeans.class, TimeZoneConfigurer.class })
 @EnableJpaRepositories("it.govhub.govregistry.api.repository")
+@ComponentScan( {"it.govhub.govregistry" })
 public class Application extends SpringBootServletInitializer {
 	
 	@Value("${govhub.time-zone:Europe/Rome}")
