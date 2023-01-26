@@ -79,16 +79,6 @@
 			<version>${jackson.databind.nullable.version}</version>
 		</dependency>
 		
-		
-		<!--  Dipendenze per generatore openapi custom -->
-	      <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>openapi-generator</artifactId>
-			<version>${openapi.tool.codegen.version}</version>
-			<scope>provided</scope>
-        </dependency>		
-
-
 		<!-- JsonPatch -->
 		<dependency>
 			<groupId>com.github.java-json-tools</groupId>
@@ -147,11 +137,11 @@
 						</configuration>
 					</execution>
 				</executions>
-								<dependencies>
+				<dependencies>
 					<dependency>
-						<groupId>it.govhub.govregistry</groupId>
+						<groupId>it.govhub</groupId>
 						<artifactId>govhub-openapi-codegen</artifactId>
-						<version>0.1.0-SNAPSHOT</version>
+						<version>${govhub.codegen.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
