@@ -58,6 +58,13 @@
 			<artifactId>springdoc-openapi-data-rest</artifactId>
 			<version>${springdoc.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>it.govhub</groupId>
+			<artifactId>govhub-openapi-codegen</artifactId>
+			<version>${govhub.codegen.version}</version>
+		</dependency>
+
 		<!-- SpringDoc fine -->
 
 		<dependency>
