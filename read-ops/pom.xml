@@ -125,6 +125,12 @@
 						<id>generate-sources-openapi</id>
 						<phase>generate-sources</phase>
 						<configuration>
+							<globalProperties>
+								<!--  Utilizziamo il nome di un bean dell'openapi inesistente in modo che non ne venga generato alcuno, perchè sono già in commons quelli che servono.
+										Da documentazione dovrebbe bastare invece questa proprietà: <apis></apis> Ma visto che non funziona, con questo workaround non viene comunque
+										generato nessun bean.-->								
+								<models>unexistent-model</models>
+							</globalProperties>
 							<inputSpec>${project.basedir}/src/main/resources/govregistry-api-readops.yaml</inputSpec>
 							<generatorName>govhub-codegen</generatorName>
 							<typeMappings>base64=it.govhub.govregistry.commons.utils.Base64String</typeMappings>
