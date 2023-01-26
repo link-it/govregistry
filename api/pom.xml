@@ -272,9 +272,9 @@
 				</executions>
 				<dependencies>
 					<dependency>
-						<groupId>it.govhub.govregistry</groupId>
+						<groupId>it.govhub</groupId>
 						<artifactId>govhub-openapi-codegen</artifactId>
-						<version>0.1.0-SNAPSHOT</version>
+						<version>${govhub.codegen.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
