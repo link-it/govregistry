@@ -10,7 +10,7 @@
 		<artifactId>govregistry</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>readops</artifactId>
 	<packaging>jar</packaging>
 	<name>GovRegistry - Common Read Operation Controllers</name>
@@ -72,12 +72,12 @@
 			<artifactId>springdoc-openapi-data-rest</artifactId>
 			<version>${springdoc.version}</version>
 		</dependency>
-                <dependency>
-                        <groupId>it.govhub</groupId>
-                        <artifactId>govhub-openapi-codegen</artifactId>
-                        <version>${govhub.codegen.version}</version>
-                </dependency>
-		
+		<dependency>
+			<groupId>it.govhub</groupId>
+			<artifactId>govhub-openapi-codegen</artifactId>
+			<version>${govhub.codegen.version}</version>
+		</dependency>
+
 		<!-- SpringDoc fine -->
 
 		<dependency>
@@ -111,9 +111,30 @@
 
 	<build>
 		<finalName>govregistry-readops</finalName>
-		
+
 		<plugins>
-		<plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>resource-dependencies</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<type>jar</type>
+							<includeArtifactIds>commons</includeArtifactIds>
+							<includes>govhub-api-commons.yaml</includes>
+							<outputDirectory>${project.basedir}/src/main/resources</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
 				<version>${openapi.tool.codegen.version}</version>
@@ -126,9 +147,11 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<globalProperties>
-								<!--  Utilizziamo il nome di un bean dell'openapi inesistente in modo che non ne venga generato alcuno, perchè sono già in commons quelli che servono.
-										Da documentazione dovrebbe bastare invece questa proprietà: <apis></apis> Ma visto che non funziona, con questo workaround non viene comunque
-										generato nessun bean.-->								
+								<!-- Utilizziamo il nome di un bean dell'openapi inesistente in modo 
+									che non ne venga generato alcuno, perchè sono già in commons quelli che servono. 
+									Da documentazione dovrebbe bastare invece questa proprietà: <apis></apis> 
+									Ma visto che non funziona, con questo workaround non viene comunque generato 
+									nessun bean. -->
 								<models>unexistent-model</models>
 							</globalProperties>
 							<inputSpec>${project.basedir}/src/main/resources/govregistry-api-readops.yaml</inputSpec>
@@ -155,8 +178,8 @@
 								<importMapping>OrganizationOrdering=it.govhub.govregistry.commons.api.beans.OrganizationOrdering</importMapping>
 								<importMapping>ServiceOrdering=it.govhub.govregistry.commons.api.beans.ServiceOrdering</importMapping>
 								<importMapping>UserOrdering=it.govhub.govregistry.commons.api.beans.UserOrdering</importMapping>
-								
-								
+
+
 							</importMappings>
 							<configOptions>
 								<dateLibrary>java8</dateLibrary>
@@ -206,7 +229,7 @@
 				</executions>
 			</plugin>
 		</plugins>
-		
+
 		<extensions>
 			<!-- Enabling the use of SSH -->
 			<extension>
