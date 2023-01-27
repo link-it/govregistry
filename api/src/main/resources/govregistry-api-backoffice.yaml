@@ -37,7 +37,6 @@ tags:
 
 paths:
 
-
   /users:
     
     post:
@@ -150,6 +149,40 @@ paths:
           $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
         default:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
+          
+    get:
+         tags:
+            - authorization
+         summary: Retrieve the user authorizations.
+         description: Retrieve the user authorizations.
+         operationId: listAuthorizations
+         parameters:
+            - $ref: "govhub-api-commons.yaml#/components/parameters/limit"
+            - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
+            - $ref: "govhub-api-commons.yaml#/components/parameters/authorization_ordering_query"
+            - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
+         responses:
+           '200':
+             description: Successful operation.
+             content:
+               application/json:
+                 schema:
+                    $ref: "govhub-api-commons.yaml#/components/schemas/AuthorizationList"
+           '400':
+             $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+           '401':
+             $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+           '403':
+             $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+           '404':
+             $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+           '429':
+             $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+           '503':
+             $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+           default:
+             $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                 
+          
           
   /authorizations/{id}:
     parameters:
