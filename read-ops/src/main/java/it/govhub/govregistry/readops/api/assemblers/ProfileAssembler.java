@@ -17,7 +17,7 @@ import it.govhub.govregistry.readops.api.spec.ProfileApi;
 public class ProfileAssembler extends RepresentationModelAssemblerSupport<UserEntity, Profile> {
 	
 	@Autowired
-	AuthorizationAssembler authAssembler;
+	AuthorizationConverter authAssembler;
 
 	public ProfileAssembler() {
 		super(ProfileApi.class, Profile.class);

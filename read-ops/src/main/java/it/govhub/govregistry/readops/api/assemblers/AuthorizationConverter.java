@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import it.govhub.govregistry.commons.api.beans.Authorization;
@@ -14,10 +13,9 @@ import it.govhub.govregistry.commons.api.beans.Role;
 import it.govhub.govregistry.commons.api.beans.ServiceAuthItem;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity;
-import it.govhub.govregistry.readops.api.spec.AuthorizationApi;
 
 @Component
-public class AuthorizationAssembler  extends RepresentationModelAssemblerSupport<RoleAuthorizationEntity, Authorization> {
+public class AuthorizationConverter {
 	
 	@Autowired
 	private OrganizationAuthItemAssembler orgAuthItemAssembler;
@@ -25,14 +23,9 @@ public class AuthorizationAssembler  extends RepresentationModelAssemblerSupport
 	@Autowired
 	private ServiceAuthItemAssembler serviceAuthItemAssembler;
 
-	public AuthorizationAssembler() {
-		super(AuthorizationApi.class, Authorization.class);
-	}
 	
-	
-	@Override	
 	public Authorization toModel(RoleAuthorizationEntity auth) {
-		Authorization ret = instantiateModel(auth);
+		Authorization ret = new Authorization();
 		
 		ret.setId(auth.getId());
 		ret.setExpirationDate(auth.getExpirationDate());

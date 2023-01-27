@@ -4,10 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import it.govhub.govregistry.api.beans.AuthorizationCreate;
 import it.govhub.govregistry.api.messages.RoleMessages;
@@ -15,6 +20,7 @@ import it.govhub.govregistry.api.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.api.repository.ServiceRepository;
 import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.commons.api.beans.Authorization;
+import it.govhub.govregistry.commons.api.beans.AuthorizationList;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity;
@@ -26,9 +32,12 @@ import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.OrganizationMessages;
 import it.govhub.govregistry.commons.messages.ServiceMessages;
 import it.govhub.govregistry.commons.messages.UserMessages;
-import it.govhub.govregistry.readops.api.assemblers.AuthorizationAssembler;
+import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
+import it.govhub.govregistry.commons.utils.ListaUtils;
+import it.govhub.govregistry.readops.api.assemblers.AuthorizationConverter;
 import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
 import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
+import it.govhub.govregistry.readops.api.repository.RoleAuthorizationFilters;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
@@ -51,7 +60,7 @@ public class RoleAuthorizationService {
 	ReadRoleRepository roleRepo;
 	
 	@Autowired
-	AuthorizationAssembler authAssembler;
+	AuthorizationConverter authAssembler;
 	
 	@Autowired
 	SecurityService securityService;
@@ -129,6 +138,25 @@ public class RoleAuthorizationService {
 		}
 		
 		this.authRepo.delete(auth);
+	}
+	
+	
+	@Transactional
+	public AuthorizationList listUserAuthorizations(Long id, LimitOffsetPageRequest pageRequest) {
+		
+		Specification<RoleAuthorizationEntity> spec = RoleAuthorizationFilters.byUser(id);
+		
+		Page<RoleAuthorizationEntity> auths = this.authRepo.findAll(spec, pageRequest.pageable);
+		
+		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes()).getRequest();
+		
+		AuthorizationList ret = ListaUtils.buildPaginatedList(auths,  pageRequest.limit, curRequest, new AuthorizationList());
+		
+		for (RoleAuthorizationEntity auth : auths) {
+			ret.addItemsItem(this.authAssembler.toModel(auth));
+		}
+		return ret;
 	}
 
 	
