@@ -36,7 +36,6 @@ public class ApplicationEntity {
 	private String name;
 	
 	@Column(name = "deployed_uri", nullable = false)
-	//private URI deployedUri;
 	private String deployedUri;
 	
 	@Embedded
@@ -58,7 +57,7 @@ public class ApplicationEntity {
 		            column = @Column( name = "logo_color" )
 		        ),
 		 @AttributeOverride(
-		            name = "bg_color",
+		            name = "bgColor",
 		            column = @Column( name = "logo_bg_color" )
 		        )
 	})

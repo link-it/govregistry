@@ -48,17 +48,3 @@ public class LogoEntity {
 
 }
 
-
-/*
- * /*
- * {
-
-  "logo": {
-    "url": "http://...",
-    "icon": "bootstrap_icon_name",
-    "micon": "material_icon_name",
-    "icon_url": "http://.../file_name.svg", 
-    "bg_color": "#0f72a7",
-    "color": "#ffffff"
-  }
-}*/

@@ -21,7 +21,8 @@ public interface SecurityUserRepository extends JpaRepositoryImplementation<User
     		UserEntity_.AUTHORIZATIONS+"."+RoleAuthorizationEntity_.SERVICES, 
     		UserEntity_.AUTHORIZATIONS+"."+RoleAuthorizationEntity_.ORGANIZATIONS,
     		UserEntity_.AUTHORIZATIONS+"."+RoleAuthorizationEntity_.ROLE,
-    		UserEntity_.AUTHORIZATIONS+"."+RoleAuthorizationEntity_.ROLE+"."+RoleEntity_.ASSIGNABLE_ROLES
+    		UserEntity_.AUTHORIZATIONS+"."+RoleAuthorizationEntity_.ROLE+"."+RoleEntity_.ASSIGNABLE_ROLES,
+    		UserEntity_.AUTHORIZATIONS+"."+RoleAuthorizationEntity_.ROLE+"."+RoleEntity_.GOVHUB_APPLICATION
     		})
 	public Optional<UserEntity> findAndPreloadByPrincipal(String principal);
 }

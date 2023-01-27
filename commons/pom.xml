@@ -126,7 +126,6 @@
 								<apiPackage>it.govhub.govregistry.commons.api.spec</apiPackage>
 								<modelPackage>it.govhub.govregistry.commons.api.beans</modelPackage>
 								<useBeanValidation>true</useBeanValidation>
-								<!-- <performBeanValidation>true</performBeanValidation> -->
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<interfaceOnly>true</interfaceOnly>
 								<hateoas>true</hateoas>
