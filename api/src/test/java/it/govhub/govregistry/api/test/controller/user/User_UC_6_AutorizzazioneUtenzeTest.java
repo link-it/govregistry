@@ -30,10 +30,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
-import it.govhub.govregistry.api.beans.PatchOp.OpEnum;
 import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
+import it.govhub.govregistry.commons.api.beans.PatchOp.OpEnum;
 import it.govhub.govregistry.commons.entity.UserEntity;
 
 @SpringBootTest(classes = Application.class)
