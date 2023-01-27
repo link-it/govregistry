@@ -38,6 +38,10 @@ public class SecurityConfig{
     
     @Value("${govhub.csp.policy:default-src 'self'}")
     String cspPolicy;
+    
+    @Value("${spring.mvc.servlet.path:}")
+    String servletPath;
+
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
@@ -93,8 +97,8 @@ public class SecurityConfig{
 		http
 		.authorizeRequests()
 		// richieste GET Schema open-api accessibile a tutti
-		.antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() 
-		.antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+		.antMatchers(HttpMethod.GET, servletPath+"/swagger-ui/**").permitAll() 
+		.antMatchers(HttpMethod.GET, servletPath+"/v3/api-docs/**").permitAll()
 		.anyRequest().authenticated()
 		;
 		return http;
