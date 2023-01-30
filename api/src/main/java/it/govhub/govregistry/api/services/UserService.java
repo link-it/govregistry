@@ -50,6 +50,8 @@ public class UserService {
 	@Transactional
 	public UserEntity createUser(UserCreate userCreate) {
 		
+		PostgreSQLUtilities.throwIfContainsNullByte(userCreate.getFullName(), "full_name");
+		
 		if (this.userRepo.findByPrincipal(userCreate.getPrincipal()).isPresent()) {
 			throw new ConflictException(this.userMessages.conflictPrincipal(userCreate.getPrincipal()));
 		}
