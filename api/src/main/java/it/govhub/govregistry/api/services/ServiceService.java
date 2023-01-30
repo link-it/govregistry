@@ -41,6 +41,10 @@ public class ServiceService {
 	ServiceMessages serviceMessages;
 	
 	public ServiceEntity createService(ServiceCreate service) {
+		
+		// Faccio partire la validazione custom per la stringa \u0000
+		PostgreSQLUtilities.throwIfContainsNullByte(service.getServiceName(), "service_name");
+		PostgreSQLUtilities.throwIfContainsNullByte(service.getDescription(), "description");
 	
 		ServiceEntity newService = this.serviceAssembler.toEntity(service);
 		
