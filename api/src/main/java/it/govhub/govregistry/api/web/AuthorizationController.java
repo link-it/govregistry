@@ -19,7 +19,6 @@ import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.readops.api.assemblers.AuthorizationConverter;
 import it.govhub.govregistry.readops.api.repository.ReadRoleAuthorizationRepository;
-import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
