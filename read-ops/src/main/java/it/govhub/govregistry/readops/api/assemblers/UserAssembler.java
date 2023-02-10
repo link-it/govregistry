@@ -4,6 +4,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkRelation;
@@ -18,6 +20,7 @@ import it.govhub.govregistry.readops.api.spec.UserApi;
 @Component
 public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEntity, User> {
 	
+	Logger log = LoggerFactory.getLogger(UserAssembler.class);
 
 	public UserAssembler() {
 		super(UserApi.class, User.class);
@@ -25,6 +28,7 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
 
 	@Override
 	public User toModel(UserEntity src) {
+		log.debug("Assembling Entity [User] to model...");
 		User ret = instantiateModel(src);
 		
         BeanUtils.copyProperties(src, ret);
@@ -46,6 +50,7 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
 	
 
 	public UserEntity toEntity(User src) {
+		log.debug("Converting Model [User] to entity...");
 		UserEntity entity = new UserEntity();
 		BeanUtils.copyProperties(src, entity);
 		return entity;
@@ -53,6 +58,7 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
 	
 	
 	public UserEntity toEntity(UserCreate src) {
+		log.debug("Converting Model [UserCreate] to entity...");
 		UserEntity entity = new UserEntity();
 		BeanUtils.copyProperties(src, entity);
 		return entity;

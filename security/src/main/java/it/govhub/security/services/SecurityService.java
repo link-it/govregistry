@@ -31,16 +31,18 @@ import it.govhub.security.config.GovregistryRoles;
 @Service
 public class SecurityService {
 	
+	static Logger log = LoggerFactory.getLogger(SecurityService.class);
+	
 	public static UserEntity getPrincipal() {
+		log.debug("Retrieving GovhubPrincipal from the Authentication Context");
+		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
 		return  principal.getUser();
 	}
 	
-	Logger logger = LoggerFactory.getLogger(SecurityService.class);
-	
-	
 	public boolean hasAnyRole(String ...roles) {
+		log.debug("Checking if principal has any of the following roles: {}", (Object[]) roles);
 		
 		UserEntity user = getPrincipal();
 		
@@ -51,7 +53,6 @@ public class SecurityService {
 		return user.getAuthorizations().stream()
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 			.anyMatch( auth -> {
-						logger.debug("Checking role: {} in roles: {}", auth.getRole().getName(), roleList );
 						return roleList.contains(auth.getRole().getName());
 					});
 		
@@ -64,7 +65,7 @@ public class SecurityService {
 		}
 	}
 	
-	public boolean isAdmin() {
+	public boolean isGovregistryAdmin() {
 		return hasAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN);
 	}
 	
@@ -80,14 +81,16 @@ public class SecurityService {
 	 * 
 	 */
 	public boolean canWriteAuthorization(RoleAuthorizationEntity authToEdit) {
-		if (isAdmin()) {
+		log.debug("Checking if principal can write the requested authorization with authority: {}", authToEdit.getRole().getName()); 
+
+		UserEntity principal = getPrincipal();
+		
+		if (isGovregistryAdmin()) {
 			return true;
 		}
 		
 		OffsetDateTime now = OffsetDateTime.now();
 
-		UserEntity principal = getPrincipal();
-		
 		Iterable<RoleAuthorizationEntity> validAuths = principal.getAuthorizations().stream()
 				.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 				.filter( auth -> auth.getRole().getAssignableRoles().contains(authToEdit.getRole()))
@@ -128,6 +131,8 @@ public class SecurityService {
 	*
 	*/
 	public void hasAnyServiceAuthority(Long serviceId, String ...roles) {
+		log.debug("Checking if principal has any of the following authorities on service [{}]: {}", serviceId, (Object[]) roles);
+		
 		UserEntity user = getPrincipal();
 		
 		Set<String> roleList = Set.of(roles);
@@ -154,6 +159,8 @@ public class SecurityService {
 	 *  
 	 */
 	public void hasAnyOrganizationAuthority(Long organizationId, String ...roles) {
+		log.debug("Checking if principal has any of the following authorities on organization [{}]: {}", organizationId, (Object[]) roles);
+		
 		UserEntity user = getPrincipal();
 		
 		Set<String> roleList = Set.of(roles);
@@ -193,6 +200,8 @@ public class SecurityService {
 	 *						- Set<Long>  l'insieme di id sul quale sono autorizzato a lavorare 
 	 */
 	public Set<Long> listAuthorizedOrganizations(Set<String> roles) {
+		log.debug("Retrieving organizations for which the principal has the following authorities: {}", roles);
+		
 		UserEntity user = getPrincipal();
 		OffsetDateTime now = OffsetDateTime.now();
 		
@@ -234,6 +243,8 @@ public class SecurityService {
 	 *						- Set<Long>  l'insieme di id sul quale sono autorizzato a lavorare 
 	 */
 	public Set<Long> listAuthorizedServices(Set<String>  roles) {
+		log.debug("Retrieving services for which the principal has the following authorities: {}", roles);
+		
 		UserEntity user = getPrincipal();
 		OffsetDateTime now = OffsetDateTime.now();
 

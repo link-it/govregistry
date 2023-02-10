@@ -11,4 +11,5 @@ import org.springframework.stereotype.Component;
 public interface ApplicationConfig {
 
 	public String getApplicationId();
+	
 }

@@ -8,6 +8,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,17 +22,23 @@ import it.govhub.govregistry.commons.beans.AuthenticationProblem;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.exception.handlers.RestResponseEntityExceptionHandler;
 
-public class ProblemHttp403ForbiddenEntryPoint implements AuthenticationEntryPoint {
+
+public class UnauthorizedAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	
-	private ObjectMapper jsonMapper;
+	ObjectMapper jsonMapper;
 	
-	public ProblemHttp403ForbiddenEntryPoint(ObjectMapper mapper) {
+	Logger logger = LoggerFactory.getLogger(UnauthorizedAuthenticationEntryPoint.class);
+	
+	public UnauthorizedAuthenticationEntryPoint(ObjectMapper mapper) {
 		this.jsonMapper = mapper;
 	}
 	
 	
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, 	AuthenticationException authException) throws IOException, ServletException {
+		
+		logger.debug("Mappo la AuthenticationException in un problem: {}", authException.getMessage());
+		
 		AuthenticationProblem problem = new AuthenticationProblem();
 		problem.status = HttpStatus.UNAUTHORIZED.value();
 		problem.title = HttpStatus.UNAUTHORIZED.getReasonPhrase();

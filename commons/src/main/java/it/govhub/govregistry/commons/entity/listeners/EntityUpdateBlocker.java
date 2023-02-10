@@ -4,6 +4,11 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
+/**
+ * Gli oggetti che Ereditano da questo bean non sono memorizzabili su DB.
+ * @author froggo
+ *
+ */
 public class EntityUpdateBlocker {
 
 	  	@PrePersist
