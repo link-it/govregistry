@@ -3,6 +3,8 @@ package it.govhub.govregistry.commons.utils;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -16,9 +18,12 @@ import it.govhub.govregistry.commons.exception.UnreachableException;
 
 public class RequestUtils {
 	
+	static Logger log = LoggerFactory.getLogger(RequestUtils.class);
+	
 	private RequestUtils() {}
 	
 	public static JsonPatch toJsonPatch(List<PatchOp> patchOp) {
+		log.debug("Building the JsonPatch object...");
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode bodyPatch = mapper.valueToTree(patchOp);
 		

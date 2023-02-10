@@ -8,6 +8,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,15 +24,21 @@ import it.govhub.govregistry.commons.beans.AuthenticationProblem;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.exception.handlers.RestResponseEntityExceptionHandler;
 
+/*
+* Handler che viene eseguito quando un oggetto {@link org.springframework.security.core.Authentication Authentication} non ha
+* l'autorizzazione richiesta. (e.g.: visistare un'endpoint) 
+*/
 @Component
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
 	@Autowired
 	private ObjectMapper jsonMapper;
 	
+	Logger logger = LoggerFactory.getLogger(AccessDeniedHandlerImpl.class);
+	
 	@Override
-	public void handle(HttpServletRequest request, HttpServletResponse response,
-			AccessDeniedException accessDeniedException) throws IOException, ServletException {
+	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+		logger.debug("Building problem for Access Denied: {}", accessDeniedException.getMessage());
 		
 		AuthenticationProblem problem = new AuthenticationProblem();
 		

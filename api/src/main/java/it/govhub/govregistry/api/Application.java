@@ -57,7 +57,6 @@ public class Application extends SpringBootServletInitializer {
 	 */
 	@Bean
 	public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-
 		return builder ->  builder.
 				timeZone(this.timeZone).
 				serializerByType(Base64String.class, new Base64StringSerializer());

@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -46,9 +48,12 @@ public class UserService {
 	@Autowired
 	UserMessages userMessages;
 	
-
+	Logger log = LoggerFactory.getLogger(UserService.class);
+	
 	@Transactional
 	public UserEntity createUser(UserCreate userCreate) {
+		
+		log.info("Creating new user: {}", userCreate);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(userCreate.getFullName(), "full_name");
 		
@@ -64,6 +69,8 @@ public class UserService {
 	
 	@Transactional
 	public UserEntity patchUser(Long id, JsonPatch patch) {
+		
+		log.info("Patching user [{}]: {}", id, patch);
 		
 		UserEntity user = this.userRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.userMessages.idNotFound(id)));

@@ -2,6 +2,8 @@ package it.govhub.govregistry.commons.exception.handlers;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
@@ -10,11 +12,19 @@ import org.springframework.web.context.request.WebRequest;
 
 import it.govhub.govregistry.commons.messages.SystemMessages;
 
+/**
+ * Handler di fallback quando il @ControllerAdvice non gestisce l'errore sollevato durante la richiesta.
+ * Trasforma gli errorAttributes in modo che venga prodotto un Problem secondo specifica.
+ *
+ */
 @Component
 public class DefaultResponseErrorHandler extends DefaultErrorAttributes {
+	
+	Logger logger = LoggerFactory.getLogger(DefaultResponseErrorHandler.class);
 
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
+    	logger.debug("Running default Response Error Handler.");
     	
         Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, options);
         

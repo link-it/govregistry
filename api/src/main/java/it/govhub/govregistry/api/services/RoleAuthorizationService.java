@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -74,9 +76,12 @@ public class RoleAuthorizationService {
 	@Autowired
 	ServiceMessages serviceMessages;
 	
-
+	Logger log = LoggerFactory.getLogger(RoleAuthorizationService.class);
+	
 	@Transactional
 	public Authorization assignAuthorization(Long userId, AuthorizationCreate authorization) {
+		
+		log.info("Assigning new authorization to user [{}]: {} )",  userId, authorization);
 		
 		this.securityService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR);
 		
@@ -132,6 +137,8 @@ public class RoleAuthorizationService {
 		
 		RoleAuthorizationEntity auth = this.authRepo.findById(authId)
 			.orElseThrow( () -> new ResourceNotFoundException(RoleMessages.authorizationNotFound(authId)));
+		
+		log.info("Removing Authorization [{}] from user [{}]", auth.getId(), auth.getUser().getPrincipal());
 		
 	    if ( !this.securityService.canWriteAuthorization(auth))  {
 			throw new NotAuthorizedException();
