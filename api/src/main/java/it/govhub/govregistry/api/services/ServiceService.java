@@ -1,5 +1,7 @@
 package it.govhub.govregistry.api.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -40,7 +42,10 @@ public class ServiceService {
 	@Autowired
 	ServiceMessages serviceMessages;
 	
+	Logger log = LoggerFactory.getLogger(ServiceService.class);
+	
 	public ServiceEntity createService(ServiceCreate service) {
+		log.info("Creating new service: {}", service);
 		
 		// Faccio partire la validazione custom per la stringa \u0000
 		PostgreSQLUtilities.throwIfContainsNullByte(service.getServiceName(), "service_name");
@@ -53,6 +58,7 @@ public class ServiceService {
 
 	
 	public ServiceEntity patchService(Long id, JsonPatch patch) {
+		log.info("Patching service [{id}}: {}", patch);
 		
 		ServiceEntity user = this.serviceRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));

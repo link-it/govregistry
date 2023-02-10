@@ -74,15 +74,6 @@ public class OrganizationController  extends ReadOrganizationController implemen
 		
 		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
-		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddress(), "office_address");
-		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddressDetails(), "office_address_details");
-		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAt(), "office_at");
-		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeForeignState(), "office_foreign_state");
-		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeMunicipality(), "office_municipality");
-		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeMunicipalityDetails(), "office_municipality_details");
-		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeProvince(), "office_province");
-		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeZip(), "office_zip");
-		
 		OrganizationEntity created = this.orgService.createOrganization(org);
 		Organization ret = this.orgAssembler.toModel(created);
 		return ResponseEntity.status(HttpStatus.CREATED).body(ret);

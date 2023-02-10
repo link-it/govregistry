@@ -3,6 +3,8 @@ package it.govhub.govregistry.readops.api.assemblers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,13 +20,16 @@ import it.govhub.govregistry.commons.entity.RoleEntity;
 public class AuthorizationConverter {
 	
 	@Autowired
-	private OrganizationAuthItemAssembler orgAuthItemAssembler;
+	OrganizationAuthItemAssembler orgAuthItemAssembler;
 	
 	@Autowired
-	private ServiceAuthItemAssembler serviceAuthItemAssembler;
+	ServiceAuthItemAssembler serviceAuthItemAssembler;
+	
+	Logger log = LoggerFactory.getLogger(AuthorizationConverter.class);
 
 	
 	public Authorization toModel(RoleAuthorizationEntity auth) {
+		log.debug("Assembling Entity [RoleAuthorization] to model.");  
 		Authorization ret = new Authorization();
 		
 		ret.setId(auth.getId());
@@ -49,6 +54,7 @@ public class AuthorizationConverter {
 
 	// I Ruoli non hanno link hateoas
 	public Role toModel(RoleEntity role) {
+		log.debug("Assembling Entity [Role] to model...");
 		Role ret = new Role();
 		BeanUtils.copyProperties(role, ret);
 		ret.setRoleName(role.getName());

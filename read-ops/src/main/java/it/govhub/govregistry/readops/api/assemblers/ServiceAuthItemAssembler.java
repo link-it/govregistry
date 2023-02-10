@@ -3,6 +3,8 @@ package it.govhub.govregistry.readops.api.assemblers;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,8 @@ import it.govhub.govregistry.readops.api.spec.ServiceApi;
 
 @Component
 public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSupport<ServiceEntity, ServiceAuthItem>{
+	
+	Logger log = LoggerFactory.getLogger(ServiceAuthItemAssembler.class);
 
 	public ServiceAuthItemAssembler() {
 		super(ServiceApi.class, ServiceAuthItem.class);
@@ -21,6 +25,7 @@ public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSuppor
 	
 	@Override
 	public ServiceAuthItem toModel(ServiceEntity src) {
+		log.debug("Assembling Entity [Service] to model...");
 		ServiceAuthItem ret = instantiateModel(src);
 		
 		BeanUtils.copyProperties(src, ret);

@@ -1,5 +1,7 @@
 package it.govhub.security.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
@@ -23,10 +25,13 @@ public class GovhubUserDetailService implements UserDetailsService, Authenticati
 	
 	@Autowired
 	UserMessages userMessages;
+	
+	Logger log = LoggerFactory.getLogger(GovhubUserDetailService.class);
 
 	@Override
 	@Cacheable(Caches.PRINCIPALS)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		log.debug("Loading principal [{}] from database...", username);
 		
 		UserEntity user = this.userRepo.findAndPreloadByPrincipal(username)
 				.orElseThrow( () -> new UsernameNotFoundException(this.userMessages.principalNotFound(username)));

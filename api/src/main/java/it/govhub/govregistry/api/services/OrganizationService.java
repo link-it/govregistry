@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -46,8 +48,11 @@ public class OrganizationService {
 	@Autowired
 	OrganizationMessages orgMessages;
 	
+	Logger log = LoggerFactory.getLogger(OrganizationService.class);
+	
 	@Transactional
 	public OrganizationEntity createOrganization(OrganizationCreate org) {
+		log.info("Creating new organization: {}", org);
 		
 		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddress(), "office_address");
 		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddressDetails(), "office_address_details");
@@ -77,6 +82,8 @@ public class OrganizationService {
 		
 		OrganizationEntity org = this.orgRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
+		
+		log.info("Patching organization [{}]: {}", id,  patch);
 		
 		// Convertiamo la entity in json e applichiamo la patch sul json
 		Organization restOrg = this.orgAssembler.toModel(org);
