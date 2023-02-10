@@ -3,6 +3,8 @@ package it.govhub.govregistry.readops.api.assemblers;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,8 @@ import it.govhub.govregistry.readops.api.spec.OrganizationApi;
 
 @Component
 public class OrganizationAssembler extends RepresentationModelAssemblerSupport<OrganizationEntity, Organization> {
+	
+	Logger log = LoggerFactory.getLogger(OrganizationAssembler.class);
 
 	public OrganizationAssembler() {
 		super(OrganizationApi.class, Organization.class);
@@ -23,6 +27,7 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 
 	@Override
 	public Organization toModel(OrganizationEntity src) {
+		log.debug("Assembling Entity [Organization] to model...");
 		Organization ret = instantiateModel(src);
 		
 		BeanUtils.copyProperties(src, ret);
@@ -41,12 +46,13 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 			.withSelfRel()
 		) ;
 		
-		
 		return ret;
 	}
 
 	
 	public OrganizationEntity toEntity(OrganizationCreate src) {
+		log.debug("Converting Model [OrganizationCreate] to Entity");
+		
 		OrganizationEntity ret = new OrganizationEntity();
 		BeanUtils.copyProperties(src,  ret);
 		

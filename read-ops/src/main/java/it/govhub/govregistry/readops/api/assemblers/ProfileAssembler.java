@@ -3,6 +3,8 @@ package it.govhub.govregistry.readops.api.assemblers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -18,6 +20,8 @@ public class ProfileAssembler extends RepresentationModelAssemblerSupport<UserEn
 	
 	@Autowired
 	AuthorizationConverter authAssembler;
+	
+	Logger log = LoggerFactory.getLogger(ProfileAssembler.class);
 
 	public ProfileAssembler() {
 		super(ProfileApi.class, Profile.class);
@@ -25,6 +29,7 @@ public class ProfileAssembler extends RepresentationModelAssemblerSupport<UserEn
 
 	@Override
 	public Profile toModel(UserEntity src) {
+		log.debug("Assembling Entity [User] to model...");
 		Profile ret = new Profile();
 		
 		BeanUtils.copyProperties(src, ret);
@@ -39,6 +44,8 @@ public class ProfileAssembler extends RepresentationModelAssemblerSupport<UserEn
 	}
 	
 	public Profile toModel(UserEntity src, String applicationId) {
+		log.debug("Assembling Entity [User] to model, filtering out authorizations by applicationId...");
+		
 		Profile ret = new Profile();
 		
 		BeanUtils.copyProperties(src, ret);

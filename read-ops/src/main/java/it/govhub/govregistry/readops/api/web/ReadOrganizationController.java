@@ -72,15 +72,15 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 		OrganizationEntity org = this.orgRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
-		byte[] ret = org.getLogo() != null ? org.getLogo() : new byte[0];
-		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
+		byte[] logoBytes = org.getLogo() != null ? org.getLogo() : new byte[0];
+		ByteArrayInputStream bret = new ByteArrayInputStream(logoBytes);
 		InputStreamResource logoStream = new InputStreamResource(bret);
 		
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentLength(ret.length);
+		headers.setContentLength(logoBytes.length);
 		
-		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
-		return ret2;
+		ResponseEntity<Resource> ret =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
+		return ret;
 	}
 
 
