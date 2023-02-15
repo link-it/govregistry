@@ -123,6 +123,8 @@ paths:
           $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
         '404':
           $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '409':
+          $ref: "govhub-api-commons.yaml#/components/responses/409Conflict"          
         '429':
           $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
         '503':

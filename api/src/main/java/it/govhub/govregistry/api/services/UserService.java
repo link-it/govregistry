@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
-import it.govhub.govregistry.api.messages.PatchMessages;
 import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.commons.api.beans.User;
 import it.govhub.govregistry.commons.api.beans.UserCreate;
@@ -26,6 +25,7 @@ import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
+import it.govhub.govregistry.commons.messages.PatchMessages;
 import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.readops.api.assemblers.UserAssembler;
