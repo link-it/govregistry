@@ -1,4 +1,4 @@
-package it.govhub.govregistry.api.messages;
+package it.govhub.govregistry.commons.messages;
 
 import org.springframework.validation.Errors;
 

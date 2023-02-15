@@ -4,6 +4,7 @@ import java.net.URL;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ import lombok.ToString;
 @Embeddable
 public class LogoEntity {
 	
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	@Column(name="type", nullable=false)
 	private LogoType type;
 

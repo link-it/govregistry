@@ -58,6 +58,15 @@ paths:
             application/json:
               schema:
                 $ref: 'govhub-api-commons.yaml#/components/schemas/User'          
+          links:
+             self:
+                $ref: "#/components/links/readUser"
+             update:
+                $ref: "#/components/links/updateUser"
+             assignAuthorization:
+                $ref: "#/components/links/assignAuthorization"                
+             list:
+                $ref: "#/components/links/listAuthorizations"
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -96,7 +105,16 @@ paths:
           content:
              application/json:
                 schema:
-                   $ref: 'govhub-api-commons.yaml#/components/schemas/User'                             
+                   $ref: 'govhub-api-commons.yaml#/components/schemas/User'
+          links:
+             self:
+                $ref: "#/components/links/readUser"
+             update:
+                $ref: "#/components/links/updateUser"
+             assignAuthorization:
+                $ref: "#/components/links/assignAuthorization"                
+             listAuthorizations:
+                $ref: "#/components/links/listAuthorizations"                                                
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -105,6 +123,8 @@ paths:
           $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
         '404':
           $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '409':
+          $ref: "govhub-api-commons.yaml#/components/responses/409Conflict"          
         '429':
           $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
         '503':
@@ -134,7 +154,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "govhub-api-commons.yaml#/components/schemas/Authorization"          
+                $ref: "govhub-api-commons.yaml#/components/schemas/Authorization"
+          links:
+           delete:
+             $ref: "#/components/links/deleteAuthorization"
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -190,8 +213,8 @@ paths:
     delete:
       tags:
         - authorization
-      summary: Delete the authorization.
-      description: Delete the authorization.
+      summary: Removes  the authorization.
+      description: Removes the authorization.
       operationId: removeAuthorization
       responses:
         '200':
@@ -231,7 +254,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'          
+                $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'        
+          links:
+             self:
+                $ref: "#/components/links/readOrganization"
+             update:
+                $ref: "#/components/links/updateOrganization"
+             logo:
+                $ref: "#/components/links/readOrganizationLogo"
+             logo-miniature:
+                $ref: "#/components/links/readOrganizationLogoMiniature"
+                  
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -301,7 +334,16 @@ paths:
           content:
              application/json:
                 schema:
-                   $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'                             
+                   $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'                            
+          links:
+             self:
+                $ref: "#/components/links/readOrganization"
+             update:
+                $ref: "#/components/links/updateOrganization"
+             logo:
+                $ref: "#/components/links/readOrganizationLogo"
+             miniature:
+                $ref: "#/components/links/readOrganizationLogoMiniature"                
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -336,7 +378,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'govhub-api-commons.yaml#/components/schemas/Service'          
+                $ref: 'govhub-api-commons.yaml#/components/schemas/Service'
+          links:
+             self:
+               $ref: "#/components/links/readService" 
+             update:
+               $ref: "#/components/links/updateService"
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -373,7 +420,12 @@ paths:
           content:
              application/json:
                 schema:
-                   $ref: 'govhub-api-commons.yaml#/components/schemas/Service'                             
+                   $ref: 'govhub-api-commons.yaml#/components/schemas/Service'
+          links:
+             self:
+               $ref: "#/components/links/readService" 
+             update:
+               $ref: "#/components/links/updateService"                                                
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -418,6 +470,73 @@ paths:
 
   
 components:
+
+   links:
+      readUser:
+         description: Retrieve the user.
+         operationRef: "govregistry-api-readops.yaml#/paths/~1users~1{id}/get"
+         parameters:
+           id: $response.body#/id
+           
+      updateUser:
+          description: Update the user.
+          operationId: updateUser
+          parameters:
+             id: $response.body#/id
+             
+      assignAuthorization:
+          description: Gives some authorizations to the user.
+          operationId: assignAuthorization
+          parameters:
+             id: $response.body#/id
+             
+      deleteAuthorization:
+          description: remove an authorization.
+          operationId: assignAuthorization
+          parameters:
+             id: $response.body#/id
+                          
+      listAuthorizations:
+          description: List the user authorizations.
+          operationId: listAuthorizations
+          parameters:
+             id: $response.body#/id
+             
+      readOrganization:
+         description: Retrieve the organization.
+         operationRef: "govregistry-api-readops.yaml#/paths/~organizations~1{id}/get"
+         parameters:
+             id: $response.body#/id
+             
+      readService:
+         description: Retrieve the service.
+         operationRef: "govregistry-api-readops.yaml#/paths/~services~1{id}/get"
+         parameters:
+             id: $response.body#/id       
+             
+      readOrganizationLogo:
+         description: Retrieve the organization logo.
+         operationRef: "govregistry-api-readops.yaml#/paths/~organizations~1{id}~1logo/get"
+         parameters:
+             id: $response.body#/id
+             
+      readOrganizationLogoMiniature:
+         description: Retrieve the organization logo miniature.
+         operationRef: "govregistry-api-readops.yaml#/paths/~organizations~1{id}~1logo-miniature/get"
+         parameters:
+             id: $response.body#/id                          
+             
+      updateOrganization:
+         description: Update the organization.
+         operationId: updateOrganization
+         parameters:
+             id: $response.body#/id       
+             
+      updateService:
+         description: Update the service.
+         operationId: updateService
+         parameters:
+             id: $response.body#/id                    
 
    # SECURITY    ---------------
    securitySchemes:

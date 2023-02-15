@@ -174,7 +174,7 @@ paths:
            default:
              $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                              
              
-   /organizations/{id}/logo_miniature:
+   /organizations/{id}/logo-miniature:
        parameters:
          - $ref: "govhub-api-commons.yaml#/components/parameters/organization_id"    
        get:
@@ -305,7 +305,7 @@ paths:
            default:
              $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                              
              
-   /services/{id}/logo_miniature:
+   /services/{id}/logo-miniature:
        parameters:
          - $ref: "govhub-api-commons.yaml#/components/parameters/service_id"    
        get:
