@@ -89,7 +89,7 @@ public class RoleAuthorizationService {
 				.orElseThrow( () -> new ResourceNotFoundException(this.userMessages.idNotFound(userId)));
 		
 		RoleEntity role = this.roleRepo.findById(authorization.getRole())
-				.orElseThrow( () -> new BadRequestException(RoleMessages.notFound(userId)));
+				.orElseThrow( () -> new BadRequestException(RoleMessages.notFound(authorization.getRole())));
 		
 		// Colleziono organizzazioni e servizi
 		
