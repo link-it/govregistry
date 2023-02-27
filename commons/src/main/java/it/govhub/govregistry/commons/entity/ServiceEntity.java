@@ -36,7 +36,7 @@ public class ServiceEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_govhub_services")
 	private Long id;
 
-	@Column(name = "name")
+	@Column(name = "name", unique = true)
 	private String name;
 	
 	@Column(name = "description", columnDefinition = "TEXT")

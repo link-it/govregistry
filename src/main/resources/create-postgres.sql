@@ -9,10 +9,10 @@ CREATE TABLE govhub_applications (
   id BIGINT DEFAULT nextval('seq_govhub_applications') NOT NULL,
   application_id VARCHAR(255) NOT NULL UNIQUE,
   deployed_uri VARCHAR(255) NOT NULL,
-  bg_color VARCHAR(255),
+  logo_bg_color VARCHAR(255),
   logo_color VARCHAR(255),
   logo_name VARCHAR(255),
-  logo_type integer,
+  logo_type VARCHAR(255),
   logo_url VARCHAR(255),
   name VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
@@ -68,6 +68,8 @@ CREATE TABLE govhub_services (
   id BIGINT DEFAULT nextval('seq_govhub_services') NOT NULL,
   description TEXT,
   name VARCHAR(255) UNIQUE,
+  logo oid,
+  logo_miniature oid,
   PRIMARY KEY (id)
 );
 

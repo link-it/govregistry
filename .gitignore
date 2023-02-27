@@ -2,3 +2,5 @@
 .settings
 .classpath
 .factorypath
+
+report/target
