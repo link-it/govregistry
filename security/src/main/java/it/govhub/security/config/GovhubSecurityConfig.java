@@ -2,6 +2,7 @@ package it.govhub.security.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -25,6 +26,7 @@ import it.govhub.security.services.GovhubUserDetailService;
  * 
  *
  */
+@Import(SecurityExportedBeans.class)
 public class GovhubSecurityConfig{
 
     @Value("${govshell.auth.header:Govhub-Consumer-Principal}")
