@@ -96,7 +96,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	//1. CreateService con utenza non admin con ruolo govhub_services_editor: OK
 	@Test
 	void UC_6_01_CreateServiceOk_UtenzaConRuolo_GovHub_Services_Editor() throws Exception {
-		ServiceEntity servizio = Costanti.getServizioTest();
+		ServiceEntity servizio = Costanti.getServizioTest2();
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -159,7 +159,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	//3. PatchService con utenza non admin con ruolo govhub_services_editor: OK
 	@Test
 	void UC_6_03_PatchServiceOk_UtenzaConRuolo_GovHub_Services_Editor() throws Exception {
-		ServiceEntity servizio = Costanti.getServizioTest();
+		ServiceEntity servizio = Costanti.getServizioTest2();
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -218,7 +218,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	//4. PatchService con utenza non admin con ruolo non govhub_services_editor: NotAuthorized
 	@Test
 	void UC_6_04_PatchServiceFail_UtenzaSenzaRuolo_GovHub_Services_Editor() throws Exception {
-		ServiceEntity servizio = Costanti.getServizioTest();
+		ServiceEntity servizio = Costanti.getServizioTest2();
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
