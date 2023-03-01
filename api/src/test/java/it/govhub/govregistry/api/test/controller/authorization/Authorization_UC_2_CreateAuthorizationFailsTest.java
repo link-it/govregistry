@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -69,6 +70,9 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 	
 	private DateTimeFormatter dt = DateTimeFormatter.ISO_DATE_TIME;
 	
+	@Value("${govhub.time-zone:Europe/Rome}")
+	private String timeZone;
+	
 	@BeforeEach
 	private void configurazioneDB() {
 		UserEntity user = Costanti.getUser_Snakamoto();
@@ -105,7 +109,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 	void UC_2_01_CreateAuthorizationFail_MissingRole() throws Exception {
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("organizations", Json.createArrayBuilder())
 				.add("services", Json.createArrayBuilder())
@@ -135,7 +139,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -165,7 +169,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 		int idUser1 = 10000;
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", idUser1)
 				.add("organizations", Json.createArrayBuilder())
@@ -197,7 +201,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(idUser1))
@@ -229,7 +233,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -260,7 +264,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -292,7 +296,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 		
 		DateTimeFormatter dt = DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.systemDefault());
 				
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -322,7 +326,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_ruolo_non_assegnabile");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -359,7 +363,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-//		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+//		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -424,7 +428,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-//		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+//		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -489,7 +493,7 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime now = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime now = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())

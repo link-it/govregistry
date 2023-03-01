@@ -11,8 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.ByteArrayInputStream;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -80,6 +82,9 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	private UserRepository userRepository;
 	
 	private DateTimeFormatter dt = DateTimeFormatter.ISO_DATE_TIME;
+	
+	@Value("${govhub.time-zone:Europe/Rome}")
+	private String timeZone;
 	
 	@BeforeEach
 	private void configurazioneDB() {
@@ -160,7 +165,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		String ruoloDaAssegnare = "govhub_user";
 		RoleEntity ruoloUser = leggiRuoloDB(ruoloDaAssegnare);
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -199,7 +204,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		String ruoloDaAssegnare = "govhub_user";
 		RoleEntity ruoloUser = leggiRuoloDB(ruoloDaAssegnare);
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -238,7 +243,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		String ruoloDaAssegnare = "govhub_user";
 		RoleEntity ruoloUser = leggiRuoloDB(ruoloDaAssegnare);
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -279,7 +284,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		String ruoloDaAssegnare = "govhub_user";
 		RoleEntity ruoloUser = leggiRuoloDB(ruoloDaAssegnare);
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -318,7 +323,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		String ruoloDaAssegnare = "govhub_user";
 		RoleEntity ruoloUser = leggiRuoloDB(ruoloDaAssegnare);
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 //				.add("organizations", Json.createArrayBuilder())
@@ -356,7 +361,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		String ruoloDaAssegnare = "govhub_user";
 		RoleEntity ruoloUser = leggiRuoloDB(ruoloDaAssegnare);
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -401,7 +406,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		String ruoloEditor = "govhub_users_editor";
 		RoleEntity ruoloUser = leggiRuoloDB(ruoloEditor);
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -473,7 +478,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		String ruoloEditor = "govhub_users_editor";
 		RoleEntity ruoloUser = leggiRuoloDB(ruoloEditor);
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -546,7 +551,9 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		String ruoloEditor = "govhub_users_editor";
 		RoleEntity ruoloUser = leggiRuoloDB(ruoloEditor);
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime();
+		 
+		
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -619,7 +626,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		String ruoloEditor = "govhub_users_editor";
 		RoleEntity ruoloUser = leggiRuoloDB(ruoloEditor);
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
