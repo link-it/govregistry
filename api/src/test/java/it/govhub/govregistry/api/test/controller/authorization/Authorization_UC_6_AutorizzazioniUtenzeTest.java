@@ -118,6 +118,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 				.build()
 				.toString();
 		
+		
 		// Creo una authorization e verifico la risposta
 		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
