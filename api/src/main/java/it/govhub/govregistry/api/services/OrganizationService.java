@@ -96,7 +96,7 @@ public class OrganizationService {
 			throw new BadRequestException(e.getLocalizedMessage());
 		}
 		
-		// Lo converto nell'oggetto User, sostituendo l'ID per essere sicuri che la patch
+		// Lo converto nell'oggetto OrganizationCreate, sostituendo l'ID per essere sicuri che la patch
 		// non l'abbia cambiato.
 		OrganizationCreate updatedOrganization;
 		try {
