@@ -18,8 +18,8 @@ import it.govhub.govregistry.commons.exception.handlers.RequestRejectedException
 import it.govhub.govregistry.commons.utils.Base64String;
 import it.govhub.govregistry.commons.utils.Base64StringSerializer;
 
-@Import({ CommonsExportedBeans.class,   TimeZoneConfigurer.class })
-public class GovhubApplication extends SpringBootServletInitializer {
+//@Import({ CommonsExportedBeans.class,   TimeZoneConfigurer.class })
+public class GovhubApplication /*extends SpringBootServletInitializer*/ {
 	
 	@Value("${govhub.time-zone:Europe/Rome}")
 	String timeZone;
