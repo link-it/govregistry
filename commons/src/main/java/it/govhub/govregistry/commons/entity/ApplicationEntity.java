@@ -5,7 +5,10 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +29,8 @@ import lombok.ToString;
 public class ApplicationEntity {
 
 	@Id
+	@SequenceGenerator(name = "seq_govhub_applications", sequenceName = "seq_govhub_applications", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_govhub_applications")
 	private Long id;
 
 	@EqualsAndHashCode.Include

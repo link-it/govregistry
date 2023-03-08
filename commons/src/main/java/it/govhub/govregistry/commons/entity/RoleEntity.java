@@ -57,7 +57,8 @@ public class RoleEntity implements Serializable {
 			name = "govhub_assignable_roles", 
 			joinColumns = @JoinColumn(name = "role_id"),
 			inverseJoinColumns = @JoinColumn(name = "assignable_role_id" ),
-			foreignKey = @ForeignKey(name="GovhubAssRole_GovhubRole"))
+			foreignKey = @ForeignKey(name="GovhubAssRole_GovhubRole"), 
+			inverseForeignKey = @ForeignKey(name="GovhubAssRole_AssignedGovhubRole"))
 	private Set<RoleEntity> assignableRoles;
 
 }

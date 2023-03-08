@@ -39,7 +39,7 @@ CREATE TABLE govhub_users (
 
 CREATE TABLE govhub_organizations (
   id BIGINT NOT NULL AUTO_INCREMENT,
-  legal_name VARCHAR(80) NOT NULL,
+  legal_name VARCHAR(80) NOT NULL UNIQUE,
   logo blob,
   logo_miniature blob,
   office_address VARCHAR(120),
