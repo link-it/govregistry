@@ -17,16 +17,28 @@ CREATE TABLE govhub_roles (
   id_govhub_application BIGINT NOT NULL,
   name VARCHAR(255) NOT NULL UNIQUE,
   PRIMARY KEY (id),
-  FOREIGN KEY (id_govhub_application) REFERENCES govhub_applications(id)
 );
+alter table govhub_roles 
+       add constraint GovhubRole_GovhubApplication 
+       foreign key (id_govhub_application) 
+       references govhub_applications;
+
 
 CREATE TABLE govhub_assignable_roles (
   role_id BIGINT NOT NULL,
   assignable_role_id BIGINT NOT NULL,
   PRIMARY KEY (role_id, assignable_role_id),
-  FOREIGN KEY (role_id) REFERENCES govhub_roles(id),
-  FOREIGN KEY (assignable_role_id) REFERENCES govhub_roles(id)
 );
+alter table govhub_assignable_roles 
+       add constraint GovhubAssRole_AssignedGovhubRole 
+       foreign key (assignable_role_id) 
+       references govhub_roles;
+
+alter table govhub_assignable_roles 
+       add constraint GovhubAssRole_GovhubRole 
+       foreign key (role_id) 
+       references govhub_roles;
+
 
 CREATE TABLE govhub_users (
   id BIGINT NOT NULL AUTO_INCREMENT,
@@ -72,22 +84,49 @@ CREATE TABLE govhub_authorizations (
   id_govhub_role BIGINT NOT NULL,
   id_govhub_user BIGINT NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (id_govhub_role) REFERENCES govhub_roles(id),
-  FOREIGN KEY (id_govhub_user) REFERENCES govhub_users(id)
 );
+alter table govhub_authorizations 
+   add constraint GovhubAuth_GovhubRole 
+   foreign key (id_govhub_role) 
+   references govhub_roles;
+
+alter table govhub_authorizations 
+   add constraint GovhubAuth_GovhubUser 
+   foreign key (id_govhub_user) 
+   references govhub_users;
+
+
 
 CREATE TABLE govhub_auth_organizations (
   id_govhub_authorization BIGINT NOT NULL,
   id_govhub_organization BIGINT NOT NULL,
   PRIMARY KEY (id_govhub_authorization, id_govhub_organization),
-  FOREIGN KEY (id_govhub_authorization) REFERENCES govhub_authorizations(id),
-  FOREIGN KEY (id_govhub_organization) REFERENCES govhub_organizations(id)
 );
+alter table govhub_auth_organizations 
+   add constraint GovhubAuthOrganization_GovhubOrganization 
+   foreign key (id_govhub_organization) 
+   references govhub_organizations;
+
+alter table govhub_auth_organizations 
+   add constraint GovhubAuthOrganization_GovhubAuth 
+   foreign key (id_govhub_authorization) 
+   references govhub_authorizations;
+
+
 
 CREATE TABLE govhub_auth_services (
   id_govhub_authorization BIGINT NOT NULL,
   id_govhub_service BIGINT NOT NULL,
   PRIMARY KEY (id_govhub_authorization, id_govhub_service),
-  FOREIGN KEY (id_govhub_authorization) REFERENCES govhub_authorizations(id),
-  FOREIGN KEY (id_govhub_service) REFERENCES govhub_services(id)
 );
+alter table govhub_auth_services 
+   add constraint GovhubAuthOrganization_GovhubService 
+   foreign key (id_govhub_service) 
+   references govhub_services;
+
+alter table govhub_auth_services 
+   add constraint GovhubAuthService_GovhubAuth 
+   foreign key (id_govhub_authorization) 
+   references govhub_authorizations;
+
+
