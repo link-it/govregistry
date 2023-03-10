@@ -1,12 +1,17 @@
 package it.govhub.govregistry.api.web;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -28,6 +33,7 @@ import it.govhub.govregistry.commons.api.beans.ServiceCreate;
 import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
+import it.govhub.govregistry.commons.exception.InternalException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.PatchMessages;
 import it.govhub.govregistry.commons.messages.ServiceMessages;
@@ -146,6 +152,74 @@ public class ServiceController extends ReadServiceController implements ServiceA
 		
 		return ResponseEntity.ok(
 				this.serviceAssembler.toModel(newService));
+	}
+
+
+	@Override
+	public ResponseEntity<Void> updateServiceLogo(Long id, Resource body) {
+		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		
+		ServiceEntity service = this.serviceRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
+		
+		try {
+			service.setLogo(body.getInputStream().readAllBytes());
+		} catch (IOException e) {
+			throw new InternalException(e);
+		}
+		
+		this.serviceRepo.save(service);
+
+		return ResponseEntity.ok().build();
+	}
+
+
+	@Override
+	public ResponseEntity<Void> updateServiceLogoMiniature(Long id, Resource body) {
+		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+
+		ServiceEntity service = this.serviceRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
+		
+		try {
+			service.setLogoMiniature(body.getInputStream().readAllBytes());
+		} catch (IOException e) {
+			throw new InternalException(e);
+		}
+		
+		this.serviceRepo.save(service);
+
+		return ResponseEntity.ok().build();
+	}
+
+
+	@Override
+	public ResponseEntity<Void> removeServiceLogo(Long id) {
+		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		
+		ServiceEntity service = this.serviceRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
+		
+		service.setLogo(null);
+		
+		this.serviceRepo.save(service);
+
+		return ResponseEntity.ok().build();
+	}
+
+
+	@Override
+	public ResponseEntity<Void> removeServiceLogoMiniature(Long id) {
+		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+
+		ServiceEntity service = this.serviceRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
+		
+		service.setLogoMiniature(null);
+		
+		this.serviceRepo.save(service);
+
+		return ResponseEntity.ok().build();
 	}
 
 }

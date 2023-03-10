@@ -1,14 +1,18 @@
 package it.govhub.govregistry.api.web;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
+import it.govhub.govregistry.api.repository.OrganizationRepository;
 import it.govhub.govregistry.api.services.OrganizationService;
 import it.govhub.govregistry.api.spec.OrganizationApi;
 import it.govhub.govregistry.commons.api.beans.Organization;
@@ -35,7 +40,9 @@ import it.govhub.govregistry.commons.api.beans.OrganizationOrdering;
 import it.govhub.govregistry.commons.api.beans.PatchOp;
 import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
+import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
+import it.govhub.govregistry.commons.exception.InternalException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.OrganizationMessages;
 import it.govhub.govregistry.commons.messages.PatchMessages;
@@ -77,6 +84,9 @@ public class OrganizationController  extends ReadOrganizationController implemen
 	
 	@Autowired
 	OrganizationMessages orgMessages;
+	
+	@Autowired
+	OrganizationRepository writeOrgRepo;
 	
 	Logger log = LoggerFactory.getLogger(OrganizationController.class);
 	
@@ -228,6 +238,70 @@ public class OrganizationController  extends ReadOrganizationController implemen
 		}
 
 		return ResponseEntity.ok(ret);
+	}
+
+
+	@Override
+	public ResponseEntity<Void> removeOrganizationLogo(Long id) {
+		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		
+		OrganizationEntity org = this.orgRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
+		
+		org.setLogo(null);
+		this.writeOrgRepo.save(org);
+		return ResponseEntity.ok().build();
+	}
+
+
+	@Override
+	public ResponseEntity<Void> removeOrganizationLogoMiniature(Long id) {
+		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		
+		OrganizationEntity org = this.orgRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
+		
+		org.setLogoMiniature(null);
+		this.writeOrgRepo.save(org);
+		return ResponseEntity.ok().build();
+	}
+
+
+	@Override
+	public ResponseEntity<Void> updateOrganizationLogo(Long id, Resource body) {
+		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		
+		OrganizationEntity org = this.orgRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
+		
+		try {
+			org.setLogo(body.getInputStream().readAllBytes());
+		} catch (IOException e) {
+			throw new InternalException(e);
+		}
+		
+		this.writeOrgRepo.save(org);
+
+		return ResponseEntity.ok().build();
+	}
+
+
+	@Override
+	public ResponseEntity<Void> updateOrganizationLogoMiniature(Long id,	Resource body) {
+		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		
+		OrganizationEntity org = this.orgRepo.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
+		
+		try {
+			org.setLogoMiniature(body.getInputStream().readAllBytes());
+		} catch (IOException e) {
+			throw new InternalException(e);
+		}
+		
+		this.writeOrgRepo.save(org);
+
+		return ResponseEntity.ok().build();
 	}
 
 	
