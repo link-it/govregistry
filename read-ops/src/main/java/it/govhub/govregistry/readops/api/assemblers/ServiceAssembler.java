@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import it.govhub.govregistry.commons.api.beans.Service;
 import it.govhub.govregistry.commons.api.beans.ServiceCreate;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
-import it.govhub.govregistry.commons.utils.Base64String;
 import it.govhub.govregistry.readops.api.spec.ServiceApi;
 
 @Component
@@ -32,19 +31,19 @@ public class ServiceAssembler extends RepresentationModelAssemblerSupport<Servic
 		BeanUtils.copyProperties(src, ret);
 		ret.setServiceName(src.getName());
 		
-		if (src.getLogo() != null) {
-			ret.setLogo(new Base64String(src.getLogo()));
-		}
-		
-		if (src.getLogoMiniature() != null) {
-			ret.setLogoMiniature(new Base64String(src.getLogoMiniature()));
-		}
-		
 		ret.add(linkTo(
 				methodOn(ServiceApi.class)
 				.readService(src.getId()))
 			.withSelfRel()
-		) ;
+		).add(linkTo(
+				methodOn(ServiceApi.class)
+				.downloadServiceLogo(src.getId()))
+			.withRel("logo")
+		).add(linkTo(
+				methodOn(ServiceApi.class)
+				.downloadServiceLogoMiniature(src.getId()))
+			.withSelfRel()
+		);
 		
 		return ret;
 	}
