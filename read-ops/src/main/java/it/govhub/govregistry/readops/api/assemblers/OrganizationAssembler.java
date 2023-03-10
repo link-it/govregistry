@@ -35,16 +35,22 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 				methodOn(OrganizationApi.class)
 				.readOrganization(src.getId()))
 			.withSelfRel()
-		) .add(linkTo(
-				methodOn(OrganizationApi.class)
-				.downloadOrganizationLogo(src.getId()))
-			.withRel("logo")
-		).add(linkTo(
-				methodOn(OrganizationApi.class)
-				.downloadOrganizationLogoMiniature(src.getId()))
-			.withSelfRel()
 		);
 		
+		if(src.getLogo() != null) {
+			ret.add(linkTo(
+					methodOn(OrganizationApi.class)
+					.downloadOrganizationLogo(src.getId()))
+				.withRel("logo"));
+		}
+		
+		if (src.getLogoMiniature() != null) {
+			ret.add(linkTo(
+						methodOn(OrganizationApi.class)
+						.downloadOrganizationLogoMiniature(src.getId()))
+				.withRel("logo-miniature"));
+		}
+			
 		return ret;
 	}
 
