@@ -1,5 +1,7 @@
 package it.govhub.govregistry.commons.messages;
 
+import java.util.Collection;
+
 public class RestEntityMessageBuilder {
 
 	private String entityName;
@@ -21,6 +23,10 @@ public class RestEntityMessageBuilder {
 	
 	public String idNotFound(Long id) {
 		return notFound("id", id);
+	}
+	
+	public String idsNotFound(Collection<Long> ids) {
+		return this.entityName + "with ids IN [" + ids + "] Not Found.";
 	}
 	
 	public String fieldNotModificable(String key) {
