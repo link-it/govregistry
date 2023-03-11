@@ -222,11 +222,24 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     );
   }
 
+  __removeEmpty(obj: any) {
+    const $this = this;
+    return Object.keys(obj)
+      .filter(function (k) {
+        return obj[k] != null;
+      })
+      .reduce(function (acc: any, k: string) {
+        acc[k] = typeof obj[k] === "object" ? $this.__removeEmpty(obj[k]) : obj[k];
+        return acc;
+      }, {});
+  }
+
   __onUpdate(id: number, body: any) {
     this._error = false;
-    const _bodyPatch: any[] = jsonpatch.compare(this.organization, body);
+    const _organization = this.__removeEmpty(this.organization);
+    const _body = this.__removeEmpty(body);
+    const _bodyPatch: any[] = jsonpatch.compare(_organization, _body);
     if (_bodyPatch) {
-      console.log('__onUpdate', _bodyPatch);
       this.apiService.updateElement(this.model, id, _bodyPatch).subscribe(
         (response: any) => {
           this._isEdit = !this._closeEdit;

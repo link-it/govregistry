@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -16,39 +18,47 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
-import it.govhub.govregistry.api.messages.PatchMessages;
-import it.govhub.govregistry.api.messages.UserMessages;
+import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.commons.api.beans.User;
 import it.govhub.govregistry.commons.api.beans.UserCreate;
-import it.govhub.govregistry.commons.assemblers.UserAssembler;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
-import it.govhub.govregistry.commons.repository.UserRepository;
+import it.govhub.govregistry.commons.messages.PatchMessages;
+import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
+import it.govhub.govregistry.readops.api.assemblers.UserAssembler;
 
 @Service
 public class UserService {
 	
 	@Autowired
-	private UserRepository userRepo;
+	UserRepository userRepo;
 	
 	@Autowired
-	private ObjectMapper objectMapper;
+	ObjectMapper objectMapper;
 	
 	@Autowired
-	private Validator validator;
+	Validator validator;
 	
 	@Autowired
-	private UserAssembler userAssembler;
+	UserAssembler userAssembler;
 	
-
+	@Autowired
+	UserMessages userMessages;
+	
+	Logger log = LoggerFactory.getLogger(UserService.class);
+	
 	@Transactional
 	public UserEntity createUser(UserCreate userCreate) {
 		
+		log.info("Creating new user: {}", userCreate);
+		
+		PostgreSQLUtilities.throwIfContainsNullByte(userCreate.getFullName(), "full_name");
+		
 		if (this.userRepo.findByPrincipal(userCreate.getPrincipal()).isPresent()) {
-			throw new ConflictException(UserMessages.conflictPrincipal(userCreate.getPrincipal()));
+			throw new ConflictException(this.userMessages.conflictPrincipal(userCreate.getPrincipal()));
 		}
 		
 		UserEntity newUser = this.userAssembler.toEntity(userCreate);
@@ -60,8 +70,10 @@ public class UserService {
 	@Transactional
 	public UserEntity patchUser(Long id, JsonPatch patch) {
 		
+		log.info("Patching user [{}]: {}", id, patch);
+		
 		UserEntity user = this.userRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(UserMessages.notFound(id)));
+				.orElseThrow( () -> new ResourceNotFoundException(this.userMessages.idNotFound(id)));
 		
 		// Convertiamo la entity in json e applichiamo la patch sul json
 		User restUser = this.userAssembler.toModel(user);
@@ -106,7 +118,7 @@ public class UserService {
 				.filter( u -> !u.getId().equals(newUser.getId()));
 		
 		if (conflictUser.isPresent() ) {
-			throw new ConflictException(UserMessages.conflictPrincipal(newUser.getPrincipal()));
+			throw new ConflictException(this.userMessages.conflictPrincipal(newUser.getPrincipal()));
 		}
 				
 		return this.userRepo.save(newUser);

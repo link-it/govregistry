@@ -24,10 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
+import it.govhub.govregistry.api.repository.ServiceRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
-import it.govhub.govregistry.commons.repository.ServiceRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -35,6 +35,8 @@ import it.govhub.govregistry.commons.repository.ServiceRepository;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
 class Service_UC_1_CreateServiceTest {
+
+	private static final String SERVICES_BASE_PATH = "/v1/services";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -56,7 +58,7 @@ class Service_UC_1_CreateServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)

@@ -1,16 +1,20 @@
 package it.govhub.govregistry.commons.utils;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.security.web.firewall.RequestRejectedException;
 
 public class Base64String {
 
 	private String value;
+	
+	private byte[] decodedValue;
 
 	public Base64String(String value) {
 		
-		if  (value.getBytes().length < 2 || !Base64.isBase64(value.getBytes())) {
-			throw new RequestRejectedException("Not a valid Base64");
+		try {
+			this.decodedValue = Base64.decodeBase64(value);
+		} catch (Exception e) {
+			throw new RequestRejectedException("Not a valid Base64: " + e.getMessage());
 		}
 		
 		this.value = value;
@@ -26,5 +30,9 @@ public class Base64String {
 
 	public String getValue() {
 		return value;
+	}
+
+	public byte[] getDecodedValue() {
+		return decodedValue;
 	}
 }

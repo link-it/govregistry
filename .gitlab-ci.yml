@@ -20,7 +20,12 @@ default:
 test:
     stage: test
     script:
-      - mvn verify sonar:sonar
+      - mvn verify sonar:sonar -U
+    rules:
+      - if: $CI_COMMIT_BRANCH == "staging"
+        allow_failure: true
+      - if: $CI_COMMIT_BRANCH != "staging"
+        allow_failure: false
     artifacts:
         untracked: false
         name: test_and_coverage_report
@@ -34,14 +39,14 @@ build_java:
       - mkdir ~/.ssh
       - chmod 700 ~/.ssh 
       - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-      - mvn -s /tmp/maven_settings/settings-repo_linkit.xml deploy -Pwar -DskipTests=true 
+      - mvn -s /tmp/maven_settings/settings-repo_linkit.xml -U deploy -Pwar -DskipTests=true 
     artifacts:
         paths:
-          - api/target/*.war
+          - api/target/govregistry.war
           - src/main/resources/*.sql
     only:
       - main
-      - pipeline-test
+      - staging
 
 build_angular:
     stage: build
@@ -56,7 +61,7 @@ build_angular:
           - webapp/govregistry-app.tgz
     only:
       - main
-      - pipeline-test
+      - staging
 
 deploy_staging:
   stage: deploy
@@ -66,10 +71,10 @@ deploy_staging:
     - scp -r webapp/govregistry-app.tgz $DEPLOY_STAGING_SSH_HOST:/tmp/
     - scp -r api/target/govregistry.war $DEPLOY_STAGING_SSH_HOST:/tmp/
     - ssh $DEPLOY_STAGING_SSH_HOST 'sudo tar xvf /tmp/govregistry-app.tgz'
-    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo cp -r dist/govregistry-app/* /usr/share/nginx/html/govregistry-app/'
-    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo cp -r /tmp/govregistry.war /opt/wildfly/govhub/deployments/'  
-    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo systemctl restart wildfly@govhub'
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo systemctl stop tomcat'
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo rm -rf /usr/share/nginx/html/govregistry-app/* && sudo cp -r dist/govregistry-app/* /usr/share/nginx/html/govregistry-app/'
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo cp -r /tmp/govregistry.war /opt/apache-tomcat-9.0.70/webapps/'  
+    - ssh $DEPLOY_STAGING_SSH_HOST 'sudo systemctl start tomcat'
     - ssh $DEPLOY_STAGING_SSH_HOST 'sudo rm -rf /tmp/govregistry-app.tgz dist /tmp/govregistry.war'
   only:
-    - main
-    - pipeline-test
+    - staging

@@ -25,10 +25,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
+import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.repository.UserRepository;
 
 
 
@@ -38,6 +38,8 @@ import it.govhub.govregistry.commons.repository.UserRepository;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
 class User_UC_1_CreateUserTest {
+
+	private static final String USERS_BASE_PATH = "/v1/users";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -60,7 +62,7 @@ class User_UC_1_CreateUserTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -100,7 +102,7 @@ class User_UC_1_CreateUserTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -141,7 +143,7 @@ class User_UC_1_CreateUserTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)

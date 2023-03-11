@@ -1,12 +1,14 @@
 package it.govhub.security.services;
 
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -29,14 +31,18 @@ import it.govhub.security.config.GovregistryRoles;
 @Service
 public class SecurityService {
 	
+	static Logger log = LoggerFactory.getLogger(SecurityService.class);
+	
 	public static UserEntity getPrincipal() {
+		log.debug("Retrieving GovhubPrincipal from the Authentication Context");
+		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
 		return  principal.getUser();
 	}
 	
-	
 	public boolean hasAnyRole(String ...roles) {
+		log.debug("Checking if principal has any of the following roles: {}", (Object[]) roles);
 		
 		UserEntity user = getPrincipal();
 		
@@ -46,7 +52,10 @@ public class SecurityService {
 		// Cerco fra le autorizzazioni una che abbia uno dei ruoli specificati e che non sia scaduta
 		return user.getAuthorizations().stream()
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.anyMatch( auth -> roleList.contains(auth.getRole().getName()));
+			.anyMatch( auth -> {
+						return roleList.contains(auth.getRole().getName());
+					});
+		
 	}
 
 
@@ -56,8 +65,8 @@ public class SecurityService {
 		}
 	}
 	
-	public boolean isAdmin() {
-		return hasAnyRole(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
+	public boolean isGovregistryAdmin() {
+		return hasAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN);
 	}
 	
 	
@@ -72,14 +81,16 @@ public class SecurityService {
 	 * 
 	 */
 	public boolean canWriteAuthorization(RoleAuthorizationEntity authToEdit) {
-		if (isAdmin()) {
+		log.debug("Checking if principal can write the requested authorization with authority: {}", authToEdit.getRole().getName()); 
+
+		UserEntity principal = getPrincipal();
+		
+		if (isGovregistryAdmin()) {
 			return true;
 		}
 		
 		OffsetDateTime now = OffsetDateTime.now();
 
-		UserEntity principal = getPrincipal();
-		
 		Iterable<RoleAuthorizationEntity> validAuths = principal.getAuthorizations().stream()
 				.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 				.filter( auth -> auth.getRole().getAssignableRoles().contains(authToEdit.getRole()))
@@ -120,6 +131,8 @@ public class SecurityService {
 	*
 	*/
 	public void hasAnyServiceAuthority(Long serviceId, String ...roles) {
+		log.debug("Checking if principal has any of the following authorities on service [{}]: {}", serviceId, (Object[]) roles);
+		
 		UserEntity user = getPrincipal();
 		
 		Set<String> roleList = Set.of(roles);
@@ -129,12 +142,10 @@ public class SecurityService {
 		.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 		.anyMatch( auth -> {
 			
-			// L'admin non ha bisogno di avere servizi specificati
-			boolean isAdmin = auth.getRole().getName().equals(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
 			boolean hasRole = roleList.contains(auth.getRole().getName());
 			boolean onService = auth.getServices().isEmpty() ||  auth.getServices().stream().anyMatch( s-> s.getId().equals(serviceId));
 			
-			return isAdmin || (hasRole && onService);
+			return hasRole && onService;
 		});
 		
 		if (!authorized) {
@@ -148,6 +159,8 @@ public class SecurityService {
 	 *  
 	 */
 	public void hasAnyOrganizationAuthority(Long organizationId, String ...roles) {
+		log.debug("Checking if principal has any of the following authorities on organization [{}]: {}", organizationId, (Object[]) roles);
+		
 		UserEntity user = getPrincipal();
 		
 		Set<String> roleList = Set.of(roles);
@@ -157,12 +170,10 @@ public class SecurityService {
 		.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
 		.anyMatch( auth -> {
 			
-			// L'admin non ha bisogno di avere servizi specificati
-			boolean isAdmin = auth.getRole().getName().equals(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
 			boolean hasRole = roleList.contains(auth.getRole().getName());
 			boolean onOrganization = auth.getOrganizations().isEmpty() ||  auth.getOrganizations().stream().anyMatch( s-> s.getId().equals(organizationId));
 			
-			return isAdmin || (hasRole && onOrganization);
+			return hasRole && onOrganization;
 		});
 		
 		if (!authorized) {
@@ -171,93 +182,114 @@ public class SecurityService {
 	}
 	
 
-	/**
-	 * Quando si ha una autorizzazione sulle organizzazioni con una lista di organizzazioni vuota, allora il permesso 
-	 * è esteso a tutte le organizzazioni e il metodo restituisce true.
-	 * 
-	 * L'admin può leggere sempre tutto.
-	 */
-	public boolean canReadAllOrganizations() {
-		
-		UserEntity user = getPrincipal();
-		OffsetDateTime now = OffsetDateTime.now();
-
-		return user.getAuthorizations().stream()
-			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.anyMatch( auth -> {
-				String role = auth.getRole().getName(); 
-				boolean isAdmin = role.equals(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
-				boolean hasRole = role.equals(GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_VIEWER) || role.equals(GovregistryRoles.RUOLO_GOVREGISTRY_ORGANIZATIONS_EDITOR);
-				return isAdmin || (hasRole && auth.getOrganizations().isEmpty());
-			});
-	}
-
 	
-	/**
-	 * Quando si ha una autorizzazione con una lista di servizi vuota, allora il permesso è esteso a tutti i servizi e il metodo
-	 * restituisce true.
-	 * 
-	 * L'admin può leggere sempre tutto.
-	 * 
-	 */	
-	public boolean canReadAllServices() {
-		
-		UserEntity user = getPrincipal();
-		OffsetDateTime now = OffsetDateTime.now();
-
-		return user.getAuthorizations().stream()
-			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.anyMatch( auth -> {
-				String role = auth.getRole().getName(); 
-				boolean isAdmin = role.equals(GovregistryRoles.RUOLO_GOVHUB_SYSADMIN);
-				boolean hasRole = role.equals(GovregistryRoles.RUOLO_GOVREGISTRY_SERVICES_VIEWER) || role.equals(GovregistryRoles.RUOLO_GOVREGISTRY_SERVICES_EDITOR);
-				return isAdmin || (hasRole && auth.getServices().isEmpty());
-			});
-	}
-	
-	
-
-	/**
-	 * Elenca le organizzazioni sulle quali si hanno dei permessi. 
-	*
-	 * @return gli Id delle organizzazioni autorizzate sui ruoli.
-	 * 
-	 */
 	public Set<Long> listAuthorizedOrganizations(String... roles) {
-		UserEntity user = getPrincipal();
-		OffsetDateTime now = OffsetDateTime.now();
-		
-		Set<String> roleList = Set.of(roles);
-		
-		return user.getAuthorizations().stream()
-			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.filter( auth -> roleList.contains(auth.getRole().getName()))
-			.flatMap( auth -> auth.getOrganizations().stream() )
-			.map( OrganizationEntity::getId)	
-			.collect(Collectors.toSet());
-			
+		return listAuthorizedOrganizations(Set.of(roles));
 	}
 	
 	
-	/**
-	 * Elenca I servizi sui quali si hanno dei permessi. 
-	*
-	 * @return gli Id dei servizi autorizzati  sui ruoli.
-	 */
+	public Set<Long> listAuthorizedOrganizations(Collection<String>  roles) {
+		return listAuthorizedOrganizations(new HashSet<String>(roles));
+	}
 	
-	@Transactional
-	public Set<Long> listAuthorizedServices(String... roles) {
+	/**
+	 * Elenca le organizzazioni sulle quali si hanno dei permessi.
+	 * Ogni ruolo ha associate delle organizzazioni, mi dice tutte le organizzazioni alle quali ho accesso secondo quei ruoli. 
+	*
+	 * @return   - null se non ho restrizioni (può diventare un Optional)
+	 *						- Set<Long>  l'insieme di id sul quale sono autorizzato a lavorare 
+	 */
+	public Set<Long> listAuthorizedOrganizations(Set<String> roles) {
+		log.debug("Retrieving organizations for which the principal has the following authorities: {}", roles);
+		
 		UserEntity user = getPrincipal();
 		OffsetDateTime now = OffsetDateTime.now();
 		
-		Set<String> roleList = Set.of(roles);
+		List<RoleAuthorizationEntity> validAuths = user.getAuthorizations().stream()
+				.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
+				.filter( auth -> roles.contains(auth.getRole().getName()))
+				.collect(Collectors.toList());
 		
-		return user.getAuthorizations().stream()
-			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.filter( auth -> roleList.contains(auth.getRole().getName()))
-			.flatMap( auth -> auth.getServices().stream() )
-			.map( ServiceEntity::getId )
-			.collect(Collectors.toSet());
+		Set<Long> orgIds = new HashSet<Long>();
+		
+		for (var auth: validAuths) {
+			if (auth.getOrganizations().isEmpty()) {
+				orgIds = null;
+				break;
+			} else {
+				orgIds.addAll(auth.getOrganizations().stream().map(OrganizationEntity::getId).collect(Collectors.toList()));
+			}
+		}
+		
+		return orgIds;
+	}
+	
+	
+	public Set<Long> listAuthorizedServices(String... roles) {
+		return listAuthorizedServices(Set.of(roles));
+	}
+	
+	
+	public Set<Long> listAuthorizedServices(Collection<String> roles) {
+		return listAuthorizedServices(new HashSet<String>(roles));
+	}
+
+
+	/**
+	 * Elenca i servizi sui quali si hanno dei permessi.
+	 * Ogni ruolo ha associate dei servizi, mi dice tutti i servizi ai quali ho accesso secondo quei ruoli. 
+	*
+	 * @return   - null se non ho restrizioni (può diventare un Optional)
+	 *						- Set<Long>  l'insieme di id sul quale sono autorizzato a lavorare 
+	 */
+	public Set<Long> listAuthorizedServices(Set<String>  roles) {
+		log.debug("Retrieving services for which the principal has the following authorities: {}", roles);
+		
+		UserEntity user = getPrincipal();
+		OffsetDateTime now = OffsetDateTime.now();
+
+		var validAuths = user.getAuthorizations().stream()
+				.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
+				.filter( auth -> roles.contains(auth.getRole().getName()))
+				.collect(Collectors.toList());
+		
+		Set<Long> serviceIds = new HashSet<Long>();
+		
+		for (var auth: validAuths) {
+			if (auth.getServices().isEmpty()) {
+				serviceIds = null;
+				break;
+			} else {
+				serviceIds.addAll(auth.getServices().stream().map(ServiceEntity::getId).collect(Collectors.toList()));
+			}
+		}
+		
+		return serviceIds;
+	}
+
+
+	/**
+	 * Ho l'insieme di id auth1 sui cui posso lavorare. Lo restringo sull'insieme auth2.
+	 *
+	 *		null = nessuna restrizione
+	 *	 	[ id1, id2, ... idN ] = autorizzato solo sui seguenti id
+	 */
+	 public static Set<Long> restrictAuthorizations(Set<Long> auth1, Set<Long> auth2) {
+		 if (auth1 == null) {
+			 // Se non ho restrizioni in origine, restituiscimi le seconde restrizioni
+			 return auth2;
+		 }
+		 
+		 if (auth2 == null) {
+			 // Se non sto restringendo, restituisci le prime restrizioni
+			 return auth1;
+		 }
+		 
+		 // Altrimenti restringi le prime con le seconde facendo l'intersezione
+		 var ret = new HashSet<Long>(auth1);
+		 ret.retainAll(auth2);
+		 return ret;
+		 
 	}
 
 

@@ -6,44 +6,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-dependencies</artifactId>
-		<version>2.7.1</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<groupId>it.govhub.govregistry</groupId>
+		<artifactId>govregistry</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
 	</parent>
-
-	<groupId>it.govhub.govregistry</groupId>
+	
 	<artifactId>commons</artifactId>
-	<version>1.0.0</version>
-
 	<packaging>jar</packaging>
-	<name>GovRegistry - Libreria comune</name>
-
-	<properties>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<swagger-annotations.version>1.6.2</swagger-annotations.version>
-		<jsonpatch.version>1.13</jsonpatch.version>
-		<springdoc.version>1.6.4</springdoc.version>
-		<jacoco.version>0.8.8</jacoco.version>
-		<maven-processor.version>4.5</maven-processor.version>
-		<openapi.tool.codegen.version>6.0.0</openapi.tool.codegen.version>
-		<jackson.databind.nullable.version>0.2.1</jackson.databind.nullable.version>
-	</properties>
-
-	<distributionManagement>
-		<repository>
-			<id>link-repository</id>
-			<name>Linkit Private Repository</name>
-			<url>scpexe://poli-dev.link.it/opt/local/maven/private</url>
-		</repository>
-		<snapshotRepository>
-			<id>link-repository</id>
-			<name>Linkit Private Snapshots Repository</name>
-			<url>scpexe://poli-dev.link.it/opt/local/maven/private-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
+	<name>GovRegistry - Common lib</name>
 
 	<dependencies>
 		<dependency>
@@ -88,6 +58,13 @@
 			<artifactId>springdoc-openapi-data-rest</artifactId>
 			<version>${springdoc.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>it.govhub</groupId>
+			<artifactId>govhub-openapi-codegen</artifactId>
+			<version>${govhub.codegen.version}</version>
+		</dependency>
+
 		<!-- SpringDoc fine -->
 
 		<dependency>
@@ -108,8 +85,7 @@
 			<artifactId>jackson-databind-nullable</artifactId>
 			<version>${jackson.databind.nullable.version}</version>
 		</dependency>
-
-
+		
 		<!-- JsonPatch -->
 		<dependency>
 			<groupId>com.github.java-json-tools</groupId>
@@ -136,7 +112,7 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/govhub-api-commons.yaml</inputSpec>
-							<generatorName>spring</generatorName>
+							<generatorName>govhub-codegen</generatorName>
 							<typeMappings>base64=it.govhub.govregistry.commons.utils.Base64String</typeMappings>
 							<importMappings>
 								<importMapping>Direction=org.springframework.data.domain.Sort.Direction</importMapping>
@@ -150,15 +126,9 @@
 								<apiPackage>it.govhub.govregistry.commons.api.spec</apiPackage>
 								<modelPackage>it.govhub.govregistry.commons.api.beans</modelPackage>
 								<useBeanValidation>true</useBeanValidation>
-								<performBeanValidation>true</performBeanValidation>
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<interfaceOnly>true</interfaceOnly>
 								<hateoas>true</hateoas>
-								<!-- Metto il booleanGetterPrefix a get, e.g.: getEnabled invece 
-									di isEnabled. questo in modo da far riconoscere e copiare le proprietà booleane 
-									alla BeanUtils.copyProperties: dalla documentazione in 'https://openapi-generator.tech/docs/generators/java/' 
-									risulta essere il default -->
-								<booleanGetterPrefix>get</booleanGetterPrefix>
 								<useTags>true</useTags>
 							</configOptions>
 							<output>${project.basedir}/target</output>
@@ -166,12 +136,21 @@
 							<generateApiTests>false</generateApiTests>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<generateModelTests>false</generateModelTests>
+							<generateApis>false</generateApis>
+							<!--  Skippiamo la validazione dell'openapi altrimenti lamenta la mancanza dell'elemento /paths.
+									 Nel commons ci interessa generare solamente i beans.-->
+							<skipValidateSpec>true</skipValidateSpec>
 						</configuration>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>it.govhub</groupId>
+						<artifactId>govhub-openapi-codegen</artifactId>
+						<version>${govhub.codegen.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
-
-
 
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
@@ -212,13 +191,14 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 		<extensions>
 			<!-- Enabling the use of SSH -->
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh-external</artifactId>
-				<version>1.0-beta-6</version>
+				<version>${wagon-ssh-external.version}</version>
 			</extension>
 		</extensions>
 	</build>

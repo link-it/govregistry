@@ -6,32 +6,15 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.1</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<groupId>it.govhub.govregistry</groupId>
+		<artifactId>govregistry</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>it.govhub.govregistry</groupId>
 	<artifactId>api</artifactId>
 	<packaging>${packaging.type}</packaging>
-	<version>1.0.0</version>
 	<name>GovRegistry - API</name>
 	<description>API per il backoffice del registro di GovHub</description>
-
-	<properties>
-		<maven.deploy.skip>true</maven.deploy.skip>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>11</java.version>
-		<openapi.tool.codegen.version>6.0.0</openapi.tool.codegen.version>
-		<jackson.databind.nullable.version>0.2.1</jackson.databind.nullable.version>
-		<swagger-annotations.version>1.6.2</swagger-annotations.version>
-		<jsonpatch.version>1.13</jsonpatch.version>
-		<jsr305.version>3.0.2</jsr305.version>
-		<springdoc.version>1.6.4</springdoc.version>
-		<glassfish.version>1.1.4</glassfish.version>
-		<jacoco.version>0.8.8</jacoco.version>
-	</properties>
 
 	<profiles>
 		<profile>
@@ -63,14 +46,21 @@
 		<dependency>
 			<groupId>it.govhub.govregistry</groupId>
 			<artifactId>commons</artifactId>
-			<version>1.0.0</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>it.govhub.security</groupId>
-			<artifactId>security</artifactId>
-			<version>1.0.0</version>
+			<groupId>it.govhub.govregistry</groupId>
+			<artifactId>readops</artifactId>
+			<version>${project.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>it.govhub.govregistry</groupId>
+			<artifactId>security</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -97,6 +87,7 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
+
 		<!-- SpringDoc per generazione OpenAPI e SwaggerUI -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -109,16 +100,30 @@
 			<artifactId>springdoc-openapi-data-rest</artifactId>
 			<version>${springdoc.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>it.govhub</groupId>
+			<artifactId>govhub-openapi-codegen</artifactId>
+			<version>${govhub.codegen.version}</version>
+		</dependency>
+
 		<!-- SpringDoc fine -->
 
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -166,8 +171,6 @@
 			<scope>test</scope>
 		</dependency>
 
-
-
 		<!-- Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -202,16 +205,35 @@
 			<artifactId>json-patch</artifactId>
 			<version>${jsonpatch.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
 		<finalName>govregistry</finalName>
+		
 		<plugins>
-
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>resource-dependencies</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<type>jar</type>
+							<includeArtifactIds>commons</includeArtifactIds>
+							<includes>govhub-api-commons.yaml</includes>
+							<outputDirectory>${project.basedir}/src/main/resources</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
@@ -227,7 +249,7 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/govregistry-api-backoffice.yaml</inputSpec>
-							<generatorName>spring</generatorName>
+							<generatorName>govhub-codegen</generatorName>
 							<typeMappings>base64=it.govhub.govregistry.commons.utils.Base64String</typeMappings>
 							<importMappings>
 								<importMapping>Direction=org.springframework.data.domain.Sort.Direction</importMapping>
@@ -243,6 +265,10 @@
 								<importMapping>OrganizationCreate=it.govhub.govregistry.commons.api.beans.OrganizationCreate</importMapping>
 								<importMapping>Service=it.govhub.govregistry.commons.api.beans.Service</importMapping>
 								<importMapping>ServiceCreate=it.govhub.govregistry.commons.api.beans.ServiceCreate</importMapping>
+								<importMapping>ServiceAuthItem=it.govhub.govregistry.commons.api.beans.ServiceAuthItem</importMapping>
+								<importMapping>OrganizationAuthItem=it.govhub.govregistry.commons.api.beans.OrganizationAuthItem</importMapping>
+								<importMapping>OrganizationList=it.govhub.govregistry.commons.api.beans.OrganizationList</importMapping>
+								<importMapping>OrganizationOrdering=it.govhub.govregistry.commons.api.beans.OrganizationOrdering</importMapping>
 							</importMappings>
 							<configOptions>
 								<dateLibrary>java8</dateLibrary>
@@ -253,7 +279,7 @@
 								<modelPackage>it.govhub.govregistry.api.beans</modelPackage>
 								<configPackage>it.govhub.govregistry.api.config</configPackage>
 								<useBeanValidation>true</useBeanValidation>
-								<performBeanValidation>true</performBeanValidation>
+								<!-- <performBeanValidation>true</performBeanValidation> -->
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<interfaceOnly>true</interfaceOnly>
 								<hateoas>true</hateoas>
@@ -271,6 +297,13 @@
 						</configuration>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>it.govhub</groupId>
+						<artifactId>govhub-openapi-codegen</artifactId>
+						<version>${govhub.codegen.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -286,5 +319,13 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<extensions>
+			<!-- Enabling the use of SSH -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>${wagon-ssh-external.version}</version>
+			</extension>
+		</extensions>
 	</build>
 </project>

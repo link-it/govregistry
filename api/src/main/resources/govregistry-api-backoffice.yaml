@@ -37,7 +37,6 @@ tags:
 
 paths:
 
-
   /users:
     
     post:
@@ -59,6 +58,15 @@ paths:
             application/json:
               schema:
                 $ref: 'govhub-api-commons.yaml#/components/schemas/User'          
+          links:
+             self:
+                $ref: "#/components/links/readUser"
+             update:
+                $ref: "#/components/links/updateUser"
+             assignAuthorization:
+                $ref: "#/components/links/assignAuthorization"                
+             list:
+                $ref: "#/components/links/listAuthorizations"
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -74,40 +82,7 @@ paths:
         default:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
           
-    get:
-      tags:
-         - user
-      summary: Retrieve the user list.
-      description: Retrieve the user list.
-      operationId: listUsers
-      parameters:
-         - $ref: "govhub-api-commons.yaml#/components/parameters/limit"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
-         - $ref: "#/components/parameters/enabled_query"
-         - $ref: "#/components/parameters/user_ordering_query"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
-      responses:
-        '200':
-          description: Successful operation.
-          content:
-            application/json:
-              schema:
-                 $ref: "#/components/schemas/UserList"
-        '400':
-          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
-        '401':
-          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
-        '403':
-          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
-        '429':
-          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
-        '503':
-          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
-        default:
-          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"       
 
-          
   /users/{id}:
     parameters:
       - $ref: "govhub-api-commons.yaml#/components/parameters/user_id"    
@@ -130,7 +105,16 @@ paths:
           content:
              application/json:
                 schema:
-                   $ref: 'govhub-api-commons.yaml#/components/schemas/User'                             
+                   $ref: 'govhub-api-commons.yaml#/components/schemas/User'
+          links:
+             self:
+                $ref: "#/components/links/readUser"
+             update:
+                $ref: "#/components/links/updateUser"
+             assignAuthorization:
+                $ref: "#/components/links/assignAuthorization"                
+             listAuthorizations:
+                $ref: "#/components/links/listAuthorizations"                                                
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -139,6 +123,8 @@ paths:
           $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
         '404':
           $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '409':
+          $ref: "govhub-api-commons.yaml#/components/responses/409Conflict"          
         '429':
           $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
         '503':
@@ -168,7 +154,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "govhub-api-commons.yaml#/components/schemas/Authorization"          
+                $ref: "govhub-api-commons.yaml#/components/schemas/Authorization"
+          links:
+           delete:
+             $ref: "#/components/links/deleteAuthorization"
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -184,14 +173,48 @@ paths:
         default:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
           
+    get:
+         tags:
+            - authorization
+         summary: Retrieve the user authorizations.
+         description: Retrieve the user authorizations.
+         operationId: listAuthorizations
+         parameters:
+            - $ref: "govhub-api-commons.yaml#/components/parameters/limit"
+            - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
+            - $ref: "govhub-api-commons.yaml#/components/parameters/authorization_ordering_query"
+            - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
+         responses:
+           '200':
+             description: Successful operation.
+             content:
+               application/json:
+                 schema:
+                    $ref: "govhub-api-commons.yaml#/components/schemas/AuthorizationList"
+           '400':
+             $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+           '401':
+             $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+           '403':
+             $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+           '404':
+             $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+           '429':
+             $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+           '503':
+             $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+           default:
+             $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                 
+          
+          
   /authorizations/{id}:
     parameters:
        - $ref: "#/components/parameters/authorization_id"    
     delete:
       tags:
         - authorization
-      summary: Delete the authorization.
-      description: Delete the authorization.
+      summary: Removes  the authorization.
+      description: Removes the authorization.
       operationId: removeAuthorization
       responses:
         '200':
@@ -231,7 +254,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'          
+                $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'        
+          links:
+             self:
+                $ref: "#/components/links/readOrganization"
+             update:
+                $ref: "#/components/links/updateOrganization"
+             logo:
+                $ref: "#/components/links/readOrganizationLogo"
+             logo-miniature:
+                $ref: "#/components/links/readOrganizationLogoMiniature"
+                  
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -244,7 +277,7 @@ paths:
           $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
         default:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
-
+          
     get:
       tags:
          - organization
@@ -255,15 +288,16 @@ paths:
          - $ref: "govhub-api-commons.yaml#/components/parameters/limit"
          - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
          - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
-         - $ref: "#/components/parameters/organization_ordering_query"
+         - $ref: "govhub-api-commons.yaml#/components/parameters/organization_ordering_query"
          - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
+         - $ref: "govhub-api-commons.yaml#/components/parameters/with_roles"
       responses:
         '200':
           description: Successful operation.
           content:
             application/json:
               schema:
-                 $ref: "#/components/schemas/OrganizationList"
+                 $ref: "govhub-api-commons.yaml#/components/schemas/OrganizationList"
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -275,7 +309,8 @@ paths:
         '503':
           $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
         default:
-          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"       
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"            
+
  
   /organizations/{id}:
     parameters:
@@ -299,7 +334,16 @@ paths:
           content:
              application/json:
                 schema:
-                   $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'                             
+                   $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'                            
+          links:
+             self:
+                $ref: "#/components/links/readOrganization"
+             update:
+                $ref: "#/components/links/updateOrganization"
+             logo:
+                $ref: "#/components/links/readOrganizationLogo"
+             miniature:
+                $ref: "#/components/links/readOrganizationLogoMiniature"                
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -334,7 +378,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'govhub-api-commons.yaml#/components/schemas/Service'          
+                $ref: 'govhub-api-commons.yaml#/components/schemas/Service'
+          links:
+             self:
+               $ref: "#/components/links/readService" 
+             update:
+               $ref: "#/components/links/updateService"
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -348,39 +397,7 @@ paths:
         default:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
           
-    get:
-      tags:
-         - service
-      summary: Retrieve the service list.
-      description: Retrieve the service list.
-      operationId: listServices
-      parameters:
-         - $ref: "govhub-api-commons.yaml#/components/parameters/limit"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
-         - $ref: "#/components/parameters/service_ordering_query"
-         - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
-      responses:
-        '200':
-          description: Successful operation.
-          content:
-            application/json:
-              schema:
-                 $ref: "#/components/schemas/ServiceList"
-        '400':
-          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
-        '401':
-          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
-        '403':
-          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
-        '429':
-          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
-        '503':
-          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
-        default:
-          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"       
 
-          
   /services/{id}:
     parameters:
       - $ref: "govhub-api-commons.yaml#/components/parameters/service_id"    
@@ -403,7 +420,12 @@ paths:
           content:
              application/json:
                 schema:
-                   $ref: 'govhub-api-commons.yaml#/components/schemas/Service'                             
+                   $ref: 'govhub-api-commons.yaml#/components/schemas/Service'
+          links:
+             self:
+               $ref: "#/components/links/readService" 
+             update:
+               $ref: "#/components/links/updateService"                                                
         '400':
           $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
         '401':
@@ -449,6 +471,73 @@ paths:
   
 components:
 
+   links:
+      readUser:
+         description: Retrieve the user.
+         operationRef: "govregistry-api-readops.yaml#/paths/~1users~1{id}/get"
+         parameters:
+           id: $response.body#/id
+           
+      updateUser:
+          description: Update the user.
+          operationId: updateUser
+          parameters:
+             id: $response.body#/id
+             
+      assignAuthorization:
+          description: Gives some authorizations to the user.
+          operationId: assignAuthorization
+          parameters:
+             id: $response.body#/id
+             
+      deleteAuthorization:
+          description: remove an authorization.
+          operationId: assignAuthorization
+          parameters:
+             id: $response.body#/id
+                          
+      listAuthorizations:
+          description: List the user authorizations.
+          operationId: listAuthorizations
+          parameters:
+             id: $response.body#/id
+             
+      readOrganization:
+         description: Retrieve the organization.
+         operationRef: "govregistry-api-readops.yaml#/paths/~organizations~1{id}/get"
+         parameters:
+             id: $response.body#/id
+             
+      readService:
+         description: Retrieve the service.
+         operationRef: "govregistry-api-readops.yaml#/paths/~services~1{id}/get"
+         parameters:
+             id: $response.body#/id       
+             
+      readOrganizationLogo:
+         description: Retrieve the organization logo.
+         operationRef: "govregistry-api-readops.yaml#/paths/~organizations~1{id}~1logo/get"
+         parameters:
+             id: $response.body#/id
+             
+      readOrganizationLogoMiniature:
+         description: Retrieve the organization logo miniature.
+         operationRef: "govregistry-api-readops.yaml#/paths/~organizations~1{id}~1logo-miniature/get"
+         parameters:
+             id: $response.body#/id                          
+             
+      updateOrganization:
+         description: Update the organization.
+         operationId: updateOrganization
+         parameters:
+             id: $response.body#/id       
+             
+      updateService:
+         description: Update the service.
+         operationId: updateService
+         parameters:
+             id: $response.body#/id                    
+
    # SECURITY    ---------------
    securitySchemes:
       header-principal:
@@ -467,37 +556,6 @@ components:
          schema:
             $ref: "govhub-api-commons.yaml#/components/schemas/AuthorizationId"
       
-      enabled_query:
-         name: enabled
-         in: query
-         description: filter by status.
-         required: false
-         schema:
-            type: boolean
-            
-      user_ordering_query:
-         name: sort
-         in: query
-         description: Sorting field.
-         required: true
-         schema:
-            $ref: "#/components/schemas/UserOrdering"           
-
-      organization_ordering_query:
-         name: sort
-         in: query
-         description: Sorting field.
-         required: true
-         schema:
-            $ref: "#/components/schemas/OrganizationOrdering"
-            
-      service_ordering_query:            
-         name: sort
-         in: query
-         description: Sorting field.
-         required: true
-         schema:
-            $ref: "#/components/schemas/ServiceOrdering"            
             
    # SCHEMAS ---------------- #
    
@@ -532,84 +590,5 @@ components:
                type: string
                format: date-time
            
-      UserOrdering:
-         type: string
-         enum:
-            - unsorted
-            - full_name
-            - id
-         default: id
-
-      OrganizationOrdering:
-         type: string
-         enum:
-            - unsorted
-            - legal_name
-            - id
-         default: id          
-                        
-      ServiceOrdering:
-         type: string
-         enum:
-            - unsorted
-            - id
-            - service_name      
-         default: id
-               
-      UserList:
-         allOf:
-            - $ref: "govhub-api-commons.yaml#/components/schemas/List"
-            - type: object
-              properties:              
-                 items:
-                    type: array
-                    items:
-                       $ref: "govhub-api-commons.yaml#/components/schemas/User"
-                    minItems: 0
-                    maxItems: 2147483647
-              required:
-                 - items 
-              additionalProperties: false
-
-      OrganizationList:
-         allOf:
-            - $ref: "govhub-api-commons.yaml#/components/schemas/List"
-            - type: object
-              properties:              
-                 items:
-                    type: array
-                    items:
-                       $ref: "#/components/schemas/OrganizationItem"
-                    minItems: 0
-                    maxItems: 2147483647
-              required:
-                 - items 
-              additionalProperties: false
-              
-      OrganizationItem:
-         allOf:
-            - $ref: "govhub-api-commons.yaml#/components/schemas/OrganizationData"
-            - type: object
-              additionalProperties: false
-              required: 
-                 - id
-              properties:
-                 id:
-                   $ref: "govhub-api-commons.yaml#/components/schemas/OrganizationId"
-              
-      ServiceList:
-         allOf:
-            - $ref: "govhub-api-commons.yaml#/components/schemas/List"
-            - type: object
-              properties:              
-                 items:
-                    type: array
-                    items:
-                       $ref: "govhub-api-commons.yaml#/components/schemas/Service"
-                    minItems: 0
-                    maxItems: 2147483647
-              required:
-                 - items 
-              additionalProperties: false   
       
          
