@@ -30,11 +30,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
-import it.govhub.govregistry.api.beans.PatchOp.OpEnum;
+import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
+import it.govhub.govregistry.commons.api.beans.PatchOp.OpEnum;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.repository.UserRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -42,6 +42,9 @@ import it.govhub.govregistry.commons.repository.UserRepository;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
 class User_UC_6_AutorizzazioneUtenzeTest {
+	
+	private static final String USERS_BASE_PATH = "/v1/users";
+	private static final String USERS_BASE_PATH_DETAIL_ID = USERS_BASE_PATH + "/{id}";
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -65,7 +68,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -105,7 +108,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 		
 		// Creazione Utente non autorizzata
-		this.mockMvc.perform(post("/users")
+		this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.with(csrf())
 				.content(json)
@@ -132,7 +135,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -156,7 +159,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(patchUser)
@@ -190,7 +193,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -212,7 +215,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.with(csrf())
 				.content(patchUser)
@@ -229,13 +232,13 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 	//5. FindAllUsers con utenza non admin con ruolo govhub_users_editor/govhub_users_viewer: OK
 	@Test
 	void UC_6_05_FindAllUsersOk_UtenzaConRuolo_GovHub_Users_Editor_O_Viewer() throws Exception {
-		this.mockMvc.perform(get("/users")
+		this.mockMvc.perform(get(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		this.mockMvc.perform(get("/users")
+		this.mockMvc.perform(get(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -245,7 +248,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 	//6. FindAllUsers con utenza non admin con ruolo non govhub_users_editor/govhub_users_viewer: NotAuthorized
 	@Test
 	void UC_6_06_FindAllUsersFail_UtenzaSenzaRuolo_GovHub_Users_Editor_O_Viewer() throws Exception {
-		this.mockMvc.perform(get("/users")
+		this.mockMvc.perform(get(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
@@ -259,7 +262,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 	//7. GetUser con utenza non admin con ruolo govhub_users_editor/govhub_users_viewer: OK
 	@Test
 	void UC_6_07_GetUserOk_UtenzaConRuolo_GovHub_Users_Editor_O_Viewer() throws Exception {
-		MvcResult result = this.mockMvc.perform(get("/users/")
+		MvcResult result = this.mockMvc.perform(get(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -274,13 +277,13 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
 		
-		this.mockMvc.perform(get("/users/{id}",idUser1)
+		this.mockMvc.perform(get(USERS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		this.mockMvc.perform(get("/users/{id}",idUser1)
+		this.mockMvc.perform(get(USERS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -291,7 +294,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 	//8. GetUser con utenza non admin con ruolo non govhub_users_editor/govhub_users_viewer: NotAuthorized
 	@Test
 	void UC_6_08_GetUserOk_UtenzaSenzaRuolo_GovHub_Users_Editor_O_Viewer() throws Exception {
-		MvcResult result = this.mockMvc.perform(get("/users/")
+		MvcResult result = this.mockMvc.perform(get(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -306,7 +309,7 @@ class User_UC_6_AutorizzazioneUtenzeTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
 		
-		this.mockMvc.perform(get("/users/{id}",idUser1)
+		this.mockMvc.perform(get(USERS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())

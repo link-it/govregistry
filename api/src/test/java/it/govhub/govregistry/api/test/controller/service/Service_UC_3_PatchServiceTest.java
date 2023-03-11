@@ -27,11 +27,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
+import it.govhub.govregistry.api.repository.ServiceRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.api.beans.PatchOp.OpEnum;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
-import it.govhub.govregistry.commons.repository.ServiceRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -39,6 +39,9 @@ import it.govhub.govregistry.commons.repository.ServiceRepository;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
 class Service_UC_3_PatchServiceTest {
+
+	private static final String SERVICES_BASE_PATH = "/v1/services";
+	private static final String SERVICES_BASE_PATH_DETAIL_ID = SERVICES_BASE_PATH + "/{id}";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -61,7 +64,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/services/{id}", 1)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, 1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -85,7 +88,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -108,7 +111,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/services/{id}", id)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -137,7 +140,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -165,7 +168,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/services/{id}", id)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -195,7 +198,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -221,7 +224,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/services/{id}", id)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -252,7 +255,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -280,7 +283,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/services/{id}", id)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -310,7 +313,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -338,7 +341,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/services/{id}", id)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -368,7 +371,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -394,7 +397,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/services/{id}", id)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -423,7 +426,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -448,7 +451,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/services/{id}", id)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)

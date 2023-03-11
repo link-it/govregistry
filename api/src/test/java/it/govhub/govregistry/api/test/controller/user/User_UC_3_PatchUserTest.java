@@ -29,11 +29,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
+import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.api.beans.PatchOp.OpEnum;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.repository.UserRepository;
 
 
 
@@ -43,6 +43,9 @@ import it.govhub.govregistry.commons.repository.UserRepository;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
 class User_UC_3_PatchUserTest {
+
+	private static final String USERS_BASE_PATH = "/v1/users";
+	private static final String USERS_BASE_PATH_DETAIL_ID = USERS_BASE_PATH + "/{id}";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -65,7 +68,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", 1)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, 1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -90,7 +93,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -109,7 +112,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -140,7 +143,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -164,7 +167,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -197,7 +200,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -221,7 +224,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -254,7 +257,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -278,7 +281,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -312,7 +315,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -336,7 +339,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -371,7 +374,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -395,7 +398,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -430,7 +433,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -454,7 +457,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -487,7 +490,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -511,7 +514,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -546,7 +549,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -568,7 +571,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -603,7 +606,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post("/users")
+		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -626,7 +629,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", id)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -659,7 +662,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/users/{id}", 1)
+		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, 1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)

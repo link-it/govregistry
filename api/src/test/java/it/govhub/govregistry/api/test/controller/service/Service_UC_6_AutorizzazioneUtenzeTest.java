@@ -33,15 +33,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
-import it.govhub.govregistry.api.beans.PatchOp.OpEnum;
+import it.govhub.govregistry.api.repository.ServiceRepository;
+import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
+import it.govhub.govregistry.commons.api.beans.PatchOp.OpEnum;
 import it.govhub.govregistry.commons.entity.RoleEntity;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.repository.RoleRepository;
-import it.govhub.govregistry.commons.repository.ServiceRepository;
-import it.govhub.govregistry.commons.repository.UserRepository;
+import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -50,6 +50,10 @@ import it.govhub.govregistry.commons.repository.UserRepository;
 
 class Service_UC_6_AutorizzazioneUtenzeTest {
 
+	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
+	private static final String SERVICES_BASE_PATH = "/v1/services";
+	private static final String SERVICES_BASE_PATH_DETAIL_ID = SERVICES_BASE_PATH + "/{id}";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -57,7 +61,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	private ServiceRepository serviceRepository;
 	
 	@Autowired
-	public RoleRepository roleRepository;
+	public ReadRoleRepository roleRepository;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -92,7 +96,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	//1. CreateService con utenza non admin con ruolo govhub_services_editor: OK
 	@Test
 	void UC_6_01_CreateServiceOk_UtenzaConRuolo_GovHub_Services_Editor() throws Exception {
-		ServiceEntity servizio = Costanti.getServizioTest();
+		ServiceEntity servizio = Costanti.getServizioTest2();
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -101,7 +105,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaServiceEditor())
 				.with(csrf())
 				.content(json)
@@ -137,7 +141,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		this.mockMvc.perform(post("/services")
+		this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaServiceViewer())
 				.with(csrf())
 				.content(json)
@@ -155,7 +159,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	//3. PatchService con utenza non admin con ruolo govhub_services_editor: OK
 	@Test
 	void UC_6_03_PatchServiceOk_UtenzaConRuolo_GovHub_Services_Editor() throws Exception {
-		ServiceEntity servizio = Costanti.getServizioTest();
+		ServiceEntity servizio = Costanti.getServizioTest2();
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -164,7 +168,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -192,7 +196,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/services/{id}", id)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaServiceEditor())
 				.with(csrf())
 				.content(PatchService)
@@ -214,7 +218,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	//4. PatchService con utenza non admin con ruolo non govhub_services_editor: NotAuthorized
 	@Test
 	void UC_6_04_PatchServiceFail_UtenzaSenzaRuolo_GovHub_Services_Editor() throws Exception {
-		ServiceEntity servizio = Costanti.getServizioTest();
+		ServiceEntity servizio = Costanti.getServizioTest2();
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -223,7 +227,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/services")
+		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -249,7 +253,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch("/services/{id}", id)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaServiceViewer())
 				.with(csrf())
 				.content(PatchService)
@@ -267,13 +271,13 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	//5. FindAllServices con utenza non admin con ruolo govhub_services_editor/govhub_services_viewer: OK
 	@Test
 	void UC_6_05_FindAllOk_UtenzaConRuolo_GovHub_Services_Editor_O_Viewer() throws Exception {
-		this.mockMvc.perform(get("/services")
+		this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaServiceEditor())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		this.mockMvc.perform(get("/services")
+		this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaServiceViewer())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -283,22 +287,24 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	//6. FindAllServices con utenza non admin con ruolo non govhub_services_editor/govhub_services_viewer: NotAuthorized
 	@Test
 	void UC_6_06_FindAllFail_UtenzaSenzaRuolo_GovHub_Services_Editor_O_Viewer() throws Exception {
-		this.mockMvc.perform(get("/services")
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isUnauthorized())
-				.andExpect(jsonPath("$.status", is(401)))
-				.andExpect(jsonPath("$.title", is("Unauthorized")))
-				.andExpect(jsonPath("$.type").isString())
-				.andExpect(jsonPath("$.detail").isString())
+				.andExpect(status().isOk())
 				.andReturn();
 		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		JsonObject serviceList = reader.readObject();
+		
+		// Controlli sugli items
+		JsonArray items = serviceList.getJsonArray("items");
+		assertEquals(0, items.size());
 	}
 	
 	//7. GetService con utenza non admin con ruolo govhub_services_editor/govhub_services_viewer: OK
 	@Test
 	void UC_6_07_GetUserOk_UtenzaConRuolo_GovHub_Services_Editor_O_Viewer() throws Exception {
-		MvcResult result = this.mockMvc.perform(get("/services/")
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -313,13 +319,13 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idService1 = item1.getInt("id");
 		
-		this.mockMvc.perform(get("/services/{id}",idService1)
+		this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID,idService1)
 				.with(this.userAuthProfilesUtils.utenzaServiceEditor())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		this.mockMvc.perform(get("/services/{id}",idService1)
+		this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID,idService1)
 				.with(this.userAuthProfilesUtils.utenzaServiceViewer())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -330,7 +336,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	//8. GetService con utenza non admin con ruolo non govhub_services_editor/govhub_services_viewer: NotAuthorized
 	@Test
 	void UC_6_08_GetUserFail_UtenzaSenzaRuolo_GovHub_Services_Editor_O_Viewer() throws Exception {
-		MvcResult result = this.mockMvc.perform(get("/services/")
+		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -345,7 +351,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idService1 = item1.getInt("id");
 		
-		this.mockMvc.perform(get("/services/{id}",idService1)
+		this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID,idService1)
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
@@ -372,7 +378,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -385,7 +391,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
 				.andReturn();
 		
-		result = this.mockMvc.perform(get("/services")
+		result = this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -423,7 +429,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -436,7 +442,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
 				.andReturn();
 		
-		result = this.mockMvc.perform(get("/services/")
+		result = this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -452,7 +458,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 		int idEnte1 = item1.getInt("id"); // Servizio1
 				
 		// l'utenza non vede altri services a parte quello che gli e' stata assegnata (Servizio 3)
-		this.mockMvc.perform(get("/services/{id}",idEnte1)
+		this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID,idEnte1)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
@@ -463,7 +469,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.andReturn();
 		
 		// l'utenza puo' vedere solo l'organization che gli e' stata assegnata (Ente 4)
-		this.mockMvc.perform(get("/services/{id}", servizio.getId())
+		this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID, servizio.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -485,7 +491,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -498,7 +504,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
 				.andReturn();
 		
-		result = this.mockMvc.perform(get("/services/")
+		result = this.mockMvc.perform(get(SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -526,7 +532,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 		
-		this.mockMvc.perform(patch("/services/{id}", servizio.getId())
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, servizio.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(PatchService)
@@ -545,7 +551,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 		assertEquals(servizio.getDescription(), serviceEntity.getDescription());
 		
 		// Patch su un service per cui non si e' autorizzati fallisce
-		this.mockMvc.perform(patch("/services/{id}", idEnte1)
+		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, idEnte1)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(PatchService)

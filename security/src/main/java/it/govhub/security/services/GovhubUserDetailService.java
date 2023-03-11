@@ -1,5 +1,7 @@
 package it.govhub.security.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
@@ -9,24 +11,30 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import it.govhub.govregistry.commons.cache.Caches;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.exception.NotAuthorizedException;
-import it.govhub.govregistry.commons.repository.UserRepository;
+import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.security.beans.GovhubPrincipal;
+import it.govhub.security.cache.Caches;
+import it.govhub.security.repository.SecurityUserRepository;
 
 @Service
 public class GovhubUserDetailService implements UserDetailsService, AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
 	
 	@Autowired
-	private UserRepository userRepo;
+	SecurityUserRepository userRepo;
+	
+	@Autowired
+	UserMessages userMessages;
+	
+	Logger log = LoggerFactory.getLogger(GovhubUserDetailService.class);
 
 	@Override
 	@Cacheable(Caches.PRINCIPALS)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		log.debug("Loading principal [{}] from database...", username);
 		
 		UserEntity user = this.userRepo.findAndPreloadByPrincipal(username)
-				.orElseThrow( () -> new NotAuthorizedException("Credenziali non Valide"));
+				.orElseThrow( () -> new UsernameNotFoundException(this.userMessages.principalNotFound(username)));
 		
 		return new GovhubPrincipal(user);
 	}

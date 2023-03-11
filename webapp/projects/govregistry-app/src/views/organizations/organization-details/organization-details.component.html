@@ -38,7 +38,7 @@
             </div>
           </div>
         <!-- </ng-template> -->
-        <div role="group" class="gl-w-full btn-group-" *ngIf="_isEdit && !_spin">
+        <div role="group" class="gl-w-full btn-group- position-relative" *ngIf="_isEdit && !_spin">
           <button aria-haspopup="true" aria-expanded="false" type="button" class="btn btn-default btn-md gl-button btn-default-tertiary ms-2" [tooltip]="(_isNew ? 'APP.TOOLTIP.CancelNew' : 'APP.TOOLTIP.CancelEdit') | translate" (click)="_onCancelEdit()">
             <i class="bi bi-x-lg"></i>
           </button>
@@ -61,7 +61,7 @@
           <button aria-expanded="false" type="button" class="btn btn-default btn-md gl-button btn-icon" [tooltip]="'APP.TOOLTIP.EditOrganization' | translate" (click)="_editOrganization()" *ngIf="!_isEdit && !_spin">
             <i class="bi bi-pencil"></i>
           </button>
-          <div role="group" class="gl-w-full btn-group-" *ngIf="_isEdit && !_spin">
+          <div role="group" class="gl-w-full btn-group- position-relative" *ngIf="_isEdit && !_spin">
             <button aria-haspopup="true" aria-expanded="false" type="button" class="btn btn-default btn-md gl-button btn-default-tertiary ms-2 btn-icon" [tooltip]="(_isNew ? 'APP.TOOLTIP.CancelNew' : 'APP.TOOLTIP.CancelEdit') | translate" (click)="_onCancelEdit()">
               <i class="bi bi-x-lg"></i>
             </button>

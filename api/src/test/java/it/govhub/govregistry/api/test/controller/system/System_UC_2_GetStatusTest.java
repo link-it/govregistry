@@ -23,6 +23,8 @@ import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class System_UC_2_GetStatusTest {
 
+	private static final String STATUS_BASE_PATH = "/v1/status";
+
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -31,7 +33,7 @@ class System_UC_2_GetStatusTest {
 	
 	@Test
 	void UC_2_01_GetStatusOk() throws Exception {
-		this.mockMvc.perform(get("/status")
+		this.mockMvc.perform(get(STATUS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept("application/problem+json"))
 				.andExpect(status().isOk())

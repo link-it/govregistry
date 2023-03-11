@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -16,42 +18,58 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
-import it.govhub.govregistry.api.messages.OrganizationMessages;
-import it.govhub.govregistry.api.messages.PatchMessages;
+import it.govhub.govregistry.api.repository.OrganizationRepository;
 import it.govhub.govregistry.commons.api.beans.Organization;
 import it.govhub.govregistry.commons.api.beans.OrganizationCreate;
-import it.govhub.govregistry.commons.assemblers.OrganizationAssembler;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
-import it.govhub.govregistry.commons.repository.OrganizationRepository;
+import it.govhub.govregistry.commons.messages.OrganizationMessages;
+import it.govhub.govregistry.commons.messages.PatchMessages;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
+import it.govhub.govregistry.readops.api.assemblers.OrganizationAssembler;
 
 @Service
 public class OrganizationService {
 
 	@Autowired
-	private OrganizationAssembler orgAssembler;
+	OrganizationAssembler orgAssembler;
 	
 	@Autowired
-	private OrganizationRepository orgRepo;
+	OrganizationRepository orgRepo;
 	
 	@Autowired
-	private ObjectMapper objectMapper;
+	ObjectMapper objectMapper;
 	
 	@Autowired
-	private Validator validator;
+	Validator validator;
+	
+	@Autowired
+	OrganizationMessages orgMessages;
+	
+	Logger log = LoggerFactory.getLogger(OrganizationService.class);
 	
 	@Transactional
 	public OrganizationEntity createOrganization(OrganizationCreate org) {
+		log.info("Creating new organization: {}", org);
+		
+		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddress(), "office_address");
+		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAddressDetails(), "office_address_details");
+		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeAt(), "office_at");
+		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeForeignState(), "office_foreign_state");
+		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeMunicipality(), "office_municipality");
+		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeMunicipalityDetails(), "office_municipality_details");
+		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeProvince(), "office_province");
+		PostgreSQLUtilities.throwIfContainsNullByte(org.getOfficeZip(), "office_zip");
+		
 
 		if (this.orgRepo.findByTaxCode(org.getTaxCode()).isPresent()) {
-			throw new ConflictException(OrganizationMessages.conflictTaxCode(org.getTaxCode()));
+			throw new ConflictException(this.orgMessages.conflictTaxCode(org.getTaxCode()));
 		}
 		
 		if (this.orgRepo.findByLegalName(org.getLegalName()).isPresent()) {
-			throw new ConflictException(OrganizationMessages.conflictLegalName(org.getLegalName()));
+			throw new ConflictException(this.orgMessages.conflictLegalName(org.getLegalName()));
 		}
 
 		OrganizationEntity toCreate = this.orgAssembler.toEntity(org);
@@ -63,7 +81,9 @@ public class OrganizationService {
 	public OrganizationEntity patchOrganization(Long id, JsonPatch patch) {
 		
 		OrganizationEntity org = this.orgRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(OrganizationMessages.notFound(id)));
+				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
+		
+		log.info("Patching organization [{}]: {}", id,  patch);
 		
 		// Convertiamo la entity in json e applichiamo la patch sul json
 		Organization restOrg = this.orgAssembler.toModel(org);
@@ -76,7 +96,7 @@ public class OrganizationService {
 			throw new BadRequestException(e.getLocalizedMessage());
 		}
 		
-		// Lo converto nell'oggetto User, sostituendo l'ID per essere sicuri che la patch
+		// Lo converto nell'oggetto OrganizationCreate, sostituendo l'ID per essere sicuri che la patch
 		// non l'abbia cambiato.
 		OrganizationCreate updatedOrganization;
 		try {
@@ -116,14 +136,14 @@ public class OrganizationService {
 				.filter( o -> !o.getId().equals(newOrg.getId()));
 		
 		if (conflictOrg.isPresent() ) {
-			throw new ConflictException(OrganizationMessages.conflictTaxCode(newOrg.getTaxCode()));
+			throw new ConflictException(this.orgMessages.conflictTaxCode(newOrg.getTaxCode()));
 		}
 		
 		 conflictOrg = this.orgRepo.findByLegalName(newOrg.getLegalName())
 					.filter( o -> !o.getId().equals(newOrg.getId()));
 			
 			if (conflictOrg.isPresent() ) {
-				throw new ConflictException(OrganizationMessages.conflictLegalName(newOrg.getLegalName()));
+				throw new ConflictException(this.orgMessages.conflictLegalName(newOrg.getLegalName()));
 			}
 				
 		return this.orgRepo.save(newOrg);

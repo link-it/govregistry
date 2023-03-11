@@ -11,8 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.ByteArrayInputStream;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -34,22 +36,27 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import it.govhub.govregistry.api.Application;
+import it.govhub.govregistry.api.repository.OrganizationRepository;
+import it.govhub.govregistry.api.repository.ServiceRepository;
+import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
+import it.govhub.govregistry.api.test.utils.Matchers;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.repository.OrganizationRepository;
-import it.govhub.govregistry.commons.repository.RoleRepository;
-import it.govhub.govregistry.commons.repository.ServiceRepository;
-import it.govhub.govregistry.commons.repository.UserRepository;
+import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di cancellazione delle Authorization")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class Authorization_UC_4_DeleteAuthorizationTest {
+	
+	private static final String AUTHORIZATIONS_BASE_PATH_DETAIL_ID = "/v1/authorizations/{id}";
+
+	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -61,7 +68,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 	private ServiceRepository serviceRepository;
 	
 	@Autowired
-	public RoleRepository roleRepository;
+	public ReadRoleRepository roleRepository;
 	
 	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;
@@ -70,6 +77,9 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 	private UserRepository userRepository;
 	
 	private DateTimeFormatter dt = DateTimeFormatter.ISO_DATE_TIME;
+	
+	@Value("${govhub.time-zone:Europe/Rome}")
+	private String timeZone;
 	
 	@BeforeEach
 	private void configurazioneDB() {
@@ -109,7 +119,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -119,7 +129,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -128,15 +138,15 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
-				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
-				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -163,7 +173,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -171,7 +181,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -199,7 +209,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -209,7 +219,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -219,14 +229,14 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
-				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -254,7 +264,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -262,7 +272,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -290,7 +300,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -300,7 +310,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -309,7 +319,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
-				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
@@ -317,7 +327,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -346,7 +356,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		// aggiungere check data dopo che si sistema il servizio
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -354,7 +364,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -382,7 +392,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -392,7 +402,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -401,8 +411,8 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
-				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
-				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
@@ -410,7 +420,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -438,7 +448,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -446,7 +456,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -484,7 +494,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -494,7 +504,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -504,7 +514,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
-				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
@@ -521,7 +531,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -531,7 +541,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
-				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
@@ -539,7 +549,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -568,7 +578,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -576,7 +586,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -614,7 +624,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -624,7 +634,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -633,8 +643,8 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
-				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
-				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
@@ -651,7 +661,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -661,7 +671,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
 				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
-				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
@@ -669,7 +679,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -698,7 +708,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -706,7 +716,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -744,7 +754,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -754,7 +764,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -763,7 +773,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
-				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
@@ -781,7 +791,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -790,7 +800,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
-				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
 //				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
@@ -799,7 +809,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -828,7 +838,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(servizio.getName(), items.getJsonObject(0).getJsonArray("services").getJsonObject(0).getString("service_name"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -836,7 +846,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -874,7 +884,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -884,7 +894,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -893,8 +903,8 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_users_editor")))
-				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
-				.andExpect(jsonPath("$.services", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
 		
@@ -911,7 +921,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -920,7 +930,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNumber())
 				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
-				.andExpect(jsonPath("$.organizations", is(new ArrayList<>())))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
 				.andExpect(jsonPath("$.services[0].service_name", is(servizio.getName())))
 				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
 				.andReturn();
@@ -929,7 +939,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRole = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -958,7 +968,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(servizio.getName(), items.getJsonObject(0).getJsonArray("services").getJsonObject(0).getString("service_name"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete("/authorizations/{id}", idRole)
+		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -966,7 +976,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get("/users/{id}/authorizations", user.getId())
+		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
