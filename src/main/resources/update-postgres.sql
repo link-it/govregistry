@@ -30,7 +30,6 @@ alter table govhub_services add column logo_media_type varchar(255);
 alter table govhub_organizations add column logo_miniature_media_type varchar(255);
 alter table govhub_organizations add column logo_media_type varchar(255);
 
-
 	
 alter table govhub_applications alter column logo_type type character varying(255);
 update govhub_applications set logo_type = 'IMAGE' where logo_type='0';
