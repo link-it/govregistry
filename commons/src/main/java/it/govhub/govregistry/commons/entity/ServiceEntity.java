@@ -44,7 +44,13 @@ public class ServiceEntity implements Serializable {
 	
 	@Lob
 	private byte[] logoMiniature;
-
+	
+	@Column(name = "logoMiniatureMediaType")
+	private String logoMiniatureMediaType;
+	
 	@Lob
 	private byte[] logo;
+	
+	@Column(name = "logoMediaType")
+	private String logoMediaType;
 }
