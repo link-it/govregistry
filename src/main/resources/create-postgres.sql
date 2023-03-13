@@ -75,6 +75,8 @@ CREATE TABLE govhub_organizations (
   office_province VARCHAR(120),
   office_zip VARCHAR(120),
   tax_code VARCHAR(11) NOT NULL UNIQUE,
+  logo_media_type varchar(255),
+  logo_miniature_media_type varchar(255),
   PRIMARY KEY (id)
 );
 
@@ -84,6 +86,8 @@ CREATE TABLE govhub_services (
   name VARCHAR(255) UNIQUE NOT NULL,
   logo oid,
   logo_miniature oid,
+  logo_media_type varchar(255),
+  logo_miniature_media_type varchar(255),
   PRIMARY KEY (id)
 );
 

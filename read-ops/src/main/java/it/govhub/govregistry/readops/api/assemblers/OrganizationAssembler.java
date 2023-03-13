@@ -61,14 +61,6 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 		OrganizationEntity ret = new OrganizationEntity();
 		BeanUtils.copyProperties(src,  ret);
 		
-		if (src.getLogo() != null) {
-			ret.setLogo(src.getLogo().getDecodedValue());
-		}
-		
-		if (src.getLogoMiniature() != null) {
-			ret.setLogoMiniature(src.getLogoMiniature().getDecodedValue());
-		}
-		
 		return ret;
 	}
 	

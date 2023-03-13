@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -156,13 +161,15 @@ public class ServiceController extends ReadServiceController implements ServiceA
 	public ResponseEntity<Void> updateServiceLogo(Long id, Resource body) {
 		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
 		
-//	    MediaType contentType = jpg ? MediaType.IMAGE_JPEG : MediaType.IMAGE_PNG;
-		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
 		
 		try {
+			HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
+					.currentRequestAttributes()).getRequest();
+			
 			service.setLogo(body.getInputStream().readAllBytes());
+			service.setLogoMediaType(curRequest.getContentType());
 		} catch (IOException e) {
 			throw new InternalException(e);
 		}
@@ -181,7 +188,11 @@ public class ServiceController extends ReadServiceController implements ServiceA
 				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
 		
 		try {
+			HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
+					.currentRequestAttributes()).getRequest();
+			
 			service.setLogoMiniature(body.getInputStream().readAllBytes());
+			service.setLogoMiniatureMediaType(curRequest.getContentType());
 		} catch (IOException e) {
 			throw new InternalException(e);
 		}
@@ -200,6 +211,7 @@ public class ServiceController extends ReadServiceController implements ServiceA
 				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
 		
 		service.setLogo(null);
+		service.setLogoMediaType(null);
 		
 		this.serviceRepo.save(service);
 
@@ -215,6 +227,7 @@ public class ServiceController extends ReadServiceController implements ServiceA
 				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
 		
 		service.setLogoMiniature(null);
+		service.setLogoMiniatureMediaType(null);
 		
 		this.serviceRepo.save(service);
 
