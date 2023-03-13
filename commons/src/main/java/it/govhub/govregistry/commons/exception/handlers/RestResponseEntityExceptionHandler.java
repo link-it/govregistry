@@ -134,6 +134,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler({InternalException.class})
 	public final Object handleAllInternalExceptions(InternalException ex, WebRequest request) {
+		logger.error("Handling Internal Server Error: {}", ex);
 		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(), request.getHeader("Accept")) ;
 	}
 	
@@ -141,7 +142,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler({RuntimeException.class})
 	public final Object catchAll(RuntimeException ex, WebRequest request) {
-		logger.warn("Handling Uncaught Runtime Exception: {}", ex);
+		logger.error("Handling Uncaught Runtime Exception: {}", ex);
 		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(), request.getHeader("Accept"));
 	}
 	
@@ -149,7 +150,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler({Exception.class})
 	public final Object catchAll(Exception ex, WebRequest request) {
-		logger.warn("Handling Uncaught Exception: {}", ex);
+		logger.error("Handling Uncaught Exception: {}", ex);
 		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(),request.getHeader("Accept"));
 	}
 	
