@@ -8,6 +8,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import it.govhub.govregistry.commons.api.beans.Organization;
@@ -78,6 +79,7 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentLength(logoBytes.length);
+		//headers.setContentType(MediaType.valueOf(org.getLogoMediaType()));
 		
 		ResponseEntity<Resource> ret =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
 		return ret;

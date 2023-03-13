@@ -82,4 +82,10 @@ public class OrganizationEntity implements Serializable {
 	@Lob
 	private byte[] logo;
 	
+	@Column(name = "logoMiniatureMediaType")
+	private String logoMiniatureMediaType;
+	
+	@Column(name = "logoMediaType")
+	private String logoMediaType;
+	
 }

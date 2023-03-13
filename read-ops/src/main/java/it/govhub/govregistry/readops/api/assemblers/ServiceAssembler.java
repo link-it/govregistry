@@ -64,14 +64,6 @@ public class ServiceAssembler extends RepresentationModelAssemblerSupport<Servic
 			.description(src.getDescription())
 			.build();
 		
-		if (src.getLogo() != null) {
-			ret.setLogo(src.getLogo().getDecodedValue());
-		}
-		
-		if (src.getLogoMiniature() != null) {
-			ret.setLogoMiniature(src.getLogoMiniature().getDecodedValue());
-		}
-		
 		return ret;
 	}
 	

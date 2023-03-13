@@ -249,6 +249,7 @@ public class OrganizationController  extends ReadOrganizationController implemen
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
 		org.setLogo(null);
+		org.setLogoMediaType(null);
 		this.writeOrgRepo.save(org);
 		return ResponseEntity.ok().build();
 	}
@@ -262,6 +263,7 @@ public class OrganizationController  extends ReadOrganizationController implemen
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
 		org.setLogoMiniature(null);
+		org.setLogoMiniatureMediaType(null);
 		this.writeOrgRepo.save(org);
 		return ResponseEntity.ok().build();
 	}
@@ -275,7 +277,11 @@ public class OrganizationController  extends ReadOrganizationController implemen
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
 		try {
+			HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
+					.currentRequestAttributes()).getRequest();
+			
 			org.setLogo(body.getInputStream().readAllBytes());
+			org.setLogoMediaType(curRequest.getContentType());
 		} catch (IOException e) {
 			throw new InternalException(e);
 		}
@@ -294,7 +300,11 @@ public class OrganizationController  extends ReadOrganizationController implemen
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
 		try {
+			HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
+					.currentRequestAttributes()).getRequest();
+			
 			org.setLogoMiniature(body.getInputStream().readAllBytes());
+			org.setLogoMiniatureMediaType(curRequest.getContentType());
 		} catch (IOException e) {
 			throw new InternalException(e);
 		}
