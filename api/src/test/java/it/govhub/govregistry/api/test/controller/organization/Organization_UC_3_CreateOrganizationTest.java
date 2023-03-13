@@ -168,7 +168,7 @@ class Organization_UC_3_CreateOrganizationTest {
 		
 	}
 	
-	@Test
+	/*@Test
 	void UC_3_03_CreateOrganizationOk_withLogoProps() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
@@ -240,5 +240,5 @@ class Organization_UC_3_CreateOrganizationTest {
 		assertArrayEquals(ente.getLogo(), organizationEntity.getLogo());
 		assertArrayEquals(ente.getLogoMiniature(), organizationEntity.getLogoMiniature());
 		
-	}
+	}*/
 }

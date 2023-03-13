@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,6 +155,8 @@ public class ServiceController extends ReadServiceController implements ServiceA
 	@Override
 	public ResponseEntity<Void> updateServiceLogo(Long id, Resource body) {
 		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		
+//	    MediaType contentType = jpg ? MediaType.IMAGE_JPEG : MediaType.IMAGE_PNG;
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
