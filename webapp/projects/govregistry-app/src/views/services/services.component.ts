@@ -1,10 +1,11 @@
 import { AfterContentChecked, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { HttpParams } from '@angular/common/http';
 
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { Tools } from 'projects/tools/src/lib/tools.service';
@@ -13,7 +14,7 @@ import { OpenAPIService } from 'projects/govregistry-app/src/services/openAPI.se
 import { PageloaderService } from 'projects/tools/src/lib/pageloader.service';
 import { SearchBarFormComponent } from 'projects/components/src/lib/ui/search-bar-form/search-bar-form.component';
 
-import * as jsonpatch from 'fast-json-patch';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-services',
@@ -35,7 +36,7 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
 
   _isEdit: boolean = false;
 
-  _hasFilter: boolean = false;
+  _hasFilter: boolean = true;
   _formGroup: UntypedFormGroup = new UntypedFormGroup({});
   _filterData: any[] = [];
 
@@ -65,7 +66,7 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
   _useRoute: boolean = true;
 
   breadcrumbs: any[] = [
-    { label: 'APP.TITLE.Services', url: '', type: 'title', icon: 'corporate_fare' }
+    { label: 'APP.TITLE.Services', url: '', type: 'title', icon: 'apps' }
   ];
 
   _unimplemented: boolean = false;
@@ -91,10 +92,6 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      // Changed
-    });
-
     this.pageloaderService.resetLoader();
     this.pageloaderService.isLoading.subscribe({
       next: (x) => { this._spin = x; },
@@ -145,13 +142,20 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
   }
 
   _initSearchForm() {
-    this._formGroup = new UntypedFormGroup({});
+    this._formGroup = new UntypedFormGroup({
+      q: new UntypedFormControl(''),
+    });
   }
 
   _loadServices(query: any = null, url: string = '') {
     this._setErrorMessages(false);
+
     if (!url) { this.services = []; }
-    this.apiService.getList(this.model).subscribe({
+
+    let aux: any;
+    if (query)  aux = { params: this._queryToHttpParams(query) };
+
+    this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
         if (response === null) {
           this._unimplemented = true;
@@ -187,6 +191,28 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
         // Tools.OnError(error);
       }
     });
+  }
+
+  _queryToHttpParams(query: any) : HttpParams {
+    let httpParams = new HttpParams();
+
+    Object.keys(query).forEach(key => {
+      if (query[key]) {
+        let _dateTime = '';
+        switch (key)
+        {
+          case 'data_inizio':
+          case 'data_fine':
+            _dateTime = moment(query[key]).format('YYYY-MM-DD');
+            httpParams = httpParams.set(key, _dateTime);
+            break;
+          default:
+            httpParams = httpParams.set(key, query[key]);
+        }
+      }
+    });
+    
+    return httpParams; 
   }
 
   __loadMoreData() {
