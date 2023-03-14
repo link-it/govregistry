@@ -3,6 +3,8 @@ package it.govhub.govregistry.commons.utils;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.FileItemHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
@@ -53,4 +55,35 @@ public class RequestUtils {
 		}
 		return error.toString();
 	}
+
+	
+	/**
+	 * Utilizzata nelle richieste multipart di upload file per estrarre il nome del file dallo header
+	 * Content-Disposition
+	 * 
+	 */
+	public static String readFilenameFromHeaders(FileItemHeaders headers) {
+		
+		String filename = null;
+		try {
+	    	String contentDisposition = headers.getHeader("Content-Disposition");
+	    	log.debug("Content Disposition Header: {}", contentDisposition);
+	    	
+	    	String[] headerDirectives = contentDisposition.split(";");
+	    	
+	    	for(String directive : headerDirectives) {
+	    		String[] keyValue = directive.split("=");
+	    		if (StringUtils.equalsIgnoreCase(keyValue[0].trim(), "filename")) {
+	    			// Rimuovo i doppi apici
+	    			filename = keyValue[1].trim().substring(1, keyValue[1].length()-1);
+	    		}
+	    	}
+		} catch (Exception e) {
+			log.error("Exception while reading header: {}", e);
+			filename = null;
+		}
+		
+		return filename;
+	}
+	
 }

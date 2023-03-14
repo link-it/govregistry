@@ -46,6 +46,7 @@ public class Costanti {
 	
 	
 	public static final String SERVICE_NAME_TEST = "Servizio Test";
+	public static final String SERVICE_NAME_TEST_2 = "Servizio Test 2";
 	public static final String SERVICE_DESCRIPTION_TEST = "Generica descrizione per un servizio di test";
 	
 	/* USERS */
@@ -106,6 +107,13 @@ public class Costanti {
 	public static ServiceEntity getServizioTest() {
 		return ServiceEntity.builder()
 				.name(Costanti.SERVICE_NAME_TEST)
+				.description(Costanti.SERVICE_DESCRIPTION_TEST)
+				.build();
+	}
+	
+	public static ServiceEntity getServizioTest2() {
+		return ServiceEntity.builder()
+				.name(Costanti.SERVICE_NAME_TEST_2)
 				.description(Costanti.SERVICE_DESCRIPTION_TEST)
 				.build();
 	}

@@ -10,5 +10,5 @@ import it.govhub.security.cache.PrincipalCacheTTLEvicter;
 @Configuration
 @ComponentScan( {"it.govhub.security.services"})
 @EnableJpaRepositories( {"it.govhub.security.repository"})
-@Import( PrincipalCacheTTLEvicter.class)
+@Import(PrincipalCacheTTLEvicter.class)
 public class SecurityExportedBeans {}

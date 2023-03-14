@@ -2910,7 +2910,7 @@ class Organization_UC_5_PatchOrganizationTest {
 		assertNull(organizationEntity.getOfficeZip());
 	}
 
-	@Test
+	/*@Test
 	void UC_5_41_PatchOrganization_ReplaceLogoMiniature() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 
@@ -3414,7 +3414,7 @@ class Organization_UC_5_PatchOrganizationTest {
 		assertNull(organizationEntity.getOfficePhoneNumber());
 		assertNull(organizationEntity.getOfficeProvince());
 		assertNull(organizationEntity.getOfficeZip());
-	}
+	}*/
 
 	@Test
 	void UC_5_48_PatchOrganization_ReplaceNotExistingLogo() throws Exception {

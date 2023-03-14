@@ -358,6 +358,124 @@ paths:
           $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
         default:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"   
+          
+  /organizations/{id}/logo:
+    parameters:
+      - $ref: "govhub-api-commons.yaml#/components/parameters/organization_id"    
+
+    put:
+      summary: Update organization logo.
+      description: Update organization logo.
+      operationId: updateOrganizationLogo
+      tags:
+      - organization
+      requestBody:    
+        required: true
+        content:
+          image/*:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Succsessful operation.
+        '400':
+          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+        '401':
+          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+        '403':
+          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+        '404':
+          $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '429':
+          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
+          
+    delete:
+      summary: Deletes the organization logo.
+      description: Delete organization logo.
+      operationId: removeOrganizationLogo
+      tags:
+      - organization 
+      responses:
+        '200':
+          description: Succsessful operation.
+        '400':
+          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+        '401':
+          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+        '403':
+          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+        '404':
+          $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '429':
+          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"          
+          
+  /organizations/{id}/logo-miniature:
+    parameters:
+      - $ref: "govhub-api-commons.yaml#/components/parameters/organization_id"    
+
+    put:
+      summary: Update organization logo miniature.
+      description: Update the organization logo miniature.
+      operationId: updateOrganizationLogoMiniature
+      tags:
+      - organization
+      requestBody:    
+        required: true
+        content:
+          image/*:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Succsessful operation.
+        '400':
+          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+        '401':
+          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+        '403':
+          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+        '404':
+          $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '429':
+          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
+          
+    delete:
+      summary: Deletes the organization logo miniature.
+      description: Delete organization logo miniature.
+      operationId: removeOrganizationLogoMiniature
+      tags:
+      - organization 
+      responses:
+        '200':
+          description: Succsessful operation.
+        '400':
+          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+        '401':
+          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+        '403':
+          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+        '404':
+          $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '429':
+          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"           
 
   /services:
     post:
@@ -398,6 +516,125 @@ paths:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
           
 
+  /services/{id}/logo:
+    parameters:
+      - $ref: "govhub-api-commons.yaml#/components/parameters/service_id"    
+
+    put:
+      summary: Update service logo.
+      description: Update service logo.
+      operationId: updateServiceLogo
+      tags:
+      - service
+      requestBody:    
+        required: true
+        content:
+          image/*:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Succsessful operation.
+        '400':
+          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+        '401':
+          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+        '403':
+          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+        '404':
+          $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '429':
+          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
+          
+    delete:
+      summary: Deletes the service logo.
+      description: Delete service logo.
+      operationId: removeServiceLogo
+      tags:
+      - service 
+      responses:
+        '200':
+          description: Succsessful operation.
+        '400':
+          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+        '401':
+          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+        '403':
+          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+        '404':
+          $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '429':
+          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"          
+          
+  /services/{id}/logo-miniature:
+    parameters:
+      - $ref: "govhub-api-commons.yaml#/components/parameters/service_id"    
+
+    put:
+      summary: Update service logo miniature.
+      description: Update the service logo miniature.
+      operationId: updateServiceLogoMiniature
+      tags:
+      - service
+      requestBody:    
+        required: true
+        content:
+          image/*:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Succsessful operation.
+        '400':
+          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+        '401':
+          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+        '403':
+          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+        '404':
+          $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '429':
+          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
+          
+    delete:
+      summary: Deletes the service logo miniature.
+      description: Delete service logo miniature.
+      operationId: removeServiceLogoMiniature
+      tags:
+      - service 
+      responses:
+        '200':
+          description: Succsessful operation.
+        '400':
+          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+        '401':
+          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+        '403':
+          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+        '404':
+          $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '429':
+          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                  
+          
+          
   /services/{id}:
     parameters:
       - $ref: "govhub-api-commons.yaml#/components/parameters/service_id"    
@@ -439,7 +676,7 @@ paths:
         '503':
           $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
         default:
-          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                    
 
   /status:
     get:

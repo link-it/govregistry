@@ -67,7 +67,8 @@ public class RoleAuthorizationEntity implements Serializable {
 			name = "govhub_auth_services",
 			joinColumns = @JoinColumn(name = "id_govhub_authorization"),
 			inverseJoinColumns = @JoinColumn(name = "id_govhub_service"), 
-			foreignKey = @ForeignKey(name = "GovhubAuthService_GovhubAuth"))
+			foreignKey = @ForeignKey(name = "GovhubAuthService_GovhubAuth"),
+			inverseForeignKey = @ForeignKey(name = "GovhubAuthOrganization_GovhubService"))
 	private Set<ServiceEntity> services;
 	
 	
@@ -76,7 +77,8 @@ public class RoleAuthorizationEntity implements Serializable {
 			name = "govhub_auth_organizations",
 			joinColumns = @JoinColumn(name = "id_govhub_authorization"),
 			inverseJoinColumns = @JoinColumn(name = "id_govhub_organization"),
-			foreignKey = @ForeignKey(name = "GovhubAuthOrganization_GovhubAuth"))
+			foreignKey = @ForeignKey(name = "GovhubAuthOrganization_GovhubAuth"),
+			inverseForeignKey = @ForeignKey(name = "GovhubAuthOrganization_GovhubOrganization"))
 	private Set<OrganizationEntity> organizations;
 	
 }
