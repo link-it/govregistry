@@ -319,7 +319,7 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
   _initBreadcrumb() {
     const _title = this.id ? `#${this.id}` : this.translate.instant('APP.TITLE.New');
     this.breadcrumbs = [
-      { label: '', url: '', type: 'title', icon: 'corporate_fare' },
+      { label: '', url: '', type: 'title', icon: 'apps' },
       { label: 'APP.TITLE.Services', url: '/services', type: 'link' },
       { label: `${_title}`, url: '', type: 'title' }
     ];
