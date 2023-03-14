@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -128,6 +129,7 @@ public abstract class ReadServiceController implements ServiceApi {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentLength(ret.length);
+		headers.setContentType(MediaType.valueOf(service.getLogoMediaType()));
 		
 		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
 		return ret2;
@@ -151,6 +153,7 @@ public abstract class ReadServiceController implements ServiceApi {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentLength(ret.length);
+		headers.setContentType(MediaType.valueOf(service.getLogoMiniatureMediaType()));
 		
 		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
 		return ret2;

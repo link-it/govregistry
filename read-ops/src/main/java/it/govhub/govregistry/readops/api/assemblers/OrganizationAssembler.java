@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import it.govhub.govregistry.commons.api.beans.Organization;
 import it.govhub.govregistry.commons.api.beans.OrganizationCreate;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
-import it.govhub.govregistry.commons.utils.Base64String;
 import it.govhub.govregistry.readops.api.spec.OrganizationApi;
 
 @Component
@@ -32,20 +31,26 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 		
 		BeanUtils.copyProperties(src, ret);
 		
-		if (src.getLogo() != null) {
-			ret.setLogo(new Base64String(src.getLogo()));
-		}
-		
-		if (src.getLogoMiniature() != null) {
-			ret.setLogoMiniature(new Base64String(src.getLogoMiniature()));
-		}
-		
 		ret.add(linkTo(
 				methodOn(OrganizationApi.class)
 				.readOrganization(src.getId()))
 			.withSelfRel()
-		) ;
+		);
 		
+		if(src.getLogo() != null) {
+			ret.add(linkTo(
+					methodOn(OrganizationApi.class)
+					.downloadOrganizationLogo(src.getId()))
+				.withRel("logo"));
+		}
+		
+		if (src.getLogoMiniature() != null) {
+			ret.add(linkTo(
+						methodOn(OrganizationApi.class)
+						.downloadOrganizationLogoMiniature(src.getId()))
+				.withRel("logo-miniature"));
+		}
+			
 		return ret;
 	}
 
@@ -55,14 +60,6 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 		
 		OrganizationEntity ret = new OrganizationEntity();
 		BeanUtils.copyProperties(src,  ret);
-		
-		if (src.getLogo() != null) {
-			ret.setLogo(src.getLogo().getDecodedValue());
-		}
-		
-		if (src.getLogoMiniature() != null) {
-			ret.setLogoMiniature(src.getLogoMiniature().getDecodedValue());
-		}
 		
 		return ret;
 	}

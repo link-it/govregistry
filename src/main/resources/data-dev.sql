@@ -1,6 +1,6 @@
 -- Applicazione
 
-INSERT INTO public.govhub_applications(id, application_id, name, deployed_uri, logo_type, logo_color, bg_color) VALUES (1, 'govregistry', 'GovRegistry', 'http://localhost:10001', 'svg', '#FFFF00', '#0000FF');
+INSERT INTO public.govhub_applications(id, application_id, name, deployed_uri, logo_type, logo_color, logo_bg_color) VALUES (1, 'govregistry', 'GovRegistry', 'http://localhost:10001', 'SVG', '#FFFF00', '#0000FF');
 
 -- Utenti
 
@@ -73,7 +73,7 @@ INSERT INTO public.govhub_assignable_roles (role_id, assignable_role_id) VALUES 
 -- amministratore -> govhub_sysadmin
 
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (
-	nextval('public.seq_govhub_services'),
+	nextval('public.seq_govhub_authorizations'),
 	(SELECT id FROM public.govhub_users WHERE principal='amministratore'),
 	(SELECT id FROM public.govhub_roles WHERE name='govhub_sysadmin' )
 );
@@ -81,15 +81,15 @@ INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VA
 -- user_viewer -> govhub_user_viewer
 
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (
-	nextval('public.seq_govhub_services'),
+	nextval('public.seq_govhub_authorizations'),
 	(SELECT id FROM public.govhub_users WHERE principal='user_viewer'),
 	(SELECT id FROM public.govhub_roles WHERE name='govhub_users_viewer')
 );
 
--- service_viewer -> govhub_services_viewer
+-- service_viewer -> govhub_authorizations_viewer
 
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (
-	nextval('public.seq_govhub_services'),
+	nextval('public.seq_govhub_authorizations'),
 	(SELECT id FROM public.govhub_users WHERE principal='service_viewer'),
 	(SELECT id FROM public.govhub_roles WHERE name='govhub_services_viewer')
 );
@@ -98,7 +98,7 @@ INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VA
 -- organization_editor -> govhub_organizations_editor
 
 INSERT INTO public.govhub_authorizations (id, id_govhub_user, id_govhub_role) VALUES (
-	nextval('public.seq_govhub_services'),
+	nextval('public.seq_govhub_authorizations'),
 	(SELECT id FROM public.govhub_users WHERE principal='org_editor'),
 	(SELECT id FROM public.govhub_roles WHERE name='govhub_organizations_editor')
 );

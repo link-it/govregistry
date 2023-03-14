@@ -11,8 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.ByteArrayInputStream;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -76,6 +78,9 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 	
 	private DateTimeFormatter dt = DateTimeFormatter.ISO_DATE_TIME;
 	
+	@Value("${govhub.time-zone:Europe/Rome}")
+	private String timeZone;
+	
 	@BeforeEach
 	private void configurazioneDB() {
 		UserEntity user = Costanti.getUser_Snakamoto();
@@ -114,7 +119,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -204,7 +209,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -295,7 +300,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -387,7 +392,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -489,7 +494,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
@@ -619,7 +624,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -749,7 +754,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
@@ -879,7 +884,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_users_editor");
 		
-		OffsetDateTime expirationDate = OffsetDateTime.now().plusDays(30); 
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
 		String json = Json.createObjectBuilder()
 				.add("role", ruoloUser.getId())
 				.add("organizations", Json.createArrayBuilder())
