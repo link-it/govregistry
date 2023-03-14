@@ -1,6 +1,7 @@
 import { AfterContentChecked, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { HttpParams } from '@angular/common/http';
 
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
@@ -57,13 +58,10 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
   sortField: string = 'legal_name';
   sortDirection: string = 'asc';
   sortFields: any[] = [
-    { field: 'id', label: 'APP.LABEL.Id', icon: '' },
-    { field: 'legal_name', label: 'APP.LABEL.LegalName', icon: '' }
+    // { field: 'legal_name', label: 'APP.LABEL.LegalName', icon: '' }
   ];
 
-  searchFields: any[] = [
-    { field: 'legal_name', label: 'APP.LABEL.LegalName', type: 'string', condition: 'equal' },
-  ];
+  searchFields: any[] = [];
 
   _useRoute: boolean = true;
 
@@ -149,15 +147,20 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
 
   _initSearchForm() {
     this._formGroup = new UntypedFormGroup({
-      id: new UntypedFormControl(''),
-      legal_name: new UntypedFormControl('')
+      q: new UntypedFormControl(''),
     });
   }
 
   _loadOrganizations(query: any = null, url: string = '') {
     this._setErrorMessages(false);
+
     if (!url) { this.organizations = []; }
-    this.apiService.getList(this.model).subscribe({
+
+    let aux: any;
+    query = { ...query };
+    aux = { params: this._queryToHttpParams(query) };
+
+    this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
         if (response === null) {
           this._unimplemented = true;
@@ -193,6 +196,22 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
         // Tools.OnError(error);
       }
     });
+  }
+
+  _queryToHttpParams(query: any) : HttpParams {
+    let httpParams = new HttpParams();
+
+    Object.keys(query).forEach(key => {
+      if (query[key]) {
+        switch (key)
+        {
+          default:
+            httpParams = httpParams.set(key, query[key]);
+        }
+      }
+    });
+    
+    return httpParams; 
   }
 
   __loadMoreData() {
@@ -233,10 +252,10 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
   }
 
   _onSearch(values: any) {
-    if (Object.keys(values).some((item: any) => values[item] != "")) {
+    // if (Object.keys(values).some((item: any) => values[item] != "")) {
       this._filterData = values;
       this._loadOrganizations(this._filterData);
-    }
+    // }
   }
 
   _resetForm() {

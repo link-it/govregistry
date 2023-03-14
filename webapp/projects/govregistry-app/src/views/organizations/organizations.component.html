@@ -2,16 +2,6 @@
   <div class="alert-wrapper gp-force-block-formatting-context">
     <ui-breadcrumb [breadcrumbs]="breadcrumbs" (onClick)="onBreadcrumb($event)"></ui-breadcrumb>
   </div>
-  <!-- <div class="flash-container flash-container-page sticky gp-display-block d-none">
-    <div class="flash-notice" data-testid="alert-info">
-      <div class="flash-text">
-        You must sign in to search for specific terms.
-        <div class="close-icon-wrapper">
-          <mat-icon class="fs-6" fontSet="material-icons-outlined">close</mat-icon>
-        </div>
-      </div>
-    </div>
-  </div> -->
   <div class="top-area">
     <div class="tabs gp-tabs d-flex flex-grow-1 p-0 m-0 mobile-separator issuable-state-filters">
       <div class="">
@@ -25,7 +15,7 @@
       </div>
     </div>
     <div class="nav-controls">
-      <div role="group" class="gl-w-full btn-group- position-relative" *ngIf="!_spin">
+      <div role="group" class="gl-w-full btn-group- position-relative">
         <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'create'"> -->
           <button aria-label="Add payment" type="button" class="btn btn-confirm btn-md gl-button btn-icon" (click)="_onNew()">
             <mat-icon fontSet="material-icons-outlined">add</mat-icon> <span class="ms-2">{{ 'APP.BUTTON.AddOrganization' | translate }}</span>
@@ -49,6 +39,7 @@
           [sortDirection]="sortDirection"
           [sortFields]="sortFields"
           [formGroup]="_formGroup"
+          [simple]="true"
           (onSearch)="_onSearch($event)"
           (onSort)="_onSort($event)">
           <div form-search>

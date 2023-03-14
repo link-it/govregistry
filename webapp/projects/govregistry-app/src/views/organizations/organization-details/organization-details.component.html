@@ -104,7 +104,7 @@
                         <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('tax_code')" type="text" name="tax_code" id="tax_code" formControlName="tax_code">
                         <p *ngIf="f['tax_code'].invalid && (f['tax_code'].dirty || f['tax_code'].touched)" class="form-text text-danger">
                           <span *ngIf="f['tax_code'].errors && f['tax_code'].errors['required']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.FieldRequired' | translate }}</span>
-                          <span *ngIf="f['tax_code'].errors && f['tax_code'].errors['pattern']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.Organizationtax_code' | translate }}</span>
+                          <span *ngIf="f['tax_code'].errors && f['tax_code'].errors['pattern']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.OrganizationTaxCode' | translate }}</span>
                         </p>
                         <ui-input-help field="tax_code" context="ORGANIZATION"></ui-input-help>
                       </div>
