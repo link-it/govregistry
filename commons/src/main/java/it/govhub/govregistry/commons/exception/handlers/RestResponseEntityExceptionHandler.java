@@ -3,6 +3,7 @@ package it.govhub.govregistry.commons.exception.handlers;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.AbstractMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -67,19 +68,21 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	
 	public static Object buildProblem(HttpStatus status, String detail, String accept) {
 		
-		if (accept == null || StringUtils.equals(accept, MediaType.ALL_VALUE) ||  StringUtils.endsWith(accept, "/json") || StringUtils.endsWith(accept, "+json")) {
-			try {
-				Problem ret = new Problem();
-				ret.setStatus(status.value());
-				ret.setTitle(status.getReasonPhrase());
-				ret.setType(new URI(problemTypes.get(status)));
-				ret.setDetail(detail);
-				return ret;
-			} catch (URISyntaxException e){
-				// Non deve mai fallire la new URI di sopra
-				throw new UnreachableException(e);
-			}
-		} else {
+		   List<MediaType> mediaTypes = MediaType.parseMediaTypes(accept);
+		   if (mediaTypes.isEmpty() || mediaTypes.contains(MediaType.ALL )  || mediaTypes.contains(MediaType.APPLICATION_JSON) || mediaTypes.contains(MediaType.APPLICATION_PROBLEM_JSON)) {
+				try {
+					Problem ret = new Problem();
+					ret.setStatus(status.value());
+					ret.setTitle(status.getReasonPhrase());
+					ret.setType(new URI(problemTypes.get(status)));
+					ret.setDetail(detail);
+					return ret;
+				} catch (URISyntaxException e){
+					// Non deve mai fallire la new URI di sopra
+					throw new UnreachableException(e);
+				}
+		   }
+		else {
 			return "HTTP " + status.value() + ": " + detail;
 		}
 	}
