@@ -6,7 +6,8 @@ import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import javax.validation.ConstraintViolationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -107,7 +108,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({BadRequestException.class, MethodArgumentTypeMismatchException.class})
+	@ExceptionHandler({BadRequestException.class, MethodArgumentTypeMismatchException.class, ConstraintViolationException.class})
 	public Object handleConstraintViolation(RuntimeException ex, WebRequest request ) {		
 		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), request.getHeader("Accept"));
 	}
