@@ -13,12 +13,12 @@ public class RestEntityMessageBuilder {
 	
 	
 	public String notFound(String key, Object keyValue) {
-		return this.entityName + "with " + key + "[" + keyValue + "] Not Found."; 
+		return this.entityName + " with " + key + "[" + keyValue + "] Not Found."; 
 	}
 	
 	
 	public String conflict(String key, Object keyValue) {
-		return this.entityName + "with " + key + "[" + keyValue + "] Already Exists.";
+		return this.entityName + " with " + key + "[" + keyValue + "] Already Exists.";
 	}
 	
 	public String idNotFound(Long id) {
@@ -26,11 +26,11 @@ public class RestEntityMessageBuilder {
 	}
 	
 	public String idsNotFound(Collection<Long> ids) {
-		return this.entityName + "with ids IN [" + ids + "] Not Found.";
+		return this.entityName + " with ids IN [" + ids + "] Not Found.";
 	}
 	
 	public String fieldNotModificable(String key) {
-		return this.entityName + "field ["+key+"] is not modificable.";
+		return this.entityName + " field ["+key+"] is not modificable.";
 	}
 	
 }
