@@ -16,6 +16,10 @@ public class RestEntityMessageBuilder {
 		return this.entityName + " with " + key + " [" + keyValue + "] Not Found."; 
 	}
 	
+	public String conflict() {
+		return this.entityName + " already present";
+	}
+	
 	
 	public String conflict(String key, Object keyValue) {
 		return this.entityName + " with " + key + " [" + keyValue + "] Already Exists.";
