@@ -72,7 +72,11 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 		OrganizationEntity org = this.orgRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
-		byte[] logoBytes = org.getLogo() != null ? org.getLogo() : new byte[0];
+		if (org.getLogo() == null) {
+			throw new ResourceNotFoundException();
+		}
+		
+		byte[] logoBytes = org.getLogo();
 		ByteArrayInputStream bret = new ByteArrayInputStream(logoBytes);
 		InputStreamResource logoStream = new InputStreamResource(bret);
 		
@@ -96,7 +100,11 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 		OrganizationEntity org = this.orgRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
 		
-		byte[] ret = org.getLogoMiniature() != null ? org.getLogoMiniature() : new byte[0];
+		if (org.getLogoMiniature() == null) {
+			throw new ResourceNotFoundException();
+		}
+		
+		byte[] ret = org.getLogoMiniature();
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
 		InputStreamResource logoStream = new InputStreamResource(bret);
 		
