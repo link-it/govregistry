@@ -201,11 +201,6 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
         let _dateTime = '';
         switch (key)
         {
-          case 'data_inizio':
-          case 'data_fine':
-            _dateTime = moment(query[key]).format('YYYY-MM-DD');
-            httpParams = httpParams.set(key, _dateTime);
-            break;
           default:
             httpParams = httpParams.set(key, query[key]);
         }

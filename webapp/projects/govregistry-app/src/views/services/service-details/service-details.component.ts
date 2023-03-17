@@ -17,6 +17,7 @@ import { YesnoDialogBsComponent } from 'projects/components/src/lib/dialogs/yesn
 import { Service } from './service';
 
 import * as jsonpatch from 'fast-json-patch';
+import moment from 'moment';
 
 @Component({
   selector: 'app-service-details',
@@ -53,6 +54,7 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
   _isNew = false;
   _formGroup: UntypedFormGroup = new UntypedFormGroup({});
   _service: Service = new Service({});
+  _isEditLogos = false;
 
   serviceProviders: any = null;
 
@@ -65,6 +67,8 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
 
   _error: boolean = false;
   _errorMsg: string = '';
+
+  _imagePlaceHolder: string = './assets/images/logo-placeholder.png';
 
   _modalConfirmRef!: BsModalRef;
 
@@ -87,11 +91,11 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
       // Changed
     });
 
-    this.pageloaderService.resetLoader();
-    this.pageloaderService.isLoading.subscribe({
-      next: (x) => { this._spin = x; },
-      error: (e: any) => { console.log('loader error', e); }
-    });
+    // this.pageloaderService.resetLoader();
+    // this.pageloaderService.isLoading.subscribe({
+    //   next: (x) => { this._spin = x; },
+    //   error: (e: any) => { console.log('loader error', e); }
+    // });
 
     this.route.params.subscribe(params => {
       if (params['id'] && params['id'] !== 'new') {
@@ -214,7 +218,7 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
       this.apiService.updateElement(this.model, id, _bodyPatch).subscribe(
         (response: any) => {
           this._isEdit = !this._closeEdit;
-          this.service = new Service({ ...response });
+          this.service = response; // new Service({ ...response });
           this._service = new Service({ ...response });
           this.id = this.service.id;
           this.save.emit({ id: this.id, payment: response, update: true });
@@ -272,20 +276,24 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
     );
   }
   
-  _loadService() {
+  _loadService(reload: boolean = true) {
     if (this.id) {
-      this.service = null;
+      if (reload) {
+        this._spin = true;
+        this.service = null;
+      }
       this.apiService.getDetails(this.model, this.id).subscribe({
         next: (response: any) => {
-          this.service = new Service({ ...response });
+          this.service = response; // new Service({ ...response });
           this._service = new Service({ ...response });
           this._title = this.service.creditorReferenceId;
           if (this.config.detailsTitle) {
             this._title = Tools.simpleItemFormatter(this.config.detailsTitle, this.service);
           }
-          // this.__initInformazioni();
+          this._spin = false;
         },
         error: (error: any) => {
+          this._spin = false;
           Tools.OnError(error);
         }
       });
@@ -366,5 +374,40 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
     } else {
       this._onClose();
     }
+  }
+
+  _onImageLoaded(event: any, type: string) {
+    this.apiService.uploadImage(this.model, this.service.id, type, event).subscribe(
+      (response) => {
+        this._loadService(false);
+      },
+      (error: any) => {
+        console.log('error', error);
+      }
+    );
+  }
+
+
+  _getLogo(item: any, type: string, bg: boolean = false) {
+    let logoUrl = this._imagePlaceHolder;
+    if (item && item._links && item._links[type]) {
+      logoUrl = item._links[type].href;
+      logoUrl += '?t=' + moment().valueOf();
+      // logoUrl = this.apiService.getImageUrl(logoUrl);
+    }
+
+    return bg ? `url(${logoUrl})` : logoUrl;
+  };
+
+  _hasLogo(item: any, type: string) {
+    let _hasLogo = false;
+    if (item && item._links && item._links[type]) {
+      _hasLogo = true;
+    }
+    return _hasLogo;
+  };
+
+  toggleEditLogos() {
+    this._isEditLogos = !this._isEditLogos;
   }
 }
