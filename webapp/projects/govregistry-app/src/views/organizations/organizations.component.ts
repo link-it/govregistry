@@ -58,7 +58,8 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
   sortField: string = 'legal_name';
   sortDirection: string = 'asc';
   sortFields: any[] = [
-    // { field: 'legal_name', label: 'APP.LABEL.LegalName', icon: '' }
+    { field: 'id', label: 'APP.LABEL.Id', icon: '' },
+    { field: 'legal_name', label: 'APP.LABEL.LegalName', icon: '' }
   ];
 
   searchFields: any[] = [];
@@ -157,7 +158,8 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
     if (!url) { this.organizations = []; }
 
     let aux: any;
-    query = { ...query };
+    const sort: any = { sort: this.sortField, sort_direction: this.sortDirection}
+    query = { ...query, ...sort };
     aux = { params: this._queryToHttpParams(query) };
 
     this.apiService.getList(this.model, aux, url).subscribe({
@@ -264,7 +266,9 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
   }
 
   _onSort(event: any) {
-    console.log(event);
+    this.sortField = event.sortField;
+    this.sortDirection = event.sortBy;
+    this._loadOrganizations(this._filterData);
   }
 
   onBreadcrumb(event: any) {

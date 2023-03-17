@@ -17,6 +17,7 @@ import { YesnoDialogBsComponent } from 'projects/components/src/lib/dialogs/yesn
 import { Organization } from './organization';
 
 import * as jsonpatch from 'fast-json-patch';
+import moment from 'moment';
 
 @Component({
   selector: 'app-organization-details',
@@ -53,6 +54,7 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
   _isNew = false;
   _formGroup: UntypedFormGroup = new UntypedFormGroup({});
   _organization: Organization = new Organization({});
+  _isEditLogos = false;
 
   organizationProviders: any = null;
 
@@ -69,6 +71,7 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
   _modalConfirmRef!: BsModalRef;
 
   _imagePlaceHolder: string = './assets/images/logo-placeholder.png';
+  _selectedFile: any = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -89,11 +92,11 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
       // Changed
     });
 
-    this.pageloaderService.resetLoader();
-    this.pageloaderService.isLoading.subscribe({
-      next: (x) => { this._spin = x; },
-      error: (e: any) => { console.log('loader error', e); }
-    });
+    // this.pageloaderService.resetLoader();
+    // this.pageloaderService.isLoading.subscribe({
+    //   next: (x) => { this._spin = x; },
+    //   error: (e: any) => { console.log('loader error', e); }
+    // });
 
     this.route.params.subscribe(params => {
       if (params['id'] && params['id'] !== 'new') {
@@ -191,20 +194,9 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     }
   }
 
-  _onImageLoaded(event: any, field: string) {
-    const _base64 = event ? window.btoa(event) : null; // btoa - atob
-    this._formGroup.get(field)?.setValue(_base64);
-  }
-
-  // _decodeImage(data: string): string {
-  //   return data ? window.atob(data) : this._imagePlaceHolder;
-  // }
-  _decodeImage = (data: string): string => {
-    return data ? window.atob(data) : this._imagePlaceHolder;
-  };
-
   __onSave(body: any) {
     this._error = false;
+    this._spin = true;
     this.apiService.saveElement(this.model, body).subscribe(
       (response: any) => {
         this.organization = new Organization({ ...response });
@@ -213,9 +205,11 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
         this._initBreadcrumb();
         this._isEdit = false;
         this._isNew = false;
+        this._spin = false;
         this.save.emit({ id: this.id, payment: response, update: false });
       },
       (error: any) => {
+        this._spin = false;
         this._error = true;
         this._errorMsg = Tools.GetErrorMsg(error);
       }
@@ -301,20 +295,25 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     );
   }
 
-  _loadOrganization() {
+  _loadOrganization(reload: boolean = true) {
     if (this.id) {
-      this.organization = null;
+      if (reload) {
+        this._spin = true;
+        this.organization = null;
+      }
       this.apiService.getDetails(this.model, this.id).subscribe({
         next: (response: any) => {
-          this.organization = new Organization({ ...response });
+          this.organization = response; // new Organization({ ...response });
           this._organization = new Organization({ ...response });
           this._title = this.organization.creditorReferenceId;
           if (this.config.detailsTitle) {
             this._title = Tools.simpleItemFormatter(this.config.detailsTitle, this.organization);
           }
+          this._spin = false;
           // this.__initInformazioni();
         },
         error: (error: any) => {
+          this._spin = false;
           Tools.OnError(error);
         }
       });
@@ -397,5 +396,62 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     } else {
       this._onClose();
     }
+  }
+
+  _onImageLoaded(event: any, type: string) {
+    this.apiService.uploadImage(this.model, this.organization.id, type, event).subscribe(
+      (response) => {
+        this._loadOrganization(false);
+      },
+      (error: any) => {
+        console.log('error', error);
+      }
+    );
+  }
+
+  _onFileLoaded(event: any, type: string) {
+    this._selectedFile = event.target.files[0];
+    console.log(this._selectedFile);
+
+    const formData = new FormData();
+    formData.append('file', this._selectedFile, this._selectedFile.name);
+    this.apiService.uploadImage(this.model, this.organization.id, type, formData).subscribe(
+      (response) => {
+        console.log('response', response);
+      },
+      (error: any) => {
+        console.log('error', error);
+      }
+    );
+  }
+
+  // _decodeImage(data: string): string {
+  //   return data ? window.atob(data) : this._imagePlaceHolder;
+  // }
+  _decodeImage = (data: string): string => {
+    return data ? window.atob(data) : this._imagePlaceHolder;
+  };
+
+  _getLogo(item: any, type: string, bg: boolean = false) {
+    let logoUrl = this._imagePlaceHolder;
+    if (item && item._links && item._links[type]) {
+      logoUrl = item._links[type].href;
+      logoUrl += '?t=' + moment().valueOf();
+      // logoUrl = this.apiService.getImageUrl(logoUrl);
+    }
+
+    return bg ? `url(${logoUrl})` : logoUrl;
+  };
+
+  _hasLogo(item: any, type: string) {
+    let _hasLogo = false;
+    if (item && item._links && item._links[type]) {
+      _hasLogo = true;
+    }
+    return _hasLogo;
+  };
+
+  toggleEditLogos() {
+    this._isEditLogos = !this._isEditLogos;
   }
 }

@@ -19,6 +19,7 @@
 			"Go": "Go",
 			"InviaRichiesta": "Send request",
 			"Login": "Login",
+			"ModifyLogos": "Modify logos",
 			"MoreInfo": "More info",
 			"Remove": "Remove",
 			"Report": "Report",
@@ -198,7 +199,9 @@
 			},
 			"TITLE": {
 				"GeneralInformations": "General informations",
-				"GeneralInformations_sub": ""
+				"GeneralInformations_sub": "",
+				"LogosInformations": "Logos",
+				"LogosInformations_sub": ""
 			}
 		},
 		"PDF": {
@@ -229,7 +232,9 @@
 			},
 			"TITLE": {
 				"GeneralInformations": "General informations",
-				"GeneralInformations_sub": ""
+				"GeneralInformations_sub": "",
+				"LogosInformations": "Logos",
+				"LogosInformations_sub": ""
 			}
 		},
 		"SIDENAV": {
@@ -309,6 +314,7 @@
 			"Export": "Export",
 			"ExportCSV": "Export file CSV",
 			"ExportPDF": "Export file PDF",
+			"ModifyLogos": "Modify logos",
 			"Preview": "Preview",
 			"Remove": "Remove"
 		},

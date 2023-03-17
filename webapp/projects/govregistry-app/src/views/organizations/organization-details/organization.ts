@@ -18,6 +18,7 @@ export class Organization {
   tax_code: string | null = null;
   logo_miniature: string | null = null; // Base64 Image
   logo: string | null = null; // Base64 Image
+  file: any = null;
 
   constructor(_data?: any) {
     if (_data) {

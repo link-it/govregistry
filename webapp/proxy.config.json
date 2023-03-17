@@ -1,4 +1,13 @@
 {
+  "/govregistry/api/*": {
+    "target": "http://172.16.1.121:8083/govregistry/api/v1",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false,
+    "pathRewrite": {
+      "^/govregistry/api": ""
+    }
+  },
   "/api/*": {
     "target": "http://172.16.1.121:8083/govregistry/api/v1",
     "secure": false,

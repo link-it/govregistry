@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<babeledit_project be_version="4.0.1" version="1.3">
+<babeledit_project be_version="4.0.3" version="1.3">
 	<!--
 
     BabelEdit project file
@@ -299,6 +299,22 @@
 									</concept_node>
 									<concept_node>
 										<name>Login</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>ModifyLogos</name>
 										<description/>
 										<comment/>
 										<default_text/>
@@ -2775,6 +2791,38 @@
 													</translation>
 												</translations>
 											</concept_node>
+											<concept_node>
+												<name>LogosInformations</name>
+												<description/>
+												<comment/>
+												<default_text/>
+												<translations>
+													<translation>
+														<language>en-US</language>
+														<approved>false</approved>
+													</translation>
+													<translation>
+														<language>it-IT</language>
+														<approved>false</approved>
+													</translation>
+												</translations>
+											</concept_node>
+											<concept_node>
+												<name>LogosInformations_sub</name>
+												<description/>
+												<comment/>
+												<default_text/>
+												<translations>
+													<translation>
+														<language>en-US</language>
+														<approved>false</approved>
+													</translation>
+													<translation>
+														<language>it-IT</language>
+														<approved>false</approved>
+													</translation>
+												</translations>
+											</concept_node>
 										</children>
 									</folder_node>
 								</children>
@@ -3095,6 +3143,38 @@
 											</concept_node>
 											<concept_node>
 												<name>GeneralInformations_sub</name>
+												<description/>
+												<comment/>
+												<default_text/>
+												<translations>
+													<translation>
+														<language>en-US</language>
+														<approved>false</approved>
+													</translation>
+													<translation>
+														<language>it-IT</language>
+														<approved>false</approved>
+													</translation>
+												</translations>
+											</concept_node>
+											<concept_node>
+												<name>LogosInformations</name>
+												<description/>
+												<comment/>
+												<default_text/>
+												<translations>
+													<translation>
+														<language>en-US</language>
+														<approved>false</approved>
+													</translation>
+													<translation>
+														<language>it-IT</language>
+														<approved>false</approved>
+													</translation>
+												</translations>
+											</concept_node>
+											<concept_node>
+												<name>LogosInformations_sub</name>
 												<description/>
 												<comment/>
 												<default_text/>
@@ -4156,6 +4236,22 @@
 									</concept_node>
 									<concept_node>
 										<name>ExportPDF</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>ModifyLogos</name>
 										<description/>
 										<comment/>
 										<default_text/>
