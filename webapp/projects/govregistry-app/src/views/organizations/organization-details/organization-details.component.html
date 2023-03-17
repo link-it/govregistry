@@ -84,7 +84,7 @@
                 <!-- <div class="row">
                   <div class="col-lg-6"> -->
                     <div class="form-group legal_name">
-                      <label class="label-bold" for="legal_name">{{ 'APP.LABEL.LegalName' | translate }}</label>
+                      <label class="label-bold" for="legal_name">{{ 'APP.LABEL.LegalName' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'legal_name'" *ngIf="_isEdit"></span></label>
                       <div class="" *ngIf="_isEdit">
                         <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('legal_name')" type="text" name="legal_nameg" id="legal_name" formControlName="legal_name">
                         <p *ngIf="f['legal_name'].invalid && (f['legal_name'].dirty || f['legal_name'].touched)" class="form-text text-danger">
@@ -99,7 +99,7 @@
                   <!-- </div>
                   <div class="col-lg-6"> -->
                     <div class="form-group tax_code">
-                      <label class="label-bold" for="tax_code">{{ 'APP.LABEL.TaxCode' | translate }}</label>
+                      <label class="label-bold" for="tax_code">{{ 'APP.LABEL.TaxCode' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'tax_code'" *ngIf="_isEdit"></span></label>
                       <div class="" *ngIf="_isEdit">
                         <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('tax_code')" type="text" name="tax_code" id="tax_code" formControlName="tax_code">
                         <p *ngIf="f['tax_code'].invalid && (f['tax_code'].dirty || f['tax_code'].touched)" class="form-text text-danger">
@@ -117,7 +117,7 @@
                 <div class="row">
                   <div class="col-lg-6"> -->
                     <div class="form-group office_address">
-                      <label class="label-bold" for="office_address">{{ 'APP.LABEL.OfficeAddress' | translate }}</label>
+                      <label class="label-bold" for="office_address">{{ 'APP.LABEL.OfficeAddress' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'office_address'" *ngIf="_isEdit"></span></label>
                       <div class="" *ngIf="_isEdit">
                         <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('office_address')" type="text" name="office_address" id="office_address" formControlName="office_address">
                         <p *ngIf="f['office_address'].invalid && (f['office_address'].dirty || f['office_address'].touched)" class="form-text text-danger">
@@ -133,7 +133,7 @@
                   <!-- </div>
                   <div class="col-lg-6"> -->
                     <div class="form-group office_at">
-                      <label class="label-bold" for="office_at">{{ 'APP.LABEL.OfficeAt' | translate }}</label>
+                      <label class="label-bold" for="office_at">{{ 'APP.LABEL.OfficeAt' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'office_at'" *ngIf="_isEdit"></span></label>
                       <div class="" *ngIf="_isEdit">
                         <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('office_at')" type="text" name="office_at" id="office_at" formControlName="office_at">
                         <p *ngIf="f['office_at'].invalid && (f['office_at'].dirty || f['office_at'].touched)" class="form-text text-danger">
@@ -151,7 +151,7 @@
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group office_zip">
-                      <label class="label-bold" for="office_zip">{{ 'APP.LABEL.OfficeZip' | translate }}</label>
+                      <label class="label-bold" for="office_zip">{{ 'APP.LABEL.OfficeZip' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'office_zip'" *ngIf="_isEdit"></span></label>
                       <div class="" *ngIf="_isEdit">
                         <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('office_zip')" type="text" name="office_zip" id="office_zip" formControlName="office_zip">
                         <p *ngIf="f['office_zip'].invalid && (f['office_zip'].dirty || f['office_zip'].touched)" class="form-text text-danger">
@@ -166,7 +166,7 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group office_municipality">
-                      <label class="label-bold" for="office_municipality">{{ 'APP.LABEL.OfficeMunicipality' | translate }}</label>
+                      <label class="label-bold" for="office_municipality">{{ 'APP.LABEL.OfficeMunicipality' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'office_municipality'" *ngIf="_isEdit"></span></label>
                       <div class="" *ngIf="_isEdit">
                         <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('office_municipality')" type="text" name="office_municipality" id="office_municipality" formControlName="office_municipality">
                         <p *ngIf="f['office_municipality'].invalid && (f['office_municipality'].dirty || f['office_municipality'].touched)" class="form-text text-danger">
@@ -181,7 +181,7 @@
                   </div>
                   <div class="col-md-3">
                     <div class="form-group office_province">
-                      <label class="label-bold" for="office_province">{{ 'APP.LABEL.OfficeProvince' | translate }}</label>
+                      <label class="label-bold" for="office_province">{{ 'APP.LABEL.OfficeProvince' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'office_province'" *ngIf="_isEdit"></span></label>
                       <div class="" *ngIf="_isEdit">
                         <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('office_province')" type="text" name="office_province" id="office_province" formControlName="office_province">
                         <p *ngIf="f['office_province'].invalid && (f['office_province'].dirty || f['office_province'].touched)"
@@ -197,67 +197,18 @@
                   </div>
                 </div>
 
-                <!-- <div class="row">
-                  <div class="col-lg-6"> -->
-                    <div class="form-group office_email_address">
-                      <label class="label-bold" for="office_email_address">{{ 'APP.LABEL.OfficeEmailAddress' | translate }}</label>
-                      <div class="" *ngIf="_isEdit">
-                        <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('office_email_address')" type="text" name="office_email_address" id="office_email_address" formControlName="office_email_address">
-                        <p *ngIf="f['office_email_address'].invalid && (f['office_email_address'].dirty || f['office_email_address'].touched)" class="form-text text-danger">
-                          <span *ngIf="f['office_email_address'].errors && f['office_email_address'].errors['required']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.FieldRequired' | translate }}</span>
-                          <span *ngIf="f['office_email_address'].errors && f['office_email_address'].errors['email']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.Email' | translate }}</span>
-                        </p>
-                        <ui-input-help field="office_email_address" context="ORGANIZATION"></ui-input-help>
-                      </div>
-                      <div class="" *ngIf="!_isEdit">
-                        <input type="text" readonly class="form-control-plaintext" id="office_email_address" [value]="organization.office_email_address">
-                      </div>
-                    </div>
-                  <!-- </div>
-                </div> -->
-
-                <div class="row">
-                  <div class="col-6">
-                    <div class="form-group logo">
-                      <label class="label-bold" for="logo">{{ 'APP.LABEL.Logo' | translate }}</label>
-                      <div class="" *ngIf="_isEdit">
-                        <app-photo-base64
-                          [boxWidth]="'175px'"
-                          [boxHeight]="'auto'"
-                          [maxSize]="20971520"
-                          [placeHolder]="_imagePlaceHolder"
-                          [imageSaved]="organization?.logo | mapper: _decodeImage"
-                          [isImageSaved]="organization?.logo"
-                          [removeLabel]="'APP.BUTTON.Remove' | translate"
-                          (imageLoaded)="_onImageLoaded($event, 'logo')">
-                        </app-photo-base64>
-                      </div>
-                      <div class="mt-2" *ngIf="!_isEdit">
-                        <img class="img-space" style="width: 175px;height: auto;" [src]="organization?.logo | mapper: _decodeImage" />
-                      </div>
-                    </div>
+                <div class="form-group office_email_address">
+                  <label class="label-bold" for="office_email_address">{{ 'APP.LABEL.OfficeEmailAddress' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'office_email_address'" *ngIf="_isEdit"></span></label>
+                  <div class="" *ngIf="_isEdit">
+                    <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('office_email_address')" type="text" name="office_email_address" id="office_email_address" formControlName="office_email_address">
+                    <p *ngIf="f['office_email_address'].invalid && (f['office_email_address'].dirty || f['office_email_address'].touched)" class="form-text text-danger">
+                      <span *ngIf="f['office_email_address'].errors && f['office_email_address'].errors['required']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.FieldRequired' | translate }}</span>
+                      <span *ngIf="f['office_email_address'].errors && f['office_email_address'].errors['email']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.Email' | translate }}</span>
+                    </p>
+                    <ui-input-help field="office_email_address" context="ORGANIZATION"></ui-input-help>
                   </div>
-                <!-- </div>
-                <div class="row"> -->
-                  <div class="col-6">
-                    <div class="form-group logo_miniature">
-                      <label class="label-bold" for="logo_miniature">{{ 'APP.LABEL.LogoMiniature' | translate }}</label>
-                      <div class="" *ngIf="_isEdit">
-                        <app-photo-base64
-                          [boxWidth]="'90px'"
-                          [boxHeight]="'auto'"
-                          [maxSize]="50000"
-                          [placeHolder]="_imagePlaceHolder"
-                          [imageSaved]="organization?.logo_miniature | mapper: _decodeImage"
-                          [isImageSaved]="organization?.logo_miniature"
-                          [removeLabel]="'APP.BUTTON.Remove' | translate"
-                          (imageLoaded)="_onImageLoaded($event, 'logo_miniature')">
-                        </app-photo-base64>
-                      </div>
-                      <div class="mt-2" *ngIf="!_isEdit">
-                        <img class="img-space" style="width: 90px;height: auto;" [src]="organization?.logo_miniature | mapper: _decodeImage" />
-                      </div>
-                    </div>
+                  <div class="" *ngIf="!_isEdit">
+                    <input type="text" readonly class="form-control-plaintext" id="office_email_address" [value]="organization.office_email_address">
                   </div>
                 </div>
               </div>
@@ -276,6 +227,82 @@
               </button>
             </div>
           </form>
+        </div>
+        <div class="row gl-mt-5 border-top pt-5" *ngIf="!_isNew">
+          <div class="col-lg-4">
+            <h4 class="gl-mt-0 text-break">
+              <span>{{ 'APP.SERVICES.TITLE.LogosInformations' | translate }}</span>
+              <button class="btn btn-default btn-md gl-button btn-icon ms-3" (click)="toggleEditLogos()" [tooltip]="(_isEditLogos ? 'APP.TOOLTIP.CancelEdit':'APP.TOOLTIP.ModifyLogos') | translate">
+                <span *ngIf="!_isEditLogos"><i class="bi bi-pencil"></i><span class="d-none">{{ 'APP.BUTTON.ModifyLogos' | translate }}</span></span>
+                <span *ngIf="_isEditLogos"><i class="bi bi-x-lg"></i><span class="d-none">{{ 'APP.BUTTON.Cancel' | translate }}</span></span>
+              </button>  
+            </h4>
+            <div class="text-break" markdown>{{ 'APP.SERVICES.TITLE.LogosInformations_sub' | translate }}</div>
+          </div>
+          <div class="col-lg-8">
+            <!-- <div class="row" *ngIf="!_isNew && _isEdit">
+              <div class="col-6">
+                <div class="form-group file">
+                  <label class="label-bold" for="logo">{{ 'APP.LABEL.Logo' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'file'" *ngIf="_isEdit"></span></label>
+                  <div class="" *ngIf="_isEdit">
+                    <input type="file" class="form-control form-control-sm" formControlName="file" (change)="_onFileLoaded($event, 'logo')" [class.gl-field-error-outline]="_hasControlError('file')">
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group file">
+                  <label class="label-bold" for="logo">{{ 'APP.LABEL.LogoMiniature' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'file'" *ngIf="_isEdit"></span></label>
+                  <div class="" *ngIf="_isEdit">
+                    <input type="file" class="form-control form-control-sm" formControlName="file" (change)="_onFileLoaded($event, 'logo')" [class.gl-field-error-outline]="_hasControlError('file')">
+                  </div>
+                </div>
+              </div>
+            </div> -->
+            <div class="row" *ngIf="!_isNew">
+              <div class="col-6">
+                <div class="form-group logo">
+                  <label class="label-bold" for="logo">{{ 'APP.LABEL.Logo' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'logo'" *ngIf="_isEditLogos"></span></label>
+                  <div class="" *ngIf="_isEditLogos">
+                    <app-photo-base64
+                      [boxWidth]="'175px'"
+                      [boxHeight]="'auto'"
+                      [maxSize]="20971520"
+                      [placeHolder]="_imagePlaceHolder"
+                      [imageSaved]="_getLogo(organization, 'logo')"
+                      [isImageSaved]="!!_getLogo(organization, 'logo')"
+                      [removeLabel]="'APP.BUTTON.Remove' | translate"
+                      [asDataUrl]="false"
+                      (imageLoaded)="_onImageLoaded($event, 'logo')">
+                    </app-photo-base64>
+                  </div>
+                  <div class="mt-2" *ngIf="!_isEditLogos">
+                    <img class="img-space" style="width: 175px;height: auto;" [src]="_getLogo(organization, 'logo')" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group logo_miniature">
+                  <label class="label-bold" for="logo_miniature">{{ 'APP.LABEL.LogoMiniature' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'logo_miniature'" *ngIf="_isEditLogos"></span></label>
+                  <div class="" *ngIf="_isEditLogos">
+                    <app-photo-base64
+                      [boxWidth]="'90px'"
+                      [boxHeight]="'auto'"
+                      [maxSize]="20971520"
+                      [placeHolder]="_imagePlaceHolder"
+                      [imageSaved]="_getLogo(organization, 'logo-miniature')"
+                      [isImageSaved]="!!_getLogo(organization, 'logo-miniature')"
+                      [removeLabel]="'APP.BUTTON.Remove' | translate"
+                      [asDataUrl]="false"
+                      (imageLoaded)="_onImageLoaded($event, 'logo-miniature')">
+                    </app-photo-base64>
+                  </div>
+                  <div class="mt-2" *ngIf="!_isEditLogos">
+                    <img class="img-space" style="width: 90px;height: auto;" [src]="_getLogo(organization, 'logo-miniature')" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
