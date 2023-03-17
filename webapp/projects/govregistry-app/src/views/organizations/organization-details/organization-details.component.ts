@@ -180,7 +180,7 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
           case 'office_email_address':
             value = data[key] ? data[key] : null;
             _group[key] = new UntypedFormControl(value, [
-              Validators.required,
+              // Validators.required,
               Validators.email
             ]);
             break;
