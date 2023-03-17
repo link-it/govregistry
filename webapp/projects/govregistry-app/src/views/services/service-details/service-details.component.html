@@ -128,6 +128,67 @@
               </button>
             </div>
           </form>
+
+          <div class="row gl-mt-5 border-top pt-5" *ngIf="!_isNew">
+            <div class="col-lg-4">
+              <h4 class="gl-mt-0 text-break">
+                <span>{{ 'APP.SERVICES.TITLE.LogosInformations' | translate }}</span>
+                <button class="btn btn-default btn-md gl-button btn-icon ms-3" (click)="toggleEditLogos()" [tooltip]="(_isEditLogos ? 'APP.TOOLTIP.CancelEdit':'APP.TOOLTIP.ModifyLogos') | translate">
+                  <span *ngIf="!_isEditLogos"><i class="bi bi-pencil"></i><span class="d-none">{{ 'APP.BUTTON.ModifyLogos' | translate }}</span></span>
+                  <span *ngIf="_isEditLogos"><i class="bi bi-x-lg"></i><span class="d-none">{{ 'APP.BUTTON.Cancel' | translate }}</span></span>
+                </button>  
+              </h4>
+              <div class="text-break" markdown>{{ 'APP.SERVICES.TITLE.LogosInformations_sub' | translate }}</div>
+            </div>
+            <div class="col-lg-8">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group logo">
+                    <label class="label-bold" for="logo">{{ 'APP.LABEL.Logo' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'logo'" *ngIf="_isEditLogos"></span></label>
+                    <div class="">
+                      <app-photo-base64
+                        [boxWidth]="'175px'"
+                        [boxHeight]="'auto'"
+                        [maxSize]="20971520"
+                        [placeHolder]="_imagePlaceHolder"
+                        [imageSaved]="_getLogo(service, 'logo')"
+                        [isImageSaved]="_hasLogo(service, 'logo')"
+                        [removeLabel]="'APP.BUTTON.Remove' | translate"
+                        [asDataUrl]="false"
+                        [isEdit]="_isEditLogos"
+                        (imageLoaded)="_onImageLoaded($event, 'logo')">
+                      </app-photo-base64>
+                    </div>
+                    <div class="mt-2" *ngIf="!_isEditLogos && false">
+                      <img class="img-space" style="width: 175px;height: auto;" [src]="_getLogo(service, 'logo')" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group logo_miniature">
+                    <label class="label-bold" for="logo_miniature">{{ 'APP.LABEL.LogoMiniature' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'logo_miniature'" *ngIf="_isEditLogos"></span></label>
+                    <div class="">
+                      <app-photo-base64
+                        [boxWidth]="'90px'"
+                        [boxHeight]="'auto'"
+                        [maxSize]="20971520"
+                        [placeHolder]="_imagePlaceHolder"
+                        [imageSaved]="_getLogo(service, 'logo-miniature')"
+                        [isImageSaved]="_hasLogo(service, 'logo-miniature')"
+                        [removeLabel]="'APP.BUTTON.Remove' | translate"
+                        [asDataUrl]="false"
+                        [isEdit]="_isEditLogos"
+                        (imageLoaded)="_onImageLoaded($event, 'logo-miniature')">
+                      </app-photo-base64>
+                    </div>
+                    <div class="mt-2" *ngIf="!_isEditLogos && false">
+                      <img class="img-space" style="width: 90px;height: auto;" [src]="_getLogo(service, 'logo-miniature')" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
