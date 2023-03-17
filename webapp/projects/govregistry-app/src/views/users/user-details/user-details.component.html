@@ -135,12 +135,17 @@
       </div>
     </div>
 
-    <ui-box-collapse *ngIf="user && _authorizations && !_spin"
+    <ui-box-collapse *ngIf="user && _authorizations && !_spin && false"
       [opened]="true"
       [id]="'user-authorizations'"
       [title]="'APP.USERS.TITLE.ShowAuthorizations' | translate"
       [subTitle]="'APP.USERS.TITLE.ShowAuthorizations_sub' | translate"> 
-      <pre>{{ _authorizations | json }}</pre>
+      <div class="row">
+        <div class="col-4"></div>
+        <div class="col-8">
+          <pre>{{ _authorizations | json }}</pre>
+        </div>
+      </div>
     </ui-box-collapse>
 
   </section>

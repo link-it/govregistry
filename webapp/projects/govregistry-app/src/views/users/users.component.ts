@@ -1,6 +1,7 @@
 import { AfterContentChecked, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { HttpParams } from '@angular/common/http';
 
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
@@ -57,7 +58,8 @@ export class UsersComponent implements OnInit, AfterContentChecked {
   sortField: string = 'full_name';
   sortDirection: string = 'asc';
   sortFields: any[] = [
-    // { field: 'nome', label: 'APP.LABEL.Name', icon: '' }
+    { field: 'id', label: 'APP.LABEL.Id', icon: '' },
+    { field: 'full_name', label: 'APP.LABEL.FullName', icon: '' }
   ];
 
   searchFields: any[] = [];
@@ -145,8 +147,15 @@ export class UsersComponent implements OnInit, AfterContentChecked {
 
   _loadUsers(query: any = null, url: string = '') {
     this._setErrorMessages(false);
+
     if (!url) { this.users = []; }
-    this.apiService.getList(this.model).subscribe({
+
+    let aux: any;
+    const sort: any = { sort: this.sortField, sort_direction: this.sortDirection}
+    query = { ...query, ...sort };
+    aux = { params: this._queryToHttpParams(query) };
+
+    this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
         if (response === null) {
           this._unimplemented = true;
@@ -158,16 +167,17 @@ export class UsersComponent implements OnInit, AfterContentChecked {
           }
 
           if (response.items) {
+            const _itemRow = this.usersConfig.itemRow;
+            const _options = this.usersConfig.options;
             const _list: any = response.items.map((user: any) => {
-              const metadataText = Tools.simpleItemFormatter(this.usersConfig.simpleItem.metadata.text, user, this.usersConfig.simpleItem.options || null);
-              const metadataLabel = Tools.simpleItemFormatter(this.usersConfig.simpleItem.metadata.label, user, this.usersConfig.simpleItem.options || null);
+              const metadataText = Tools.simpleItemFormatter(_itemRow.metadata.text, user, _options || null);
+              const metadataLabel = Tools.simpleItemFormatter(_itemRow.metadata.label, user, _options || null);
               const element = {
                 id: user.id,
-                primaryText: Tools.simpleItemFormatter(this.usersConfig.simpleItem.primaryText, user, this.usersConfig.simpleItem.options || null),
-                secondaryText: Tools.simpleItemFormatter(this.usersConfig.simpleItem.secondaryText, user, this.usersConfig.simpleItem.options || null),
+                primaryText: Tools.simpleItemFormatter(_itemRow.primaryText, user, _options || null, ' '),
+                secondaryText: Tools.simpleItemFormatter(_itemRow.secondaryText, user, _options || null, ' '),
                 metadata: `${metadataText}<span class="me-2">&nbsp;</span>${metadataLabel}`,
-                secondaryMetadata: Tools.simpleItemFormatter(this.usersConfig.simpleItem.secondaryMetadata, user, this.usersConfig.simpleItem.options || null),
-                enableCollapse: true,
+                secondaryMetadata: Tools.simpleItemFormatter(_itemRow.secondaryMetadata, user, _options || null, ' '),
                 editMode: false,
                 source: { ...user }
               };
@@ -185,6 +195,23 @@ export class UsersComponent implements OnInit, AfterContentChecked {
         // Tools.OnError(error);
       }
     });
+  }
+
+  _queryToHttpParams(query: any) : HttpParams {
+    let httpParams = new HttpParams();
+
+    Object.keys(query).forEach(key => {
+      if (query[key]) {
+        let _dateTime = '';
+        switch (key)
+        {
+          default:
+            httpParams = httpParams.set(key, query[key]);
+        }
+      }
+    });
+    
+    return httpParams; 
   }
 
   __loadMoreData() {
@@ -242,7 +269,9 @@ export class UsersComponent implements OnInit, AfterContentChecked {
   }
 
   _onSort(event: any) {
-    console.log(event);
+    this.sortField = event.sortField;
+    this.sortDirection = event.sortBy;
+    this._loadUsers(this._filterData);
   }
 
   onBreadcrumb(event: any) {
