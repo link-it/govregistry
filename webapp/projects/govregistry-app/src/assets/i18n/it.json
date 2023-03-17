@@ -243,8 +243,10 @@
 		"STATUS": {
 			"ACCETTATO": "Accettato",
 			"COMPLETATO": "Completato",
+			"DISABLED": "Disabilitato",
 			"ELABORATO": "Elaborato",
 			"ELABORAZIONE": "In elaborazione",
+			"ENABLED": "Abilitato",
 			"ERRORE": "Errore",
 			"IN_ELABORAZIONE": "In elaborazione",
 			"NUOVO": "Nuovo",

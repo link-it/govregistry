@@ -40,6 +40,7 @@
           [sortDirection]="sortDirection"
           [sortFields]="sortFields"
           [formGroup]="_formGroup"
+          [simple]="true"
           (onSearch)="_onSearch($event)"
           (onSort)="_onSort($event)">
           <div form-search>
@@ -78,29 +79,20 @@
 
     <div class="row">
       <div class="col-12">
-        <ui-simple-item class="border-bottom" *ngFor="let u of users"
+        <!-- <ui-simple-item class="border-bottom" *ngFor="let u of users"
           [primaryText]="u.primaryText"
           [secondaryText]="u.secondaryText"
           [metadata]="u.metadata"
           [secondaryMetadata]="u.secondaryMetadata"
           [hasLink]="true"
           (simpleClick)="_onEdit($event, u)">
-        </ui-simple-item>
-        <!-- <ui-collapse-item class="border-bottom" *ngFor="let u of users"
-          [primaryText]="u.primaryText"
-          [secondaryText]="u.secondaryText"
-          [metadata]="u.metadata"
-          [secondaryMetadata]="u.secondaryMetadata"
+        </ui-simple-item> -->
+        <ui-item-row class="border-bottom" *ngFor="let u of users"
+          [data]="u"
+          [config]="usersConfig"
           [hasLink]="true"
-          [enableCollapse]="u.enableCollapse"
-          (simpleClick)="_onEdit($event, u)">
-          <div collapse-content class="p-4 my-1 bg-lightest" *ngIf="u.enableCollapse">
-            <ui-form-readonly
-              [fields]="_generateUsersFields(u.source)"
-              [columns]="config.AppConfig?.Layout?.Details?.columns || 6">
-            </ui-form-readonly>
-          </div>
-        </ui-collapse-item> -->
+          (itemClick)="_onEdit($event, u)">
+        </ui-item-row>
       </div>
     </div>
 
