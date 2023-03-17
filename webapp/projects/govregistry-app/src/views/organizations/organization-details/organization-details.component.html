@@ -262,7 +262,7 @@
               <div class="col-6">
                 <div class="form-group logo">
                   <label class="label-bold" for="logo">{{ 'APP.LABEL.Logo' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'logo'" *ngIf="_isEditLogos"></span></label>
-                  <div class="" *ngIf="_isEditLogos">
+                  <div class="">
                     <app-photo-base64
                       [boxWidth]="'175px'"
                       [boxHeight]="'auto'"
@@ -272,10 +272,11 @@
                       [isImageSaved]="!!_getLogo(organization, 'logo')"
                       [removeLabel]="'APP.BUTTON.Remove' | translate"
                       [asDataUrl]="false"
+                      [isEdit]="_isEditLogos"
                       (imageLoaded)="_onImageLoaded($event, 'logo')">
                     </app-photo-base64>
                   </div>
-                  <div class="mt-2" *ngIf="!_isEditLogos">
+                  <div class="mt-2" *ngIf="!_isEditLogos && false">
                     <img class="img-space" style="width: 175px;height: auto;" [src]="_getLogo(organization, 'logo')" />
                   </div>
                 </div>
@@ -283,7 +284,7 @@
               <div class="col-6">
                 <div class="form-group logo_miniature">
                   <label class="label-bold" for="logo_miniature">{{ 'APP.LABEL.LogoMiniature' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'logo_miniature'" *ngIf="_isEditLogos"></span></label>
-                  <div class="" *ngIf="_isEditLogos">
+                  <div class="">
                     <app-photo-base64
                       [boxWidth]="'90px'"
                       [boxHeight]="'auto'"
@@ -293,10 +294,11 @@
                       [isImageSaved]="!!_getLogo(organization, 'logo-miniature')"
                       [removeLabel]="'APP.BUTTON.Remove' | translate"
                       [asDataUrl]="false"
+                      [isEdit]="_isEditLogos"
                       (imageLoaded)="_onImageLoaded($event, 'logo-miniature')">
                     </app-photo-base64>
                   </div>
-                  <div class="mt-2" *ngIf="!_isEditLogos">
+                  <div class="mt-2" *ngIf="!_isEditLogos && false">
                     <img class="img-space" style="width: 90px;height: auto;" [src]="_getLogo(organization, 'logo-miniature')" />
                   </div>
                 </div>
