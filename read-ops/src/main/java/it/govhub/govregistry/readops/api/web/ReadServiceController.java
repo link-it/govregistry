@@ -122,8 +122,11 @@ public abstract class ReadServiceController implements ServiceApi {
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
+		if (service.getLogo() == null) {
+			throw new ResourceNotFoundException();
+		}
 
-		byte[] ret = service.getLogo() != null ? service.getLogo() : new byte[0];
+		byte[] ret = service.getLogo();
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
 		InputStreamResource logoStream = new InputStreamResource(bret);
 		
@@ -146,8 +149,11 @@ public abstract class ReadServiceController implements ServiceApi {
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
+		if (service.getLogoMiniature() == null) {
+			throw new ResourceNotFoundException();
+		}
 
-		byte[] ret = service.getLogoMiniature() != null ? service.getLogoMiniature() : new byte[0];
+		byte[] ret = service.getLogoMiniature();
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
 		InputStreamResource logoStream = new InputStreamResource(bret);
 		

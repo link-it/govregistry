@@ -57,10 +57,10 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 	
 	public OrganizationEntity toEntity(OrganizationCreate src) {
 		log.debug("Converting Model [OrganizationCreate] to Entity");
-		
+
 		OrganizationEntity ret = new OrganizationEntity();
-		BeanUtils.copyProperties(src,  ret);
-		
+		BeanUtils.copyProperties(src, ret);
+
 		return ret;
 	}
 	
