@@ -88,16 +88,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      // Changed
-    });
-
-    // this.pageloaderService.resetLoader();
-    // this.pageloaderService.isLoading.subscribe({
-    //   next: (x) => { this._spin = x; },
-    //   error: (e: any) => { console.log('loader error', e); }
-    // });
-
     this.route.params.subscribe(params => {
       if (params['id'] && params['id'] !== 'new') {
         this.id = params['id'];
@@ -123,7 +113,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
           this._loadAll();
         }
       }
-
     });
   }
 
@@ -148,7 +137,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
 
   _loadAll() {
     this._loadOrganization();
-    // this._loadOrganizationProviders();
   }
 
   _hasControlError(name: string) {
