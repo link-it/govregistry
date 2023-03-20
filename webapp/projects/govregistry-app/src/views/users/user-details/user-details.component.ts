@@ -173,9 +173,13 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
           case 'email':
             value = data[key] ? data[key] : null;
             _group[key] = new UntypedFormControl(value, [
-              Validators.required,
+              // Validators.required,
               Validators.email
             ]);
+            break;
+          case 'enabled':
+            value = data[key] ? data[key] : false;
+            _group[key] = new UntypedFormControl(value, []);
             break;
           default:
             value = data[key] ? data[key] : null;

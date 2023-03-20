@@ -75,6 +75,7 @@
 			"Description": "Descrizione",
 			"DueDate": "Scadenza",
 			"Email": "E-mail",
+			"Enabled": "Abilitato",
 			"FileName": "Nome del file",
 			"FullName": "Nome e cognome",
 			"Id": "ID",
@@ -215,7 +216,8 @@
 			"DebtorTaxcode": "es.: RSSMRA70A41F205Z",
 			"NoticeNumber": "Numero avviso",
 			"Search": "Cerca...",
-			"Taxonomy": "Tassonomia"
+			"Taxonomy": "Tassonomia",
+			"UnknownOffice": "Ufficio sconosciuto"
 		},
 		"SEARCH": {
 			"ClearRecentSearches": "Cancella le ricerche recenti",

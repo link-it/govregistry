@@ -86,6 +86,12 @@
           [hasLink]="true"
           (simpleClick)="_onEdit($event, service)">
         </ui-simple-item>
+        <ui-item-row class="border-bottom" *ngFor="let service of services"
+          [data]="service"
+          [config]="servicesConfig"
+          [hasLink]="true"
+          (itemClick)="_onEdit($event, service)">
+        </ui-item-row>
       </div>
 
       <ui-box-spinner [color]="'accent'" [diameter]="48" [strokeWidth]="4" *ngIf="_spin"></ui-box-spinner>

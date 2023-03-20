@@ -35,8 +35,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
   @Output() close: EventEmitter<any> = new EventEmitter<any>();
   @Output() save: EventEmitter<any> = new EventEmitter<any>();
 
-  _title: string = '';
-
   appConfig: any;
 
   hasTab: boolean = true;
@@ -88,16 +86,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      // Changed
-    });
-
-    // this.pageloaderService.resetLoader();
-    // this.pageloaderService.isLoading.subscribe({
-    //   next: (x) => { this._spin = x; },
-    //   error: (e: any) => { console.log('loader error', e); }
-    // });
-
     this.route.params.subscribe(params => {
       if (params['id'] && params['id'] !== 'new') {
         this.id = params['id'];
@@ -123,7 +111,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
           this._loadAll();
         }
       }
-
     });
   }
 
@@ -148,7 +135,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
 
   _loadAll() {
     this._loadOrganization();
-    // this._loadOrganizationProviders();
   }
 
   _hasControlError(name: string) {
@@ -220,7 +206,7 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     const $this = this;
     return Object.keys(obj)
       .filter(function (k) {
-        return obj[k] != null;
+        return ( obj[k] != null && typeof obj[k] !== "object");
       })
       .reduce(function (acc: any, k: string) {
         acc[k] = typeof obj[k] === "object" ? $this.__removeEmpty(obj[k]) : obj[k];
@@ -305,12 +291,9 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
         next: (response: any) => {
           this.organization = response; // new Organization({ ...response });
           this._organization = new Organization({ ...response });
-          this._title = this.organization.creditorReferenceId;
-          if (this.config.detailsTitle) {
-            this._title = Tools.simpleItemFormatter(this.config.detailsTitle, this.organization);
-          }
-          this._spin = false;
           // this.__initInformazioni();
+
+          this._spin = false;
         },
         error: (error: any) => {
           this._spin = false;
