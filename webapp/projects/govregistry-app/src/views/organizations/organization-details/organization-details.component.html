@@ -208,7 +208,7 @@
                     <ui-input-help field="office_email_address" context="ORGANIZATION"></ui-input-help>
                   </div>
                   <div class="" *ngIf="!_isEdit">
-                    <input type="text" readonly class="form-control-plaintext" id="office_email_address" [value]="organization.office_email_address">
+                    <input type="text" readonly class="form-control-plaintext" id="office_email_address" [value]="organization.office_email_address || '-'">
                   </div>
                 </div>
               </div>
