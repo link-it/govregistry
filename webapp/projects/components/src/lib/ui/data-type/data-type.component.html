@@ -9,15 +9,15 @@
     <div class="d-inline-block" *ngIf="!(_elem.hideZero && _value == 0)">
       <span class="{{ _elem.class || '' }}" [tooltip]="_elem.tooltip || '' | translate" container="body" [delay]="500">
         <i class="bi bi-{{ _elem.icon }} {{ _elem.iconClass }}" *ngIf="_elem.icon"></i>
-        {{ utilsLib.formatNumberSuff(_value) }}
+        {{ utilsLib.formatNumberSuff(_value) || 0 }}
       </span>
     </div>
   </ng-container>
   <ng-container *ngSwitchCase="'message'">
-    <span [tooltip]="_elem.tooltip || '' | translate" container="body" [delay]="500" class="{{ _elem.class || '' }}">{{ _elem.field }}</span>
+    <span [tooltip]="(_elem.tooltip || '') | translate" container="body" [delay]="500" class="{{ _elem.class || '' }}">{{ _elem.field }}</span>
   </ng-container>
   <ng-container *ngSwitchCase="'date'">
-    <span [tooltip]="_elem.tooltip || '' | translate" container="body" [delay]="500" class="{{ _elem.class || '' }}">{{ utilsLib.dateFormatter(_value, _elem.format) }}</span>
+    <span [tooltip]="(_elem.tooltip || '') | translate" container="body" [delay]="500" class="{{ _elem.class || '' }}">{{ utilsLib.dateFormatter(_value, _elem.format) }}</span>
   </ng-container>
   <ng-container *ngSwitchCase="'label'">
     <span class="status-label {{_class}} status-label-scoped status-ml-2" style="--label-background-color:{{_background}}; --label-inset-border:inset 0 0 0 1px {{_border}};" [style.color]="_color"> <span class="status-link status-label-link"> <span class="status-label-text">{{_label}}</span> <span class="status-label-text-scoped">{{_value}}</span></span></span>
