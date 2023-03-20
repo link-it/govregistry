@@ -78,14 +78,20 @@
       </ui-box-message>
 
       <div class="col-12">
-        <ui-simple-item class="border-bottom" *ngFor="let org of organizations"
+        <!-- <ui-simple-item class="border-bottom" *ngFor="let org of organizations"
           [primaryText]="org.primaryText"
           [secondaryText]="org.secondaryText"
           [metadata]="org.metadata"
           [secondaryMetadata]="org.secondaryMetadata"
           [hasLink]="true"
           (simpleClick)="_onEdit($event, org)">
-        </ui-simple-item>
+        </ui-simple-item> -->
+        <ui-item-row class="border-bottom" *ngFor="let org of organizations"
+          [data]="org"
+          [config]="organizationsConfig"
+          [hasLink]="true"
+          (itemClick)="_onEdit($event, org)">
+        </ui-item-row>
       </div>
 
       <ui-box-spinner [color]="'accent'" [diameter]="48" [strokeWidth]="4" *ngIf="_spin"></ui-box-spinner>
