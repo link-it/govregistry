@@ -75,6 +75,7 @@
 			"Description": "Descrizione",
 			"DueDate": "Scadenza",
 			"Email": "E-mail",
+			"Enabled": "Abilitato",
 			"FileName": "Nome del file",
 			"FullName": "Nome e cognome",
 			"Id": "ID",
