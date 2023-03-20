@@ -216,7 +216,8 @@
 			"DebtorTaxcode": "e.g.: RSSMRA70A41F205Z",
 			"NoticeNumber": "Notice number",
 			"Search": "Search...",
-			"Taxonomy": "Taxonomy"
+			"Taxonomy": "Taxonomy",
+			"UnknownOffice": "Unknown office"
 		},
 		"SEARCH": {
 			"ClearRecentSearches": "Clear recent searches",
