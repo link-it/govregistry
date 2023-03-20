@@ -155,12 +155,13 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
   _loadOrganizations(query: any = null, url: string = '') {
     this._setErrorMessages(false);
 
-    if (!url) { this.organizations = []; }
-
     let aux: any;
-    const sort: any = { sort: this.sortField, sort_direction: this.sortDirection}
-    query = { ...query, ...sort };
-    aux = { params: this._queryToHttpParams(query) };
+    if (!url) {
+      this.organizations = [];
+      const sort: any = { sort: this.sortField, sort_direction: this.sortDirection}
+      query = { ...query, ...sort };
+      aux = { params: this._queryToHttpParams(query) };
+    }
 
     this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {

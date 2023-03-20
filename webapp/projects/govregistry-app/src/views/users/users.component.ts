@@ -148,12 +148,13 @@ export class UsersComponent implements OnInit, AfterContentChecked {
   _loadUsers(query: any = null, url: string = '') {
     this._setErrorMessages(false);
 
-    if (!url) { this.users = []; }
-
     let aux: any;
-    const sort: any = { sort: this.sortField, sort_direction: this.sortDirection}
-    query = { ...query, ...sort };
-    aux = { params: this._queryToHttpParams(query) };
+    if (!url) {
+      this.users = [];
+      const sort: any = { sort: this.sortField, sort_direction: this.sortDirection}
+      query = { ...query, ...sort };
+      aux = { params: this._queryToHttpParams(query) };
+    }
 
     this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {

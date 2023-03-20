@@ -1,6 +1,6 @@
 <ng-container [ngSwitch]="_elem.type">
   <ng-container *ngSwitchCase="'text'">
-    <span class="{{ _elem.class || '' }}">{{ _value }}</span>
+    <span class="{{ _elem.class || '' }}">{{ _value | translate }}</span>
   </ng-container>
   <ng-container *ngSwitchCase="'markdown'">
     <span markdown class="{{ _elem.class || '' }}">{{ _value }}</span>

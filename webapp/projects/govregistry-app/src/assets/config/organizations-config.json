@@ -11,7 +11,7 @@
     "metadata": {
       "text": [
         { "field": "id", "type": "cardinal" },
-        { "field": "office_at", "type": "text" }
+        { "field": "office_at", "type": "text", "default": "APP.PLACEHOLDER.UnknownOffice" }
       ],
       "label": []
     },

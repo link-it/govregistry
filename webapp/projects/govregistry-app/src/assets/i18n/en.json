@@ -75,8 +75,9 @@
 			"Description": "Description",
 			"DueDate": "Due date",
 			"Email": "Email",
+			"Enabled": "Enabled",
 			"FileName": "Filename",
-			"FullName": "Fullname",
+			"FullName": "Full name",
 			"Id": "ID",
 			"Index": "Index",
 			"LastUpdateDate": "Last update",
@@ -121,7 +122,7 @@
 			"Dashboard": "Dashboard",
 			"DeleteOrganization": "Delete organization …",
 			"DeleteService": "Delete service …",
-			"DeleteUser": "Delete user …",
+			"DeleteUser": "Delete user…",
 			"DownloadReport": "Download report",
 			"ExportCSV": "Export CSV",
 			"ExportPDF": "Export PDF",
@@ -215,7 +216,8 @@
 			"DebtorTaxcode": "e.g.: RSSMRA70A41F205Z",
 			"NoticeNumber": "Notice number",
 			"Search": "Search...",
-			"Taxonomy": "Taxonomy"
+			"Taxonomy": "Taxonomy",
+			"UnknownOffice": "Unknown office"
 		},
 		"SEARCH": {
 			"ClearRecentSearches": "Clear recent searches",
