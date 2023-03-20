@@ -59,7 +59,9 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
 
   sortField: string = 'service_name';
   sortDirection: string = 'asc';
-  sortFields: any[] = [];
+  sortFields: any[] = [
+    { field: 'service_name', label: 'APP.LABEL.ServiceName', icon: '' }
+  ];
 
   searchFields: any[] = [];
 
@@ -153,7 +155,10 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
     if (!url) { this.services = []; }
 
     let aux: any;
-    if (query)  aux = { params: this._queryToHttpParams(query) };
+    const sort: any = { sort: this.sortField, sort_direction: this.sortDirection}
+    query = { ...query, ...sort };
+    aux = { params: this._queryToHttpParams(query) };
+
 
     this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
@@ -258,7 +263,9 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
   }
 
   _onSort(event: any) {
-    console.log(event);
+    this.sortField = event.sortField;
+    this.sortDirection = event.sortBy;
+    this._loadServices(this._filterData);
   }
 
   onBreadcrumb(event: any) {
