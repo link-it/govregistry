@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.govhub.govregistry.commons.api.beans.Organization;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
@@ -28,6 +29,7 @@ import it.govhub.security.services.SecurityService;
  *		che dice per quel servizio quali sono i ruoli che consentono la lettura delle organizzazioni. 
  *
  */
+@RequestMapping("/v1")
 public abstract class ReadOrganizationController implements OrganizationApi {
 	
 	@Autowired
