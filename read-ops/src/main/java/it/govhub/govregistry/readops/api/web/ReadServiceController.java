@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -36,6 +37,7 @@ import it.govhub.govregistry.readops.api.spec.ServiceApi;
 import it.govhub.security.services.SecurityService;
 
 
+@RequestMapping("/v1")
 public abstract class ReadServiceController implements ServiceApi {
 	
 	@Autowired
