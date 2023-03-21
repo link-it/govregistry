@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +38,6 @@ import it.govhub.govregistry.commons.api.beans.OrganizationOrdering;
 import it.govhub.govregistry.commons.api.beans.PatchOp;
 import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
-import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.InternalException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
