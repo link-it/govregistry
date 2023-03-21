@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import it.govhub.govregistry.commons.api.beans.OrganizationItem;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
-import it.govhub.govregistry.readops.api.spec.OrganizationApi;
 import it.govhub.govregistry.readops.api.web.ReadOrganizationController;
 
 
@@ -37,17 +36,21 @@ public class OrganizationItemAssembler extends RepresentationModelAssemblerSuppo
 				.readOrganization(src.getId()))
 			.withSelfRel()
 		) ;
+
+		if (src.getLogo() != null) {
+			ret.add(linkTo(
+					methodOn(ReadOrganizationController.class)
+					.downloadOrganizationLogo(src.getId()))
+					.withRel("logo"));
+		}
 		
-		ret.add(linkTo(
-				methodOn(ReadOrganizationController.class)
-				.downloadOrganizationLogo(src.getId()))
-				.withRel("logo"));
-		
-		ret.add(linkTo(
-				methodOn(ReadOrganizationController.class)
-				.downloadOrganizationLogoMiniature(src.getId()))
-			.withRel("logo_small")
-		) ;
+		if (src.getLogoMiniature() != null) {
+			ret.add(linkTo(
+					methodOn(ReadOrganizationController.class)
+					.downloadOrganizationLogoMiniature(src.getId()))
+				.withRel("logo-miniature")
+			) ;
+		}
 		
 		return ret;
 	}
