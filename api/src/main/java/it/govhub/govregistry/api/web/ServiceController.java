@@ -1,17 +1,15 @@
 package it.govhub.govregistry.api.web;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -32,6 +30,8 @@ import it.govhub.govregistry.api.spec.ServiceApi;
 import it.govhub.govregistry.commons.api.beans.PatchOp;
 import it.govhub.govregistry.commons.api.beans.Service;
 import it.govhub.govregistry.commons.api.beans.ServiceCreate;
+import it.govhub.govregistry.commons.api.beans.ServiceList;
+import it.govhub.govregistry.commons.api.beans.ServiceOrdering;
 import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
@@ -47,7 +47,7 @@ import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 @V1RestController
-public class ServiceController extends ReadServiceController implements ServiceApi {
+public class ServiceController implements ServiceApi {
 	
 	@Autowired
 	ServiceService serviceService;
@@ -70,21 +70,11 @@ public class ServiceController extends ReadServiceController implements ServiceA
 	@Autowired
 	ServiceMessages serviceMessages;
 	
+	@Autowired
+	ReadServiceController readServiceController;
+	
 	Logger log = LoggerFactory.getLogger(ServiceController.class);
-	
 
-	private static Set<String> readServiceRoles = Set.of(
-			GovregistryRoles.GOVREGISTRY_SYSADMIN ,
-			GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR,
-			GovregistryRoles.GOVREGISTRY_SERVICES_VIEWER);
-			
-	
-	@Override
-	protected Set<String> getReadServiceRoles() {
-		return new HashSet<>(readServiceRoles);
-	}
-	
-	
 	@Override
 	public ResponseEntity<Service> createService(ServiceCreate serviceCreate) {
 		PostgreSQLUtilities.throwIfContainsNullByte(serviceCreate.getServiceName(), "service_name");
@@ -232,6 +222,30 @@ public class ServiceController extends ReadServiceController implements ServiceA
 		this.serviceRepo.save(service);
 
 		return ResponseEntity.ok().build();
+	}
+
+
+	@Override
+	public ResponseEntity<Resource> downloadServiceLogo(Long id) {
+		return this.readServiceController.downloadServiceLogo(id);
+	}
+
+
+	@Override
+	public ResponseEntity<Resource> downloadServiceLogoMiniature(Long id) {
+		return this.readServiceController.downloadServiceLogoMiniature(id);
+	}
+
+
+	@Override
+	public ResponseEntity<ServiceList> listServices(ServiceOrdering sort, Direction sortDirection, Integer limit,	Long offset, String q, List<String> withRoles) {
+		return this.readServiceController.listServices(sort, sortDirection, limit, offset, q, withRoles);
+	}
+
+
+	@Override
+	public ResponseEntity<Service> readService(Long id) {
+		return this.readServiceController.readService(id);
 	}
 
 }

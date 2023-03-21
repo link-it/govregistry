@@ -7,13 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import it.govhub.govregistry.commons.api.beans.User;
 import it.govhub.govregistry.commons.api.beans.UserList;
 import it.govhub.govregistry.commons.api.beans.UserOrdering;
-import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.UserMessages;
@@ -27,7 +28,8 @@ import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 
-@V1RestController
+@Component
+@RequestMapping("/v1")
 public class ReadUserController implements UserApi{
 	
 	@Autowired
