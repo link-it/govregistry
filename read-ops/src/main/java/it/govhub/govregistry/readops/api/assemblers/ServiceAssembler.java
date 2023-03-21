@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import it.govhub.govregistry.commons.api.beans.Service;
 import it.govhub.govregistry.commons.api.beans.ServiceCreate;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
-import it.govhub.govregistry.readops.api.spec.ServiceApi;
+import it.govhub.govregistry.readops.api.web.ReadServiceController;
 
 @Component
 public class ServiceAssembler extends RepresentationModelAssemblerSupport<ServiceEntity, Service> {
@@ -20,7 +20,7 @@ public class ServiceAssembler extends RepresentationModelAssemblerSupport<Servic
 	Logger log = LoggerFactory.getLogger(ServiceAssembler.class);
 
 	public ServiceAssembler() {
-		super(ServiceApi.class, Service.class);
+		super(ReadServiceController.class, Service.class);
 	}
 
 	@Override
@@ -32,14 +32,14 @@ public class ServiceAssembler extends RepresentationModelAssemblerSupport<Servic
 		ret.setServiceName(src.getName());
 		
 		ret.add(linkTo(
-				methodOn(ServiceApi.class)
+				methodOn(ReadServiceController.class)
 				.readService(src.getId()))
 			.withSelfRel()
 		);
 		
 		if (src.getLogo() != null) {
 			ret.add(linkTo(
-					methodOn(ServiceApi.class)
+					methodOn(ReadServiceController.class)
 					.downloadServiceLogo(src.getId()))
 				.withRel("logo")
 			);
@@ -47,9 +47,9 @@ public class ServiceAssembler extends RepresentationModelAssemblerSupport<Servic
 		
 		if (src.getLogoMiniature() != null) {
 			ret.add(linkTo(
-					methodOn(ServiceApi.class)
+					methodOn(ReadServiceController.class)
 					.downloadServiceLogoMiniature(src.getId()))
-				.withRel("logo-miniature")
+				.withRel("logo-miniiature")
 			);
 		}
 		

@@ -36,18 +36,20 @@ public class OrganizationAuthItemAssembler extends RepresentationModelAssemblerS
 			.withSelfRel()
 		) ;
 		
-		if(src.getLogo() != null)
+		if(src.getLogo() != null) {
 			ret.add(linkTo(
 					methodOn(ReadOrganizationController.class)
 					.downloadOrganizationLogo(src.getId()))
 					.withRel("logo"));
+		}
 	
-		if(src.getLogoMiniature() != null)
+		if(src.getLogoMiniature() != null) {
 			ret.add(linkTo(
 					methodOn(ReadOrganizationController.class)
 					.downloadOrganizationLogoMiniature(src.getId()))
-				.withRel("logo_small")
+				.withRel("logo-miniature")
 			) ;
+		}
 		
 		return ret;
 	}
