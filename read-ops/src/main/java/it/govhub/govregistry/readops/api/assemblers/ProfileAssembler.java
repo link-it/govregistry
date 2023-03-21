@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import it.govhub.govregistry.commons.api.beans.Authorization;
 import it.govhub.govregistry.commons.api.beans.Profile;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.readops.api.spec.ProfileApi;
+import it.govhub.govregistry.readops.api.web.ProfileController;
 
 @Component
 public class ProfileAssembler extends RepresentationModelAssemblerSupport<UserEntity, Profile> {
@@ -24,7 +24,7 @@ public class ProfileAssembler extends RepresentationModelAssemblerSupport<UserEn
 	Logger log = LoggerFactory.getLogger(ProfileAssembler.class);
 
 	public ProfileAssembler() {
-		super(ProfileApi.class, Profile.class);
+		super(ProfileController.class, Profile.class);
 	}
 
 	@Override

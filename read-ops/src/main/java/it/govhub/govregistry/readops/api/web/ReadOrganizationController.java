@@ -8,6 +8,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -84,7 +85,7 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentLength(logoBytes.length);
-		//headers.setContentType(MediaType.valueOf(org.getLogoMediaType()));
+		headers.setContentType(MediaType.valueOf(org.getLogoMediaType()));
 		
 		ResponseEntity<Resource> ret =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
 		return ret;
@@ -112,6 +113,8 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentLength(ret.length);
+		headers.setContentType(MediaType.valueOf(org.getLogoMiniatureMediaType()));
+
 		
 		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
 		return ret2;

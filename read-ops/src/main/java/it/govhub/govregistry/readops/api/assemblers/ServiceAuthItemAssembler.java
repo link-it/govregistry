@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import it.govhub.govregistry.commons.api.beans.ServiceAuthItem;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
-import it.govhub.govregistry.readops.api.spec.ServiceApi;
+import it.govhub.govregistry.readops.api.web.ReadServiceController;
 
 @Component
 public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSupport<ServiceEntity, ServiceAuthItem>{
@@ -19,7 +19,7 @@ public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSuppor
 	Logger log = LoggerFactory.getLogger(ServiceAuthItemAssembler.class);
 
 	public ServiceAuthItemAssembler() {
-		super(ServiceApi.class, ServiceAuthItem.class);
+		super(ReadServiceController.class, ServiceAuthItem.class);
 	}
 
 	
@@ -32,26 +32,27 @@ public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSuppor
 		ret.setServiceName(src.getName());
 		
 		ret.add(linkTo(
-				methodOn(ServiceApi.class)
+				methodOn(ReadServiceController.class)
 				.readService(src.getId()))
 			.withSelfRel()
 		) ;
 		
-		if (src.getLogo() != null) 
+		if (src.getLogo() != null) {
 			ret.add(linkTo(
-					methodOn(ServiceApi.class)
+					methodOn(ReadServiceController.class)
 					.downloadServiceLogo(src.getId()))
 					.withRel("logo"));
+		}
 		
-		if (src.getLogoMiniature() != null) 
+		if (src.getLogoMiniature() != null) { 
 			ret.add(linkTo(
-					methodOn(ServiceApi.class)
+					methodOn(ReadServiceController.class)
 					.downloadServiceLogoMiniature(src.getId()))
-				.withRel("logo_small")
+				.withRel("logo-miniature")
 			) ;
+		}
 		
 		return ret; 
-	}
-	
+	}	
 
 }
