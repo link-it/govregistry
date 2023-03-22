@@ -36,7 +36,6 @@ import it.govhub.govregistry.readops.api.assemblers.OrganizationAssembler;
 import it.govhub.govregistry.readops.api.assemblers.OrganizationItemAssembler;
 import it.govhub.govregistry.readops.api.repository.OrganizationFilters;
 import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
-import it.govhub.govregistry.readops.api.spec.OrganizationApi;
 import it.govhub.security.services.SecurityService;
 
 
@@ -49,7 +48,7 @@ import it.govhub.security.services.SecurityService;
  */
 @RequestMapping("/v1")
 @Component
-public abstract class ReadOrganizationController implements OrganizationApi {
+public class ReadOrganizationController {
 	
 	@Autowired
 	OrganizationAssembler orgAssembler;
@@ -69,7 +68,6 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 	@Autowired
 	ApplicationConfig applicationConfig;
 	
-	@Override
 	public ResponseEntity<Organization> readOrganization(Long id) {
 		
 		Set<Long> orgIds = this.authService.listAuthorizedOrganizations(this.applicationConfig.getReadOrganizationRoles());
@@ -85,7 +83,6 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 		return ResponseEntity.ok(ret);
 	}
 
-	@Override
     public ResponseEntity<OrganizationList> listOrganizations(
             OrganizationOrdering sort,
             Direction sortDirection,
@@ -138,7 +135,6 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 	}
 
 
-	@Override
 	public ResponseEntity<Resource> downloadOrganizationLogo(Long id) {
 		
 		Set<Long> orgIds = this.authService.listAuthorizedOrganizations(this.applicationConfig.getReadOrganizationRoles());
@@ -166,7 +162,6 @@ public abstract class ReadOrganizationController implements OrganizationApi {
 	}
 
 
-	@Override
 	public ResponseEntity<Resource> downloadOrganizationLogoMiniature(Long id) {
 		
 		Set<Long> orgIds = this.authService.listAuthorizedOrganizations(this.applicationConfig.getReadOrganizationRoles());

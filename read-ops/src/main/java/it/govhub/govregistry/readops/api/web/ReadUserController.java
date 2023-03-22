@@ -23,14 +23,13 @@ import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.UserAssembler;
 import it.govhub.govregistry.readops.api.repository.ReadUserRepository;
 import it.govhub.govregistry.readops.api.repository.UserFilters;
-import it.govhub.govregistry.readops.api.spec.UserApi;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 
 @Component
 @RequestMapping("/v1")
-public class ReadUserController implements UserApi{
+public class ReadUserController {
 	
 	@Autowired
 	ReadUserRepository userRepo;
@@ -44,7 +43,6 @@ public class ReadUserController implements UserApi{
 	@Autowired
 	UserMessages userMessages;
 	
-	@Override
 	public ResponseEntity<UserList> listUsers(UserOrdering orderBy, Direction sortDirection, Integer limit, Long offset, String q, Boolean enabled) {
 		
 		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR, GovregistryRoles.GOVREGISTRY_USERS_VIEWER);
@@ -75,7 +73,6 @@ public class ReadUserController implements UserApi{
 
 	
 	
-	@Override
 	public ResponseEntity<User> readUser(Long id) {
 		
 		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR, GovregistryRoles.GOVREGISTRY_USERS_VIEWER);

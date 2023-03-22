@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -37,13 +36,23 @@ import it.govhub.govregistry.readops.api.assemblers.ServiceAssembler;
 import it.govhub.govregistry.readops.api.assemblers.ServiceAuthItemAssembler;
 import it.govhub.govregistry.readops.api.repository.ReadServiceRepository;
 import it.govhub.govregistry.readops.api.repository.ServiceFilters;
-import it.govhub.govregistry.readops.api.spec.ServiceApi;
 import it.govhub.security.services.SecurityService;
 
 
-@RequestMapping("/v1")
+/**
+ * 
+ * Tutte le applicazioni di Govhub hanno una stessa parte in comune per la lettura di utenti, organizzazioni e servizi.
+ * 
+ * Questa classe contiene il codice condiviso per l'accesso in lettura alle service entitities.
+ * 
+ * La specifica dei metodi è dentro govregistry-api-readops.yaml. Questa specifica è riportata dentro gli altri yaml, che per adesso sono
+ * govregisty-api-backoffice.yaml e govio-api-backoffice.yaml.
+ * 
+ *
+ */
 @Component
-public abstract class ReadServiceController implements ServiceApi {
+@RequestMapping("/v1")
+public class ReadServiceController {
 	
 	@Autowired
 	ServiceAssembler serviceAssembler;
@@ -63,7 +72,6 @@ public abstract class ReadServiceController implements ServiceApi {
 	@Autowired
 	ApplicationConfig applicationConfig;
 	
-	@Override
 	public ResponseEntity<ServiceList> listServices(ServiceOrdering sort, Direction sortDirection, Integer limit, Long offset, String q, List<String> withRoles) {
 		
 		Set<String> roles = new HashSet<>(this.applicationConfig.getReadServiceRoles());
@@ -106,7 +114,6 @@ public abstract class ReadServiceController implements ServiceApi {
 	}
 	
 	
-	@Override
 	public ResponseEntity<Service> readService(Long id) {
 		
 		Set<Long> serviceIds = this.authService.listAuthorizedServices(this.applicationConfig.getReadServiceRoles());
@@ -121,7 +128,6 @@ public abstract class ReadServiceController implements ServiceApi {
 	}
 
 
-	@Override
 	public ResponseEntity<Resource> downloadServiceLogo(Long id) {
 		
 		Set<Long> serviceIds = this.authService.listAuthorizedServices(this.applicationConfig.getReadServiceRoles());
@@ -148,7 +154,6 @@ public abstract class ReadServiceController implements ServiceApi {
 	}
 
 
-	@Override 
 	public ResponseEntity<Resource> downloadServiceLogoMiniature(Long id) {
 		
 		Set<Long> serviceIds = this.authService.listAuthorizedServices(this.applicationConfig.getReadServiceRoles());
