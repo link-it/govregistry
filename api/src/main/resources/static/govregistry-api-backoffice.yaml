@@ -969,7 +969,41 @@ paths:
         '503':
           $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
         default:
-          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                  
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
+          
+  /roles:
+     get:
+        parameters:
+            - $ref: "govhub-api-commons.yaml#/components/parameters/limit"
+            - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
+            - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
+            - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
+        tags:
+           - authorization
+        summary: Get the Role list.
+        description: >
+           Each application defines a set of roles used in the authorization process. Each role
+           optionally defines a set of roles that can be assigned by a user having the former role.
+        operationId: listRoles
+        responses:
+           '200':
+              description: Successful operation.
+              content:
+                 application/json:
+                    schema:
+                       $ref: 'govhub-api-commons.yaml#/components/schemas/RoleList'
+           '400':
+             $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+           '401':
+             $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+           '403':
+             $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+           '429':
+             $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+           '503':
+             $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+           default:
+             $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                                         
           
   /status:
     get:
