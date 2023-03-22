@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import it.govhub.govregistry.commons.api.beans.AssignableRole;
 import it.govhub.govregistry.commons.api.beans.Authorization;
 import it.govhub.govregistry.commons.api.beans.OrganizationAuthItem;
 import it.govhub.govregistry.commons.api.beans.Role;
@@ -60,7 +61,12 @@ public class AuthorizationConverter {
 		ret.setRoleName(role.getName());
 		ret.setAssignableRoles(
 				role.getAssignableRoles().stream()
-					.map(RoleEntity::getName)
+					.map( rr -> {
+						AssignableRole rr1 = new AssignableRole();
+						rr1.setId(rr.getId());
+						rr1.setRoleName(rr.getName());
+						return rr1;
+					})
 					.collect(Collectors.toList())
 				);
 		return ret;
