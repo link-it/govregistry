@@ -1,5 +1,7 @@
 package it.govhub.govregistry.commons.config;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,4 +14,7 @@ public interface ApplicationConfig {
 
 	public String getApplicationId();
 	
+	public Set<String> getReadServiceRoles();
+	
+	public Set<String> getReadOrganizationRoles();
 }

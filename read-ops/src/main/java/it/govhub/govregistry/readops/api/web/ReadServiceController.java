@@ -1,6 +1,7 @@
 package it.govhub.govregistry.readops.api.web;
 
 import java.io.ByteArrayInputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -23,6 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import it.govhub.govregistry.commons.api.beans.Service;
 import it.govhub.govregistry.commons.api.beans.ServiceList;
 import it.govhub.govregistry.commons.api.beans.ServiceOrdering;
+import it.govhub.govregistry.commons.config.ApplicationConfig;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
@@ -33,12 +36,23 @@ import it.govhub.govregistry.readops.api.assemblers.ServiceAssembler;
 import it.govhub.govregistry.readops.api.assemblers.ServiceAuthItemAssembler;
 import it.govhub.govregistry.readops.api.repository.ReadServiceRepository;
 import it.govhub.govregistry.readops.api.repository.ServiceFilters;
-import it.govhub.govregistry.readops.api.spec.ServiceApi;
 import it.govhub.security.services.SecurityService;
 
 
+/**
+ * 
+ * Tutte le applicazioni di Govhub hanno una stessa parte in comune per la lettura di utenti, organizzazioni e servizi.
+ * 
+ * Questa classe contiene il codice condiviso per l'accesso in lettura alle service entitities.
+ * 
+ * La specifica dei metodi è dentro govregistry-api-readops.yaml. Questa specifica è riportata dentro gli altri yaml, che per adesso sono
+ * govregisty-api-backoffice.yaml e govio-api-backoffice.yaml.
+ * 
+ *
+ */
+@Component
 @RequestMapping("/v1")
-public abstract class ReadServiceController implements ServiceApi {
+public class ReadServiceController {
 	
 	@Autowired
 	ServiceAssembler serviceAssembler;
@@ -55,12 +69,13 @@ public abstract class ReadServiceController implements ServiceApi {
 	@Autowired
 	ServiceMessages serviceMessages;
 	
-	protected abstract Set<String> getReadServiceRoles();	
-
-	@Override
+	@Autowired
+	ApplicationConfig applicationConfig;
+	
 	public ResponseEntity<ServiceList> listServices(ServiceOrdering sort, Direction sortDirection, Integer limit, Long offset, String q, List<String> withRoles) {
 		
-		Set<String> roles = getReadServiceRoles();
+		Set<String> roles = new HashSet<>(this.applicationConfig.getReadServiceRoles());
+		
 		if (withRoles != null) {
 			roles.retainAll(withRoles);
 		}
@@ -99,10 +114,9 @@ public abstract class ReadServiceController implements ServiceApi {
 	}
 	
 	
-	@Override
 	public ResponseEntity<Service> readService(Long id) {
 		
-		Set<Long> serviceIds = this.authService.listAuthorizedServices(getReadServiceRoles());
+		Set<Long> serviceIds = this.authService.listAuthorizedServices(this.applicationConfig.getReadServiceRoles());
 		if (serviceIds != null && !serviceIds.contains(id)) {
 			throw new NotAuthorizedException();
 		}
@@ -114,10 +128,9 @@ public abstract class ReadServiceController implements ServiceApi {
 	}
 
 
-	@Override
 	public ResponseEntity<Resource> downloadServiceLogo(Long id) {
 		
-		Set<Long> serviceIds = this.authService.listAuthorizedServices(getReadServiceRoles());
+		Set<Long> serviceIds = this.authService.listAuthorizedServices(this.applicationConfig.getReadServiceRoles());
 		if (serviceIds != null && !serviceIds.contains(id)) {
 			throw new NotAuthorizedException();
 		}
@@ -141,10 +154,9 @@ public abstract class ReadServiceController implements ServiceApi {
 	}
 
 
-	@Override 
 	public ResponseEntity<Resource> downloadServiceLogoMiniature(Long id) {
 		
-		Set<Long> serviceIds = this.authService.listAuthorizedServices(getReadServiceRoles());
+		Set<Long> serviceIds = this.authService.listAuthorizedServices(this.applicationConfig.getReadServiceRoles());
 		if (serviceIds != null && !serviceIds.contains(id)) {
 			throw new NotAuthorizedException();
 		}
