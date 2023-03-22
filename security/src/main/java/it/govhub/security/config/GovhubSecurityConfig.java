@@ -91,12 +91,14 @@ public class GovhubSecurityConfig{
 	private HttpSecurity applyAuthRules(HttpSecurity http) throws Exception {
 		
 		http
-		.authorizeRequests()
-		// richieste GET Schema open-api accessibile a tutti
-		.antMatchers(HttpMethod.GET, servletPath+"/swagger-ui/**").permitAll() 
-		.antMatchers(HttpMethod.GET, servletPath+"/v3/api-docs/**").permitAll()
-		.anyRequest().authenticated()
-		;
+			.authorizeRequests()
+			// richieste GET Schema open-api accessibile a tutti
+			.antMatchers(HttpMethod.GET, servletPath+"/swagger-ui/**").permitAll() 
+			.antMatchers(HttpMethod.GET, servletPath+"/v3/api-docs/**").permitAll()
+			.antMatchers(HttpMethod.GET, servletPath+"/govregistry-api-backoffice.yaml").permitAll()
+			.antMatchers(HttpMethod.GET, servletPath+"/govhub-api-commons.yaml").permitAll()
+			.anyRequest().authenticated();
+		
 		return http;
 	}
 	

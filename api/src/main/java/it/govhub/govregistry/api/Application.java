@@ -1,5 +1,7 @@
 package it.govhub.govregistry.api;
 
+import org.springdoc.core.SpringDocConfigProperties;
+import org.springdoc.core.SpringDocConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -89,4 +91,18 @@ public class Application  extends SpringBootServletInitializer {
 	}
 	
 	
+	/**
+	 * Configurazione minimale per SpringDoc in modo che carichi gli asset sotto 
+	 * src/main/resources/static
+	 * 
+	 */
+	@Bean
+	SpringDocConfiguration springDocConfiguration(){
+	   return new SpringDocConfiguration();
+	}
+	@Bean
+	SpringDocConfigProperties springDocConfigProperties() {
+	   return new SpringDocConfigProperties();
+	}
+
 }
