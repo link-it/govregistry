@@ -2,8 +2,10 @@ package it.govhub.govregistry.commons.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,12 +44,14 @@ public class ServiceEntity implements Serializable {
 	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
 	
+	@Basic(fetch=FetchType.LAZY)
 	@Lob
 	private byte[] logoMiniature;
 	
 	@Column(name = "logoMiniatureMediaType")
 	private String logoMiniatureMediaType;
 	
+	@Basic(fetch=FetchType.LAZY)
 	@Lob
 	private byte[] logo;
 	
