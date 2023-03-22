@@ -1,4 +1,4 @@
-package it.govhub.govregistry.config;
+package it.govhub.govregistry.api.config;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,10 +15,10 @@ public class GovRegistryConfig implements ApplicationConfig {
 	@Value("${application-id:govregistry")
 	String applicationId;
 
-	@Value("#{systemProperties['govhub.auth.read-service-roles'] ?: T(it.govhub.govregistry.config.GovRegistryConfig).DEFAULT_READ_SERVICE_ROLES}")
+	@Value("#{systemProperties['govhub.auth.read-service-roles'] ?: T(it.govhub.govregistry.api.config.GovRegistryConfig).DEFAULT_READ_SERVICE_ROLES}")
 	Set<String> readServiceRoles;
 	
-	@Value("#{systemProperties['govhub.auth.read-organization-roles'] ?: T(it.govhub.govregistry.config.GovRegistryConfig).DEFAULT_READ_ORGANIZATION_ROLES}")
+	@Value("#{systemProperties['govhub.auth.read-organization-roles'] ?: T(it.govhub.govregistry.api.config.GovRegistryConfig).DEFAULT_READ_ORGANIZATION_ROLES}")
 	Set<String> readOrganizationRoles;
 	
 	public static Set<String> DEFAULT_READ_SERVICE_ROLES = Set.of(
