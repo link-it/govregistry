@@ -195,6 +195,7 @@
 							<generateApiTests>false</generateApiTests>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<generateModelTests>false</generateModelTests>
+							<generateApis>false</generateApis>
 						</configuration>
 					</execution>
 				</executions>

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import it.govhub.govregistry.commons.api.beans.Organization;
 import it.govhub.govregistry.commons.api.beans.OrganizationCreate;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
-import it.govhub.govregistry.readops.api.web.ReadOrganizationController;
+import it.govhub.govregistry.readops.api.spec.OrganizationApi;
 
 @Component
 public class OrganizationAssembler extends RepresentationModelAssemblerSupport<OrganizationEntity, Organization> {
@@ -20,7 +20,7 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 	Logger log = LoggerFactory.getLogger(OrganizationAssembler.class);
 
 	public OrganizationAssembler() {
-		super(ReadOrganizationController.class, Organization.class);
+		super(OrganizationApi.class, Organization.class);
 	}
 	
 
@@ -32,21 +32,21 @@ public class OrganizationAssembler extends RepresentationModelAssemblerSupport<O
 		BeanUtils.copyProperties(src, ret);
 		
 		ret.add(linkTo(
-				methodOn(ReadOrganizationController.class)
+				methodOn(OrganizationApi.class)
 				.readOrganization(src.getId()))
 			.withSelfRel()
 		);
 		
 		if(src.getLogo() != null) {
 			ret.add(linkTo(
-					methodOn(ReadOrganizationController.class)
+					methodOn(OrganizationApi.class)
 					.downloadOrganizationLogo(src.getId()))
 				.withRel("logo"));
 		}
 		
 		if (src.getLogoMiniature() != null) {
 			ret.add(linkTo(
-						methodOn(ReadOrganizationController.class)
+						methodOn(OrganizationApi.class)
 						.downloadOrganizationLogoMiniature(src.getId()))
 				.withRel("logo-miniature"));
 		}
