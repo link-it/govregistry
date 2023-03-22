@@ -46,7 +46,6 @@ import it.govhub.security.services.SecurityService;
  *		che dice per quel servizio quali sono i ruoli che consentono la lettura delle organizzazioni. 
  *
  */
-@RequestMapping("/v1")
 @Component
 public class ReadOrganizationController {
 	

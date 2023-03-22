@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import it.govhub.govregistry.commons.api.beans.OrganizationItem;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
-import it.govhub.govregistry.readops.api.web.ReadOrganizationController;
+import it.govhub.govregistry.readops.api.spec.OrganizationApi;
 
 
 
@@ -21,7 +21,7 @@ public class OrganizationItemAssembler extends RepresentationModelAssemblerSuppo
 	Logger log = LoggerFactory.getLogger(OrganizationItemAssembler.class);
 	
 	public OrganizationItemAssembler() {
-		super(ReadOrganizationController.class, OrganizationItem.class);
+		super(OrganizationApi.class, OrganizationItem.class);
 	}
 	
 	@Override
@@ -32,21 +32,21 @@ public class OrganizationItemAssembler extends RepresentationModelAssemblerSuppo
 		BeanUtils.copyProperties(src, ret);
 		
 		ret.add(linkTo(
-				methodOn(ReadOrganizationController.class)
+				methodOn(OrganizationApi.class)
 				.readOrganization(src.getId()))
 			.withSelfRel()
 		) ;
 
 		if (src.getLogo() != null) {
 			ret.add(linkTo(
-					methodOn(ReadOrganizationController.class)
+					methodOn(OrganizationApi.class)
 					.downloadOrganizationLogo(src.getId()))
 					.withRel("logo"));
 		}
 		
 		if (src.getLogoMiniature() != null) {
 			ret.add(linkTo(
-					methodOn(ReadOrganizationController.class)
+					methodOn(OrganizationApi.class)
 					.downloadOrganizationLogoMiniature(src.getId()))
 				.withRel("logo-miniature")
 			) ;

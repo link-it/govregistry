@@ -28,7 +28,6 @@ import it.govhub.security.services.SecurityService;
 
 
 @Component
-@RequestMapping("/v1")
 public class ReadUserController {
 	
 	@Autowired
