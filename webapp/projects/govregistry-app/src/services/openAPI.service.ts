@@ -79,6 +79,13 @@ export class OpenAPIService {
     return this.http.delete<any>(_url, options);
   }
 
+  deleteElementImage(name: string, id: any, type: string, options?: IRequestOptions) {
+    if(!options) options = {};
+    
+    const _url = `${this.proxyPath}${name}/${id}/${type}`;
+    return this.http.delete<any>(_url, options);
+  }
+
   getImageUrl(imageUrl: string) {
     let url = `${this.proxyPath}${name}`;
 

@@ -240,24 +240,6 @@
                 <span *ngIf="_isEditLogos"><i class="bi bi-x-lg"></i><span class="d-none">{{ 'APP.BUTTON.Cancel' | translate }}</span></span>
               </button>  
             </div>
-          <!-- <div class="row" *ngIf="!_isNew && _isEdit">
-              <div class="col-6">
-                <div class="form-group file">
-                  <label class="label-bold" for="logo">{{ 'APP.LABEL.Logo' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'file'" *ngIf="_isEdit"></span></label>
-                  <div class="" *ngIf="_isEdit">
-                    <input type="file" class="form-control form-control-sm" formControlName="file" (change)="_onFileLoaded($event, 'logo')" [class.gl-field-error-outline]="_hasControlError('file')">
-                  </div>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="form-group file">
-                  <label class="label-bold" for="logo">{{ 'APP.LABEL.LogoMiniature' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'file'" *ngIf="_isEdit"></span></label>
-                  <div class="" *ngIf="_isEdit">
-                    <input type="file" class="form-control form-control-sm" formControlName="file" (change)="_onFileLoaded($event, 'logo')" [class.gl-field-error-outline]="_hasControlError('file')">
-                  </div>
-                </div>
-              </div>
-            </div> -->
             <div class="row" *ngIf="!_isNew">
               <div class="col-6">
                 <div class="form-group logo">
