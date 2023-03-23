@@ -377,15 +377,26 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
   }
 
   _onImageLoaded(event: any, type: string) {
-    this.apiService.uploadImage(this.model, this.service.id, type, event).subscribe(
-      (response) => {
-        this._loadService(false);
-      },
-      (error: any) => {
-        console.log('error', error);
-      }
-    );
-  }
+    if (event) {
+      this.apiService.uploadImage(this.model, this.service.id, type, event).subscribe(
+        (response) => {
+          this._loadService(false);
+        },
+        (error: any) => {
+          console.log('error', error);
+        }
+      );
+    } else {
+      this.apiService.deleteElementImage(this.model, this.service.id, type).subscribe(
+        (response) => {
+          this._loadService(false);
+        },
+        (error: any) => {
+          console.log('error', error);
+        }
+      );
+    }
+}
 
 
   _getLogo(item: any, type: string, bg: boolean = false) {

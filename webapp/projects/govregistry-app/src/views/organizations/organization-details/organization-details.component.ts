@@ -382,14 +382,25 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
   }
 
   _onImageLoaded(event: any, type: string) {
-    this.apiService.uploadImage(this.model, this.organization.id, type, event).subscribe(
-      (response) => {
-        this._loadOrganization(false);
-      },
-      (error: any) => {
-        console.log('error', error);
-      }
-    );
+    if (event) {
+      this.apiService.uploadImage(this.model, this.organization.id, type, event).subscribe(
+        (response) => {
+          this._loadOrganization(false);
+        },
+        (error: any) => {
+          console.log('error', error);
+        }
+      );
+    } else {
+      this.apiService.deleteElementImage(this.model, this.organization.id, type).subscribe(
+        (response) => {
+          this._loadOrganization(false);
+        },
+        (error: any) => {
+          console.log('error', error);
+        }
+      );
+    }
   }
 
   _onFileLoaded(event: any, type: string) {
