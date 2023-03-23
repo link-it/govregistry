@@ -85,16 +85,6 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      // Changed
-    });
-
-    this.pageloaderService.resetLoader();
-    this.pageloaderService.isLoading.subscribe({
-      next: (x) => { this._spin = x; },
-      error: (e: any) => { console.log('loader error', e); }
-    });
-
     this.route.params.subscribe(params => {
       if (params['id'] && params['id'] !== 'new') {
         this.id = params['id'];
@@ -120,7 +110,6 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
           this._loadAll();
         }
       }
-
     });
   }
 
@@ -145,7 +134,7 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
 
   _loadAll() {
     this._loadUser();
-    this._loadAuthorization();
+    // this._loadAuthorization();
   }
 
   _hasControlError(name: string) {
@@ -277,18 +266,17 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
 
   _loadUser() {
     if (this.id) {
+      this._spin = true;
       this.user = null;
       this.apiService.getDetails(this.model, this.id).subscribe({
         next: (response: any) => {
           this.user = new User({ ...response });
           this._user = new User({ ...response });
-          this._title = this.user.creditorReferenceId;
-          if (this.config.detailsTitle) {
-            this._title = Tools.simpleItemFormatter(this.config.detailsTitle, this.user);
-          }
           // this.__initInformazioni();
+          this._spin = false;
         },
         error: (error: any) => {
+          this._spin = false;
           Tools.OnError(error);
         }
       });
