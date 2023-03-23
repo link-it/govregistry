@@ -393,7 +393,6 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
     if (item && item._links && item._links[type]) {
       logoUrl = item._links[type].href;
       logoUrl += '?t=' + moment().valueOf();
-      // logoUrl = this.apiService.getImageUrl(logoUrl);
     }
 
     return bg ? `url(${logoUrl})` : logoUrl;

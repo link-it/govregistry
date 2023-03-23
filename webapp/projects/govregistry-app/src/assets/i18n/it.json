@@ -1,6 +1,7 @@
 {
 	"APP": {
 		"BUTTON": {
+			"AddAuthorization": "Aggiungi autorizzazione",
 			"AddOrganization": "Aggiungi organizzazione",
 			"AddService": "Aggiungi servizio",
 			"AddUser": "Aggiungi utente",
@@ -76,6 +77,7 @@
 			"DueDate": "Scadenza",
 			"Email": "E-mail",
 			"Enabled": "Abilitato",
+			"ExpirationDate": "Data di scadenza",
 			"FileName": "Nome del file",
 			"FullName": "Nome e cognome",
 			"Id": "ID",
@@ -95,6 +97,7 @@
 			"Organization": "Nome ente",
 			"OrganizationLegalName": "Nome ente",
 			"OrganizationTaxCode": "Codice fiscale ente",
+			"Organizations": "Organizzazioni",
 			"Organizer": "Organizzatore",
 			"OutcomeCode": "Codice",
 			"OutcomeDate": "Data",
@@ -106,7 +109,9 @@
 			"ReceiptId": "Codice ricevuta",
 			"Reference": "Progressivo movimento",
 			"ReportingFlowId": "Id flusso rendicontazione",
+			"Role": "Ruolo",
 			"ServiceName": "Nome del servizio",
+			"Services": "Servizi",
 			"Status": "Stato",
 			"StatusCode": "Codice di stato",
 			"StatusDescription": "Descrizione dello stato",
@@ -167,12 +172,15 @@
 			"NoPaymentsResultsHelp": "Aggiungi un nuovo pagamento",
 			"NoResults": "Siamo spiacenti, il tuo filtro non ha prodotto risultati",
 			"NoResultsHelp": "Per ampliare la tua ricerca, cambia o rimuovi i filtri qui sopra",
+			"NotFoundItem": "Elemento non trovato",
+			"NotFoundText": "Testo non trovato",
 			"Organizations_Results": {
 				"none": "Nessun Ente Creditore trovato",
 				"plural": "Trovati {{count}} Enti Creditori",
 				"singular": "È presente un solo Ente Creditore"
 			},
 			"PageNumber": "Pagina {{page}} di {{total}}",
+			"PleaseEnterMin": "Inserisci {{lengthTerm}} o più caratteri",
 			"Sign_in_message": "Accedi con il tuo account",
 			"VALIDATION": {
 				"Email": "Inserisci una e-mail valida",
@@ -199,6 +207,7 @@
 				"Open": "Aperti"
 			},
 			"TITLE": {
+				"All": "Tutte",
 				"GeneralInformations": "Informazioni generali",
 				"GeneralInformations_sub": "",
 				"LogosInformations": "Loghi",
@@ -219,6 +228,24 @@
 			"Taxonomy": "Tassonomia",
 			"UnknownOffice": "Ufficio sconosciuto"
 		},
+		"ROLE": {
+			"govhub_organizations_editor": "GovHub organizations editor",
+			"govhub_organizations_viewer": "GovHub organizations viewer",
+			"govhub_role_assigner": "GovHub role assigner",
+			"govhub_services_editor": "GovHub services editor",
+			"govhub_services_viewer": "GovHub services viewer",
+			"govhub_sysadmin": "GovHub sysadmin",
+			"govhub_user": "GovHub user",
+			"govhub_users_editor": "GovHub users editor",
+			"govhub_users_viewer": "GovHub users viewer",
+			"govio_sender": "GovIO sender",
+			"govio_service_editor": "GovIO service editor",
+			"govio_service_instance_editor": "GovIO service instance editor",
+			"govio_service_instance_viewer": "GovIO service instance viewer",
+			"govio_service_viewer": "GovIO service viewer",
+			"govio_sysadmin": "GovIO sysadmin",
+			"govio_viewer": "GovIO viewer"
+		},
 		"SEARCH": {
 			"ClearRecentSearches": "Cancella le ricerche recenti",
 			"NoRecentSearches": "Non hai ricerche recenti",
@@ -233,6 +260,7 @@
 				"Open": "Aperti"
 			},
 			"TITLE": {
+				"All": "Tutti",
 				"GeneralInformations": "Informazioni generali",
 				"GeneralInformations_sub": "",
 				"LogosInformations": "Loghi",
@@ -312,6 +340,7 @@
 			"AddPayment": "Aggiungi pagamento",
 			"CancelEdit": "Annulla modifica",
 			"CancelNew": "Annulla inserimento",
+			"EditAuthorizations": "Modifica autorizzazioni",
 			"EditOrganization": "Modifica ente creditore",
 			"EditService": "Modifica servizio",
 			"EditUser": "Modifica utente",

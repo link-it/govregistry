@@ -1,0 +1,88 @@
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <span class="spinner-border spinner-border-sm text-primary me-3-" *ngIf="_spin"></span> 
+  <span class="" *ngIf="!_spin"><i class="bi-arrow-clockwise text-white" (click)="refresh()"></i></span> 
+  <div class="position-relative">
+    <div role="group" class="gl-w-full btn-group-" *ngIf="userAuthorizations?.length">
+      <button aria-label="Add authorization" type="button" class="btn btn-default btn-md gl-button btn-icon me-3" (click)="_onNew()" *ngIf="_editAuthorizations && !_isNew">
+        <span class="">{{ 'APP.BUTTON.AddAuthorization' | translate }}</span>
+      </button>
+      <button type="button" class="btn btn-default btn-md gl-button btn-icon" (click)="_onEditAuthorizations($event)" [tooltip]="(_editAuthorizations ? '' : 'APP.TOOLTIP.EditAuthorizations') | translate" placement="left">
+        <span *ngIf="!_editAuthorizations"><i class="bi-pencil"></i></span>
+        <span *ngIf="_editAuthorizations"><i class="bi-x-lg"></i><span class="ms-2">{{ 'APP.BUTTON.Cancel' | translate }}</span></span>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="AUTHORIZATIONS-LIST-FLEX py-2">
+  <div class="table-container fs-smaller" role="table">
+    <div class="flex-table header border-top border-bottom align-items-center" role="rowgroup">
+      <div class="flex-table-row first fw-bold" role="columnheader">
+        <span class="">{{ 'APP.LABEL.Role' | translate }}</span>
+      </div>
+      <div class="flex-table-row second fw-bold text-start text-truncate" role="columnheader">
+        <span class="">{{ 'APP.LABEL.Organizations' | translate }}</span>
+      </div>
+      <div class="flex-table-row thirth fw-bold text-start text-truncate" role="columnheader">
+        <span class="">{{ 'APP.LABEL.Services' | translate }}</span>
+      </div>
+      <div class="flex-table-row fourth fw-bold text-center" role="columnheader">
+        <span class="">{{ 'APP.LABEL.ExpirationDate' | translate }}</span>
+      </div>
+      <div class="flex-table-row fifth fw-bold text-end" role="columnheader">
+        <span class="">{{ '&nbsp;' | translate }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="table-container" [class.disabled]="_isNew" role="table">
+    <!-- <ng-container *ngFor="let auth of userAuthorizations">
+      <div class="flex-table align-items-center border-bottom" role="rowgroup">
+        <div class="flex-table-row first" role="columnheader">
+          <div class="text-break">
+            {{ auth.role.role_name }}
+          </div>
+        </div>
+        <div class="flex-table-row second text-center" role="columnheader">
+          <div class="">
+            <ng-container *ngIf="auth.organizations.length == 0">
+              <span class="badge badge-pill bg-info">{{ 'APP.ORGANIZATIONS.TITLE.All' | translate }}</span>
+            </ng-container>
+            <pre *ngIf="auth.organizations.length">{{ auth.organizations | json }}</pre>
+          </div>
+        </div>
+        <div class="flex-table-row thirth text-center" role="columnheader">
+          <div class="">
+            <ng-container *ngIf="auth.services.length == 0">
+              <span class="badge badge-pill bg-info">{{ 'APP.SERVICES.TITLE.All' | translate }}</span>
+            </ng-container>
+            <pre *ngIf="auth.services.length">{{ auth.services | json }}</pre>
+          </div>
+        </div>
+        <div class="flex-table-row fourth text-end" role="columnheader">
+          <button type="button" class="btn btn-default btn-md gl-button btn-icon" (click)="_onDelete(auth)" *ngIf="_editAuthorizations" [disabled]="_isNew">
+            <i class="bi bi-trash text-danger"></i>
+          </button>
+        </div>
+      </div>
+    </ng-container> -->
+    <ng-container *ngFor="let auth of userAuthorizations">
+      <app-authorization-item
+        [uid]="id"
+        [data]="auth"
+        [editable]="_editAuthorizations"
+        (delete)="_onDelete(auth)"
+        (save)="_onSave($event)">
+      </app-authorization-item>
+    </ng-container>
+  </div>
+</div>
+<div id="edit-container" class="table-container mt-3" *ngIf="_isNew">
+  <div class="border border-2 border-danger">
+    <app-authorization-item
+      [uid]="id"
+      [data]="null"
+      [editable]="_editAuthorizations"
+      (close)="_onClose($event)"
+      (save)="_onSave($event)">
+    </app-authorization-item>
+  </div>
+</div>
