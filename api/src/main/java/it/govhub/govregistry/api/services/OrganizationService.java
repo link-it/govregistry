@@ -51,7 +51,7 @@ public class OrganizationService {
 	public OrganizationEntity replaceOrganization(OrganizationEntity oldOrg, OrganizationEntity newOrg) {
 		log.info("Replacing Organization {} With {}", oldOrg, newOrg);
 
-		if (oldOrg.getId() != newOrg.getId()) {
+		if ( ! oldOrg.getId().equals(newOrg.getId())) {
 			throw new SemanticValidationException(this.orgMessages.fieldNotModificable("id"));
 		}
 		

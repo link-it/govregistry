@@ -1,7 +1,8 @@
 package it.govhub.govregistry.commons.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -26,7 +27,9 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "govhub_applications")
-public class ApplicationEntity {
+public class ApplicationEntity implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@SequenceGenerator(name = "seq_govhub_applications", sequenceName = "seq_govhub_applications", initialValue = 1, allocationSize = 1)
@@ -44,28 +47,26 @@ public class ApplicationEntity {
 	private String deployedUri;
 	
 	@Embedded
-	@AttributeOverrides({
-		 @AttributeOverride(
-		            name = "name",
-		            column = @Column( name = "logo_name" )
-		        ),
-		 @AttributeOverride(
-		            name = "url",
-		            column = @Column( name = "logo_url" )
-		        ),
-		 @AttributeOverride(
-		            name = "type",
-		            column = @Column( name = "logo_type" )
-		        ),
-		 @AttributeOverride(
-		            name = "color",
-		            column = @Column( name = "logo_color" )
-		        ),
-		 @AttributeOverride(
-		            name = "bgColor",
-		            column = @Column( name = "logo_bg_color" )
-		        )
-	})
+	 @AttributeOverride(
+	            name = "name",
+	            column = @Column( name = "logo_name" )
+	        )
+	 @AttributeOverride(
+	            name = "url",
+	            column = @Column( name = "logo_url" )
+	        )
+	 @AttributeOverride(
+	            name = "type",
+	            column = @Column( name = "logo_type" )
+	        )
+	 @AttributeOverride(
+	            name = "color",
+	            column = @Column( name = "logo_color" )
+	        )
+	 @AttributeOverride(
+	            name = "bgColor",
+	            column = @Column( name = "logo_bg_color" )
+	        )
 	private LogoEntity logo;
 	
 }
