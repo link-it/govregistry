@@ -13,6 +13,9 @@ public class SystemMessages {
 	public static String sessionExpired() {
 		return "This session has been expired (possibly due to multiple concurrent logins being attempted as the same user)";
 	}
+
 	
+	private SystemMessages() {
+	}
 
 }

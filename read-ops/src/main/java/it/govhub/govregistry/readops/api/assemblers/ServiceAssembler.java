@@ -59,12 +59,10 @@ public class ServiceAssembler extends RepresentationModelAssemblerSupport<Servic
 	public ServiceEntity toEntity(ServiceCreate src) {
 		log.debug("Converting Model [ServiceCreate] to entity...");
 		
-		var ret = ServiceEntity.builder()
+		return ServiceEntity.builder()
 			.name(src.getServiceName())
 			.description(src.getDescription())
 			.build();
-		
-		return ret;
 	}
 	
 
