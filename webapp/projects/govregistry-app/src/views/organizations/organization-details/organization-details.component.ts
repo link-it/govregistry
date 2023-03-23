@@ -193,6 +193,7 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
         this._isNew = false;
         this._spin = false;
         this.save.emit({ id: this.id, payment: response, update: false });
+        this.router.navigate([this.model, this.organization.id], { replaceUrl: true });
       },
       (error: any) => {
         this._spin = false;
