@@ -479,4 +479,51 @@ export class Tools {
     }
     return str;
   }
+
+  /**
+   * Sort by properties
+   * @param {string[]} properties
+   * @param {boolean} asc
+   * @param {boolean} isDate
+   * @returns {any[]}
+   */
+  static SortBy(properties: string[], asc: boolean = true, isDate: boolean = false) {
+    return ((value1: any, value2: any) => {
+      properties.forEach((p: string)  => {
+        value1 = value1[p] || '';
+        value2 = value2[p] || '';
+      });
+      if (isDate) {
+        value1 = new Date(value1);
+        value2 = new Date(value2);
+      }
+      if (value1 < value2) {
+        return asc?-1:1;
+      }
+      if (value1 > value2) {
+        return asc?1:-1;
+      }
+      return 0;
+    });
+  }
+
+  public static TruncateRows(text: string, rows: number = 2, maxchars: number = 160): string {
+    let split: string[] = [];
+    if (text && text.search(/\r\n|\r|\n/) !== -1) {
+      split = text.split(/\r\n|\r|\n/);
+      text = split.slice(0, Math.min(rows, split.length)).join('\n').trim();
+    }
+    if (text && (text.length > maxchars || rows < split.length)) {
+      return text.substring(0, maxchars).trim() + '...';
+    }
+    return text;
+  }
+
+  public static Trunc(value: number): number {
+    return value < 0 ? Math.ceil(value) : Math.floor(value);
+  }
+
+  public static IsNullOrUndefined<T>(obj: T | null | undefined): obj is null | undefined {
+    return typeof obj === 'undefined' || obj === null;
+  }
 }
