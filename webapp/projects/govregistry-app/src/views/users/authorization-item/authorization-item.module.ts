@@ -7,11 +7,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { VendorsModule } from 'projects/vendors/src/lib/vendors.module';
 import { ComponentsModule } from 'projects/components/src/lib/components.module';
 import { LinkLabModule } from 'projects/link-lab/src/lib/link-lab.module';
-import { HasPermissionModule } from '../../../directives/has-permission/has-permission.module';
 
-import { UserDetailsComponent } from './user-details.component';
-import { UserDetailsRoutingModule } from './user-details-routing.module';
-import { UserAuthorizationsModule } from '../user-authorizations/user-authorizations.module';
+import { AuthorizationItemComponent } from './authorization-item.component';
 
 @NgModule({
   imports: [
@@ -20,16 +17,13 @@ import { UserAuthorizationsModule } from '../user-authorizations/user-authorizat
     TranslateModule,
     VendorsModule,
     ComponentsModule,
-    LinkLabModule,
-    HasPermissionModule,
-    UserDetailsRoutingModule,
-    UserAuthorizationsModule
+    LinkLabModule
   ],
   declarations: [
-    UserDetailsComponent
+    AuthorizationItemComponent
   ],
-  exports: [UserDetailsComponent],
+  exports: [AuthorizationItemComponent],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class UserDetailsModule { }
+export class AuthorizationItemModule { }

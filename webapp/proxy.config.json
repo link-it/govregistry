@@ -5,7 +5,7 @@
     "logLevel": "debug",
     "changeOrigin": false,
     "pathRewrite": {
-      "^/govregistry/api": ""
+      "^/govregistry/api/v1": ""
     }
   },
   "/api/*": {
@@ -24,9 +24,12 @@
     "changeOrigin": true
   },
   "/profile": {
-    "target": "http://localhost:9003",
+    "target": "http://172.16.1.121:8083/govregistry/api/v1",
     "secure": false,
     "logLevel": "debug",
-    "changeOrigin": true
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
   }
 }

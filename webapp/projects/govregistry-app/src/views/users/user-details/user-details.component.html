@@ -62,7 +62,7 @@
         <div class="edit-form">
           <form novalidate class="issue-form common-note-form mt-3 gl-show-field-errors gfm-form" [class.form-readonly]="!_isEdit" [formGroup]="_formGroup" (submit)="_onSubmit(_formGroup.value)">
             <div class="row gl-mt-3">
-              <div class="col-lg-4">
+              <div class="col-lg-4 mb-4">
                 <h4 class="gl-mt-0 text-break">{{ 'APP.USERS.TITLE.GeneralInformations' | translate }}</h4>
                 <div class="text-break" markdown>{{ 'APP.USERS.TITLE.GeneralInformations_sub' | translate }}</div>
               </div>
@@ -149,18 +149,17 @@
       </div>
     </div>
 
-    <ui-box-collapse *ngIf="user && _authorizations && !_spin && false"
-      [opened]="true"
-      [id]="'user-authorizations'"
-      [title]="'APP.USERS.TITLE.ShowAuthorizations' | translate"
-      [subTitle]="'APP.USERS.TITLE.ShowAuthorizations_sub' | translate"> 
-      <div class="row">
-        <div class="col-4"></div>
-        <div class="col-8">
-          <pre>{{ _authorizations | json }}</pre>
+    <div class="settings border-top mt-3" *ngIf="user && _authorizations && !_spin">
+      <div class="row gl-mt-5 AUTHORIZATIONS">
+        <div class="col-lg-4">
+          <h4 class="gl-mt-0 text-break">{{ 'APP.USERS.TITLE.ShowAuthorizations' | translate }}</h4>
+          <div class="text-break" markdown>{{ 'APP.USERS.TITLE.ShowAuthorizations_sub' | translate }}</div>
+        </div>
+        <div class="col-lg-8">
+          <app-user-authorizations [id]="id"></app-user-authorizations>
         </div>
       </div>
-    </ui-box-collapse>
+    </div>
 
   </section>
 </div>
