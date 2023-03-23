@@ -49,7 +49,7 @@ public class ServiceAssembler extends RepresentationModelAssemblerSupport<Servic
 			ret.add(linkTo(
 					methodOn(ServiceApi.class)
 					.downloadServiceLogoMiniature(src.getId()))
-				.withRel("logo-miniiature")
+				.withRel("logo-miniature")
 			);
 		}
 		
