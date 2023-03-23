@@ -1,0 +1,212 @@
+<div class="flex-table align-items-center border-bottom" role="rowgroup" *ngIf="!_isNew && data">
+  <div class="flex-table-row first" role="columnheader">
+    <div class="text-break">
+      {{ 'APP.ROLE.' + data.role.role_name | translate }}
+    </div>
+  </div>
+  <div class="flex-table-row second text-start" role="columnheader">
+    <div class="">
+      <ng-container *ngIf="_organizations.length == 0">
+        <span class="badge badge-pill bg-info">{{ 'APP.ORGANIZATIONS.TITLE.All' | translate }}</span>
+      </ng-container>
+      <ng-container *ngIf="_organizations.length">
+        <div class="">
+          <div class="gl-avatars-inline gl-avatars-collapsed collapsed-" style="width: 48px; height: 24px;">
+            <ng-container *ngFor="let org of _organizations;let index = index;">
+              <div class="gl-avatars-inline-child" [style.left]="(index * 18) + 'px'" [style.z-index]="index + 1">
+                <a target="_blank" class="gl-link gl-avatar-link" [tooltip]="org.legal_name" container="body" [delay]="500">
+                  <!-- <div [src]="org | mapper: _orgLogoUrl" alt="avatar" class="gl-avatar gl-avatar-circle gl-avatar-s24 bg-white"> -->
+                  <div class="gl-avatar gl-avatar-circle gl-avatar-s24 menu-logo logo-miniature" [style.backgroundImage]="org | mapper: _orgLogoBackground"></div>
+                </a>
+              </div>
+            </ng-container>
+            <div class="gl-avatars-inline-child" [style.left]="(_organizations.length * 18) + 'px'" [style.z-index]="_organizations.length" *ngIf="_orgCount > 0">
+              <span class="gl-link- gl-avatar-link">
+                <span class="gl-avatar gl-avatar-circle gl-avatar-s24 bg-white" style="padding-top: 0.15rem;padding-left: 0.15rem;">+{{ _orgCount }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="flex-table-row thirth text-center-" role="columnheader">
+    <div class="">
+      <ng-container *ngIf="_services.length == 0">
+        <span class="badge badge-pill bg-info">{{ 'APP.SERVICES.TITLE.All' | translate }}</span>
+      </ng-container>
+      <ng-container *ngIf="_services.length">
+        <div class="">
+          <div class="gl-avatars-inline gl-avatars-collapsed collapsed-" style="width: 48px; height: 24px;">
+            <ng-container *ngFor="let service of _services;let index = index;">
+              <div class="gl-avatars-inline-child" [style.left]="(index * 18) + 'px'" [style.z-index]="index + 1">
+                <a target="_blank" class="gl-link gl-avatar-link" [tooltip]="service.service_name" container="body" [delay]="500">
+                  <!-- <img [src]="service | mapper: _serviceLogoUrl" alt="avatar" class="gl-avatar gl-avatar-circle gl-avatar-s24 bg-white"> -->
+                  <div class="gl-avatar gl-avatar-circle gl-avatar-s24 menu-logo logo-miniature" [style.backgroundImage]="service | mapper: _serviceLogoBackground"></div>
+                </a>
+              </div>
+            </ng-container>
+            <div class="gl-avatars-inline-child" [style.left]="(_services.length * 18) + 'px'" [style.z-index]="_services.length" *ngIf="_servCount > 0">
+              <span class="gl-link- gl-avatar-link">
+                <span class="gl-avatar gl-avatar-circle gl-avatar-s24 bg-white" style="padding-top: 0.15rem;padding-left: 0.15rem;">+{{ _servCount }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="flex-table-row fourth text-center text-nowrap" role="columnheader">
+    <span>{{ (data.expiration_date | date:'dd-MM-YYYY') || '-' }}</span>
+  </div>
+  <div class="flex-table-row fifth text-end" role="columnheader">
+    <!-- <button type="button" class="btn btn-default btn-md gl-button btn-icon me-1" (click)="_onEdit($event)" *ngIf="editable" [disabled]="_isNew">
+      <i class="bi bi-pencil"></i>
+    </button> -->
+    <button type="button" class="btn btn-default btn-md gl-button btn-icon" (click)="_onDelete(data)" *ngIf="editable" [disabled]="_isNew">
+      <i class="bi bi-trash text-danger"></i>
+    </button>
+  </div>
+</div>
+<div class="border-2 px-3 py-3 position-relative border-info" [class.border]="_isEdit" *ngIf="_isNew || _isEdit">
+  <div class="position-absolute top-0 end-0" (click)="_onCancelEdit($event)">
+    <button type="button" class="close"><i class="bi bi-x"></i></button>
+  </div>
+  <form novalidate class="gl-show-field-errors form-sm-" [formGroup]="_formGroup" (submit)="_onSubmit(_formGroup.value)">
+    <div class="row row-cols-lg-auto align-items-center">
+      <div class="col-12">
+        <div class="form-group">
+          <label class="label-bold" for="role_id">{{ 'APP.LABEL.Role' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'role_id'"></span></label>
+          <div class="">
+            <ng-select [class.gl-field-error-outline]="_hasControlError('role_id')"
+              [items]="roles$ | async"
+              [trackByFn]="trackByFn"
+              [typeahead]="rolesInput$"
+              [minTermLength]="minLengthTerm" 
+              [notFoundText]="'APP.MESSAGE.NotFoundItem' | translate"
+              [typeToSearchText]="'APP.MESSAGE.PleaseEnterMin' | translate:{ lengthTerm: minLengthTerm }"
+              bindValue="id"
+              bindLabel="role_name"
+              labelForId="role_id"
+              appendTo="body"
+              [editableSearchTerm]="true"
+              formControlName="role_id">
+              <ng-template ng-label-tmp let-item="item">
+                {{ 'APP.ROLE.' + item.role_name | translate }}
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                {{ 'APP.ROLE.' + item.role_name | translate }}
+              </ng-template>
+            </ng-select>
+          </div>
+          <p *ngIf="f['role_id'].invalid && (f['role_id'].dirty || f['role_id'].touched)" class="form-text text-danger">
+            <span *ngIf="f['role_id'].errors && f['role_id'].errors['required']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.FieldRequired' | translate }}</span>
+          </p>
+          <ui-input-help field="role_id" context="SERVICE"></ui-input-help>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label class="label-bold w-100" for="organizations">{{ 'APP.LABEL.Organizations' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'organizations'"></span> <span class="float-end"><input type="checkbox" id="all_organizations" name="all_organizations" formControlName="all_organizations" (change)="_onChangeAllOrganizations()"><label for="all_organizations" class="ms-2">{{ 'APP.ORGANIZATIONS.TITLE.All' | translate }}</label></span></label>
+          <div class="">
+            <ng-select class="" [class.gl-field-error-outline]="_hasControlError('organizations')"
+              [items]="organizations$ | async"
+              [multiple]="true"
+              [trackByFn]="trackByFn"
+              [typeahead]="organizationsInput$"
+              [minTermLength]="minLengthTerm" 
+              [notFoundText]="'APP.MESSAGE.NotFoundItem' | translate"
+              [typeToSearchText]="'APP.MESSAGE.PleaseEnterMin' | translate:{ lengthTerm: minLengthTerm }"
+              bindValue="id"
+              bindLabel="legal_name"
+              labelForId="organizations"
+              appendTo="body"
+              [editableSearchTerm]="true"
+              [closeOnSelect]="false"
+              formControlName="organizations">
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                <div class="d-flex flex-row align-items-center">
+                  <span class="ng-value-icon left" (click)="clear(item)" aria-hidden="true">×</span>
+                  <div class="flex-shrink-0 menu-logo logo-miniature" [style.backgroundImage]="item | mapper: _orgLogoBackground" [style.width]="'20px'" [style.height]="'20px'"></div>
+                  <span class="ng-value-label">{{item.legal_name}}</span>
+                </div>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <div class="d-flex flex-row align-items-center">
+                  <input id="item-{{index}}" type="checkbox" [checked]="item$.selected"/>
+                  <div class="flex-shrink-0 menu-logo logo-miniature ms-2" [style.backgroundImage]="item | mapper: _orgLogoBackground"></div>
+                  <span class="flex-shrink-1 ms-2">{{ item.legal_name }}</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <p *ngIf="f['organizations'].invalid && (f['organizations'].dirty || f['organizations'].touched)" class="form-text text-danger">
+              <span *ngIf="f['organizations'].errors && f['organizations'].errors['required']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.FieldRequired' | translate }}</span>
+              <span *ngIf="f['organizations'].errors && f['organizations'].errors['pattern']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.Serviceorganizations' | translate }}</span>
+            </p>
+            <ui-input-help field="organizations" context="SERVICE"></ui-input-help>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label class="label-bold w-100" for="services">{{ 'APP.LABEL.Services' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'services'"></span> <span class="float-end"><input type="checkbox" id="all_services" name="all_services" formControlName="all_services" (ngModelChange)="_onChangeAllServices()"><label for="all_services" class="ms-2">{{ 'APP.SERVICES.TITLE.All' | translate }}</label></span></label>
+          <div class="">
+            <ng-select class="" [class.gl-field-error-outline]="_hasControlError('services')"
+              [items]="services$ | async"
+              [multiple]="true"
+              [trackByFn]="trackByFn"
+              [typeahead]="servicesInput$"
+              [minTermLength]="minLengthTerm" 
+              [notFoundText]="'APP.MESSAGE.NotFoundItem' | translate"
+              [typeToSearchText]="'APP.MESSAGE.PleaseEnterMin' | translate:{ lengthTerm: minLengthTerm }"
+              bindValue="id"
+              bindLabel="service_name"
+              labelForId="services"
+              appendTo="body"
+              [closeOnSelect]="false"
+              [editableSearchTerm]="true"
+              formControlName="services">
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                <div class="d-flex flex-row align-items-center">
+                  <span class="ng-value-icon left" (click)="clear(item)" aria-hidden="true">×</span>
+                  <div class="flex-shrink-0 menu-logo logo-miniature" [style.backgroundImage]="item | mapper: _serviceLogoBackground" [style.width]="'20px'" [style.height]="'20px'"></div>
+                  <span class="ng-value-label">{{item.service_name}}</span>
+                </div>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <div class="d-flex flex-row align-items-center">
+                  <input id="item-{{index}}" type="checkbox" [checked]="item$.selected"/>
+                  <div class="flex-shrink-0 menu-logo logo-miniature ms-2" [style.backgroundImage]="item | mapper: _serviceLogoBackground"></div>
+                  <span class="flex-shrink-1 ms-2">{{ item.service_name }}</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <p *ngIf="f['services'].invalid && (f['services'].dirty || f['services'].touched)" class="form-text text-danger">
+              <span *ngIf="f['services'].errors && f['services'].errors['required']" class="d-block">{{ 'APP.MESSAGE.VALIDATION.FieldRequired' | translate }}</span>
+            </p>
+            <ui-input-help field="services" context="SERVICE"></ui-input-help>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group expiration_date mb-0-">
+          <label class="label-bold visually-hidden-" for="expiration_date">{{ 'APP.LABEL.ExpirationDate' | translate }}</label>
+          <input autocomplete="off" class="form-control" type="date" name="expiration_date" id="expiration_date" formControlName="expiration_date" [placeholder]="'APP.LABEL.ExpirationDate' | translate">
+        </div>
+      </div>
+    </div>
+
+    <div class="gl-alert gl-alert-danger mt-3 p-3" *ngIf="_isEdit && _error">
+      {{ _errorMsg }}
+    </div>
+
+    <div class="row-content-block footer-block text-end mt-1- py-2">
+      <button aria-label="Save" type="submit" class="gl-button btn btn-confirm gl-mr-2" [disabled]="_formGroup.invalid || _spin">
+        {{ 'APP.BUTTON.Save' | translate }}
+      </button>
+      <button aria-label="Cancel" type="button" class="btn gl-button btn-default" (click)="_onCancelEdit($event)">
+        {{ 'APP.BUTTON.Cancel' | translate }}
+      </button>
+    </div>
+  </form>
+</div>
