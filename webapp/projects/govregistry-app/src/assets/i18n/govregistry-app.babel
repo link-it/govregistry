@@ -26,6 +26,22 @@
 								<name>BUTTON</name>
 								<children>
 									<concept_node>
+										<name>AddAuthorization</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
 										<name>AddOrganization</name>
 										<description/>
 										<comment/>
@@ -1064,6 +1080,22 @@
 										</translations>
 									</concept_node>
 									<concept_node>
+										<name>ExpirationDate</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
 										<name>FileName</name>
 										<description/>
 										<comment/>
@@ -1368,6 +1400,22 @@
 										</translations>
 									</concept_node>
 									<concept_node>
+										<name>Organizations</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
 										<name>Organizer</name>
 										<description/>
 										<comment/>
@@ -1544,7 +1592,39 @@
 										</translations>
 									</concept_node>
 									<concept_node>
+										<name>Role</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
 										<name>ServiceName</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>Services</name>
 										<description/>
 										<comment/>
 										<default_text/>
@@ -2384,6 +2464,38 @@
 											</translation>
 										</translations>
 									</concept_node>
+									<concept_node>
+										<name>NotFoundItem</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>NotFoundText</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
 									<folder_node>
 										<name>Organizations_Results</name>
 										<children>
@@ -2439,6 +2551,22 @@
 									</folder_node>
 									<concept_node>
 										<name>PageNumber</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>PleaseEnterMin</name>
 										<description/>
 										<comment/>
 										<default_text/>
@@ -2776,6 +2904,22 @@
 										<name>TITLE</name>
 										<children>
 											<concept_node>
+												<name>All</name>
+												<description/>
+												<comment/>
+												<default_text/>
+												<translations>
+													<translation>
+														<language>en-US</language>
+														<approved>false</approved>
+													</translation>
+													<translation>
+														<language>it-IT</language>
+														<approved>false</approved>
+													</translation>
+												</translations>
+											</concept_node>
+											<concept_node>
 												<name>GeneralInformations</name>
 												<description/>
 												<comment/>
@@ -3014,6 +3158,267 @@
 								</children>
 							</folder_node>
 							<folder_node>
+								<name>ROLE</name>
+								<children>
+									<concept_node>
+										<name>govhub_organizations_editor</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govhub_organizations_viewer</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govhub_role_assigner</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govhub_services_editor</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govhub_services_viewer</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govhub_sysadmin</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govhub_user</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govhub_users_editor</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govhub_users_viewer</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govio_sender</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govio_service_editor</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govio_service_instance_editor</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govio_service_instance_viewer</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govio_service_viewer</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govio_sysadmin</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>govio_viewer</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+								</children>
+							</folder_node>
+							<folder_node>
 								<name>SEARCH</name>
 								<children>
 									<concept_node>
@@ -3157,6 +3562,22 @@
 									<folder_node>
 										<name>TITLE</name>
 										<children>
+											<concept_node>
+												<name>All</name>
+												<description/>
+												<comment/>
+												<default_text/>
+												<translations>
+													<translation>
+														<language>en-US</language>
+														<approved>false</approved>
+													</translation>
+													<translation>
+														<language>it-IT</language>
+														<approved>false</approved>
+													</translation>
+												</translations>
+											</concept_node>
 											<concept_node>
 												<name>GeneralInformations</name>
 												<description/>
@@ -4204,6 +4625,22 @@
 									</concept_node>
 									<concept_node>
 										<name>CancelNew</name>
+										<description/>
+										<comment/>
+										<default_text/>
+										<translations>
+											<translation>
+												<language>en-US</language>
+												<approved>false</approved>
+											</translation>
+											<translation>
+												<language>it-IT</language>
+												<approved>false</approved>
+											</translation>
+										</translations>
+									</concept_node>
+									<concept_node>
+										<name>EditAuthorizations</name>
 										<description/>
 										<comment/>
 										<default_text/>

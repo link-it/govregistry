@@ -408,9 +408,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     );
   }
 
-  // _decodeImage(data: string): string {
-  //   return data ? window.atob(data) : this._imagePlaceHolder;
-  // }
   _decodeImage = (data: string): string => {
     return data ? window.atob(data) : this._imagePlaceHolder;
   };
@@ -420,7 +417,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     if (item && item._links && item._links[type]) {
       logoUrl = item._links[type].href;
       logoUrl += '?t=' + moment().valueOf();
-      // logoUrl = this.apiService.getImageUrl(logoUrl);
     }
 
     return bg ? `url(${logoUrl})` : logoUrl;
