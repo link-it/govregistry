@@ -1,7 +1,5 @@
 package it.govhub.security.config;
 
-import java.util.Set;
-
 public class GovregistryRoles {
 
 	public static final String REALM_NAME = "govhub";

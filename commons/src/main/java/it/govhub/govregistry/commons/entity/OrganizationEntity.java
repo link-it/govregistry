@@ -2,8 +2,10 @@ package it.govhub.govregistry.commons.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -76,9 +78,11 @@ public class OrganizationEntity implements Serializable {
 	@Column(name = "office_pec_address")
 	private String officePecAddress;
 
+	@Basic(fetch=FetchType.LAZY)
 	@Lob
 	private byte[] logoMiniature;
 
+	@Basic(fetch=FetchType.LAZY)
 	@Lob
 	private byte[] logo;
 	

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import it.govhub.govregistry.commons.api.beans.ServiceAuthItem;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
-import it.govhub.govregistry.readops.api.web.ReadServiceController;
+import it.govhub.govregistry.readops.api.spec.ServiceApi;
 
 @Component
 public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSupport<ServiceEntity, ServiceAuthItem>{
@@ -19,7 +19,7 @@ public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSuppor
 	Logger log = LoggerFactory.getLogger(ServiceAuthItemAssembler.class);
 
 	public ServiceAuthItemAssembler() {
-		super(ReadServiceController.class, ServiceAuthItem.class);
+		super(ServiceApi.class, ServiceAuthItem.class);
 	}
 
 	
@@ -32,21 +32,21 @@ public class ServiceAuthItemAssembler extends RepresentationModelAssemblerSuppor
 		ret.setServiceName(src.getName());
 		
 		ret.add(linkTo(
-				methodOn(ReadServiceController.class)
+				methodOn(ServiceApi.class)
 				.readService(src.getId()))
 			.withSelfRel()
 		) ;
 		
 		if (src.getLogo() != null) {
 			ret.add(linkTo(
-					methodOn(ReadServiceController.class)
+					methodOn(ServiceApi.class)
 					.downloadServiceLogo(src.getId()))
 					.withRel("logo"));
 		}
 		
 		if (src.getLogoMiniature() != null) { 
 			ret.add(linkTo(
-					methodOn(ReadServiceController.class)
+					methodOn(ServiceApi.class)
 					.downloadServiceLogoMiniature(src.getId()))
 				.withRel("logo-miniature")
 			) ;

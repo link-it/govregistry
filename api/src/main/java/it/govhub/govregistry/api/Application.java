@@ -1,5 +1,7 @@
 package it.govhub.govregistry.api;
 
+import org.springdoc.core.SpringDocConfigProperties;
+import org.springdoc.core.SpringDocConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -89,4 +92,20 @@ public class Application  extends SpringBootServletInitializer {
 	}
 	
 	
+	/**
+	 * Configurazione minimale per SpringDoc in modo che carichi gli asset sotto 
+	 * src/main/resources/static
+	 * 
+	 */
+	@Primary
+	@Bean
+	SpringDocConfiguration springDocConfiguration(){
+	   return new SpringDocConfiguration();
+	}
+	@Primary
+	@Bean
+	SpringDocConfigProperties springDocConfigProperties() {
+	   return new SpringDocConfigProperties();
+	}
+
 }

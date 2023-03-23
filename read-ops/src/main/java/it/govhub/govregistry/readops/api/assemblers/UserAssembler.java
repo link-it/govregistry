@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import it.govhub.govregistry.commons.api.beans.User;
 import it.govhub.govregistry.commons.api.beans.UserCreate;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.readops.api.web.ReadUserController;
+import it.govhub.govregistry.readops.api.spec.UserApi;
 
 @Component
 public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEntity, User> {
@@ -23,7 +23,7 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
 	Logger log = LoggerFactory.getLogger(UserAssembler.class);
 
 	public UserAssembler() {
-		super(ReadUserController.class, User.class);
+		super(UserApi.class, User.class);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class UserAssembler  extends RepresentationModelAssemblerSupport<UserEnti
         BeanUtils.copyProperties(src, ret);
 
 		ret.add(linkTo(
-					methodOn(ReadUserController.class)
+					methodOn(UserApi.class)
 					.readUser(src.getId()))
 				.withSelfRel()
 			);

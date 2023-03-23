@@ -171,8 +171,6 @@
 								<importMapping>OrganizationOrdering=it.govhub.govregistry.commons.api.beans.OrganizationOrdering</importMapping>
 								<importMapping>ServiceOrdering=it.govhub.govregistry.commons.api.beans.ServiceOrdering</importMapping>
 								<importMapping>UserOrdering=it.govhub.govregistry.commons.api.beans.UserOrdering</importMapping>
-
-
 							</importMappings>
 							<configOptions>
 								<dateLibrary>java8</dateLibrary>
@@ -197,6 +195,7 @@
 							<generateApiTests>false</generateApiTests>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<generateModelTests>false</generateModelTests>
+							<generateApis>false</generateApis>
 						</configuration>
 					</execution>
 				</executions>
