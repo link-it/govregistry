@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -23,6 +24,8 @@ import it.govhub.govregistry.api.spec.UserApi;
 import it.govhub.govregistry.commons.api.beans.PatchOp;
 import it.govhub.govregistry.commons.api.beans.User;
 import it.govhub.govregistry.commons.api.beans.UserCreate;
+import it.govhub.govregistry.commons.api.beans.UserList;
+import it.govhub.govregistry.commons.api.beans.UserOrdering;
 import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.BadRequestException;
@@ -32,6 +35,7 @@ import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.commons.utils.RequestUtils;
 import it.govhub.govregistry.readops.api.assemblers.UserAssembler;
+import it.govhub.govregistry.readops.api.web.ReadUserController;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
@@ -59,6 +63,9 @@ public class UserController implements UserApi {
 	
 	@Autowired
 	Validator validator;
+	
+	@Autowired
+	ReadUserController readUserController;
 	
 	Logger log = LoggerFactory.getLogger(UserController.class);
 	
@@ -129,6 +136,18 @@ public class UserController implements UserApi {
 		UserEntity newUser = this.userAssembler.toEntity(userCreate);
 		newUser = this.userService.createUser(newUser);
 		return ResponseEntity.status(HttpStatus.CREATED).body(this.userAssembler.toModel(newUser));
+	}
+
+
+	@Override
+	public ResponseEntity<UserList> listUsers(UserOrdering sort, Direction sortDirection, Integer limit,Long offset, String q, Boolean enabled) {
+		return this.readUserController.listUsers(sort, sortDirection, limit, offset, q, enabled);
+	}
+
+
+	@Override
+	public ResponseEntity<User> readUser(Long id) {
+		return this.readUserController.readUser(id);
 	}
 	
 

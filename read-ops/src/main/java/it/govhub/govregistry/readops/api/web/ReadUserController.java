@@ -7,13 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import it.govhub.govregistry.commons.api.beans.User;
 import it.govhub.govregistry.commons.api.beans.UserList;
 import it.govhub.govregistry.commons.api.beans.UserOrdering;
-import it.govhub.govregistry.commons.config.V1RestController;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.UserMessages;
@@ -22,13 +23,12 @@ import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.UserAssembler;
 import it.govhub.govregistry.readops.api.repository.ReadUserRepository;
 import it.govhub.govregistry.readops.api.repository.UserFilters;
-import it.govhub.govregistry.readops.api.spec.UserApi;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 
-@V1RestController
-public class ReadUserController implements UserApi{
+@Component
+public class ReadUserController {
 	
 	@Autowired
 	ReadUserRepository userRepo;
@@ -42,7 +42,6 @@ public class ReadUserController implements UserApi{
 	@Autowired
 	UserMessages userMessages;
 	
-	@Override
 	public ResponseEntity<UserList> listUsers(UserOrdering orderBy, Direction sortDirection, Integer limit, Long offset, String q, Boolean enabled) {
 		
 		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR, GovregistryRoles.GOVREGISTRY_USERS_VIEWER);
@@ -73,7 +72,6 @@ public class ReadUserController implements UserApi{
 
 	
 	
-	@Override
 	public ResponseEntity<User> readUser(Long id) {
 		
 		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR, GovregistryRoles.GOVREGISTRY_USERS_VIEWER);

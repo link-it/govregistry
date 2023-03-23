@@ -1,9 +1,7 @@
 package it.govhub.govregistry.api.web;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,9 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -43,20 +39,17 @@ import it.govhub.govregistry.commons.exception.InternalException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.messages.OrganizationMessages;
 import it.govhub.govregistry.commons.messages.PatchMessages;
-import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
-import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.commons.utils.RequestUtils;
 import it.govhub.govregistry.readops.api.assemblers.OrganizationAssembler;
 import it.govhub.govregistry.readops.api.assemblers.OrganizationItemAssembler;
-import it.govhub.govregistry.readops.api.repository.OrganizationFilters;
 import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
 import it.govhub.govregistry.readops.api.web.ReadOrganizationController;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
 
 @V1RestController
-public class OrganizationController  extends ReadOrganizationController implements OrganizationApi {
+public class OrganizationController  implements OrganizationApi {
 	
 	@Autowired
 	OrganizationAssembler orgAssembler;
@@ -85,19 +78,10 @@ public class OrganizationController  extends ReadOrganizationController implemen
 	@Autowired
 	OrganizationRepository writeOrgRepo;
 	
+	@Autowired
+	ReadOrganizationController readOrganizationController;
+	
 	Logger log = LoggerFactory.getLogger(OrganizationController.class);
-	
-	
-	private static Set<String> readOrganizationRoles = Set.of(
-			GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR,
-			GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_VIEWER,
-			GovregistryRoles.GOVREGISTRY_SYSADMIN);
-
-	
-	@Override
-	protected Set<String> getReadOrganizationRoles() {
-		return new HashSet<>(readOrganizationRoles);
-	}
 	
 
 	@Override
@@ -185,58 +169,6 @@ public class OrganizationController  extends ReadOrganizationController implemen
 		return ResponseEntity.ok(this.orgAssembler.toModel(newOrg));
 	}
 	
-	
-	@Override
-	public ResponseEntity<OrganizationList> listOrganizations(
-			OrganizationOrdering sort,
-			Direction sortDirection, 
-			Integer limit,
-			Long offset,
-			String q, 
-			List<String> withRoles) {
-		
-		Set<String> roles = getReadOrganizationRoles();
-		
-		if (withRoles != null) {
-			roles.retainAll(withRoles);
-		}
-		
-		Set<Long> orgIds = this.authService.listAuthorizedOrganizations(roles);
-
-		Specification<OrganizationEntity> spec;
-
-		if (orgIds == null) {
-			// Non ho restrizioni
-			spec = OrganizationFilters.empty();
-		} else if (orgIds.isEmpty()) {
-			// Nessuna organizzazione
-			spec = OrganizationFilters.never();
-		} else {
-			// Filtra per le organizzazioni trovate
-			spec = OrganizationFilters.byId(orgIds);
-		}
-		if (q != null) {
-			spec = spec.and(OrganizationFilters.likeTaxCode(q).or(OrganizationFilters.likeLegalName(q)));
-		}
-
-		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit,
-				OrganizationFilters.sort(sort, sortDirection));
-
-		Page<OrganizationEntity> organizations = this.orgRepo.findAll(spec, pageRequest.pageable);
-
-		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-				.getRequest();
-
-		OrganizationList ret = ListaUtils.buildPaginatedList(organizations, pageRequest.limit, curRequest,
-				new OrganizationList());
-				
-		for (OrganizationEntity org : organizations) {
-			ret.addItemsItem(this.orgItemAssembler.toModel(org));
-		}
-
-		return ResponseEntity.ok(ret);
-	}
-
 
 	@Override
 	public ResponseEntity<Void> removeOrganizationLogo(Long id) {
@@ -309,6 +241,34 @@ public class OrganizationController  extends ReadOrganizationController implemen
 		this.writeOrgRepo.save(org);
 
 		return ResponseEntity.ok().build();
+	}
+
+
+
+	@Override
+	public ResponseEntity<Resource> downloadOrganizationLogo(Long id) {
+		return this.readOrganizationController.downloadOrganizationLogo(id);
+	}
+
+
+
+	@Override
+	public ResponseEntity<Resource> downloadOrganizationLogoMiniature( Long id) {
+		return this.readOrganizationController.downloadOrganizationLogoMiniature(id);
+	}
+
+
+
+	@Override
+	public ResponseEntity<OrganizationList> listOrganizations(OrganizationOrdering sort, Direction sortDirection, Integer limit,Long offset,String q, List<String> withRoles) {
+		return this.readOrganizationController.listOrganizations(sort, sortDirection, limit, offset, q, withRoles);
+	}
+
+
+
+	@Override
+	public ResponseEntity<Organization> readOrganization(Long id) {
+		return this.readOrganizationController.readOrganization(id);
 	}
 
 	
