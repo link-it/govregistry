@@ -162,6 +162,7 @@
 				"wrong_username_password": "Username e/o Password errati."
 			},
 			"NoAnnouncement": "No announcement",
+			"NoAuthorizations": "No authorizations",
 			"NoBankAccount": "No bank account",
 			"NoCandidacies": "No candidacies",
 			"NoData": "Sorry, the requested information was not found",

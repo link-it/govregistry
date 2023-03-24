@@ -92,7 +92,7 @@
                     <ui-input-help field="full_name" context="USER"></ui-input-help>
                   </div>
                   <div class="" *ngIf="!_isEdit">
-                    <input type="text" readonly class="form-control-plaintext" id="full_name" [value]="user.full_name">
+                    <input type="text" readonly class="form-control-plaintext" id="full_name" [value]="user.full_name || '-'">
                   </div>
                 </div>
                 <div class="form-group">
@@ -106,7 +106,7 @@
                     <ui-input-help field="email" context="USER"></ui-input-help>
                   </div>
                   <div class="" *ngIf="!_isEdit">
-                    <input type="text" readonly class="form-control-plaintext" id="email" [value]="user.email">
+                    <input type="text" readonly class="form-control-plaintext" id="email" [value]="user.email || '-'">
                   </div>
                 </div>
                 <div class="row mt-5 enabled">
@@ -137,7 +137,7 @@
             </div>
 
             <div class="row-content-block footer-block" *ngIf="_isEdit">
-              <button aria-label="Save" type="submit" class="gl-button btn btn-confirm gl-mr-2" [disabled]="_formGroup.invalid || _spin">
+              <button aria-label="Save" type="submit" class="gl-button btn btn-confirm gl-mr-2" [disabled]="_formGroup.invalid">
                 {{ 'APP.BUTTON.Save' | translate }}
               </button>
               <button aria-label="Cancel" type="button" class="btn gl-button btn-default" (click)="_onCancelEdit()">
@@ -149,9 +149,9 @@
       </div>
     </div>
 
-    <div class="settings border-top mt-3" *ngIf="user && _authorizations && !_spin">
+    <div class="settings border-top mt-3" *ngIf="user && !_spin">
       <div class="row gl-mt-5 AUTHORIZATIONS">
-        <div class="col-lg-4">
+        <div class="col-lg-4 mb-4">
           <h4 class="gl-mt-0 text-break">{{ 'APP.USERS.TITLE.ShowAuthorizations' | translate }}</h4>
           <div class="text-break" markdown>{{ 'APP.USERS.TITLE.ShowAuthorizations_sub' | translate }}</div>
         </div>

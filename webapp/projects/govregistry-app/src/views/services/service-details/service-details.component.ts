@@ -188,7 +188,8 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
         this._initBreadcrumb();
         this._isEdit = false;
         this._isNew = false;
-        this.save.emit({ id: this.id, payment: response, update: false });
+        this.save.emit({ id: this.id, service: response, update: false });
+        this.router.navigate([this.model, this.service.id], { replaceUrl: true });
       },
       (error: any) => {
         this._error = true;

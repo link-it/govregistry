@@ -94,16 +94,9 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
   }
 
   ngOnInit() {
-    this.pageloaderService.resetLoader();
-    this.pageloaderService.isLoading.subscribe({
-      next: (x) => { this._spin = x; },
-      error: (e: any) => { console.log('loader error', e); }
-    });
-
     this.configService.getConfig(this.model).subscribe(
       (config: any) => {
         this.servicesConfig = config;
-        this._translateConfig();
         this._loadServices();
       }
     );
@@ -115,21 +108,6 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
 
   ngAfterContentChecked(): void {
     this.desktop = (window.innerWidth >= 992);
-  }
-
-  _translateConfig() {
-    if (this.servicesConfig && this.servicesConfig.options) {
-      Object.keys(this.servicesConfig.options).forEach((key: string) => {
-        if (this.servicesConfig.options[key].label) {
-          this.servicesConfig.options[key].label = this.translate.instant(this.servicesConfig.options[key].label);
-        }
-        if (this.servicesConfig.options[key].values) {
-          Object.keys(this.servicesConfig.options[key].values).forEach((key2: string) => {
-            this.servicesConfig.options[key].values[key2].label = this.translate.instant(this.servicesConfig.options[key].values[key2].label);
-          });
-        }
-      });
-    }
   }
 
   _setErrorMessages(error: boolean) {
@@ -160,6 +138,7 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
       aux = { params: this._queryToHttpParams(query) };
     }
 
+    this._spin = true;
     this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
         if (response === null) {
@@ -171,15 +150,8 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
 
           if (response.items) {
             const _list: any = response.items.map((service: any) => {
-              const metadataText = Tools.simpleItemFormatter(this.servicesConfig.simpleItem.metadata.text, service, this.servicesConfig.simpleItem.options || null);
-              const metadataLabel = Tools.simpleItemFormatter(this.servicesConfig.simpleItem.metadata.label, service, this.servicesConfig.simpleItem.options || null);
               const element = {
                 id: service.id,
-                primaryText: Tools.simpleItemFormatter(this.servicesConfig.simpleItem.primaryText, service, this.servicesConfig.simpleItem.options || null),
-                secondaryText: Tools.simpleItemFormatter(this.servicesConfig.simpleItem.secondaryText, service, this.servicesConfig.simpleItem.options || null),
-                metadata: `${metadataText}<span class="me-2">&nbsp;</span>${metadataLabel}`,
-                secondaryMetadata: Tools.simpleItemFormatter(this.servicesConfig.simpleItem.secondaryMetadata, service, this.servicesConfig.simpleItem.options || null),
-                editMode: false,
                 source: { ...service }
               };
               return element;
@@ -187,12 +159,14 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
             this.services = (url) ? [...this.services, ..._list] : [..._list];
             this._preventMultiCall = false;
           }
+          this._spin = false;
           Tools.ScrollTo(0);
         }
       },
       error: (error: any) => {
         this._setErrorMessages(true);
         this._preventMultiCall = false;
+        this._spin = false;
         // Tools.OnError(error);
       }
     });
@@ -203,7 +177,6 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
 
     Object.keys(query).forEach(key => {
       if (query[key]) {
-        let _dateTime = '';
         switch (key)
         {
           default:
