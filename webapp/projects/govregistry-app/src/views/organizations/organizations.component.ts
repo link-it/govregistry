@@ -93,20 +93,10 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      // Changed
-    });
-
     this.pageloaderService.resetLoader();
-    this.pageloaderService.isLoading.subscribe({
-      next: (x) => { this._spin = x; },
-      error: (e: any) => { console.log('loader error', e); }
-    });
-
     this.configService.getConfig(this.model).subscribe(
       (config: any) => {
         this.organizationsConfig = config;
-        this._translateConfig();
         this._loadOrganizations();
       }
     );
@@ -118,21 +108,6 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
 
   ngAfterContentChecked(): void {
     this.desktop = (window.innerWidth >= 992);
-  }
-
-  _translateConfig() {
-    if (this.organizationsConfig && this.organizationsConfig.options) {
-      Object.keys(this.organizationsConfig.options).forEach((key: string) => {
-        if (this.organizationsConfig.options[key].label) {
-          this.organizationsConfig.options[key].label = this.translate.instant(this.organizationsConfig.options[key].label);
-        }
-        if (this.organizationsConfig.options[key].values) {
-          Object.keys(this.organizationsConfig.options[key].values).forEach((key2: string) => {
-            this.organizationsConfig.options[key].values[key2].label = this.translate.instant(this.organizationsConfig.options[key].values[key2].label);
-          });
-        }
-      });
-    }
   }
 
   _setErrorMessages(error: boolean) {
@@ -163,6 +138,7 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
       aux = { params: this._queryToHttpParams(query) };
     }
 
+    this._spin = true;
     this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
         if (response === null) {
@@ -190,12 +166,14 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
             this.organizations = (url) ? [...this.organizations, ..._list] : [..._list];
             this._preventMultiCall = false;
           }
+          this._spin = false;
           Tools.ScrollTo(0);
         }
       },
       error: (error: any) => {
         this._setErrorMessages(true);
         this._preventMultiCall = false;
+        this._spin = false;
         // Tools.OnError(error);
       }
     });
