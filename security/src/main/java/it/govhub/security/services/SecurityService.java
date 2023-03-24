@@ -52,9 +52,7 @@ public class SecurityService {
 		// Cerco fra le autorizzazioni una che abbia uno dei ruoli specificati e che non sia scaduta
 		return user.getAuthorizations().stream()
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.anyMatch( auth -> {
-						return roleList.contains(auth.getRole().getName());
-					});
+			.anyMatch( auth -> roleList.contains(auth.getRole().getName()) );
 		
 	}
 
@@ -189,7 +187,7 @@ public class SecurityService {
 	
 	
 	public Set<Long> listAuthorizedOrganizations(Collection<String>  roles) {
-		return listAuthorizedOrganizations(new HashSet<String>(roles));
+		return listAuthorizedOrganizations(new HashSet<>(roles));
 	}
 	
 	/**
@@ -210,7 +208,7 @@ public class SecurityService {
 				.filter( auth -> roles.contains(auth.getRole().getName()))
 				.collect(Collectors.toList());
 		
-		Set<Long> orgIds = new HashSet<Long>();
+		Set<Long> orgIds = new HashSet<>();
 		
 		for (var auth: validAuths) {
 			if (auth.getOrganizations().isEmpty()) {
@@ -231,7 +229,7 @@ public class SecurityService {
 	
 	
 	public Set<Long> listAuthorizedServices(Collection<String> roles) {
-		return listAuthorizedServices(new HashSet<String>(roles));
+		return listAuthorizedServices(new HashSet<>(roles));
 	}
 
 
@@ -253,7 +251,7 @@ public class SecurityService {
 				.filter( auth -> roles.contains(auth.getRole().getName()))
 				.collect(Collectors.toList());
 		
-		Set<Long> serviceIds = new HashSet<Long>();
+		Set<Long> serviceIds = new HashSet<>();
 		
 		for (var auth: validAuths) {
 			if (auth.getServices().isEmpty()) {

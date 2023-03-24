@@ -42,7 +42,7 @@ public class ServiceService {
 	public ServiceEntity replaceService(ServiceEntity oldService, ServiceEntity newService) {
 		log.info("Replacing Service {} With {}", oldService, newService);
 		
-		if (oldService.getId() != newService.getId()) {
+		if ( ! oldService.getId().equals(newService.getId())) {
 			throw new SemanticValidationException(this.serviceMessages.fieldNotModificable("id"));
 		}
 		
