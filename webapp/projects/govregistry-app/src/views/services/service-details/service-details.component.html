@@ -76,7 +76,7 @@
         <div class="edit-form">
           <form novalidate class="issue-form common-note-form mt-3 gl-show-field-errors gfm-form" [class.form-readonly]="!_isEdit" [formGroup]="_formGroup" (submit)="_onSubmit(_formGroup.value)">
             <div class="row gl-mt-3">
-              <div class="col-lg-4">
+              <div class="col-lg-4 mb-4">
                 <h4 class="gl-mt-0 text-break">{{ 'APP.SERVICES.TITLE.GeneralInformations' | translate }}</h4>
                 <div class="text-break" markdown>{{ 'APP.SERVICES.TITLE.GeneralInformations_sub' | translate }}</div>
               </div>
@@ -120,7 +120,7 @@
             </div>
 
             <div class="row-content-block footer-block" *ngIf="_isEdit">
-              <button aria-label="Save" type="submit" class="gl-button btn btn-confirm gl-mr-2" [disabled]="_formGroup.invalid || _spin">
+              <button aria-label="Save" type="submit" class="gl-button btn btn-confirm gl-mr-2" [disabled]="_formGroup.invalid">
                 {{ 'APP.BUTTON.Save' | translate }}
               </button>
               <button aria-label="Cancel" type="button" class="btn gl-button btn-default" (click)="_onCancelEdit()">
@@ -130,7 +130,7 @@
           </form>
 
           <div class="row gl-mt-5 border-top pt-5" *ngIf="!_isNew">
-            <div class="col-lg-4">
+            <div class="col-lg-4 mb-4">
               <h4 class="gl-mt-0 text-break"><span>{{ 'APP.SERVICES.TITLE.LogosInformations' | translate }}</span></h4>
               <div class="text-break" markdown>{{ 'APP.SERVICES.TITLE.LogosInformations_sub' | translate }}</div>
             </div>

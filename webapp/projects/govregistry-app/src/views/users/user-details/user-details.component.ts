@@ -152,11 +152,11 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
         let value = '';
         switch (key) {
           case 'principal':
-            const pattern = /^[\w_\-\.]+$/;
+            // const pattern = /^[\w_\-\.]+$/;
             value = data[key] ? data[key] : null;
             _group[key] = new UntypedFormControl(value, [
               Validators.required,
-              Validators.pattern(pattern)
+              // Validators.pattern(pattern)
             ]);
             break;
           case 'email':
@@ -190,7 +190,8 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
         this._initBreadcrumb();
         this._isEdit = false;
         this._isNew = false;
-        this.save.emit({ id: this.id, payment: response, update: false });
+        this.save.emit({ id: this.id, user: response, update: false });
+        this.router.navigate([this.model, this.user.id], { replaceUrl: true });
       },
       (error: any) => {
         this._error = true;
@@ -209,7 +210,7 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
           this.user = new User({ ...response });
           this._user = new User({ ...response });
           this.id = this.user.id;
-          this.save.emit({ id: this.id, payment: response, update: true });
+          this.save.emit({ id: this.id, user: response, update: true });
         },
         (error: any) => {
           this._error = true;

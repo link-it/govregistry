@@ -90,22 +90,9 @@ export class UsersComponent implements OnInit, AfterContentChecked {
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      setTimeout(() => {
-        Tools.WaitForResponse(false);
-      }, this.config.AppConfig.DELAY || 0);
-    });
-
-    this.pageloaderService.resetLoader();
-    this.pageloaderService.isLoading.subscribe({
-      next: (x) => { this._spin = x; },
-      error: (e: any) => { console.log('loader error', e); }
-    });
-
     this.configService.getConfig(this.model).subscribe(
       (config: any) => {
         this.usersConfig = config;
-        this._translateConfig();
         this._loadUsers();
       }
     );
@@ -113,21 +100,6 @@ export class UsersComponent implements OnInit, AfterContentChecked {
 
   ngAfterContentChecked(): void {
     this.desktop = (window.innerWidth >= 992);
-  }
-
-  _translateConfig() {
-    if (this.usersConfig && this.usersConfig.options) {
-      Object.keys(this.usersConfig.options).forEach((key: string) => {
-        if (this.usersConfig.options[key].label) {
-          this.usersConfig.options[key].label = this.translate.instant(this.usersConfig.options[key].label);
-        }
-        if (this.usersConfig.options[key].values) {
-          Object.keys(this.usersConfig.options[key].values).forEach((key2: string) => {
-            this.usersConfig.options[key].values[key2].label = this.translate.instant(this.usersConfig.options[key].values[key2].label);
-          });
-        }
-      });
-    }
   }
 
   _setErrorMessages(error: boolean) {
@@ -156,6 +128,7 @@ export class UsersComponent implements OnInit, AfterContentChecked {
       aux = { params: this._queryToHttpParams(query) };
     }
 
+    this._spin = true;
     this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
         if (response === null) {
@@ -168,18 +141,9 @@ export class UsersComponent implements OnInit, AfterContentChecked {
           }
 
           if (response.items) {
-            const _itemRow = this.usersConfig.itemRow;
-            const _options = this.usersConfig.options;
             const _list: any = response.items.map((user: any) => {
-              const metadataText = Tools.simpleItemFormatter(_itemRow.metadata.text, user, _options || null);
-              const metadataLabel = Tools.simpleItemFormatter(_itemRow.metadata.label, user, _options || null);
               const element = {
                 id: user.id,
-                primaryText: Tools.simpleItemFormatter(_itemRow.primaryText, user, _options || null, ' '),
-                secondaryText: Tools.simpleItemFormatter(_itemRow.secondaryText, user, _options || null, ' '),
-                metadata: `${metadataText}<span class="me-2">&nbsp;</span>${metadataLabel}`,
-                secondaryMetadata: Tools.simpleItemFormatter(_itemRow.secondaryMetadata, user, _options || null, ' '),
-                editMode: false,
                 source: { ...user }
               };
               return element;
@@ -187,12 +151,14 @@ export class UsersComponent implements OnInit, AfterContentChecked {
             this.users = (url) ? [...this.users, ..._list] : [..._list];
             this._preventMultiCall = false;
           }
+          this._spin = false;
           Tools.ScrollTo(0);
         }
       },
       error: (error: any) => {
         this._setErrorMessages(true);
         this._preventMultiCall = false;
+        this._spin = false;
         // Tools.OnError(error);
       }
     });
@@ -203,7 +169,6 @@ export class UsersComponent implements OnInit, AfterContentChecked {
 
     Object.keys(query).forEach(key => {
       if (query[key]) {
-        let _dateTime = '';
         switch (key)
         {
           default:

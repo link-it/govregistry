@@ -170,18 +170,19 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
       role: form.role_id,
       organizations: form.organizations,
       services: form.services,
-      expiration_date: moment(form.expiration_date).utc().format()
+      expiration_date: form.expiration_date ? moment(form.expiration_date).utc().format() : null
     };
-    console.log('__onSave', form);
-    console.log('__onSave _body', _body);
+    this._spin = true;
     this.apiService.saveElement(`users/${this.uid}/authorizations`, _body).subscribe(
       (response: any) => {
         this._isEdit = false;
         this.data = response;
         this.save.emit({ item: this.data });
+        this._spin = false;
       },
       (error: any) => {
         this._error = true;
+        this._spin = false;
         this._errorMsg = Tools.GetErrorMsg(error);
       }
     );
