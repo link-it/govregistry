@@ -17,7 +17,6 @@ import com.github.fge.jsonpatch.JsonPatch;
 
 import it.govhub.govregistry.commons.api.beans.PatchOp;
 import it.govhub.govregistry.commons.exception.BadRequestException;
-import it.govhub.govregistry.commons.exception.UnreachableException;
 
 public class RequestUtils {
 	
@@ -36,7 +35,6 @@ public class RequestUtils {
 		} 
 		catch (IOException e) {
 			throw new BadRequestException(e);
-			//throw new UnreachableException("Body of List<PatchOp> should always be convertible to JsonPatch");
 		}
 		return patch;
 	}

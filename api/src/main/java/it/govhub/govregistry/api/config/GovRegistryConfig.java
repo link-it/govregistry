@@ -1,6 +1,5 @@
 package it.govhub.govregistry.api.config;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,19 +14,13 @@ public class GovRegistryConfig implements ApplicationConfig {
 	@Value("${application-id:govregistry")
 	String applicationId;
 
-	@Value("#{systemProperties['govhub.auth.read-service-roles'] ?: T(it.govhub.govregistry.api.config.GovRegistryConfig).DEFAULT_READ_SERVICE_ROLES}")
-	Set<String> readServiceRoles;
-	
-	@Value("#{systemProperties['govhub.auth.read-organization-roles'] ?: T(it.govhub.govregistry.api.config.GovRegistryConfig).DEFAULT_READ_ORGANIZATION_ROLES}")
-	Set<String> readOrganizationRoles;
-	
-	public static Set<String> DEFAULT_READ_SERVICE_ROLES = Set.of(
+	private static final Set<String> DEFAULT_READ_SERVICE_ROLES = Set.of(
 			GovregistryRoles.GOVREGISTRY_SYSADMIN ,
 			GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR,
 			GovregistryRoles.GOVREGISTRY_SERVICES_VIEWER);
 
 	
-	public static Set<String> DEFAULT_READ_ORGANIZATION_ROLES = Set.of(
+	private static final Set<String> DEFAULT_READ_ORGANIZATION_ROLES = Set.of(
 			GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR,
 			GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_VIEWER,
 			GovregistryRoles.GOVREGISTRY_SYSADMIN);
@@ -39,12 +32,12 @@ public class GovRegistryConfig implements ApplicationConfig {
 	
 	@Override
 	public Set<String> getReadServiceRoles() {
-		return new HashSet<>(readServiceRoles);
+		return DEFAULT_READ_SERVICE_ROLES;
 	}
 
 	@Override
 	public Set<String> getReadOrganizationRoles() {
-		return new HashSet<>(readOrganizationRoles);
+		return DEFAULT_READ_ORGANIZATION_ROLES;
 	}
 
 }

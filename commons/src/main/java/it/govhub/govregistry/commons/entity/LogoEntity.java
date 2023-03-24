@@ -1,5 +1,6 @@
 package it.govhub.govregistry.commons.entity;
 
+import java.io.Serializable;
 import java.net.URL;
 
 import javax.persistence.Column;
@@ -21,8 +22,13 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Embeddable
-public class LogoEntity {
+public class LogoEntity implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name="type", nullable=false)
 	private LogoType type;
@@ -43,7 +49,7 @@ public class LogoEntity {
 	@Column(name="name")
 	private String name;
 	
-	public static enum LogoType {
+	public enum LogoType {
 		IMAGE, SVG, BOOTSTRAP, MATERIAL
 	}
 
