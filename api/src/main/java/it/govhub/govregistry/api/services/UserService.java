@@ -49,7 +49,7 @@ public class UserService {
 	@Transactional
 	public UserEntity replaceUser(UserEntity oldUser, UserEntity newUser) {
 		log.info("Replacing User {} With {}", oldUser, newUser);
-		if (oldUser.getId() != newUser.getId()) {
+		if ( ! oldUser.getId().equals(newUser.getId())) {
 			throw new SemanticValidationException(this.userMessages.fieldNotModificable("id"));
 		}
 		
