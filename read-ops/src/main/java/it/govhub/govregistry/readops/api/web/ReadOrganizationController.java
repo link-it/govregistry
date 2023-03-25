@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -156,8 +155,7 @@ public class ReadOrganizationController {
 		headers.setContentLength(logoBytes.length);
 		headers.setContentType(MediaType.valueOf(org.getLogoMediaType()));
 		
-		ResponseEntity<Resource> ret =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
-		return ret;
+		return new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
 	}
 
 
@@ -183,9 +181,7 @@ public class ReadOrganizationController {
 		headers.setContentLength(ret.length);
 		headers.setContentType(MediaType.valueOf(org.getLogoMiniatureMediaType()));
 
-		
-		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
-		return ret2;
+		return new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
 	}
 
 }

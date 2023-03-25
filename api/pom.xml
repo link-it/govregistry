@@ -286,7 +286,6 @@
 								<modelPackage>it.govhub.govregistry.api.beans</modelPackage>
 								<configPackage>it.govhub.govregistry.api.config</configPackage>
 								<useBeanValidation>true</useBeanValidation>
-								<!-- <performBeanValidation>true</performBeanValidation> -->
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<interfaceOnly>true</interfaceOnly>
 								<hateoas>true</hateoas>

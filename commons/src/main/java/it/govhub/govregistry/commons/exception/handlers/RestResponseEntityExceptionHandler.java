@@ -28,11 +28,13 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.function.ServerRequest.Headers;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
 
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 
+import io.swagger.v3.oas.models.headers.Header;
 import it.govhub.govregistry.commons.api.beans.Problem;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
@@ -95,43 +97,43 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
 	@ResponseStatus(HttpStatus.CONFLICT)
 	@ExceptionHandler(ConflictException.class)
-	public Object handleConstraintViolation(ConflictException ex, WebRequest request) {
-		return buildProblem(HttpStatus.CONFLICT, ex.getLocalizedMessage(), request.getHeader("Accept") );
+	public Object handleConstraintViolation(ConflictException ex, WebRequest request) {		
+		return buildProblem(HttpStatus.CONFLICT, ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT) );
 	}
 	
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public Object handleConstraintViolation(ResourceNotFoundException ex, WebRequest request) {
-		return buildProblem(HttpStatus.NOT_FOUND, ex.getLocalizedMessage(), request.getHeader("Accept"));
+		return buildProblem(HttpStatus.NOT_FOUND, ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT));
 	}
 	
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({BadRequestException.class, MethodArgumentTypeMismatchException.class, ConstraintViolationException.class})
 	public Object handleConstraintViolation(RuntimeException ex, WebRequest request ) {		
-		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), request.getHeader("Accept"));
+		return buildProblem(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT));
 	}
 
 	
 	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler(SemanticValidationException.class)
 	public Object handleConstraintViolation(SemanticValidationException ex, WebRequest request) {
-		return buildProblem(HttpStatus.UNPROCESSABLE_ENTITY, ex.getLocalizedMessage(), request.getHeader("Accept"));
+		return buildProblem(HttpStatus.UNPROCESSABLE_ENTITY, ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT));
 	}
 	
 	
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(NotAuthorizedException.class)
 	public Object handleConstraintViolation(NotAuthorizedException ex, WebRequest request) {
-		return buildProblem(HttpStatus.UNAUTHORIZED, ex.getLocalizedMessage(), request.getHeader("Accept"));
+		return buildProblem(HttpStatus.UNAUTHORIZED, ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT));
 	}
 	
 	
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(ForbiddenException.class)
 	public Object handleConstraintViolation(ForbiddenException ex, WebRequest request) {
-		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage(),request.getHeader("Accept"));
+		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage(),request.getHeader(HttpHeaders.ACCEPT));
 	}
 	
 	
@@ -139,7 +141,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler({InternalException.class})
 	public final Object handleAllInternalExceptions(InternalException ex, WebRequest request) {
 		logger.error("Handling Internal Server Error: {}", ex);
-		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(), request.getHeader("Accept")) ;
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(), request.getHeader(HttpHeaders.ACCEPT)) ;
 	}
 	
 	
@@ -147,7 +149,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler({RuntimeException.class})
 	public final Object catchAll(RuntimeException ex, WebRequest request) {
 		logger.error("Handling Uncaught Runtime Exception: {}", ex);
-		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(), request.getHeader("Accept"));
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(), request.getHeader(HttpHeaders.ACCEPT));
 	}
 	
 	
@@ -155,7 +157,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler({Exception.class})
 	public final Object catchAll(Exception ex, WebRequest request) {
 		logger.error("Handling Uncaught Exception: {}", ex);
-		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(),request.getHeader("Accept"));
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, SystemMessages.internalError(),request.getHeader(HttpHeaders.ACCEPT));
 	}
 	
 
@@ -166,7 +168,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		var error = ex.getBindingResult().getAllErrors().get(0);
 
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.BAD_REQUEST, RequestUtils.extractValidationError(error),request.getHeader("Accept")),
+				buildProblem(HttpStatus.BAD_REQUEST, RequestUtils.extractValidationError(error),request.getHeader(HttpHeaders.ACCEPT)),
 				HttpStatus.BAD_REQUEST);
 	}
 	
@@ -182,7 +184,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			msg = ex.getLocalizedMessage();
 		}
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.BAD_REQUEST,msg, request.getHeader("Accept")),
+				buildProblem(HttpStatus.BAD_REQUEST,msg, request.getHeader(HttpHeaders.ACCEPT)),
 				HttpStatus.BAD_REQUEST);
 	}
 
@@ -192,7 +194,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.NOT_FOUND,ex.getLocalizedMessage(), request.getHeader("Accept")),
+				buildProblem(HttpStatus.NOT_FOUND,ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT)),
 				HttpStatus.NOT_FOUND);	
 		}
 	
@@ -202,7 +204,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage(), request.getHeader("Accept")),
+				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT)),
 				HttpStatus.BAD_REQUEST);	
 		}
 
@@ -212,7 +214,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage(), request.getHeader("Accept")),
+				buildProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT)),
 				HttpStatus.BAD_REQUEST);
 	}
 	
@@ -239,7 +241,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 			request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, RequestAttributes.SCOPE_REQUEST);
 		}
 		return new ResponseEntity<>(
-				buildProblem(HttpStatus.INTERNAL_SERVER_ERROR,ex.getLocalizedMessage(), request.getHeader("Accept")) ,
+				buildProblem(HttpStatus.INTERNAL_SERVER_ERROR,ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT)) ,
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
