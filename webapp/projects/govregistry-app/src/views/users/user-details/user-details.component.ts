@@ -159,6 +159,10 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
               // Validators.pattern(pattern)
             ]);
             break;
+          case 'full_name':
+            value = data[key] ? data[key] : null;
+            _group[key] = new UntypedFormControl(value, [ Validators.required ]);
+            break;
           case 'email':
             value = data[key] ? data[key] : null;
             _group[key] = new UntypedFormControl(value, [
