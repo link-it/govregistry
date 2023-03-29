@@ -5,13 +5,12 @@ import { HttpParams } from '@angular/common/http';
 
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { EventsManagerService } from 'projects/tools/src/lib/eventsmanager.service';
 import { OpenAPIService } from 'projects/govregistry-app/src/services/openAPI.service';
-import { PageloaderService } from 'projects/tools/src/lib/pageloader.service';
 import { SearchBarFormComponent } from 'projects/components/src/lib/ui/search-bar-form/search-bar-form.component';
 
 @Component({
@@ -40,7 +39,7 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
 
   _preventMultiCall: boolean = false;
 
-  _spin: boolean = false;
+  _spin: boolean = true;
   desktop: boolean = false;
 
   _materialAppearance: MatFormFieldAppearance = 'fill';
@@ -79,8 +78,7 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
     private configService: ConfigService,
     public tools: Tools,
     private eventsManagerService: EventsManagerService,
-    public apiService: OpenAPIService,
-    public pageloaderService: PageloaderService
+    public apiService: OpenAPIService
   ) {
     this.config = this.configService.getConfiguration();
     this._materialAppearance = this.config.materialAppearance;
@@ -93,7 +91,6 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
   }
 
   ngOnInit() {
-    this.pageloaderService.resetLoader();
     this.configService.getConfig(this.model).subscribe(
       (config: any) => {
         this.organizationsConfig = config;
