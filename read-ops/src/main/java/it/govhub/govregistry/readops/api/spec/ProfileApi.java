@@ -44,35 +44,35 @@ public interface ProfileApi {
         tags = { "profile" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Successful operation.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Profile.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Profile.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Profile.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "401", description = "Required credentials missing.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "403", description = "Agent not authorized for the operation.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "429", description = "Too many requests.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "503", description = "Service Unavailable.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "200", description = "Unexpected error.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             })
         }
@@ -80,7 +80,7 @@ public interface ProfileApi {
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/profile",
-        produces = { "application/hal+json:", "application/problem+json" }
+        produces = { "application/hal+json", "application/problem+json" }
     )
     ResponseEntity<Profile> profile(
         

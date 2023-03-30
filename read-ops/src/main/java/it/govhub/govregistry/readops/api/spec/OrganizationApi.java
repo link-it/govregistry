@@ -189,31 +189,31 @@ public interface OrganizationApi {
         tags = { "organization" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Successful operation.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = OrganizationList.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = OrganizationList.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = OrganizationList.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "401", description = "Required credentials missing.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "403", description = "Agent not authorized for the operation.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "429", description = "Too many requests.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "503", description = "Service Unavailable.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "200", description = "Unexpected error.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             })
         }
@@ -221,7 +221,7 @@ public interface OrganizationApi {
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/organizations",
-        produces = { "application/hal+json:", "application/problem+json" }
+        produces = { "application/hal+json", "application/problem+json" }
     )
     ResponseEntity<OrganizationList> listOrganizations(
         @NotNull @Parameter(name = "sort", description = "Sorting field.", required = true) @Valid @RequestParam(value = "sort", required = true, defaultValue = "id") OrganizationOrdering sort,
@@ -253,35 +253,35 @@ public interface OrganizationApi {
         tags = { "organization" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Successful operation.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Organization.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Organization.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Organization.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "401", description = "Required credentials missing.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "403", description = "Agent not authorized for the operation.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "429", description = "Too many requests.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "503", description = "Service Unavailable.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "200", description = "Unexpected error.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             })
         }
@@ -289,7 +289,7 @@ public interface OrganizationApi {
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/organizations/{id}",
-        produces = { "application/hal+json:", "application/problem+json" }
+        produces = { "application/hal+json", "application/problem+json" }
     )
     ResponseEntity<Organization> readOrganization(
         @Min(0L) @Max(9223372036854775807L) @Parameter(name = "id", description = "", required = true) @PathVariable("id") Long id
