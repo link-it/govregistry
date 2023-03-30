@@ -11,7 +11,7 @@ import it.govhub.security.config.GovregistryRoles;
 @Component
 public class GovRegistryConfig implements ApplicationConfig {
 	
-	@Value("${application-id:govregistry")
+	@Value("${application-id:govregistry}")
 	String applicationId;
 
 	private static final Set<String> DEFAULT_READ_SERVICE_ROLES = Set.of(
