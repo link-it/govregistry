@@ -189,31 +189,31 @@ public interface ServiceApi {
         tags = { "service" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Successful operation.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = ServiceList.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = ServiceList.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ServiceList.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "401", description = "Required credentials missing.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "403", description = "Agent not authorized for the operation.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "429", description = "Too many requests.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "503", description = "Service Unavailable.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "200", description = "Unexpected error.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             })
         }
@@ -221,7 +221,7 @@ public interface ServiceApi {
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/services",
-        produces = { "application/hal+json:", "application/problem+json" }
+        produces = { "application/hal+json", "application/problem+json" }
     )
     ResponseEntity<ServiceList> listServices(
         @NotNull @Parameter(name = "sort", description = "Sorting field.", required = true) @Valid @RequestParam(value = "sort", required = true, defaultValue = "id") ServiceOrdering sort,
@@ -253,35 +253,35 @@ public interface ServiceApi {
         tags = { "service" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Successful operation.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Service.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Service.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Service.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "401", description = "Required credentials missing.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "403", description = "Agent not authorized for the operation.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "429", description = "Too many requests.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "503", description = "Service Unavailable.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             }),
             @ApiResponse(responseCode = "200", description = "Unexpected error.", content = {
-                @Content(mediaType = "application/hal+json:", schema = @Schema(implementation = Problem.class)),
+                @Content(mediaType = "application/hal+json", schema = @Schema(implementation = Problem.class)),
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Problem.class))
             })
         }
@@ -289,7 +289,7 @@ public interface ServiceApi {
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/services/{id}",
-        produces = { "application/hal+json:", "application/problem+json" }
+        produces = { "application/hal+json", "application/problem+json" }
     )
     ResponseEntity<Service> readService(
         @Min(0L) @Max(9223372036854775807L) @Parameter(name = "id", description = "", required = true) @PathVariable("id") Long id
