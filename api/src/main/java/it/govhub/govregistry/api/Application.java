@@ -102,7 +102,7 @@ public class Application  extends SpringBootServletInitializer {
 		    configurer.
 		    favorParameter(false).
 		    ignoreAcceptHeader(true).
-		    defaultContentType(MediaType.parseMediaType("application/hal+json"));
+		    defaultContentType(MediaType.parseMediaType("application/hal+json"), MediaType.ALL);
 		}
 	}
 	
