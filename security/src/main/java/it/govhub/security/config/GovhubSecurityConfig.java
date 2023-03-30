@@ -70,16 +70,18 @@ public class GovhubSecurityConfig{
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
 		.and()
 			.headers()
-			.xssProtection()
-            .and()
+			.xssProtection();
+         //   .and()
          // Politica di CSP più restrittiva. https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
          // Anche le immagini dal gravatar
-        .contentSecurityPolicy(this.cspPolicy);
+        //.contentSecurityPolicy(this.cspPolicy);
 		
 		return http.build();
 	}
 
-	
+	/**
+	 * Impstiamo il servizio per caricare l'utente a partire dallo header.
+	 */
 	@Bean
 	public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider(GovhubUserDetailService userDetailService) {
 		PreAuthenticatedAuthenticationProvider ret = new PreAuthenticatedAuthenticationProvider();

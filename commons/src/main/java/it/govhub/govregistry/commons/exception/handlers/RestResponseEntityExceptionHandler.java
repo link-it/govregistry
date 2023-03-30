@@ -28,13 +28,11 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.function.ServerRequest.Headers;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
 
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 
-import io.swagger.v3.oas.models.headers.Header;
 import it.govhub.govregistry.commons.api.beans.Problem;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
