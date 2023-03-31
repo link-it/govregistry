@@ -7,7 +7,7 @@ export const navItemsMainMenu: INavData[] = [
     path: 'dashboard',
     url: '/dashboard',
     icon: 'dashboard',
-    permission: 'DASHBOARD',
+    permission: 'PUBLIC',
     attributes: { disabled: false }
   },
   {
