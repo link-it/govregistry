@@ -145,7 +145,9 @@ export class GpLayoutComponent implements OnInit, AfterContentChecked, OnDestroy
       }
     });
 
-    this.loadProfile();
+    setTimeout(() => {
+      this.loadProfile();
+    }, 200);
   }
 
   ngAfterContentChecked() {
