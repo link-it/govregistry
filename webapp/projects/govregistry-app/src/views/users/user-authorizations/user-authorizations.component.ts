@@ -18,6 +18,7 @@ import { OpenAPIService } from '@services/openAPI.service';
 export class UserAuthorizationsComponent implements OnInit, OnDestroy {
 
   @Input() id: number | null = null;
+  @Input() canEdit: boolean = false;
 
   config: any;
 

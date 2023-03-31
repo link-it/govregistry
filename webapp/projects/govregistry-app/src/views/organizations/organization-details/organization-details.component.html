@@ -6,7 +6,7 @@
     <h3 class="page-title" *ngIf="_isEdit && !_isNew">{{ 'APP.TITLE.EditOrganization' | translate }}</h3>
     <h3 class="page-title" *ngIf="_isEdit && _isNew">{{ 'APP.TITLE.NewOrganization' | translate }}</h3>
     <div class="d-flex flex-grow-1">&nbsp;</div>
-    <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'edit'"> -->
+    <ng-template [appHasPermission]="'USERS'" [action]="'edit'">
       <div class="nav-controls">
         <div class="position-relative" *ngIf="!_isEdit && !_spin">
           <button aria-expanded="false" type="button" class="btn btn-default btn-md gl-button btn-icon" [tooltip]="'APP.TOOLTIP.EditOrganization' | translate" (click)="_editOrganization()">
@@ -44,7 +44,7 @@
           </button>
         </div>
       </div>
-    <!-- </ng-template> -->
+    </ng-template>
   </div>
   <section class="container-fluid container-limited limit-container-width container-scroller container-scroller-no-search">
     <ui-box-spinner [color]="'accent'" [diameter]="48" [strokeWidth]="4" *ngIf="_spin && !_isNew"></ui-box-spinner>
@@ -234,12 +234,14 @@
             <div class="text-break" markdown>{{ 'APP.SERVICES.TITLE.LogosInformations_sub' | translate }}</div>
           </div>
           <div class="col-lg-8">
-            <div class="position-absolute top-0" style="z-index: 999;right: 15px !important;">
-              <button class="btn btn-default btn-md gl-button btn-icon ms-3" (click)="toggleEditLogos()" [tooltip]="(_isEditLogos ? 'APP.TOOLTIP.CancelEdit':'APP.TOOLTIP.ModifyLogos') | translate">
-                <span *ngIf="!_isEditLogos"><i class="bi bi-pencil"></i><span class="d-none">{{ 'APP.BUTTON.ModifyLogos' | translate }}</span></span>
-                <span *ngIf="_isEditLogos"><i class="bi bi-x-lg"></i><span class="d-none">{{ 'APP.BUTTON.Cancel' | translate }}</span></span>
-              </button>  
-            </div>
+            <ng-template [appHasPermission]="'ORGANIZATIONS'" [action]="'edit'">
+              <div class="position-absolute top-0" style="z-index: 999;right: 15px !important;">
+                <button class="btn btn-default btn-md gl-button btn-icon ms-3" (click)="toggleEditLogos()" [tooltip]="(_isEditLogos ? 'APP.TOOLTIP.CancelEdit':'APP.TOOLTIP.ModifyLogos') | translate">
+                  <span *ngIf="!_isEditLogos"><i class="bi bi-pencil"></i><span class="d-none">{{ 'APP.BUTTON.ModifyLogos' | translate }}</span></span>
+                  <span *ngIf="_isEditLogos"><i class="bi bi-x-lg"></i><span class="d-none">{{ 'APP.BUTTON.Cancel' | translate }}</span></span>
+                </button>  
+              </div>
+            </ng-template>
             <div class="row" *ngIf="!_isNew">
               <div class="col-6">
                 <div class="form-group logo">

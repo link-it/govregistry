@@ -53,6 +53,8 @@ import { TextUppercaseModule } from './directives/uppercase.module';
 import { TextLowercaseModule } from './directives/lowercase.module';
 import { CountUpeModule } from './directives/count-up.module';
 import { MarkAsteriskModule } from './directives/mark-asterisk.module';
+import { HideMissingModule } from './directives/hide-missing.module';
+import { ImgFallbackModule } from './directives/image-fallback.module';
 
 @NgModule({
   imports: [
@@ -85,7 +87,9 @@ import { MarkAsteriskModule } from './directives/mark-asterisk.module';
     TextUppercaseModule,
     TextLowercaseModule,
     CountUpeModule,
-    MarkAsteriskModule
+    MarkAsteriskModule,
+    HideMissingModule,
+    ImgFallbackModule
   ],
   declarations: [
     HeadBarComponent,
@@ -161,7 +165,9 @@ import { MarkAsteriskModule } from './directives/mark-asterisk.module';
     TextUppercaseModule,
     TextLowercaseModule,
     CountUpeModule,
-    MarkAsteriskModule    
+    MarkAsteriskModule,
+    HideMissingModule,
+    ImgFallbackModule
   ]
 })
 export class ComponentsModule { }
