@@ -6,12 +6,14 @@
     <h3 class="page-title" *ngIf="_isEdit && !_isNew">{{ 'APP.TITLE.EditUser' | translate }}</h3>
     <h3 class="page-title" *ngIf="_isEdit && _isNew">{{ 'APP.TITLE.NewUser' | translate }}</h3>
     <div class="d-flex flex-grow-1">&nbsp;</div>
-    <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'edit'"> -->
+    <ng-template [appHasPermission]="'USERS'" [action]="'edit'">
       <div class="nav-controls">
         <div class="position-relative" *ngIf="!_isEdit && !_spin">
-          <button aria-expanded="false" type="button" class="btn btn-default btn-md gl-button btn-icon" [tooltip]="'APP.TOOLTIP.EditUser' | translate" (click)="_editUser()">
-            <i class="bi bi-pencil"></i>
-          </button>
+          <ng-template [appHasPermission]="'USERS'" [action]="'edit'">
+            <button aria-expanded="false" type="button" class="btn btn-default btn-md gl-button btn-icon" [tooltip]="'APP.TOOLTIP.EditUser' | translate" (click)="_editUser()">
+              <i class="bi bi-pencil"></i>
+            </button>
+          </ng-template>
         </div>
         <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'delete'"> -->
           <!-- <div role="group" class="btn-group- ms-1" *ngIf="!_isEdit && !_spin">
@@ -44,7 +46,7 @@
           </button>
         </div>
       </div>
-    <!-- </ng-template> -->
+    </ng-template>
   </div>
   <section class="container-fluid container-limited limit-container-width container-scroller container-scroller-no-search">
     <ui-box-spinner [color]="'accent'" [diameter]="48" [strokeWidth]="4" *ngIf="_spin && !_isNew"></ui-box-spinner>
@@ -156,7 +158,10 @@
           <div class="text-break" markdown>{{ 'APP.USERS.TITLE.ShowAuthorizations_sub' | translate }}</div>
         </div>
         <div class="col-lg-8">
-          <app-user-authorizations [id]="id"></app-user-authorizations>
+          <app-user-authorizations
+            [id]="id"
+            [canEdit]="_canEdit">
+          </app-user-authorizations>
         </div>
       </div>
     </div>

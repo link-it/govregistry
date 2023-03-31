@@ -3,10 +3,10 @@
   <span class="" *ngIf="!_spin"><i class="bi-arrow-clockwise text-white" (click)="refresh()"></i></span> 
   <div class="position-relative" *ngIf="!_spin">
     <div role="group" class="gl-w-full btn-group-">
-      <button aria-label="Add authorization" type="button" class="btn btn-default btn-md gl-button btn-icon" (click)="_onNew()" *ngIf="(_editAuthorizations && !_isNew) || !userAuthorizations?.length">
+      <button aria-label="Add authorization" type="button" class="btn btn-default btn-md gl-button btn-icon" (click)="_onNew()" *ngIf="((_editAuthorizations && !_isNew) || !userAuthorizations?.length) && canEdit">
         <span class="">{{ 'APP.BUTTON.AddAuthorization' | translate }}</span>
       </button>
-      <button type="button" class="btn btn-default btn-md gl-button btn-icon ms-3" (click)="_onEditAuthorizations($event)" [tooltip]="(_editAuthorizations ? '' : 'APP.TOOLTIP.EditAuthorizations') | translate" placement="left" *ngIf="userAuthorizations?.length">
+      <button type="button" class="btn btn-default btn-md gl-button btn-icon ms-3" (click)="_onEditAuthorizations($event)" [tooltip]="(_editAuthorizations ? '' : 'APP.TOOLTIP.EditAuthorizations') | translate" placement="left" *ngIf="userAuthorizations?.length && canEdit">
         <span *ngIf="!_editAuthorizations"><i class="bi-pencil"></i></span>
         <span *ngIf="_editAuthorizations"><i class="bi-x-lg"></i><span class="ms-2">{{ 'APP.BUTTON.Cancel' | translate }}</span></span>
       </button>

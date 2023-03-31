@@ -11,24 +11,44 @@ export const AUTH_CONST: any = {
   storageSession: 'GORE_SESSION'
 };
 
+export const USER_ADMIN: string = 'govhub_sysadmin';
+
 export const PERMISSIONS: any = {
-  govregistry_r: [
+  govhub_organizations_editor: [
     { name: 'DASHBOARD', view: true, edit: false, create: false, delete: false },
-    { name: 'USERS', view: true, edit: false, create: false, delete: false },
+    { name: 'USERS', view: false, edit: false, create: false, delete: false },
+    { name: 'ORGANIZATIONS', view: true, edit: true, create: true, delete: true },
+    { name: 'SERVICES', view: false, edit: false, create: false, delete: false },
+  ],
+  govhub_organizations_viewer: [
+    { name: 'DASHBOARD', view: true, edit: false, create: false, delete: false },
+    { name: 'USERS', view: false, edit: false, create: false, delete: false },
     { name: 'ORGANIZATIONS', view: true, edit: false, create: false, delete: false },
-    { name: 'SERVICES', view: true, edit: false, create: false, delete: false },
+    { name: 'SERVICES', view: false, edit: false, create: false, delete: false }
   ],
-  govregistry_rw: [
-    { name: 'DASHBOARD', view: true, edit: true, create: true, delete: true },
-    { name: 'USERS', view: true, edit: true, create: true, delete: true },
-    { name: 'ORGANIZATIONS', view: true, edit: true, create: true, delete: true },
+  govhub_services_editor: [
+    { name: 'DASHBOARD', view: true, edit: false, create: false, delete: false },
+    { name: 'USERS', view: false, edit: false, create: false, delete: false },
+    { name: 'ORGANIZATIONS', view: false, edit: false, create: false, delete: false },
     { name: 'SERVICES', view: true, edit: true, create: true, delete: true }
   ],
-  govregistry_adm: [
+  govhub_services_viewer: [
+    { name: 'DASHBOARD', view: true, edit: false, create: false, delete: false },
+    { name: 'USERS', view: false, edit: false, create: false, delete: false },
+    { name: 'ORGANIZATIONS', view: false, edit: false, create: false, delete: false },
+    { name: 'SERVICES', view: true, edit: false, create: false, delete: false }
+  ],
+  govhub_users_editor: [
     { name: 'DASHBOARD', view: true, edit: true, create: true, delete: true },
     { name: 'USERS', view: true, edit: true, create: true, delete: true },
-    { name: 'ORGANIZATIONS', view: true, edit: true, create: true, delete: true },
-    { name: 'SERVICES', view: true, edit: true, create: true, delete: true }
+    { name: 'ORGANIZATIONS', view: false, edit: false, create: false, delete: false },
+    { name: 'SERVICES', view: false, edit: false, create: false, delete: false }
+  ],
+  govhub_users_viewer: [
+    { name: 'DASHBOARD', view: true, edit: true, create: true, delete: true },
+    { name: 'USERS', view: true, edit: false, create: false, delete: false },
+    { name: 'ORGANIZATIONS', view: false, edit: false, create: false, delete: false },
+    { name: 'SERVICES', view: false, edit: false, create: false, delete: false }
   ],
 };
 
@@ -119,41 +139,43 @@ export class AuthenticationService {
     return session?.full_name ? session?.full_name : session?.principal ?? '<no-username>';
   }
 
-  getRoles() {
+  getAuthorizations() {
     const session = this.getCurrentSession();
-    return session?.roles ?? [];
+    return session?.authorizations ?? [];
   }
 
   hasRole(role: string) {
-    const roles = this.getRoles();
-    if (roles.findIndex((x: any) => x.name === role) > -1) {
+    const _auths = this.getAuthorizations();
+    if (_auths.findIndex((x: any) => x.name === role) > -1) {
       return true;
     }
     return false;
   }
 
   isAdmin() {
+    const _auths: any[] = this.getAuthorizations();
     if (!this.currentSession) {
       return false;
     } else {
-      return (_.includes(this.currentSession.roles, 'govregistry_adm'));
+      const idx = _auths.findIndex((auth: any) => auth.role.role_name === USER_ADMIN);
+      return ( idx > -1);
     }
   }
 
   getPermissions() {
-    const roles: any[] = this.getRoles();
+    const _auths: any[] = this.getAuthorizations();
     let permissions: any[] = [];
-    roles.forEach((role: any) => {
-      permissions = permissions.concat(PERMISSIONS[role]);
+    _auths.forEach((auth: any) => {
+      permissions = permissions.concat(PERMISSIONS[auth.role.role_name]);
     });
     return permissions;
   }
 
   hasPermission(value: string, grant = 'view') {
-    const uValue = value ? value.toUpperCase() : value;
+    const uValue = value;
     if (this.isAdmin() || uValue === 'PUBLIC') { return true; }
     const permissions = this.getPermissions();
-    const idx = permissions.findIndex(o => o.name.toUpperCase() === uValue);
+    const idx = permissions.findIndex((auth: any) => auth.name === uValue);
     const permission = (idx > -1) ? permissions[idx] : null;
     if (permission) {
       return permission[grant];

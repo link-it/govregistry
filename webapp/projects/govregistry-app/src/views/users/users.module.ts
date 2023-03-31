@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { VendorsModule } from 'projects/vendors/src/lib/vendors.module';
 import { ComponentsModule } from 'projects/components/src/lib/components.module';
 import { LinkLabModule } from 'projects/link-lab/src/lib/link-lab.module';
+import { HasPermissionModule } from '@app/directives/has-permission/has-permission.module';
 
 import { UsersComponent } from './users.component';
 import { UsersRoutingModule } from './users-routing.module';
@@ -20,6 +21,7 @@ import { UserDetailsModule } from './user-details/user-details.module';
     VendorsModule,
     ComponentsModule,
     LinkLabModule,
+    HasPermissionModule,
     UsersRoutingModule,
     UserDetailsModule
   ],

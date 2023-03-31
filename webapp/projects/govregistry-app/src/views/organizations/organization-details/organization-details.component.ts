@@ -9,7 +9,6 @@ import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { EventsManagerService } from 'projects/tools/src/lib/eventsmanager.service';
 import { OpenAPIService } from 'projects/govregistry-app/src/services/openAPI.service';
-import { FieldClass } from 'projects/link-lab/src/lib/it/link/classes/definitions';
 
 import { YesnoDialogBsComponent } from 'projects/components/src/lib/dialogs/yesno-dialog-bs/yesno-dialog-bs.component';
 
@@ -41,8 +40,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     { label: 'Details', icon: 'details', link: 'details', enabled: true }
   ];
   _currentTab: string = 'details';
-
-  _informazioni: FieldClass[] = [];
 
   _isDetails = true;
 
@@ -92,7 +89,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
         this.configService.getConfig(this.model).subscribe(
           (config: any) => {
             this.config = config;
-            this._translateConfig();
             this._loadAll();
           }
         );
@@ -297,30 +293,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
         error: (error: any) => {
           this._spin = false;
           Tools.OnError(error);
-        }
-      });
-    }
-  }
-
-  __initInformazioni() {
-    if (this.organization) {
-      this._informazioni = Tools.generateFields(this.config.details, this.organization).map((field: FieldClass) => {
-        field.label = this.translate.instant(field.label);
-        return field;
-      });
-    }
-  }
-
-  _translateConfig() {
-    if (this.config && this.config.options) {
-      Object.keys(this.config.options).forEach((key: string) => {
-        if (this.config.options[key].label) {
-          this.config.options[key].label = this.translate.instant(this.config.options[key].label);
-        }
-        if (this.config.options[key].values) {
-          Object.keys(this.config.options[key].values).forEach((key2: string) => {
-            this.config.options[key].values[key2].label = this.translate.instant(this.config.options[key].values[key2].label);
-          });
         }
       });
     }
