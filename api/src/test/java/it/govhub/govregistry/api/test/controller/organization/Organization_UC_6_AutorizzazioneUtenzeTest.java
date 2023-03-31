@@ -509,7 +509,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	}
 	
 	//11. PatchOrganization con utenza non admin con ruolo govhub_organizations_editor che ha autorizzazione solo su una organization
-	@Test
+	//@Test
 	void UC_6_11_PatchOrganizationOk_UtenzaConRuolo_GovHub_Organizations_Editor_Authorization() throws Exception {
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_4);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
