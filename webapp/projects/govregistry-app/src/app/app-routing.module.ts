@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 
-import { AuthGuard } from '../guard/auth.guard';
+import { AuthGuard, PermissionGuard } from '../guard';
 
 import { GpLayoutComponent, SimpleLayoutComponent } from '../containers';
 
@@ -32,14 +32,20 @@ const routes: Routes = [
       },
       {
         path: 'users',
+        canActivate: [PermissionGuard],
+        data: {  permission: 'USERS', grant: 'view' },
         loadChildren: () => import('../views/users/users.module').then(m => m.UsersModule)
       },
       {
         path: 'organizations',
+        canActivate: [PermissionGuard],
+        data: {  permission: 'ORGANIZATIONS', grant: 'view' },
         loadChildren: () => import('../views/organizations/organizations.module').then(m => m.OrganizationsModule)
       },
       {
         path: 'services',
+        canActivate: [PermissionGuard],
+        data: {  permission: 'SERVICES', grant: 'view' },
         loadChildren: () => import('../views/services/services.module').then(m => m.ServicesModule)
       },
     ]
