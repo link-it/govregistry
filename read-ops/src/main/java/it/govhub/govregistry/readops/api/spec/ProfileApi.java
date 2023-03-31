@@ -23,6 +23,7 @@ import it.govhub.govregistry.commons.api.beans.Profile;
 @Generated(value = "it.govhub.openapi.codegen.GovhubCodegenGenerator", date = "2023-03-30T13:10:58.167825+02:00[Europe/Rome]")
 @Validated
 @Tag(name = "Profile", description = "the Profile API")
+@RequestMapping("/v1")
 public interface ProfileApi {
 
     /**
