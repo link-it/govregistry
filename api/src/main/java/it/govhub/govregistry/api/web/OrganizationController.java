@@ -109,7 +109,7 @@ public class OrganizationController  implements OrganizationApi {
 	@Override
 	public ResponseEntity<Organization> updateOrganization(Long id, List<PatchOp> patchOp) {
 		
-		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);
@@ -172,7 +172,7 @@ public class OrganizationController  implements OrganizationApi {
 
 	@Override
 	public ResponseEntity<Void> removeOrganizationLogo(Long id) {
-		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
 		OrganizationEntity org = this.orgRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
@@ -186,7 +186,7 @@ public class OrganizationController  implements OrganizationApi {
 
 	@Override
 	public ResponseEntity<Void> removeOrganizationLogoMiniature(Long id) {
-		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
 		OrganizationEntity org = this.orgRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
@@ -200,7 +200,7 @@ public class OrganizationController  implements OrganizationApi {
 
 	@Override
 	public ResponseEntity<Void> updateOrganizationLogo(Long id, Resource body) {
-		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
 		OrganizationEntity org = this.orgRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));
@@ -223,7 +223,7 @@ public class OrganizationController  implements OrganizationApi {
 
 	@Override
 	public ResponseEntity<Void> updateOrganizationLogoMiniature(Long id,	Resource body) {
-		this.authService.hasAnyOrganizationAuthority(id, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_ORGANIZATIONS_EDITOR);
 		
 		OrganizationEntity org = this.orgRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.orgMessages.idNotFound(id)));

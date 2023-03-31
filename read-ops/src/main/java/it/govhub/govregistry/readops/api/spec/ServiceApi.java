@@ -37,6 +37,7 @@ import it.govhub.govregistry.commons.api.beans.ServiceOrdering;
 @Generated(value = "it.govhub.openapi.codegen.GovhubCodegenGenerator", date = "2023-03-30T13:10:58.167825+02:00[Europe/Rome]")
 @Validated
 @Tag(name = "Service", description = "the Service API")
+@RequestMapping("/v1")
 public interface ServiceApi {
 
     /**

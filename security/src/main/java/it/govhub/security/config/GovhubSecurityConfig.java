@@ -1,5 +1,6 @@
 package it.govhub.security.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.govhub.govregistry.commons.security.AccessDeniedHandlerImpl;
 import it.govhub.govregistry.commons.security.PreAuthenticatedExceptionHandler;
 import it.govhub.govregistry.commons.security.UnauthorizedAuthenticationEntryPoint;
+import it.govhub.govregistry.commons.security.UnauthorizedBasicAuthenticationEntryPoint;
 import it.govhub.security.services.GovhubUserDetailService;
 
 
@@ -37,7 +39,6 @@ public class GovhubSecurityConfig{
     
     @Value("${spring.mvc.servlet.path:}")
     String servletPath;
-
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
@@ -66,6 +67,10 @@ public class GovhubSecurityConfig{
 				// Gestisci la mancata autenticazione con un problem ben formato
 				.authenticationEntryPoint(new UnauthorizedAuthenticationEntryPoint(jsonMapper))	
 		.and()
+			.httpBasic()
+			.authenticationEntryPoint(new UnauthorizedBasicAuthenticationEntryPoint(jsonMapper));
+		
+		http
 				// Le applicazioni di govhub non usano una sessione, nè fanno login. Arrivano solo richieste autenticate.
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
 		.and()
@@ -88,6 +93,16 @@ public class GovhubSecurityConfig{
 		ret.setPreAuthenticatedUserDetailsService(userDetailService);
 		return ret;
 	}
+	
+	
+	/**
+	 * Registriamo lo UserDetailService per essere chiamato in caso di autenticazione basic
+	 */
+	
+	/*@Bean
+	public GovhubUserDetailService userDetailService() {
+		
+	}*/
 	
 	
 	private HttpSecurity applyAuthRules(HttpSecurity http) throws Exception {
