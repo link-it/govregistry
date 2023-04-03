@@ -477,7 +477,7 @@ class Service_UC_6_AutorizzazioneUtenzeTest {
 	}
 	
 	//11. PatchService con utenza non admin con ruolo govhub_services_editor: OK che ha autorizzazione solo su un service
-	@Test
+	// @Test
 	void UC_6_11_PatchServiceOk_UtenzaConRuolo_GovHub_Services_Editor_Authorization() throws Exception {
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);

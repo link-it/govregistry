@@ -92,7 +92,7 @@ public class ServiceController implements ServiceApi {
 	@Override
 	public ResponseEntity<Service> updateService(Long id, List<PatchOp> patchOp) {
 		
-		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR);
 		
 		// Otteniamo l'oggetto JsonPatch
 		JsonPatch patch = RequestUtils.toJsonPatch(patchOp);
@@ -149,7 +149,7 @@ public class ServiceController implements ServiceApi {
 
 	@Override
 	public ResponseEntity<Void> updateServiceLogo(Long id, Resource body) {
-		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR);
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
@@ -172,7 +172,7 @@ public class ServiceController implements ServiceApi {
 
 	@Override
 	public ResponseEntity<Void> updateServiceLogoMiniature(Long id, Resource body) {
-		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR);
 
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
@@ -195,7 +195,7 @@ public class ServiceController implements ServiceApi {
 
 	@Override
 	public ResponseEntity<Void> removeServiceLogo(Long id) {
-		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR);
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
@@ -211,7 +211,7 @@ public class ServiceController implements ServiceApi {
 
 	@Override
 	public ResponseEntity<Void> removeServiceLogoMiniature(Long id) {
-		this.authService.hasAnyServiceAuthority(id,  GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR, GovregistryRoles.GOVREGISTRY_SYSADMIN);
+		this.authService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_SERVICES_EDITOR);
 
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow( () -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
