@@ -59,6 +59,7 @@ public class AuthorizationConverter {
 		Role ret = new Role();
 		BeanUtils.copyProperties(role, ret);
 		ret.setRoleName(role.getName());
+		ret.setApplication(role.getGovhubApplication().getApplicationId());
 		ret.setAssignableRoles(
 				role.getAssignableRoles().stream()
 					.map( rr -> {

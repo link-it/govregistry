@@ -43,21 +43,4 @@ public class ProfileAssembler extends RepresentationModelAssemblerSupport<UserEn
 		return ret;
 	}
 	
-	public Profile toModel(UserEntity src, String applicationId) {
-		log.debug("Assembling Entity [User] to model, filtering out authorizations by applicationId...");
-		
-		Profile ret = new Profile();
-		
-		BeanUtils.copyProperties(src, ret);
-		
-		List<Authorization> auths = src.getAuthorizations().stream()
-			.filter( auth -> auth.getRole().getGovhubApplication().getApplicationId().equals(applicationId))	
-			.map(this.authAssembler::toModel)
-			.collect(Collectors.toList());
-		
-		ret.setAuthorizations(auths);
-		
-		return ret;
-	}
-
 }

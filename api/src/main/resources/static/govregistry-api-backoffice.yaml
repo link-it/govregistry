@@ -49,7 +49,7 @@ paths:
            '200':
              description: Successful operation.
              content:
-               application/json:
+               application/hal+json:
                  schema:
                    $ref: 'govhub-api-commons.yaml#/components/schemas/Profile'          
            '400':
@@ -85,7 +85,7 @@ paths:
         '201':
           description: Successful operation.
           content:
-            application/json:
+            application/hal+json:
               schema:
                 $ref: 'govhub-api-commons.yaml#/components/schemas/User'          
           links:
@@ -129,7 +129,7 @@ paths:
         '200':
           description: Successful operation.
           content:
-            application/json:
+            application/hal+json:
               schema:
                  $ref: "govhub-api-commons.yaml#/components/schemas/UserList"
         '400':
@@ -160,7 +160,7 @@ paths:
         '200':
           description: Successful operation.
           content:
-            application/json:
+            application/hal+json:
               schema:
                 $ref: 'govhub-api-commons.yaml#/components/schemas/User'          
         '400':
@@ -194,7 +194,7 @@ paths:
         '200':
           description: Succsessful operation.
           content:
-             application/json:
+             application/hal+json:
                 schema:
                    $ref: 'govhub-api-commons.yaml#/components/schemas/User'
           links:
@@ -243,7 +243,7 @@ paths:
         '200':
           description: Successful operation.
           content:
-            application/json:
+            application/hal+json:
               schema:
                 $ref: "govhub-api-commons.yaml#/components/schemas/Authorization"
           links:
@@ -279,7 +279,7 @@ paths:
            '200':
              description: Successful operation.
              content:
-               application/json:
+               application/hal+json:
                  schema:
                     $ref: "govhub-api-commons.yaml#/components/schemas/AuthorizationList"
            '400':
@@ -343,7 +343,7 @@ paths:
         '201':
           description: Successful operation.
           content:
-            application/json:
+            application/hal+json:
               schema:
                 $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'        
           links:
@@ -386,7 +386,7 @@ paths:
         '200':
           description: Successful operation.
           content:
-            application/json:
+            application/hal+json:
               schema:
                  $ref: "govhub-api-commons.yaml#/components/schemas/OrganizationList"
         '400':
@@ -417,7 +417,7 @@ paths:
            '200':
              description: Successful operation.
              content:
-               application/json:
+               application/hal+json:
                  schema:
                    $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'          
            '400':
@@ -451,7 +451,7 @@ paths:
         "200":
           description: Succsessful operation.
           content:
-             application/json:
+             application/hal+json:
                 schema:
                    $ref: 'govhub-api-commons.yaml#/components/schemas/Organization'                            
           links:
@@ -671,7 +671,7 @@ paths:
         '201':
           description: Successful operation.
           content:
-            application/json:
+            application/hal+json:
               schema:
                 $ref: 'govhub-api-commons.yaml#/components/schemas/Service'
           links:
@@ -709,7 +709,7 @@ paths:
         '200':
           description: Successful operation.
           content:
-            application/json:
+            application/hal+json:
               schema:
                  $ref: "govhub-api-commons.yaml#/components/schemas/ServiceList"
         '400':
@@ -738,7 +738,7 @@ paths:
            '200':
              description: Successful operation.
              content:
-               application/json:
+               application/hal+json:
                  schema:
                    $ref: 'govhub-api-commons.yaml#/components/schemas/Service'          
            '400':
@@ -772,7 +772,7 @@ paths:
            '200':
              description: Succsessful operation.
              content:
-                application/json:
+                application/hal+json:
                    schema:
                       $ref: 'govhub-api-commons.yaml#/components/schemas/Service'
              links:
@@ -989,7 +989,7 @@ paths:
            '200':
               description: Successful operation.
               content:
-                 application/json:
+                 application/hal+json:
                     schema:
                        $ref: 'govhub-api-commons.yaml#/components/schemas/RoleList'
            '400':
