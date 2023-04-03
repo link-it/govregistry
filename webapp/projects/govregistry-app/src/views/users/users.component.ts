@@ -129,29 +129,24 @@ export class UsersComponent implements OnInit, AfterContentChecked {
     this._spin = true;
     this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
-        if (response === null) {
-          this._unimplemented = true;
-        } else {
-
-          if (response.page !== undefined) {
-            this.page = response.page;
-            this._links = this.page.links;  
-          }
-
-          if (response.items) {
-            const _list: any = response.items.map((user: any) => {
-              const element = {
-                id: user.id,
-                source: { ...user }
-              };
-              return element;
-            });
-            this.users = (url) ? [...this.users, ..._list] : [..._list];
-            this._preventMultiCall = false;
-          }
-          this._spin = false;
-          Tools.ScrollTo(0);
+        if (response.page !== undefined) {
+          this.page = response.page;
+          this._links = this.page.links;  
         }
+
+        if (response.items) {
+          const _list: any = response.items.map((user: any) => {
+            const element = {
+              id: user.id,
+              source: { ...user }
+            };
+            return element;
+          });
+          this.users = (url) ? [...this.users, ..._list] : [..._list];
+          this._preventMultiCall = false;
+        }
+        this._spin = false;
+        Tools.ScrollTo(0);
       },
       error: (error: any) => {
         this._setErrorMessages(true);
