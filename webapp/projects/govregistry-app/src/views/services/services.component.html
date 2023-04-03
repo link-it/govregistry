@@ -62,19 +62,12 @@
     (scrolled)="__loadMoreData()"
     [scrollWindow]="false">
     <div class="row">
-      <ui-box-message *ngIf="services.length == 0 && !_spin && !_unimplemented"
+      <ui-box-message *ngIf="services.length == 0 && !_spin"
         [size]="64"
         [icon]="'report_problem'"
         [image]="'./assets/images/illustrations/services.svg'"
         [message]="_message | translate"
         [subMessage]="_messageHelp | translate">
-      </ui-box-message>
-
-      <ui-box-message *ngIf="_unimplemented && !_spin"
-        [size]="64"
-        [icon]="'report_problem'"
-        [image]="'./assets/images/illustrations/users.svg'"
-        [message]="_messageUnimplemented | translate">
       </ui-box-message>
 
       <div class="col-12">

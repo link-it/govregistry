@@ -70,7 +70,7 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
     { label: 'APP.TITLE.Services', url: '', type: 'title', icon: 'apps' }
   ];
 
-  _unimplemented: boolean = false;
+  _serviceLogoPlaceholder: string = './assets/images/service-placeholder.png';
 
   constructor(
     private route: ActivatedRoute,
@@ -139,27 +139,23 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
     this._spin = true;
     this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
-        if (response === null) {
-          this._unimplemented = true;
-        } else {
+        this.page = response.page;
+        this._links = response._links;
 
-          this.page = response.page;
-          this._links = response._links;
-
-          if (response.items) {
-            const _list: any = response.items.map((service: any) => {
-              const element = {
-                id: service.id,
-                source: { ...service }
-              };
-              return element;
-            });
-            this.services = (url) ? [...this.services, ..._list] : [..._list];
-            this._preventMultiCall = false;
-          }
-          this._spin = false;
-          Tools.ScrollTo(0);
+        if (response.items) {
+          const _list: any = response.items.map((service: any) => {
+            const _service: any = this.__prepareServiceData(service);
+            const element = {
+              id: service.id,
+              source: { ..._service }
+            };
+            return element;
+          });
+          this.services = (url) ? [...this.services, ..._list] : [..._list];
+          this._preventMultiCall = false;
         }
+        this._spin = false;
+        Tools.ScrollTo(0);
       },
       error: (error: any) => {
         this._setErrorMessages(true);
@@ -168,6 +164,16 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
         // Tools.OnError(error);
       }
     });
+  }
+
+  __prepareServiceData(service: any) {
+    const _service: any = {
+      ... service,
+      logo: service._links['logo']?.href || this._serviceLogoPlaceholder,
+      logo_small: service._links['logo-miniature']?.href || this._serviceLogoPlaceholder
+    };
+
+    return _service;
   }
 
   _queryToHttpParams(query: any) : HttpParams {
