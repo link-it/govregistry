@@ -98,6 +98,9 @@ export class ItemTypeComponent implements OnInit, AfterViewInit {
     if (this._elem.type === 'avatar') {
       this._tooltip = this.utilsLib.getObjectValue(this._data.source, this._elem.tooltip);
     }
+    if (this._elem.type === 'avatar-image') {
+      this._tooltip = this.utilsLib.getObjectValue(this._data.source, this._elem.tooltip);
+    }
   }
 
   ngAfterViewInit(): void {
