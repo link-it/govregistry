@@ -49,6 +49,8 @@ public class Costanti {
 	public static final String SERVICE_NAME_TEST_2 = "Servizio Test 2";
 	public static final String SERVICE_DESCRIPTION_TEST = "Generica descrizione per un servizio di test";
 	
+	public static final String APPLICATION_GOVREGISTRY = "govregistry";
+	
 	/* USERS */
 	
 	public static UserEntity getUser_Snakamoto() {

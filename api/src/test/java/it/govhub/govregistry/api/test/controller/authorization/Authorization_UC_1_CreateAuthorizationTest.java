@@ -128,6 +128,9 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		// Nome Ruolo
 		assertEquals(nomeRuolo, roleAuthorizationEntity.getRole().getName());
 		
+		// Applicazione
+		assertEquals(Costanti.APPLICATION_GOVREGISTRY, roleAuthorizationEntity.getRole().getGovhubApplication().getApplicationId());
+		
 		// ExpirationDate
 		if(expirationDate == null) {
 			assertNull(roleAuthorizationEntity.getExpirationDate());
