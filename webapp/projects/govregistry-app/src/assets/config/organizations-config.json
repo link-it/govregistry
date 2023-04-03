@@ -2,22 +2,18 @@
   "table":[],
 
   "simpleItem": {
+    "avatar": { "field": "logo_small", "type": "avatar-image" },
     "primaryText": [
       { "field": "legal_name", "type": "text" }
     ],
-    "secondaryText": [
-      { "field": "tax_code", "type": "text" }
-    ],
+    "secondaryText": [],
     "metadata": {
       "text": [
-        { "field": "id", "type": "cardinal" },
-        { "field": "office_at", "type": "text", "default": "APP.PLACEHOLDER.UnknownOffice" }
+        { "field": "id", "type": "cardinal" }
       ],
       "label": []
     },
-    "secondaryMetadata": [
-      { "field": "office_email_address", "type": "text" }
-    ]
+    "secondaryMetadata": []
   },
 
   "details": [
