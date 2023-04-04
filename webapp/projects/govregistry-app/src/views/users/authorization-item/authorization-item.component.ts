@@ -352,32 +352,32 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
 
   _orgLogoBackground = (item: any): string => {
     let logoUrl = this._organizationLogoPlaceholder;
-    if (item && item._links && item._links.logo) {
-      logoUrl = item._links.logo.href;
+    if (item && item._links && item._links['logo-miniature']) {
+      logoUrl = item._links['logo-miniature'].href;
     }
     return `url(${logoUrl})`;
   };
 
   _orgLogoUrl = (item: any): string => {
     let logoUrl = this._organizationLogoPlaceholder;
-    if (item && item._links && item._links.logo) {
-      logoUrl = item._links.logo.href;
+    if (item && item._links && item._links['logo-miniature']) {
+      logoUrl = item._links['logo-miniature'].href;
     }
     return `${logoUrl}`;
   };
 
   _serviceLogoBackground = (item: any): string => {
     let logoUrl = this._serviceLogoPlaceholder;
-    if (item && item._links && item._links.logo) {
-      logoUrl = item._links.logo.href;
+    if (item && item._links && item._links['logo-miniature']) {
+      logoUrl = item._links['logo-miniature'].href;
     }
     return `url(${logoUrl})`;
   };
 
   _serviceLogoUrl = (item: any): string => {
     let logoUrl = this._serviceLogoPlaceholder;
-    if (item && item._links && item._links.logo) {
-      logoUrl = item._links.logo.href;
+    if (item && item._links && item._links['logo-miniature']) {
+      logoUrl = item._links['logo-miniature'].href;
     }
     return `${logoUrl}`;
   };
