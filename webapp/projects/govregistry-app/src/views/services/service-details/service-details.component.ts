@@ -15,6 +15,9 @@ import { YesnoDialogBsComponent } from 'projects/components/src/lib/dialogs/yesn
 
 import { Service } from './service';
 
+import { Observable, forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 import * as jsonpatch from 'fast-json-patch';
 import moment from 'moment';
 
@@ -70,6 +73,13 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
   _imagePlaceHolder: string = './assets/images/logo-placeholder.png';
 
   _modalConfirmRef!: BsModalRef;
+
+  _modifiedLogo: boolean = false;
+  _modifiedLogoSmall: boolean = false;
+  _logoData: any = null;
+  _logoSmallData: any = null;
+
+  _refreshLogo: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -270,6 +280,8 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
       if (reload) {
         this._spin = true;
         this.service = null;
+      } else {
+        this._refreshLogo = true;
       }
       this.apiService.getDetails(this.model, this.id).subscribe({
         next: (response: any) => {
@@ -279,10 +291,18 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
           if (this.config.detailsTitle) {
             this._title = Tools.simpleItemFormatter(this.config.detailsTitle, this.service);
           }
+
+          this._modifiedLogo = false;
+          this._logoData = null;
+          this._modifiedLogoSmall = false;
+          this._logoSmallData = null;
+
           this._spin = false;
+          this._refreshLogo = false;
         },
         error: (error: any) => {
           this._spin = false;
+          this._refreshLogo = false;
           Tools.OnError(error);
         }
       });
@@ -326,10 +346,6 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
     this._currentTab = tab;
   }
 
-  _dummyAction(event: any, param: any) {
-    console.log(event, param);
-  }
-
   _editService() {
     this._initForm({ ...this._service });
     this._isEdit = true;
@@ -366,6 +382,82 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
   }
 
   _onImageLoaded(event: any, type: string) {
+    if (type === 'logo') {
+      this._modifiedLogo = true;
+      this._logoData = event;
+    } else {
+      this._modifiedLogoSmall = true;
+      this._logoSmallData = event;
+    }
+  }
+
+  _saveLogos() {
+    if (this._modifiedLogo || this._modifiedLogoSmall) {
+      const reqs: Observable<any>[] = [];
+
+      if (this._modifiedLogo) {
+        if (this._logoData) {
+          reqs.push(
+            this.apiService.uploadImage(this.model, this.service.id, 'logo', this._logoData)
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        } else {
+          reqs.push(
+            this.apiService.deleteElementImage(this.model, this.service.id, 'logo')
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        }
+      }
+
+      if (this._modifiedLogoSmall) {
+        if (this._logoSmallData) {
+          reqs.push(
+            this.apiService.uploadImage(this.model, this.service.id, 'logo-miniature', this._logoSmallData)
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo small error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        } else {
+          reqs.push(
+            this.apiService.deleteElementImage(this.model, this.service.id, 'logo-miniature')
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo small error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        }
+      }
+
+      forkJoin(reqs).subscribe(
+        (results: Array<any>) => {
+          this._isEditLogos = false;
+          this._loadService(false);
+        },
+        (error: any) => {
+          console.log('_saveLogo forkJoin error', error);
+        }
+      );
+    } else {
+      console.log('_saveLogo', 'NO Moodified');
+    }
+  }
+
+  _onImageLoadedOrig(event: any, type: string) {
     if (event) {
       this.apiService.uploadImage(this.model, this.service.id, type, event).subscribe(
         (response) => {
@@ -385,8 +477,7 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
         }
       );
     }
-}
-
+  }
 
   _getLogo(item: any, type: string, bg: boolean = false) {
     let logoUrl = this._imagePlaceHolder;
@@ -394,9 +485,17 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
       logoUrl = item._links[type].href;
       logoUrl += '?t=' + moment().valueOf();
     }
-
     return bg ? `url(${logoUrl})` : logoUrl;
   };
+
+  _getLogoMapper = (item: any, type: string, bg: boolean = false): string => {
+    let logoUrl = this._imagePlaceHolder;
+    if (item && item._links && item._links[type]) {
+      logoUrl = item._links[type].href;
+      logoUrl += '?t=' + moment().valueOf();
+    }
+    return bg ? `url(${logoUrl})` : logoUrl;
+  }
 
   _hasLogo(item: any, type: string) {
     let _hasLogo = false;
@@ -406,7 +505,20 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
     return _hasLogo;
   };
 
-  toggleEditLogos() {
-    this._isEditLogos = !this._isEditLogos;
+  _hasLogoMapper = (item: any, type: string) => {
+    let _hasLogo = false;
+    if (item && item._links && item._links[type]) {
+      _hasLogo = true;
+    }
+    return _hasLogo;
+  }
+
+  _onEditLogos() {
+    this._isEditLogos = true;
+  }
+
+  _onCancelEditLogos() {
+    this._isEditLogos = false;
+    this._loadService(false);
   }
 }
