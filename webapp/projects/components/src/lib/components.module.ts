@@ -55,6 +55,8 @@ import { CountUpeModule } from './directives/count-up.module';
 import { MarkAsteriskModule } from './directives/mark-asterisk.module';
 import { HideMissingModule } from './directives/hide-missing.module';
 import { ImgFallbackModule } from './directives/image-fallback.module';
+import { SetBackgroundImageModule } from './directives/set-background-image.module';
+import { AlphanumericOnlyModule } from './directives/alphanumeric-only.module';
 
 @NgModule({
   imports: [
@@ -89,7 +91,9 @@ import { ImgFallbackModule } from './directives/image-fallback.module';
     CountUpeModule,
     MarkAsteriskModule,
     HideMissingModule,
-    ImgFallbackModule
+    ImgFallbackModule,
+    SetBackgroundImageModule,
+    AlphanumericOnlyModule
   ],
   declarations: [
     HeadBarComponent,
@@ -167,7 +171,9 @@ import { ImgFallbackModule } from './directives/image-fallback.module';
     CountUpeModule,
     MarkAsteriskModule,
     HideMissingModule,
-    ImgFallbackModule
+    ImgFallbackModule,
+    SetBackgroundImageModule,
+    AlphanumericOnlyModule
   ]
 })
 export class ComponentsModule { }
