@@ -37,3 +37,9 @@ update govhub_applications set logo_type = 'SVG' where logo_type='1';
 update govhub_applications set logo_type = 'BOOTSTRAP' where logo_type='2';
 update govhub_applications set logo_type = 'MATERIAL' where logo_type='3';
 
+-- PATCH 7-04-2024
+
+alter table govhub_authorizations alter column id_govhub_user set not null;
+
+alter table govhub_authorizations alter column id_govhub_role set not null;
+
