@@ -2,16 +2,6 @@
   <div class="alert-wrapper gp-force-block-formatting-context">
     <ui-breadcrumb [breadcrumbs]="breadcrumbs" (onClick)="onBreadcrumb($event)"></ui-breadcrumb>
   </div>
-  <!-- <div class="flash-container flash-container-page sticky gp-display-block d-none">
-    <div class="flash-notice" data-testid="alert-info">
-      <div class="flash-text">
-        You must sign in to search for specific terms.
-        <div class="close-icon-wrapper">
-          <mat-icon class="fs-6" fontSet="material-icons-outlined">close</mat-icon>
-        </div>
-      </div>
-    </div>
-  </div> -->
   <div class="top-area">
     <div class="tabs gp-tabs d-flex flex-grow-1 p-0 m-0 mobile-separator issuable-state-filters">
       <div class="">
@@ -26,11 +16,11 @@
     </div>
     <div class="nav-controls">
       <div role="group" class="gl-w-full btn-group-" *ngIf="!_spin">
-        <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'create'"> -->
+        <ng-template [appHasPermission]="'SERVICES'" [action]="'create'">
           <button aria-label="Add payment" type="button" class="btn btn-confirm btn-md gl-button btn-icon" (click)="_onNew()">
             <mat-icon fontSet="material-icons-outlined">add</mat-icon> <span class="ms-2">{{ 'APP.BUTTON.AddService' | translate }}</span>
           </button>
-        <!-- </ng-template> -->
+        </ng-template>
       </div>
     </div>
   </div>
@@ -49,6 +39,7 @@
           [sortDirection]="sortDirection"
           [sortFields]="sortFields"
           [formGroup]="_formGroup"
+          [simple]="true"
           (onSearch)="_onSearch($event)"
           (onSort)="_onSort($event)">
           <div form-search>
@@ -71,7 +62,7 @@
     (scrolled)="__loadMoreData()"
     [scrollWindow]="false">
     <div class="row">
-      <ui-box-message *ngIf="services.length == 0 && !_spin && !_unimplemented"
+      <ui-box-message *ngIf="services.length == 0 && !_spin"
         [size]="64"
         [icon]="'report_problem'"
         [image]="'./assets/images/illustrations/services.svg'"
@@ -79,22 +70,13 @@
         [subMessage]="_messageHelp | translate">
       </ui-box-message>
 
-      <ui-box-message *ngIf="_unimplemented && !_spin"
-        [size]="64"
-        [icon]="'report_problem'"
-        [image]="'./assets/images/illustrations/users.svg'"
-        [message]="_messageUnimplemented | translate">
-      </ui-box-message>
-
       <div class="col-12">
-        <ui-simple-item class="border-bottom" *ngFor="let service of services"
-          [primaryText]="service.primaryText"
-          [secondaryText]="service.secondaryText"
-          [metadata]="service.metadata"
-          [secondaryMetadata]="service.secondaryMetadata"
+        <ui-item-row class="border-bottom" *ngFor="let service of services"
+          [data]="service"
+          [config]="servicesConfig"
           [hasLink]="true"
-          (simpleClick)="_onEdit($event, service)">
-        </ui-simple-item>
+          (itemClick)="_onEdit($event, service)">
+        </ui-item-row>
       </div>
 
       <ui-box-spinner [color]="'accent'" [diameter]="48" [strokeWidth]="4" *ngIf="_spin"></ui-box-spinner>

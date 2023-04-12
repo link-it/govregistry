@@ -2,21 +2,24 @@ import { AfterContentChecked, Component, EventEmitter, Input, OnChanges, OnDestr
 import { Router, ActivatedRoute } from '@angular/router';
 import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { EventsManagerService } from 'projects/tools/src/lib/eventsmanager.service';
 import { OpenAPIService } from 'projects/govregistry-app/src/services/openAPI.service';
-import { PageloaderService } from 'projects/tools/src/lib/pageloader.service';
 import { FieldClass } from 'projects/link-lab/src/lib/it/link/classes/definitions';
 
 import { YesnoDialogBsComponent } from 'projects/components/src/lib/dialogs/yesno-dialog-bs/yesno-dialog-bs.component';
 
 import { Service } from './service';
 
+import { Observable, forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 import * as jsonpatch from 'fast-json-patch';
+import moment from 'moment';
 
 @Component({
   selector: 'app-service-details',
@@ -53,6 +56,7 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
   _isNew = false;
   _formGroup: UntypedFormGroup = new UntypedFormGroup({});
   _service: Service = new Service({});
+  _isEditLogos = false;
 
   serviceProviders: any = null;
 
@@ -66,7 +70,16 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
   _error: boolean = false;
   _errorMsg: string = '';
 
+  _imagePlaceHolder: string = './assets/images/logo-placeholder.png';
+
   _modalConfirmRef!: BsModalRef;
+
+  _modifiedLogo: boolean = false;
+  _modifiedLogoSmall: boolean = false;
+  _logoData: any = null;
+  _logoSmallData: any = null;
+
+  _refreshLogo: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -76,23 +89,12 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
     private configService: ConfigService,
     public tools: Tools,
     public eventsManagerService: EventsManagerService,
-    public apiService: OpenAPIService,
-    public pageloaderService: PageloaderService
+    public apiService: OpenAPIService
   ) {
     this.appConfig = this.configService.getConfiguration();
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      // Changed
-    });
-
-    this.pageloaderService.resetLoader();
-    this.pageloaderService.isLoading.subscribe({
-      next: (x) => { this._spin = x; },
-      error: (e: any) => { console.log('loader error', e); }
-    });
-
     this.route.params.subscribe(params => {
       if (params['id'] && params['id'] !== 'new') {
         this.id = params['id'];
@@ -184,7 +186,8 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
         this._initBreadcrumb();
         this._isEdit = false;
         this._isNew = false;
-        this.save.emit({ id: this.id, payment: response, update: false });
+        this.save.emit({ id: this.id, service: response, update: false });
+        this.router.navigate([this.model, this.service.id], { replaceUrl: true });
       },
       (error: any) => {
         this._error = true;
@@ -197,7 +200,7 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
     const $this = this;
     return Object.keys(obj)
       .filter(function (k) {
-        return obj[k] != null;
+        return ( obj[k] != null && typeof obj[k] !== "object");
       })
       .reduce(function (acc: any, k: string) {
         acc[k] = typeof obj[k] === "object" ? $this.__removeEmpty(obj[k]) : obj[k];
@@ -214,7 +217,7 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
       this.apiService.updateElement(this.model, id, _bodyPatch).subscribe(
         (response: any) => {
           this._isEdit = !this._closeEdit;
-          this.service = new Service({ ...response });
+          this.service = response; // new Service({ ...response });
           this._service = new Service({ ...response });
           this.id = this.service.id;
           this.save.emit({ id: this.id, payment: response, update: true });
@@ -272,20 +275,34 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
     );
   }
   
-  _loadService() {
+  _loadService(reload: boolean = true) {
     if (this.id) {
-      this.service = null;
+      if (reload) {
+        this._spin = true;
+        this.service = null;
+      } else {
+        this._refreshLogo = true;
+      }
       this.apiService.getDetails(this.model, this.id).subscribe({
         next: (response: any) => {
-          this.service = new Service({ ...response });
+          this.service = response; // new Service({ ...response });
           this._service = new Service({ ...response });
           this._title = this.service.creditorReferenceId;
           if (this.config.detailsTitle) {
             this._title = Tools.simpleItemFormatter(this.config.detailsTitle, this.service);
           }
-          // this.__initInformazioni();
+
+          this._modifiedLogo = false;
+          this._logoData = null;
+          this._modifiedLogoSmall = false;
+          this._logoSmallData = null;
+
+          this._spin = false;
+          this._refreshLogo = false;
         },
         error: (error: any) => {
+          this._spin = false;
+          this._refreshLogo = false;
           Tools.OnError(error);
         }
       });
@@ -319,7 +336,7 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
   _initBreadcrumb() {
     const _title = this.id ? `#${this.id}` : this.translate.instant('APP.TITLE.New');
     this.breadcrumbs = [
-      { label: '', url: '', type: 'title', icon: 'corporate_fare' },
+      { label: '', url: '', type: 'title', icon: 'apps' },
       { label: 'APP.TITLE.Services', url: '/services', type: 'link' },
       { label: `${_title}`, url: '', type: 'title' }
     ];
@@ -327,10 +344,6 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
 
   _clickTab(tab: string) {
     this._currentTab = tab;
-  }
-
-  _dummyAction(event: any, param: any) {
-    console.log(event, param);
   }
 
   _editService() {
@@ -366,5 +379,146 @@ export class ServiceDetailsComponent implements OnInit, OnChanges, AfterContentC
     } else {
       this._onClose();
     }
+  }
+
+  _onImageLoaded(event: any, type: string) {
+    if (type === 'logo') {
+      this._modifiedLogo = true;
+      this._logoData = event;
+    } else {
+      this._modifiedLogoSmall = true;
+      this._logoSmallData = event;
+    }
+  }
+
+  _saveLogos() {
+    if (this._modifiedLogo || this._modifiedLogoSmall) {
+      const reqs: Observable<any>[] = [];
+
+      if (this._modifiedLogo) {
+        if (this._logoData) {
+          reqs.push(
+            this.apiService.uploadImage(this.model, this.service.id, 'logo', this._logoData)
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        } else {
+          reqs.push(
+            this.apiService.deleteElementImage(this.model, this.service.id, 'logo')
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        }
+      }
+
+      if (this._modifiedLogoSmall) {
+        if (this._logoSmallData) {
+          reqs.push(
+            this.apiService.uploadImage(this.model, this.service.id, 'logo-miniature', this._logoSmallData)
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo small error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        } else {
+          reqs.push(
+            this.apiService.deleteElementImage(this.model, this.service.id, 'logo-miniature')
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo small error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        }
+      }
+
+      forkJoin(reqs).subscribe(
+        (results: Array<any>) => {
+          this._isEditLogos = false;
+          this._loadService(false);
+        },
+        (error: any) => {
+          console.log('_saveLogo forkJoin error', error);
+        }
+      );
+    } else {
+      console.log('_saveLogo', 'NO Moodified');
+    }
+  }
+
+  _onImageLoadedOrig(event: any, type: string) {
+    if (event) {
+      this.apiService.uploadImage(this.model, this.service.id, type, event).subscribe(
+        (response) => {
+          this._loadService(false);
+        },
+        (error: any) => {
+          console.log('error', error);
+        }
+      );
+    } else {
+      this.apiService.deleteElementImage(this.model, this.service.id, type).subscribe(
+        (response) => {
+          this._loadService(false);
+        },
+        (error: any) => {
+          console.log('error', error);
+        }
+      );
+    }
+  }
+
+  _getLogo(item: any, type: string, bg: boolean = false) {
+    let logoUrl = this._imagePlaceHolder;
+    if (item && item._links && item._links[type]) {
+      logoUrl = item._links[type].href;
+      logoUrl += '?t=' + moment().valueOf();
+    }
+    return bg ? `url(${logoUrl})` : logoUrl;
+  };
+
+  _getLogoMapper = (item: any, type: string, bg: boolean = false): string => {
+    let logoUrl = this._imagePlaceHolder;
+    if (item && item._links && item._links[type]) {
+      logoUrl = item._links[type].href;
+      logoUrl += '?t=' + moment().valueOf();
+    }
+    return bg ? `url(${logoUrl})` : logoUrl;
+  }
+
+  _hasLogo(item: any, type: string) {
+    let _hasLogo = false;
+    if (item && item._links && item._links[type]) {
+      _hasLogo = true;
+    }
+    return _hasLogo;
+  };
+
+  _hasLogoMapper = (item: any, type: string) => {
+    let _hasLogo = false;
+    if (item && item._links && item._links[type]) {
+      _hasLogo = true;
+    }
+    return _hasLogo;
+  }
+
+  _onEditLogos() {
+    this._isEditLogos = true;
+  }
+
+  _onCancelEditLogos() {
+    this._isEditLogos = false;
+    this._loadService(false);
   }
 }

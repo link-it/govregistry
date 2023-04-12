@@ -59,6 +59,10 @@ export class ApiClient {
       (err: any) => console.error(err));
   }
 
+  getApiUrl() {
+    return this.api_url;
+  }
+
   /**
    * GET request
    * @param {string} endPoint it doesn't need / in front of the end point
@@ -82,6 +86,12 @@ export class ApiClient {
     if (!options) options = {observe: 'response'};
 
     return this.http.get<T>(this.api_url + endPoint, options);
+  }
+
+  public getContentRaw(endPoint: string) {
+    let _headers = new HttpHeaders();
+    _headers = _headers.set('Content-Type', 'application/octet-stream');
+    return this.http.get(this.api_url + endPoint, { responseType: 'blob' });
   }
 
   /**
@@ -131,9 +141,9 @@ export class ApiClient {
     return this.http.put<T>(this.api_url + endPoint, params, options);
   }
 
-  public putRaw<T>(endPoint: string, params: Object, options?: IRawRequestOptions): Observable<T> {
-    if (!options) options = {observe: 'response'};
-    return this.http.put<T>(this.api_url + endPoint, options);
+  public putRaw<T>(endPoint: string, params: Object, options?: IRequestOptions): Observable<T> {
+
+    return this.http.put<T>(this.api_url + endPoint, params, options);
   }
 
   /**

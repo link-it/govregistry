@@ -80,44 +80,6 @@ export class Tools {
     }
   }
 
-  // Stati journal
-  public static StatoJournal: any = {
-    NUOVO: { Code: 'NUOVO', Label: 'Nuovo', Order: 0 },
-    ELABORAZIONE: { Code: 'ELABORAZIONE', Label: 'Elaborazione', Order: 2 },
-    COMPLETATO: { Code: 'COMPLETATO', Label: 'Completato', Order: 4 },
-    SCARTATO: { Code: 'SCARTATO', Label: 'Scartato', Order: 6 }
-  };
-  public static StatiJournal: any[] = Object.keys(Tools.StatoJournal).map((key: string) => {
-    return { label: Tools.StatoJournal[key].Label, value: Tools.StatoJournal[key].Code, order: Tools.StatoJournal[key].Order };
-  });
-
-  // Tipi journal
-  public static TipoJournal: any = {
-    NUOVO: { Code: 'CBI', Label: 'CBI', Order: 0 }
-  };
-  public static TipiJournal: any[] = Object.keys(Tools.TipoJournal).map((key: string) => {
-    return { label: Tools.TipoJournal[key].Label, value: Tools.TipoJournal[key].Code, order: Tools.TipoJournal[key].Order };
-  });
-
-  // Stati transactions
-  public static StatoTransaction: any = {
-    NUOVO: { Code: 'NUOVO', Label: 'Nuovo', Order: 0 },
-    COMPLETATO: { Code: 'COMPLETATO', Label: 'Completato', Order: 2 }
-  };
-  public static StatiTransaction: any[] = Object.keys(Tools.StatoTransaction).map((key: string) => {
-    return { label: Tools.StatoTransaction[key].Label, value: Tools.StatoTransaction[key].Code, order: Tools.StatoTransaction[key].Order };
-  });
-
-  public static FindTaxonomyPagoPAByField(value: string, field: string) {
-    let _searchValue: string = value;
-    if (field === 'DATI SPECIFICI DI INCASSO') {
-      const _valueSplit = value.split('/');
-      if (_valueSplit.length >= 2) { _searchValue = `${_valueSplit[0]}/${_valueSplit[1]}`; }
-    }
-    const _taxonomy = Tools.TaxonomiesPagoPA.find((taxonomy: any) => taxonomy[field].indexOf(_searchValue) !== -1);
-    return _taxonomy || null;
-  }
-
   public static formatValue(value: any, data: any, html: boolean = true, options: any = null): string {
     switch (data.type) {
       case 'number':
@@ -130,9 +92,6 @@ export class Tools {
         return html ? GridFormatters.progressFormatter({ value: value }) : value;
       case 'tag':
         return GridFormatters.typeTagFormatter({ field: data, value: value, optionsName: data.options, options: options });
-      case 'taxonomyPagoPA':
-        const _taxonomy = Tools.FindTaxonomyPagoPAByField(value, data.fieldFindTaxonomy);
-        return _taxonomy ? `${value} - ${_taxonomy[data.fieldTaxonomy]}` : `${value} - [n/a]`;
       default:
         return value;
     }
@@ -201,7 +160,8 @@ export class Tools {
     if (!path) { return obj; }
     const properties: string[] = path.split('.');
     const first = properties.shift() || '';
-    return obj[first] ? Tools.getObjectValue(obj[first], properties.join('.')) : '';
+    const _objFirst = (typeof obj[first] === 'boolean') ? obj[first].toString() : obj[first];
+    return _objFirst ? this.getObjectValue(obj[first], properties.join('.')) : '';
   }
 
   public static ScrollTo(offset: number, callback: Function | null = null) {
@@ -477,5 +437,52 @@ export class Tools {
       str += line + '\r\n';
     }
     return str;
+  }
+
+  /**
+   * Sort by properties
+   * @param {string[]} properties
+   * @param {boolean} asc
+   * @param {boolean} isDate
+   * @returns {any[]}
+   */
+  static SortBy(properties: string[], asc: boolean = true, isDate: boolean = false) {
+    return ((value1: any, value2: any) => {
+      properties.forEach((p: string)  => {
+        value1 = value1[p] || '';
+        value2 = value2[p] || '';
+      });
+      if (isDate) {
+        value1 = new Date(value1);
+        value2 = new Date(value2);
+      }
+      if (value1 < value2) {
+        return asc?-1:1;
+      }
+      if (value1 > value2) {
+        return asc?1:-1;
+      }
+      return 0;
+    });
+  }
+
+  public static TruncateRows(text: string, rows: number = 2, maxchars: number = 160): string {
+    let split: string[] = [];
+    if (text && text.search(/\r\n|\r|\n/) !== -1) {
+      split = text.split(/\r\n|\r|\n/);
+      text = split.slice(0, Math.min(rows, split.length)).join('\n').trim();
+    }
+    if (text && (text.length > maxchars || rows < split.length)) {
+      return text.substring(0, maxchars).trim() + '...';
+    }
+    return text;
+  }
+
+  public static Trunc(value: number): number {
+    return value < 0 ? Math.ceil(value) : Math.floor(value);
+  }
+
+  public static IsNullOrUndefined<T>(obj: T | null | undefined): obj is null | undefined {
+    return typeof obj === 'undefined' || obj === null;
   }
 }

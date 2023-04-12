@@ -1,6 +1,25 @@
+/*
+ * GovRegistry - Registries manager for GovHub
+ *
+ * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package it.govhub.govregistry.readops.api.web;
 
 import java.io.ByteArrayInputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,13 +33,16 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import it.govhub.govregistry.commons.api.beans.Service;
 import it.govhub.govregistry.commons.api.beans.ServiceList;
 import it.govhub.govregistry.commons.api.beans.ServiceOrdering;
+import it.govhub.govregistry.commons.config.ApplicationConfig;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
@@ -31,11 +53,22 @@ import it.govhub.govregistry.readops.api.assemblers.ServiceAssembler;
 import it.govhub.govregistry.readops.api.assemblers.ServiceAuthItemAssembler;
 import it.govhub.govregistry.readops.api.repository.ReadServiceRepository;
 import it.govhub.govregistry.readops.api.repository.ServiceFilters;
-import it.govhub.govregistry.readops.api.spec.ServiceApi;
 import it.govhub.security.services.SecurityService;
 
 
-public abstract class ReadServiceController implements ServiceApi {
+/**
+ * 
+ * Tutte le applicazioni di Govhub hanno una stessa parte in comune per la lettura di utenti, organizzazioni e servizi.
+ * 
+ * Questa classe contiene il codice condiviso per l'accesso in lettura alle service entitities.
+ * 
+ * La specifica dei metodi è dentro govregistry-api-readops.yaml. Questa specifica è riportata dentro gli altri yaml, che per adesso sono
+ * govregisty-api-backoffice.yaml e govio-api-backoffice.yaml.
+ * 
+ *
+ */
+@Component
+public class ReadServiceController {
 	
 	@Autowired
 	ServiceAssembler serviceAssembler;
@@ -52,12 +85,13 @@ public abstract class ReadServiceController implements ServiceApi {
 	@Autowired
 	ServiceMessages serviceMessages;
 	
-	protected abstract Set<String> getReadServiceRoles();	
-
-	@Override
+	@Autowired
+	ApplicationConfig applicationConfig;
+	
 	public ResponseEntity<ServiceList> listServices(ServiceOrdering sort, Direction sortDirection, Integer limit, Long offset, String q, List<String> withRoles) {
 		
-		Set<String> roles = getReadServiceRoles();
+		Set<String> roles = new HashSet<>(this.applicationConfig.getReadServiceRoles());
+		
 		if (withRoles != null) {
 			roles.retainAll(withRoles);
 		}
@@ -96,10 +130,9 @@ public abstract class ReadServiceController implements ServiceApi {
 	}
 	
 	
-	@Override
 	public ResponseEntity<Service> readService(Long id) {
 		
-		Set<Long> serviceIds = this.authService.listAuthorizedServices(getReadServiceRoles());
+		Set<Long> serviceIds = this.authService.listAuthorizedServices(this.applicationConfig.getReadServiceRoles());
 		if (serviceIds != null && !serviceIds.contains(id)) {
 			throw new NotAuthorizedException();
 		}
@@ -111,49 +144,53 @@ public abstract class ReadServiceController implements ServiceApi {
 	}
 
 
-	@Override
 	public ResponseEntity<Resource> downloadServiceLogo(Long id) {
 		
-		Set<Long> serviceIds = this.authService.listAuthorizedServices(getReadServiceRoles());
+		Set<Long> serviceIds = this.authService.listAuthorizedServices(this.applicationConfig.getReadServiceRoles());
 		if (serviceIds != null && !serviceIds.contains(id)) {
 			throw new NotAuthorizedException();
 		}
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
+		if (service.getLogo() == null) {
+			throw new ResourceNotFoundException();
+		}
 
-		byte[] ret = service.getLogo() != null ? service.getLogo() : new byte[0];
+		byte[] ret = service.getLogo();
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
 		InputStreamResource logoStream = new InputStreamResource(bret);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentLength(ret.length);
+		headers.setContentType(MediaType.valueOf(service.getLogoMediaType()));
 		
-		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
-		return ret2;
+		return  new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
 	}
 
 
-	@Override 
 	public ResponseEntity<Resource> downloadServiceLogoMiniature(Long id) {
 		
-		Set<Long> serviceIds = this.authService.listAuthorizedServices(getReadServiceRoles());
+		Set<Long> serviceIds = this.authService.listAuthorizedServices(this.applicationConfig.getReadServiceRoles());
 		if (serviceIds != null && !serviceIds.contains(id)) {
 			throw new NotAuthorizedException();
 		}
 		
 		ServiceEntity service = this.serviceRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException(this.serviceMessages.idNotFound(id)));
+		if (service.getLogoMiniature() == null) {
+			throw new ResourceNotFoundException();
+		}
 
-		byte[] ret = service.getLogoMiniature() != null ? service.getLogoMiniature() : new byte[0];
+		byte[] ret = service.getLogoMiniature();
 		ByteArrayInputStream bret = new ByteArrayInputStream(ret);
 		InputStreamResource logoStream = new InputStreamResource(bret);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentLength(ret.length);
+		headers.setContentType(MediaType.valueOf(service.getLogoMiniatureMediaType()));
 		
-		ResponseEntity<Resource> ret2 =   new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
-		return ret2;
+		return  new ResponseEntity<>(logoStream, headers, HttpStatus.OK); 
 	}
 
 

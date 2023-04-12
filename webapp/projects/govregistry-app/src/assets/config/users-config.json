@@ -1,26 +1,37 @@
 {
-  "simpleItem": {
+  "itemRow": {
+    "avatar": { "field": "email", "type": "gravatar-image" },
     "primaryText": [
-      { "field": "full_name", "type": "text" }
-    ],
-    "secondaryText": [
       { "field": "principal", "type": "text" }
     ],
+    "secondaryText": [],
     "metadata": {
       "text": [
-        { "field": "email", "type": "text" }
+        { "field": "id", "type": "cardinal", "class": "" },
+        { "field": "full_name", "type": "text" }
       ],
-      "label": []
+      "label": [
+        { "field": "enabled", "type": "tag", "options": "enabled" }
+      ]
     },
-    "secondaryMetadata": [
-      { "field": "enabled", "type": "text" }
-    ]
+    "secondaryMetadata": []
   },
 
   "details": [
     { "label": "APP.LABEL.FullName", "field": "full_name", "type": "text" },
     { "label": "APP.LABEL.Principal", "field": "principal", "type": "text" },
     { "label": "APP.LABEL.Email", "field": "email", "type": "text" }
-  ]
+  ],
+
+  "options": {
+    "enabled": {
+      "label": "APP.LABEL.Enabled",
+      "small": true,
+      "values": {
+        "true": { "label": "APP.STATUS.ENABLED", "background": "#57cc99", "border": "#57cc99", "color": "#1f1f1f" },
+        "false": { "label": "APP.STATUS.DISABLED", "background": "#A4ABB6", "border": "#A4ABB6", "color": "#ffffff" }
+      }
+    }
+  }
 }
 

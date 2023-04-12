@@ -16,8 +16,6 @@ export class Organization {
   office_email_address: string | null = null;
   office_pec_address: string | null = null;
   tax_code: string | null = null;
-  logo_miniature: string | null = null; // Base64 Image
-  logo: string | null = null; // Base64 Image
 
   constructor(_data?: any) {
     if (_data) {

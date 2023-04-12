@@ -2,21 +2,23 @@ import { AfterContentChecked, Component, EventEmitter, Input, OnChanges, OnDestr
 import { Router, ActivatedRoute } from '@angular/router';
 import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { EventsManagerService } from 'projects/tools/src/lib/eventsmanager.service';
 import { OpenAPIService } from 'projects/govregistry-app/src/services/openAPI.service';
-import { PageloaderService } from 'projects/tools/src/lib/pageloader.service';
-import { FieldClass } from 'projects/link-lab/src/lib/it/link/classes/definitions';
 
 import { YesnoDialogBsComponent } from 'projects/components/src/lib/dialogs/yesno-dialog-bs/yesno-dialog-bs.component';
 
 import { Organization } from './organization';
 
+import { Observable, forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 import * as jsonpatch from 'fast-json-patch';
+import moment from 'moment';
 
 @Component({
   selector: 'app-organization-details',
@@ -34,8 +36,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
   @Output() close: EventEmitter<any> = new EventEmitter<any>();
   @Output() save: EventEmitter<any> = new EventEmitter<any>();
 
-  _title: string = '';
-
   appConfig: any;
 
   hasTab: boolean = true;
@@ -44,8 +44,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
   ];
   _currentTab: string = 'details';
 
-  _informazioni: FieldClass[] = [];
-
   _isDetails = true;
 
   _isEdit = false;
@@ -53,6 +51,7 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
   _isNew = false;
   _formGroup: UntypedFormGroup = new UntypedFormGroup({});
   _organization: Organization = new Organization({});
+  _isEditLogos = false;
 
   organizationProviders: any = null;
 
@@ -69,6 +68,14 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
   _modalConfirmRef!: BsModalRef;
 
   _imagePlaceHolder: string = './assets/images/logo-placeholder.png';
+  _selectedFile: any = null;
+
+  _modifiedLogo: boolean = false;
+  _modifiedLogoSmall: boolean = false;
+  _logoData: any = null;
+  _logoSmallData: any = null;
+
+  _refreshLogo: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -78,23 +85,12 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     private configService: ConfigService,
     public tools: Tools,
     public eventsManagerService: EventsManagerService,
-    public apiService: OpenAPIService,
-    public pageloaderService: PageloaderService
+    public apiService: OpenAPIService
   ) {
     this.appConfig = this.configService.getConfiguration();
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      // Changed
-    });
-
-    this.pageloaderService.resetLoader();
-    this.pageloaderService.isLoading.subscribe({
-      next: (x) => { this._spin = x; },
-      error: (e: any) => { console.log('loader error', e); }
-    });
-
     this.route.params.subscribe(params => {
       if (params['id'] && params['id'] !== 'new') {
         this.id = params['id'];
@@ -103,7 +99,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
         this.configService.getConfig(this.model).subscribe(
           (config: any) => {
             this.config = config;
-            this._translateConfig();
             this._loadAll();
           }
         );
@@ -120,7 +115,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
           this._loadAll();
         }
       }
-
     });
   }
 
@@ -145,7 +139,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
 
   _loadAll() {
     this._loadOrganization();
-    // this._loadOrganizationProviders();
   }
 
   _hasControlError(name: string) {
@@ -177,7 +170,7 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
           case 'office_email_address':
             value = data[key] ? data[key] : null;
             _group[key] = new UntypedFormControl(value, [
-              Validators.required,
+              // Validators.required,
               Validators.email
             ]);
             break;
@@ -191,20 +184,9 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     }
   }
 
-  _onImageLoaded(event: any, field: string) {
-    const _base64 = event ? window.btoa(event) : null; // btoa - atob
-    this._formGroup.get(field)?.setValue(_base64);
-  }
-
-  // _decodeImage(data: string): string {
-  //   return data ? window.atob(data) : this._imagePlaceHolder;
-  // }
-  _decodeImage = (data: string): string => {
-    return data ? window.atob(data) : this._imagePlaceHolder;
-  };
-
   __onSave(body: any) {
     this._error = false;
+    this._spin = true;
     this.apiService.saveElement(this.model, body).subscribe(
       (response: any) => {
         this.organization = new Organization({ ...response });
@@ -213,9 +195,12 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
         this._initBreadcrumb();
         this._isEdit = false;
         this._isNew = false;
+        this._spin = false;
         this.save.emit({ id: this.id, payment: response, update: false });
+        this.router.navigate([this.model, this.organization.id], { replaceUrl: true });
       },
       (error: any) => {
+        this._spin = false;
         this._error = true;
         this._errorMsg = Tools.GetErrorMsg(error);
       }
@@ -226,7 +211,7 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     const $this = this;
     return Object.keys(obj)
       .filter(function (k) {
-        return obj[k] != null;
+        return ( obj[k] != null && typeof obj[k] !== "object");
       })
       .reduce(function (acc: any, k: string) {
         acc[k] = typeof obj[k] === "object" ? $this.__removeEmpty(obj[k]) : obj[k];
@@ -301,45 +286,31 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     );
   }
 
-  _loadOrganization() {
+  _loadOrganization(reload: boolean = true) {
     if (this.id) {
-      this.organization = null;
+      if (reload) {
+        this._spin = true;
+        this.organization = null;
+      } else {
+        this._refreshLogo = true;
+      }
       this.apiService.getDetails(this.model, this.id).subscribe({
         next: (response: any) => {
-          this.organization = new Organization({ ...response });
+          this.organization = response; // new Organization({ ...response });
           this._organization = new Organization({ ...response });
-          this._title = this.organization.creditorReferenceId;
-          if (this.config.detailsTitle) {
-            this._title = Tools.simpleItemFormatter(this.config.detailsTitle, this.organization);
-          }
-          // this.__initInformazioni();
+
+          this._modifiedLogo = false;
+          this._logoData = null;
+          this._modifiedLogoSmall = false;
+          this._logoSmallData = null;
+
+          this._spin = false;
+          this._refreshLogo = false;
         },
         error: (error: any) => {
+          this._spin = false;
+          this._refreshLogo = false;
           Tools.OnError(error);
-        }
-      });
-    }
-  }
-
-  __initInformazioni() {
-    if (this.organization) {
-      this._informazioni = Tools.generateFields(this.config.details, this.organization).map((field: FieldClass) => {
-        field.label = this.translate.instant(field.label);
-        return field;
-      });
-    }
-  }
-
-  _translateConfig() {
-    if (this.config && this.config.options) {
-      Object.keys(this.config.options).forEach((key: string) => {
-        if (this.config.options[key].label) {
-          this.config.options[key].label = this.translate.instant(this.config.options[key].label);
-        }
-        if (this.config.options[key].values) {
-          Object.keys(this.config.options[key].values).forEach((key2: string) => {
-            this.config.options[key].values[key2].label = this.translate.instant(this.config.options[key].values[key2].label);
-          });
         }
       });
     }
@@ -356,10 +327,6 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
 
   _clickTab(tab: string) {
     this._currentTab = tab;
-  }
-
-  _dummyAction(event: any, param: any) {
-    console.log(event, param);
   }
 
   _editOrganization() {
@@ -397,5 +364,166 @@ export class OrganizationDetailsComponent implements OnInit, OnChanges, AfterCon
     } else {
       this._onClose();
     }
+  }
+
+  _onImageLoaded(event: any, type: string) {
+    if (type === 'logo') {
+      this._modifiedLogo = true;
+      this._logoData = event;
+    } else {
+      this._modifiedLogoSmall = true;
+      this._logoSmallData = event;
+    }
+  }
+
+  _saveLogos() {
+    if (this._modifiedLogo || this._modifiedLogoSmall) {
+      const reqs: Observable<any>[] = [];
+
+      if (this._modifiedLogo) {
+        if (this._logoData) {
+          reqs.push(
+            this.apiService.uploadImage(this.model, this.organization.id, 'logo', this._logoData)
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        } else {
+          reqs.push(
+            this.apiService.deleteElementImage(this.model, this.organization.id, 'logo')
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        }
+      }
+
+      if (this._modifiedLogoSmall) {
+        if (this._logoSmallData) {
+          reqs.push(
+            this.apiService.uploadImage(this.model, this.organization.id, 'logo-miniature', this._logoSmallData)
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo small error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        } else {
+          reqs.push(
+            this.apiService.deleteElementImage(this.model, this.organization.id, 'logo-miniature')
+              .pipe(
+                catchError((err) => {
+                  console.log('_saveLogo small error', err);
+                  return of({ data: [] });
+                })
+              )
+          );
+        }
+      }
+
+      forkJoin(reqs).subscribe(
+        (results: Array<any>) => {
+          this._isEditLogos = false;
+          this._loadOrganization(false);
+        },
+        (error: any) => {
+          console.log('_saveLogo forkJoin error', error);
+        }
+      );
+    } else {
+      console.log('_saveLogo', 'NO Moodified');
+    }
+  }
+
+
+  _onImageLoadedOrig(event: any, type: string) {
+    if (event) {
+      this.apiService.uploadImage(this.model, this.organization.id, type, event).subscribe(
+        (response) => {
+          this._loadOrganization(false);
+        },
+        (error: any) => {
+          console.log('error', error);
+        }
+      );
+    } else {
+      this.apiService.deleteElementImage(this.model, this.organization.id, type).subscribe(
+        (response) => {
+          this._loadOrganization(false);
+        },
+        (error: any) => {
+          console.log('error', error);
+        }
+      );
+    }
+  }
+
+  _onFileLoaded(event: any, type: string) {
+    this._selectedFile = event.target.files[0];
+
+    const formData = new FormData();
+    formData.append('file', this._selectedFile, this._selectedFile.name);
+    this.apiService.uploadImage(this.model, this.organization.id, type, formData).subscribe(
+      (response) => {
+        console.log('response', response);
+      },
+      (error: any) => {
+        console.log('error', error);
+      }
+    );
+  }
+
+  _decodeImage = (data: string): string => {
+    return data ? window.atob(data) : this._imagePlaceHolder;
+  }
+
+  _getLogo(item: any, type: string, bg: boolean = false) {
+    let logoUrl = this._imagePlaceHolder;
+    if (item && item._links && item._links[type]) {
+      logoUrl = item._links[type].href;
+      logoUrl += '?t=' + moment().valueOf();
+    }
+    return bg ? `url(${logoUrl})` : logoUrl;
+  }
+
+  _getLogoMapper = (item: any, type: string, bg: boolean = false): string => {
+    let logoUrl = this._imagePlaceHolder;
+    if (item && item._links && item._links[type]) {
+      logoUrl = item._links[type].href;
+      logoUrl += '?t=' + moment().valueOf();
+    }
+    return bg ? `url(${logoUrl})` : logoUrl;
+  }
+
+  _hasLogo(item: any, type: string) {
+    let _hasLogo = false;
+    if (item && item._links && item._links[type]) {
+      _hasLogo = true;
+    }
+    return _hasLogo;
+  }
+
+  _hasLogoMapper = (item: any, type: string) => {
+    let _hasLogo = false;
+    if (item && item._links && item._links[type]) {
+      _hasLogo = true;
+    }
+    return _hasLogo;
+  }
+
+  _onEditLogos() {
+    this._isEditLogos = true;
+  }
+
+  _onCancelEditLogos() {
+    this._isEditLogos = false;
+    this._loadOrganization(false);
   }
 }

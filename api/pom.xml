@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>it.govhub.govregistry</groupId>
 		<artifactId>govregistry</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<artifactId>api</artifactId>
@@ -102,10 +102,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-hateoas</artifactId>
+			<version>${springdoc.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>it.govhub</groupId>
 			<artifactId>govhub-openapi-codegen</artifactId>
 			<version>${govhub.codegen.version}</version>
 		</dependency>
+		
+	
 
 		<!-- SpringDoc fine -->
 
@@ -216,6 +224,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		
+ 		  <!--  Copia il govhub-api-commons.yaml dal package commons e lo mette sotto src/main/resources-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -230,12 +239,13 @@
 							<type>jar</type>
 							<includeArtifactIds>commons</includeArtifactIds>
 							<includes>govhub-api-commons.yaml</includes>
-							<outputDirectory>${project.basedir}/src/main/resources</outputDirectory>
+							<outputDirectory>${project.basedir}/src/main/resources/static</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 
+			<!--  Genera specifica e modelli per l'openapi di GovRegistry -->
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
@@ -248,7 +258,7 @@
 						<id>generate-sources-openapi</id>
 						<phase>generate-sources</phase>
 						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/govregistry-api-backoffice.yaml</inputSpec>
+							<inputSpec>${project.basedir}/src/main/resources/static/govregistry-api-backoffice.yaml</inputSpec>
 							<generatorName>govhub-codegen</generatorName>
 							<typeMappings>base64=it.govhub.govregistry.commons.utils.Base64String</typeMappings>
 							<importMappings>
@@ -268,8 +278,15 @@
 								<importMapping>ServiceAuthItem=it.govhub.govregistry.commons.api.beans.ServiceAuthItem</importMapping>
 								<importMapping>OrganizationAuthItem=it.govhub.govregistry.commons.api.beans.OrganizationAuthItem</importMapping>
 								<importMapping>OrganizationList=it.govhub.govregistry.commons.api.beans.OrganizationList</importMapping>
+								<importMapping>ServiceList=it.govhub.govregistry.commons.api.beans.ServiceList</importMapping>
+								<importMapping>UserList=it.govhub.govregistry.commons.api.beans.UserList</importMapping>
 								<importMapping>OrganizationOrdering=it.govhub.govregistry.commons.api.beans.OrganizationOrdering</importMapping>
 							</importMappings>
+  							<schemaMappings>
+								<schemaMapping>ServiceOrdering=it.govhub.govregistry.commons.api.beans.ServiceOrdering</schemaMapping>
+								<schemaMapping>UserOrdering=it.govhub.govregistry.commons.api.beans.UserOrdering</schemaMapping>
+								<schemaMapping>Role=it.govhub.govregistry.commons.api.beans.Role</schemaMapping>
+							</schemaMappings>
 							<configOptions>
 								<dateLibrary>java8</dateLibrary>
 								<library>spring-boot</library>
@@ -279,14 +296,9 @@
 								<modelPackage>it.govhub.govregistry.api.beans</modelPackage>
 								<configPackage>it.govhub.govregistry.api.config</configPackage>
 								<useBeanValidation>true</useBeanValidation>
-								<!-- <performBeanValidation>true</performBeanValidation> -->
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<interfaceOnly>true</interfaceOnly>
 								<hateoas>true</hateoas>
-								<!-- Metto il booleanGetterPrefix a get, e.g.: getEnabled invece 
-									di isEnabled. questo in modo da far riconoscere e copiare le proprietà booleane 
-									alla BeanUtils.copyProperties -->
-								<booleanGetterPrefix>get</booleanGetterPrefix>
 								<useTags>true</useTags>
 							</configOptions>
 							<output>${project.basedir}/target</output>
@@ -305,6 +317,8 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			
+			<!-- Code Coverage Plugin -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>

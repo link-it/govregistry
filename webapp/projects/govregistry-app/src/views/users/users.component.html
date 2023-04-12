@@ -16,12 +16,11 @@
     </div>
     <div class="nav-controls">
       <div role="group" class="gl-w-full btn-group-" *ngIf="!_spin">
-        <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'create'"> -->
-        <button aria-label="Add payment" type="button" class="btn btn-confirm btn-md gl-button btn-icon" (click)="_onNew()">
-          <mat-icon fontSet="material-icons-outlined">add</mat-icon> <span class="ms-2">{{ 'APP.BUTTON.AddUser' |
-            translate }}</span>
-        </button>
-        <!-- </ng-template> -->
+        <ng-template [appHasPermission]="'USERS'" [action]="'create'">
+          <button aria-label="Add payment" type="button" class="btn btn-confirm btn-md gl-button btn-icon" (click)="_onNew()">
+            <mat-icon fontSet="material-icons-outlined">add</mat-icon> <span class="ms-2">{{ 'APP.BUTTON.AddUser' | translate }}</span>
+          </button>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -40,6 +39,7 @@
           [sortDirection]="sortDirection"
           [sortFields]="sortFields"
           [formGroup]="_formGroup"
+          [simple]="true"
           (onSearch)="_onSearch($event)"
           (onSort)="_onSort($event)">
           <div form-search>
@@ -61,7 +61,7 @@
     [infiniteScrollThrottle]="50"
     (scrolled)="__loadMoreData()"
     [scrollWindow]="false">
-    <ui-box-message *ngIf="users.length == 0 && !_spin && !_unimplemented"
+    <ui-box-message *ngIf="users.length == 0 && !_spin"
       [size]="64"
       [icon]="'report_problem'"
       [image]="'./assets/images/illustrations/no-data.svg'"
@@ -69,38 +69,14 @@
       [subMessage]="_messageHelp | translate">
     </ui-box-message>
 
-    <ui-box-message *ngIf="_unimplemented && !_spin"
-      [size]="64"
-      [icon]="'report_problem'"
-      [image]="'./assets/images/illustrations/processing.svg'"
-      [message]="_messageUnimplemented | translate">
-    </ui-box-message>
-
     <div class="row">
       <div class="col-12">
-        <ui-simple-item class="border-bottom" *ngFor="let u of users"
-          [primaryText]="u.primaryText"
-          [secondaryText]="u.secondaryText"
-          [metadata]="u.metadata"
-          [secondaryMetadata]="u.secondaryMetadata"
+        <ui-item-row class="border-bottom" *ngFor="let u of users"
+          [data]="u"
+          [config]="usersConfig"
           [hasLink]="true"
-          (simpleClick)="_onEdit($event, u)">
-        </ui-simple-item>
-        <!-- <ui-collapse-item class="border-bottom" *ngFor="let u of users"
-          [primaryText]="u.primaryText"
-          [secondaryText]="u.secondaryText"
-          [metadata]="u.metadata"
-          [secondaryMetadata]="u.secondaryMetadata"
-          [hasLink]="true"
-          [enableCollapse]="u.enableCollapse"
-          (simpleClick)="_onEdit($event, u)">
-          <div collapse-content class="p-4 my-1 bg-lightest" *ngIf="u.enableCollapse">
-            <ui-form-readonly
-              [fields]="_generateUsersFields(u.source)"
-              [columns]="config.AppConfig?.Layout?.Details?.columns || 6">
-            </ui-form-readonly>
-          </div>
-        </ui-collapse-item> -->
+          (itemClick)="_onEdit($event, u)">
+        </ui-item-row>
       </div>
     </div>
 
