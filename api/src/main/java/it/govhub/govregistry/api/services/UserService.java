@@ -1,3 +1,21 @@
+/*
+ * GovRegistry - Registries manager for GovHub
+ *
+ * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package it.govhub.govregistry.api.services;
 
 import java.util.Optional;
@@ -8,112 +26,52 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 
 import it.govhub.govregistry.api.repository.UserRepository;
-import it.govhub.govregistry.commons.api.beans.User;
-import it.govhub.govregistry.commons.api.beans.UserCreate;
 import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
-import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
-import it.govhub.govregistry.commons.messages.PatchMessages;
+import it.govhub.govregistry.commons.exception.SemanticValidationException;
 import it.govhub.govregistry.commons.messages.UserMessages;
-import it.govhub.govregistry.commons.utils.PostgreSQLUtilities;
 import it.govhub.govregistry.readops.api.assemblers.UserAssembler;
 
 @Service
 public class UserService {
-	
-	@Autowired
-	UserRepository userRepo;
-	
-	@Autowired
-	ObjectMapper objectMapper;
-	
-	@Autowired
-	Validator validator;
-	
+		
 	@Autowired
 	UserAssembler userAssembler;
 	
 	@Autowired
 	UserMessages userMessages;
 	
+	@Autowired
+	UserRepository userRepo;
+	
 	Logger log = LoggerFactory.getLogger(UserService.class);
 	
+	
 	@Transactional
-	public UserEntity createUser(UserCreate userCreate) {
-		
+	public UserEntity createUser(UserEntity userCreate) {
 		log.info("Creating new user: {}", userCreate);
-		
-		PostgreSQLUtilities.throwIfContainsNullByte(userCreate.getFullName(), "full_name");
 		
 		if (this.userRepo.findByPrincipal(userCreate.getPrincipal()).isPresent()) {
 			throw new ConflictException(this.userMessages.conflictPrincipal(userCreate.getPrincipal()));
 		}
 		
-		UserEntity newUser = this.userAssembler.toEntity(userCreate);
-				
-		return this.userRepo.save(newUser);
+		return this.userRepo.save(userCreate);
 	}
 	
-	
+	/**
+	 * Sostituisce la vecchia entità con la nuova, effettuando i controlli necessari.
+	 * 
+	 */
 	@Transactional
-	public UserEntity patchUser(Long id, JsonPatch patch) {
-		
-		log.info("Patching user [{}]: {}", id, patch);
-		
-		UserEntity user = this.userRepo.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException(this.userMessages.idNotFound(id)));
-		
-		// Convertiamo la entity in json e applichiamo la patch sul json
-		User restUser = this.userAssembler.toModel(user);
-		JsonNode jsonUser = this.objectMapper.convertValue(restUser, JsonNode.class);
-		
-		JsonNode newJsonUser;
-		try {
-			newJsonUser = patch.apply(jsonUser);
-		} catch (JsonPatchException e) {			
-			throw new BadRequestException(e.getLocalizedMessage());
+	public UserEntity replaceUser(UserEntity oldUser, UserEntity newUser) {
+		log.info("Replacing User {} With {}", oldUser, newUser);
+		if ( ! oldUser.getId().equals(newUser.getId())) {
+			throw new SemanticValidationException(this.userMessages.fieldNotModificable("id"));
 		}
 		
-		// Lo converto nell'oggetto User, sostituendo l'ID per essere sicuri che la patch
-		// non l'abbia cambiato.
-		User updatedContact;
-		try {
-			updatedContact = this.objectMapper.treeToValue(newJsonUser, User.class);
-		} catch (JsonProcessingException e) {
-			throw new BadRequestException(e);
-		}
-		
-		if (updatedContact == null) {
-			throw new BadRequestException(PatchMessages.VOID_OBJECT_PATCH);
-		}
-		updatedContact.setId(id);
-		
-		// Faccio partire la validazione
-		Errors errors = new BeanPropertyBindingResult(updatedContact, updatedContact.getClass().getName());
-		validator.validate(updatedContact, errors);
-		if (!errors.getAllErrors().isEmpty()) {
-			throw new BadRequestException(PatchMessages.validationFailed(errors));
-		}
-		
-		// Faccio partire la validazione custom per la stringa \u0000
-		PostgreSQLUtilities.throwIfContainsNullByte(updatedContact.getFullName(), "full_name");
-		
-		// Dall'oggetto REST passo alla entity
-		UserEntity newUser = this.userAssembler.toEntity(updatedContact);
-
-		// Controllo eventuali conflitti sugli indici
+		// Cerco conflitti un'altro  utente con lo stesso principal ma id diverso.
 		Optional<UserEntity> conflictUser = this.userRepo.findByPrincipal(newUser.getPrincipal())
 				.filter( u -> !u.getId().equals(newUser.getId()));
 		
@@ -123,4 +81,5 @@ public class UserService {
 				
 		return this.userRepo.save(newUser);
 	}
+	
 }

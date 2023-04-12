@@ -1,15 +1,15 @@
 import { AfterContentChecked, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { HttpParams } from '@angular/common/http';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { FieldClass } from 'projects/link-lab/src/lib/it/link/classes/definitions';
 
 import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { EventsManagerService } from 'projects/tools/src/lib/eventsmanager.service';
-import { PageloaderService } from 'projects/tools/src/lib/pageloader.service';
 import { OpenAPIService } from 'projects/govregistry-app/src/services/openAPI.service';
 import { SearchBarFormComponent } from 'projects/components/src/lib/ui/search-bar-form/search-bar-form.component';
 
@@ -39,7 +39,7 @@ export class UsersComponent implements OnInit, AfterContentChecked {
 
   _preventMultiCall: boolean = false;
 
-  _spin: boolean = false;
+  _spin: boolean = true;
   desktop: boolean = false;
 
   _useRoute: boolean = true;
@@ -57,7 +57,8 @@ export class UsersComponent implements OnInit, AfterContentChecked {
   sortField: string = 'full_name';
   sortDirection: string = 'asc';
   sortFields: any[] = [
-    // { field: 'nome', label: 'APP.LABEL.Name', icon: '' }
+    { field: 'id', label: 'APP.LABEL.Id', icon: '' },
+    { field: 'full_name', label: 'APP.LABEL.FullName', icon: '' }
   ];
 
   searchFields: any[] = [];
@@ -75,7 +76,6 @@ export class UsersComponent implements OnInit, AfterContentChecked {
     private configService: ConfigService,
     public tools: Tools,
     private eventsManagerService: EventsManagerService,
-    public pageloaderService: PageloaderService,
     public apiService: OpenAPIService
   ) {
     this.config = this.configService.getConfiguration();
@@ -88,22 +88,9 @@ export class UsersComponent implements OnInit, AfterContentChecked {
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      setTimeout(() => {
-        Tools.WaitForResponse(false);
-      }, this.config.AppConfig.DELAY || 0);
-    });
-
-    this.pageloaderService.resetLoader();
-    this.pageloaderService.isLoading.subscribe({
-      next: (x) => { this._spin = x; },
-      error: (e: any) => { console.log('loader error', e); }
-    });
-
     this.configService.getConfig(this.model).subscribe(
       (config: any) => {
         this.usersConfig = config;
-        this._translateConfig();
         this._loadUsers();
       }
     );
@@ -111,21 +98,6 @@ export class UsersComponent implements OnInit, AfterContentChecked {
 
   ngAfterContentChecked(): void {
     this.desktop = (window.innerWidth >= 992);
-  }
-
-  _translateConfig() {
-    if (this.usersConfig && this.usersConfig.options) {
-      Object.keys(this.usersConfig.options).forEach((key: string) => {
-        if (this.usersConfig.options[key].label) {
-          this.usersConfig.options[key].label = this.translate.instant(this.usersConfig.options[key].label);
-        }
-        if (this.usersConfig.options[key].values) {
-          Object.keys(this.usersConfig.options[key].values).forEach((key2: string) => {
-            this.usersConfig.options[key].values[key2].label = this.translate.instant(this.usersConfig.options[key].values[key2].label);
-          });
-        }
-      });
-    }
   }
 
   _setErrorMessages(error: boolean) {
@@ -145,46 +117,60 @@ export class UsersComponent implements OnInit, AfterContentChecked {
 
   _loadUsers(query: any = null, url: string = '') {
     this._setErrorMessages(false);
-    if (!url) { this.users = []; }
-    this.apiService.getList(this.model).subscribe({
+
+    let aux: any;
+    if (!url) {
+      this.users = [];
+      const sort: any = { sort: this.sortField, sort_direction: this.sortDirection}
+      query = { ...query, ...sort };
+      aux = { params: this._queryToHttpParams(query) };
+    }
+
+    this._spin = true;
+    this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
-        if (response === null) {
-          this._unimplemented = true;
-        } else {
-
-          if (response.page !== undefined) {
-            this.page = response.page;
-            this._links = this.page.links;  
-          }
-
-          if (response.items) {
-            const _list: any = response.items.map((user: any) => {
-              const metadataText = Tools.simpleItemFormatter(this.usersConfig.simpleItem.metadata.text, user, this.usersConfig.simpleItem.options || null);
-              const metadataLabel = Tools.simpleItemFormatter(this.usersConfig.simpleItem.metadata.label, user, this.usersConfig.simpleItem.options || null);
-              const element = {
-                id: user.id,
-                primaryText: Tools.simpleItemFormatter(this.usersConfig.simpleItem.primaryText, user, this.usersConfig.simpleItem.options || null),
-                secondaryText: Tools.simpleItemFormatter(this.usersConfig.simpleItem.secondaryText, user, this.usersConfig.simpleItem.options || null),
-                metadata: `${metadataText}<span class="me-2">&nbsp;</span>${metadataLabel}`,
-                secondaryMetadata: Tools.simpleItemFormatter(this.usersConfig.simpleItem.secondaryMetadata, user, this.usersConfig.simpleItem.options || null),
-                enableCollapse: true,
-                editMode: false,
-                source: { ...user }
-              };
-              return element;
-            });
-            this.users = (url) ? [...this.users, ..._list] : [..._list];
-            this._preventMultiCall = false;
-          }
-          Tools.ScrollTo(0);
+        if (response.page !== undefined) {
+          this.page = response.page;
+          this._links = this.page.links;  
         }
+
+        if (response.items) {
+          const _list: any = response.items.map((user: any) => {
+            const element = {
+              id: user.id,
+              source: { ...user }
+            };
+            return element;
+          });
+          this.users = (url) ? [...this.users, ..._list] : [..._list];
+          this._preventMultiCall = false;
+        }
+        this._spin = false;
+        Tools.ScrollTo(0);
       },
       error: (error: any) => {
         this._setErrorMessages(true);
         this._preventMultiCall = false;
+        this._spin = false;
         // Tools.OnError(error);
       }
     });
+  }
+
+  _queryToHttpParams(query: any) : HttpParams {
+    let httpParams = new HttpParams();
+
+    Object.keys(query).forEach(key => {
+      if (query[key]) {
+        switch (key)
+        {
+          default:
+            httpParams = httpParams.set(key, query[key]);
+        }
+      }
+    });
+    
+    return httpParams; 
   }
 
   __loadMoreData() {
@@ -242,7 +228,9 @@ export class UsersComponent implements OnInit, AfterContentChecked {
   }
 
   _onSort(event: any) {
-    console.log(event);
+    this.sortField = event.sortField;
+    this.sortDirection = event.sortBy;
+    this._loadUsers(this._filterData);
   }
 
   onBreadcrumb(event: any) {

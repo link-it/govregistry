@@ -1,3 +1,21 @@
+/*
+ * GovRegistry - Registries manager for GovHub
+ *
+ * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package it.govhub.security.services;
 
 import java.time.OffsetDateTime;
@@ -52,9 +70,7 @@ public class SecurityService {
 		// Cerco fra le autorizzazioni una che abbia uno dei ruoli specificati e che non sia scaduta
 		return user.getAuthorizations().stream()
 			.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-			.anyMatch( auth -> {
-						return roleList.contains(auth.getRole().getName());
-					});
+			.anyMatch( auth -> roleList.contains(auth.getRole().getName()) );
 		
 	}
 
@@ -189,7 +205,7 @@ public class SecurityService {
 	
 	
 	public Set<Long> listAuthorizedOrganizations(Collection<String>  roles) {
-		return listAuthorizedOrganizations(new HashSet<String>(roles));
+		return listAuthorizedOrganizations(new HashSet<>(roles));
 	}
 	
 	/**
@@ -210,7 +226,7 @@ public class SecurityService {
 				.filter( auth -> roles.contains(auth.getRole().getName()))
 				.collect(Collectors.toList());
 		
-		Set<Long> orgIds = new HashSet<Long>();
+		Set<Long> orgIds = new HashSet<>();
 		
 		for (var auth: validAuths) {
 			if (auth.getOrganizations().isEmpty()) {
@@ -231,7 +247,7 @@ public class SecurityService {
 	
 	
 	public Set<Long> listAuthorizedServices(Collection<String> roles) {
-		return listAuthorizedServices(new HashSet<String>(roles));
+		return listAuthorizedServices(new HashSet<>(roles));
 	}
 
 
@@ -253,7 +269,7 @@ public class SecurityService {
 				.filter( auth -> roles.contains(auth.getRole().getName()))
 				.collect(Collectors.toList());
 		
-		Set<Long> serviceIds = new HashSet<Long>();
+		Set<Long> serviceIds = new HashSet<>();
 		
 		for (var auth: validAuths) {
 			if (auth.getServices().isEmpty()) {

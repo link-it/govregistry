@@ -1,13 +1,13 @@
 {
   "simpleItem": {
+    "avatar": { "field": "logo_small", "type": "avatar-image" },
     "primaryText": [
       { "field": "service_name", "type": "text" }
     ],
-    "secondaryText": [
-      { "field": "id", "type": "text" }
-    ],
+    "secondaryText": [],
     "metadata": {
       "text": [
+        { "field": "id", "type": "cardinal" },
         { "field": "description", "type": "text" }
       ],
       "label": []

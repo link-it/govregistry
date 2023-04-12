@@ -1,6 +1,7 @@
 {
 	"APP": {
 		"BUTTON": {
+			"AddAuthorization": "Add authorization",
 			"AddOrganization": "Add organization",
 			"AddService": "Add service",
 			"AddUser": "Add user",
@@ -19,6 +20,7 @@
 			"Go": "Go",
 			"InviaRichiesta": "Send request",
 			"Login": "Login",
+			"ModifyLogos": "Modify logos",
 			"MoreInfo": "More info",
 			"Remove": "Remove",
 			"Report": "Report",
@@ -74,8 +76,10 @@
 			"Description": "Description",
 			"DueDate": "Due date",
 			"Email": "Email",
+			"Enabled": "Enabled",
+			"ExpirationDate": "Expiration date",
 			"FileName": "Filename",
-			"FullName": "Fullname",
+			"FullName": "Full name",
 			"Id": "ID",
 			"Index": "Index",
 			"LastUpdateDate": "Last update",
@@ -93,6 +97,7 @@
 			"Organization": "Organization name",
 			"OrganizationLegalName": "Organization Legal Name",
 			"OrganizationTaxCode": "Organization Tax Code",
+			"Organizations": "Organizations",
 			"Organizer": "Organizer",
 			"OutcomeCode": "Outcome code",
 			"OutcomeDate": "Outcome date",
@@ -104,7 +109,9 @@
 			"ReceiptId": "Receipt Id",
 			"Reference": "",
 			"ReportingFlowId": "Flow id",
+			"Role": "Role",
 			"ServiceName": "Service name",
+			"Services": "Services",
 			"Status": "Status",
 			"StatusCode": "Status code",
 			"StatusDescription": "Status description",
@@ -120,7 +127,7 @@
 			"Dashboard": "Dashboard",
 			"DeleteOrganization": "Delete organization …",
 			"DeleteService": "Delete service …",
-			"DeleteUser": "Delete user …",
+			"DeleteUser": "Delete user…",
 			"DownloadReport": "Download report",
 			"ExportCSV": "Export CSV",
 			"ExportPDF": "Export PDF",
@@ -155,6 +162,7 @@
 				"wrong_username_password": "Username e/o Password errati."
 			},
 			"NoAnnouncement": "No announcement",
+			"NoAuthorizations": "No authorizations",
 			"NoBankAccount": "No bank account",
 			"NoCandidacies": "No candidacies",
 			"NoData": "Sorry, the requested information was not found",
@@ -165,12 +173,15 @@
 			"NoPaymentsResultsHelp": "Add a new payment",
 			"NoResults": "Sorry, your filter produced no results",
 			"NoResultsHelp": "To widen your search, change or remove filters above",
+			"NotFoundItem": "Not found item",
+			"NotFoundText": "Not found text",
 			"Organizations_Results": {
 				"none": "No Creditor found",
 				"plural": "Found {{count}} Creditors",
 				"singular": "There is only one Creditor"
 			},
 			"PageNumber": "Page {{page}} of {{total}}",
+			"PleaseEnterMin": "Please enter {{lengthTerm}} or more characters",
 			"Sign_in_message": "Sign in with your account",
 			"VALIDATION": {
 				"Email": "Insert valid email",
@@ -197,8 +208,11 @@
 				"Open": "Open"
 			},
 			"TITLE": {
+				"All": "All",
 				"GeneralInformations": "General informations",
-				"GeneralInformations_sub": ""
+				"GeneralInformations_sub": "",
+				"LogosInformations": "Logos",
+				"LogosInformations_sub": ""
 			}
 		},
 		"PDF": {
@@ -212,7 +226,26 @@
 			"DebtorTaxcode": "e.g.: RSSMRA70A41F205Z",
 			"NoticeNumber": "Notice number",
 			"Search": "Search...",
-			"Taxonomy": "Taxonomy"
+			"Taxonomy": "Taxonomy",
+			"UnknownOffice": "Unknown office"
+		},
+		"ROLE": {
+			"govhub_organizations_editor": "GovHub organizations editor",
+			"govhub_organizations_viewer": "GovHub organizations viewer",
+			"govhub_role_assigner": "GovHub role assigner",
+			"govhub_services_editor": "GovHub services editor",
+			"govhub_services_viewer": "GovHub services viewer",
+			"govhub_sysadmin": "GovHub sysadmin",
+			"govhub_user": "GovHub user",
+			"govhub_users_editor": "GovHub users editor",
+			"govhub_users_viewer": "GovHub users viewer",
+			"govio_sender": "GovIO sender",
+			"govio_service_editor": "GovIO service editor",
+			"govio_service_instance_editor": "GovIO service instance editor",
+			"govio_service_instance_viewer": "GovIO service instance viewer",
+			"govio_service_viewer": "GovIO service viewer",
+			"govio_sysadmin": "GovIO sysadmin",
+			"govio_viewer": "GovIO viewer"
 		},
 		"SEARCH": {
 			"ClearRecentSearches": "Clear recent searches",
@@ -228,8 +261,11 @@
 				"Open": "Open"
 			},
 			"TITLE": {
+				"All": "All",
 				"GeneralInformations": "General informations",
-				"GeneralInformations_sub": ""
+				"GeneralInformations_sub": "",
+				"LogosInformations": "Logos",
+				"LogosInformations_sub": ""
 			}
 		},
 		"SIDENAV": {
@@ -238,8 +274,10 @@
 		"STATUS": {
 			"ACCETTATO": "Accepted",
 			"COMPLETATO": "Completed",
+			"DISABLED": "Disabled",
 			"ELABORATO": "Processed",
 			"ELABORAZIONE": "In processing",
+			"ENABLED": "Enabled",
 			"ERRORE": "Error",
 			"IN_ELABORAZIONE": "In processing",
 			"NUOVO": "New",
@@ -303,12 +341,14 @@
 			"AddPayment": "Add payment",
 			"CancelEdit": "Cancel edit",
 			"CancelNew": "Cancel add",
+			"EditAuthorizations": "Edit authorizations",
 			"EditOrganization": "Edit organization",
 			"EditService": "Edit service",
 			"EditUser": "Edit user",
 			"Export": "Export",
 			"ExportCSV": "Export file CSV",
 			"ExportPDF": "Export file PDF",
+			"ModifyLogos": "Modify logos",
 			"Preview": "Preview",
 			"Remove": "Remove"
 		},

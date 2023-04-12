@@ -6,15 +6,17 @@
     <h3 class="page-title" *ngIf="_isEdit && !_isNew">{{ 'APP.TITLE.EditUser' | translate }}</h3>
     <h3 class="page-title" *ngIf="_isEdit && _isNew">{{ 'APP.TITLE.NewUser' | translate }}</h3>
     <div class="d-flex flex-grow-1">&nbsp;</div>
-    <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'edit'"> -->
+    <ng-template [appHasPermission]="'USERS'" [action]="'edit'">
       <div class="nav-controls">
         <div class="position-relative" *ngIf="!_isEdit && !_spin">
-          <button aria-expanded="false" type="button" class="btn btn-default btn-md gl-button btn-icon" [tooltip]="'APP.TOOLTIP.EditUser' | translate" (click)="_editUser()">
-            <i class="bi bi-pencil"></i>
-          </button>
+          <ng-template [appHasPermission]="'USERS'" [action]="'edit'">
+            <button aria-expanded="false" type="button" class="btn btn-default btn-md gl-button btn-icon" [tooltip]="'APP.TOOLTIP.EditUser' | translate" (click)="_editUser()">
+              <i class="bi bi-pencil"></i>
+            </button>
+          </ng-template>
         </div>
         <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'delete'"> -->
-          <div role="group" class="btn-group- ms-1" *ngIf="!_isEdit && !_spin">
+          <!-- <div role="group" class="btn-group- ms-1" *ngIf="!_isEdit && !_spin">
             <div class="dropdown b-dropdown gl-new-dropdown btn-group" id="actions">
               <button aria-haspopup="true" aria-expanded="false" type="button" class="btn dropdown-toggle btn-default btn-md gl-button gl-dropdown-toggle btn-default-tertiary dropdown-icon-only dropdown-toggle-no-caret" data-bs-toggle="dropdown" data-bs-display="static" id="other_actions">
                 <i class="bi bi-three-dots-vertical"></i>
@@ -36,7 +38,7 @@
                 </div>
               </ul>
             </div>
-          </div>
+          </div> -->
         <!-- </ng-template> -->
         <div role="group" class="gl-w-full btn-group- position-relative" *ngIf="_isEdit && !_spin">
           <button aria-haspopup="true" aria-expanded="false" type="button" class="btn btn-default btn-md gl-button btn-default-tertiary ms-2" [tooltip]="(_isNew ? 'APP.TOOLTIP.CancelNew' : 'APP.TOOLTIP.CancelEdit') | translate" (click)="_onCancelEdit()">
@@ -44,7 +46,7 @@
           </button>
         </div>
       </div>
-    <!-- </ng-template> -->
+    </ng-template>
   </div>
   <section class="container-fluid container-limited limit-container-width container-scroller container-scroller-no-search">
     <ui-box-spinner [color]="'accent'" [diameter]="48" [strokeWidth]="4" *ngIf="_spin && !_isNew"></ui-box-spinner>
@@ -62,15 +64,13 @@
         <div class="edit-form">
           <form novalidate class="issue-form common-note-form mt-3 gl-show-field-errors gfm-form" [class.form-readonly]="!_isEdit" [formGroup]="_formGroup" (submit)="_onSubmit(_formGroup.value)">
             <div class="row gl-mt-3">
-              <div class="col-lg-4">
+              <div class="col-lg-4 mb-4">
                 <h4 class="gl-mt-0 text-break">{{ 'APP.USERS.TITLE.GeneralInformations' | translate }}</h4>
                 <div class="text-break" markdown>{{ 'APP.USERS.TITLE.GeneralInformations_sub' | translate }}</div>
               </div>
               <div class="col-lg-8">
-              <!-- <div class="row">
-                <div class="col-lg-6"> -->
                 <div class="form-group">
-                  <label class="label-bold" for="principal">{{ 'APP.LABEL.Principal' | translate }}</label>
+                  <label class="label-bold" for="principal">{{ 'APP.LABEL.Principal' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'principal'" *ngIf="_isEdit"></span></label>
                   <div class="" *ngIf="_isEdit">
                     <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('principal')" type="text" name="principalg" id="principal" formControlName="principal">
                     <p *ngIf="f['principal'].invalid && (f['principal'].dirty || f['principal'].touched)" class="form-text text-danger">
@@ -83,10 +83,8 @@
                     <input type="text" readonly class="form-control-plaintext" id="principal" [value]="user.principal">
                   </div>
                 </div>
-              <!-- </div>
-              <div class="col-lg-6"> -->
                 <div class="form-group">
-                  <label class="label-bold" for="full_name">{{ 'APP.LABEL.FullName' | translate }}</label>
+                  <label class="label-bold" for="full_name">{{ 'APP.LABEL.FullName' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'full_name'" *ngIf="_isEdit"></span></label>
                   <div class="" *ngIf="_isEdit">
                     <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('full_name')" type="text" name="full_name" id="full_name" formControlName="full_name">
                     <p *ngIf="f['full_name'].invalid && (f['full_name'].dirty || f['full_name'].touched)" class="form-text text-danger">
@@ -96,13 +94,11 @@
                     <ui-input-help field="full_name" context="USER"></ui-input-help>
                   </div>
                   <div class="" *ngIf="!_isEdit">
-                    <input type="text" readonly class="form-control-plaintext" id="full_name" [value]="user.full_name">
+                    <input type="text" readonly class="form-control-plaintext" id="full_name" [value]="user.full_name || '-'">
                   </div>
                 </div>
-              <!-- </div>
-              <div class="col-lg-6"> -->
                 <div class="form-group">
-                  <label class="label-bold" for="email">{{ 'APP.LABEL.Email' | translate }}</label>
+                  <label class="label-bold" for="email">{{ 'APP.LABEL.Email' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'email'" *ngIf="_isEdit"></span></label>
                   <div class="" *ngIf="_isEdit">
                     <input aria-required="true" autofocus="autofocus" autocomplete="off" class="form-control" [class.gl-field-error-outline]="_hasControlError('email')" type="text" name="email" id="email" formControlName="email">
                     <p *ngIf="f['email'].invalid && (f['email'].dirty || f['email'].touched)" class="form-text text-danger">
@@ -112,7 +108,27 @@
                     <ui-input-help field="email" context="USER"></ui-input-help>
                   </div>
                   <div class="" *ngIf="!_isEdit">
-                    <input type="text" readonly class="form-control-plaintext" id="email" [value]="user.email">
+                    <input type="text" readonly class="form-control-plaintext" id="email" [value]="user.email || '-'">
+                  </div>
+                </div>
+                <div class="row mt-5 enabled">
+                  <div class="col-md-6">
+                    <div class="" *ngIf="_isEdit">
+                      <div class="gl-form-checkbox custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" name="enabled" id="enabled" formControlName="enabled">
+                        <label class="custom-control-label" for="enabled">
+                          <span>{{ 'APP.LABEL.Enabled' | translate }}</span> <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'enabled'" *ngIf="_isEdit"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="" *ngIf="!_isEdit">
+                      <div class="gl-form-checkbox custom-control custom-checkbox">
+                        <input autofocus="autofocus" class="custom-control-input" type="checkbox" name="enabled" id="enabled" [checked]="user.enabled" disabled>
+                        <label class="custom-control-label text-dark" for="enabled">
+                          <span>{{ 'APP.LABEL.Enabled' | translate }}</span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -123,7 +139,7 @@
             </div>
 
             <div class="row-content-block footer-block" *ngIf="_isEdit">
-              <button aria-label="Save" type="submit" class="gl-button btn btn-confirm gl-mr-2" [disabled]="_formGroup.invalid || _spin">
+              <button aria-label="Save" type="submit" class="gl-button btn btn-confirm gl-mr-2" [disabled]="_formGroup.invalid">
                 {{ 'APP.BUTTON.Save' | translate }}
               </button>
               <button aria-label="Cancel" type="button" class="btn gl-button btn-default" (click)="_onCancelEdit()">
@@ -135,13 +151,20 @@
       </div>
     </div>
 
-    <ui-box-collapse *ngIf="user && _authorizations && !_spin"
-      [opened]="true"
-      [id]="'user-authorizations'"
-      [title]="'APP.USERS.TITLE.ShowAuthorizations' | translate"
-      [subTitle]="'APP.USERS.TITLE.ShowAuthorizations_sub' | translate"> 
-      <pre>{{ _authorizations | json }}</pre>
-    </ui-box-collapse>
+    <div class="settings border-top mt-3" *ngIf="user && !_spin">
+      <div class="row gl-mt-5 AUTHORIZATIONS">
+        <div class="col-lg-4 mb-4">
+          <h4 class="gl-mt-0 text-break">{{ 'APP.USERS.TITLE.ShowAuthorizations' | translate }}</h4>
+          <div class="text-break" markdown>{{ 'APP.USERS.TITLE.ShowAuthorizations_sub' | translate }}</div>
+        </div>
+        <div class="col-lg-8">
+          <app-user-authorizations
+            [id]="id"
+            [canEdit]="_canEdit">
+          </app-user-authorizations>
+        </div>
+      </div>
+    </div>
 
   </section>
 </div>

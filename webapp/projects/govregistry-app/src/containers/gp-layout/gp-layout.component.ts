@@ -10,7 +10,8 @@ import { Language } from 'projects/components/src/lib/classes/language';
 import { MenuAction } from 'projects/components/src/lib/classes/menu-action';
 import { EventType } from 'projects/tools/src/lib/classes/events';
 import { EventsManagerService } from 'projects/tools/src/lib/eventsmanager.service';
-import { AuthenticationService } from '../../services/authentication.service';
+import { AuthenticationService } from '@services/authentication.service';
+import { OpenAPIService } from '@services/openAPI.service';
 
 import { INavData } from './gp-sidebar-nav';
 import { GpSidebarNavHelper } from './gp-sidebar-nav.helper';
@@ -53,7 +54,7 @@ export class GpLayoutComponent implements OnInit, AfterContentChecked, OnDestroy
   _menuActions: MenuAction[] = [];
   _menuAppActions: MenuAction[] = [];
 
-  _spin = false;
+  _spin = true;
 
   _sideBarOpened: boolean = false;
   _sideBarCollapsed: boolean = false;
@@ -71,7 +72,7 @@ export class GpLayoutComponent implements OnInit, AfterContentChecked, OnDestroy
 
   _title: string = '';
 
-  _isGovRegistry: boolean = true;
+  _isGovApp: boolean = true;
 
   constructor(
     private router: Router,
@@ -81,6 +82,7 @@ export class GpLayoutComponent implements OnInit, AfterContentChecked, OnDestroy
     private tools: Tools,
     private eventsManagerService: EventsManagerService,
     private authenticationService: AuthenticationService,
+    private apiService: OpenAPIService,
     public sidebarNavHelper: GpSidebarNavHelper
   ) {
     this._config = this.configService.getConfiguration();
@@ -102,7 +104,7 @@ export class GpLayoutComponent implements OnInit, AfterContentChecked, OnDestroy
     this._session = this.authenticationService.getCurrentSession();
 
     if (Tools.CurrentApplication && Tools.CurrentApplication.menu) {
-      this._isGovRegistry = Tools.CurrentApplication.menu.action === 'dashboard';
+      this._isGovApp = Tools.CurrentApplication.menu.action === 'dashboard';
     }
 
     this._initLanguages();
@@ -142,10 +144,14 @@ export class GpLayoutComponent implements OnInit, AfterContentChecked, OnDestroy
         this.__toggelCollapse();
       }
     });
+
+    setTimeout(() => {
+      this.loadProfile();
+    }, 200);
   }
 
   ngAfterContentChecked() {
-    this._spin = this.tools.getSpinner() && this.tools.isSpinnerGlobal();
+    // this._spin = this.tools.getSpinner() && this.tools.isSpinnerGlobal();
 
     if (this._config.AppConfig.Watermark) {
       this.__once = false;
@@ -154,6 +160,23 @@ export class GpLayoutComponent implements OnInit, AfterContentChecked, OnDestroy
   }
 
   ngOnDestroy() {
+  }
+
+  loadProfile() {
+    this._spin = true;
+    this.apiService.getList('profile').subscribe(
+      (response: any) => {
+        // console.log('profile response', response);
+        this.authenticationService.setCurrentSession(response);
+        this.authenticationService.reloadSession();
+        this._initMenuActions();
+        this._spin = false;
+      },
+      (error: any) => {
+        console.log('loadProfile error', error.error.status, error);
+        this._spin = false;
+      }
+    );
   }
 
   _initMenuActions() {
@@ -276,9 +299,11 @@ export class GpLayoutComponent implements OnInit, AfterContentChecked, OnDestroy
       }
     } else {
       // Expand the menu
-      this._sideBarCollapsed = false;
-      this._sideBarOpened = true;
-      this._openSideBar = true;
+      if (!this.desktop && !this.mobile) {
+        this._sideBarCollapsed = true;
+        this._sideBarOpened = false;
+        this._openSideBar = false;
+      }
       item.expanded = true;
       this.router.navigate([item.url]);
       if (this.mobile) {
@@ -308,11 +333,11 @@ export class GpLayoutComponent implements OnInit, AfterContentChecked, OnDestroy
     this._title = (Tools.CurrentApplication && Tools.CurrentApplication.menu) ? Tools.CurrentApplication.menu.title : this._config.AppConfig.Layout.Header.title;
     switch (event.menu.action) {
       case 'dashboard':
-        this._isGovRegistry = true;
+        this._isGovApp = true;
         this.router.navigate([event.menu.url]);
         break
       default:
-        this._isGovRegistry = false;
+        this._isGovApp = false;
         this.router.navigate(['/application']);
         break;
     }

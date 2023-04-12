@@ -2,15 +2,14 @@ import { AfterContentChecked, Component, EventEmitter, Input, OnChanges, OnDestr
 import { Router, ActivatedRoute } from '@angular/router';
 import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { EventsManagerService } from 'projects/tools/src/lib/eventsmanager.service';
+import { AuthenticationService } from '@app/services/authentication.service';
 import { OpenAPIService } from 'projects/govregistry-app/src/services/openAPI.service';
-import { PageloaderService } from 'projects/tools/src/lib/pageloader.service';
-import { FieldClass } from 'projects/link-lab/src/lib/it/link/classes/definitions';
 
 import { YesnoDialogBsComponent } from 'projects/components/src/lib/dialogs/yesno-dialog-bs/yesno-dialog-bs.component';
 
@@ -44,8 +43,6 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
   ];
   _currentTab: string = 'details';
 
-  _informazioni: FieldClass[] = [];
-
   _isDetails = true;
 
   _isEdit = false;
@@ -67,9 +64,11 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
 
   _error: boolean = false;
   _errorMsg: string = '';
-
+  
   _modalConfirmRef!: BsModalRef;
-
+  
+  _canEdit: boolean = false;
+  
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -78,22 +77,14 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
     private configService: ConfigService,
     public tools: Tools,
     public eventsManagerService: EventsManagerService,
-    public apiService: OpenAPIService,
-    public pageloaderService: PageloaderService
+    public authenticationService: AuthenticationService,
+    public apiService: OpenAPIService
   ) {
     this.appConfig = this.configService.getConfiguration();
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      // Changed
-    });
-
-    this.pageloaderService.resetLoader();
-    this.pageloaderService.isLoading.subscribe({
-      next: (x) => { this._spin = x; },
-      error: (e: any) => { console.log('loader error', e); }
-    });
+    this._canEdit = this.authenticationService.hasPermission('USERS', 'edit');
 
     this.route.params.subscribe(params => {
       if (params['id'] && params['id'] !== 'new') {
@@ -103,7 +94,6 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
         this.configService.getConfig(this.model).subscribe(
           (config: any) => {
             this.config = config;
-            this._translateConfig();
             this._loadAll();
           }
         );
@@ -120,7 +110,6 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
           this._loadAll();
         }
       }
-
     });
   }
 
@@ -145,7 +134,7 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
 
   _loadAll() {
     this._loadUser();
-    this._loadAuthorization();
+    // this._loadAuthorization();
   }
 
   _hasControlError(name: string) {
@@ -163,19 +152,27 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
         let value = '';
         switch (key) {
           case 'principal':
-            const pattern = /^[\w_\-\.]+$/;
+            // const pattern = /^[\w_\-\.]+$/;
             value = data[key] ? data[key] : null;
             _group[key] = new UntypedFormControl(value, [
               Validators.required,
-              Validators.pattern(pattern)
+              // Validators.pattern(pattern)
             ]);
+            break;
+          case 'full_name':
+            value = data[key] ? data[key] : null;
+            _group[key] = new UntypedFormControl(value, [ Validators.required ]);
             break;
           case 'email':
             value = data[key] ? data[key] : null;
             _group[key] = new UntypedFormControl(value, [
-              Validators.required,
+              // Validators.required,
               Validators.email
             ]);
+            break;
+          case 'enabled':
+            value = data[key] ? data[key] : false;
+            _group[key] = new UntypedFormControl(value, []);
             break;
           default:
             value = data[key] ? data[key] : null;
@@ -197,7 +194,8 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
         this._initBreadcrumb();
         this._isEdit = false;
         this._isNew = false;
-        this.save.emit({ id: this.id, payment: response, update: false });
+        this.save.emit({ id: this.id, user: response, update: false });
+        this.router.navigate([this.model, this.user.id], { replaceUrl: true });
       },
       (error: any) => {
         this._error = true;
@@ -216,7 +214,7 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
           this.user = new User({ ...response });
           this._user = new User({ ...response });
           this.id = this.user.id;
-          this.save.emit({ id: this.id, payment: response, update: true });
+          this.save.emit({ id: this.id, user: response, update: true });
         },
         (error: any) => {
           this._error = true;
@@ -273,43 +271,17 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
 
   _loadUser() {
     if (this.id) {
+      this._spin = true;
       this.user = null;
       this.apiService.getDetails(this.model, this.id).subscribe({
         next: (response: any) => {
           this.user = new User({ ...response });
           this._user = new User({ ...response });
-          this._title = this.user.creditorReferenceId;
-          if (this.config.detailsTitle) {
-            this._title = Tools.simpleItemFormatter(this.config.detailsTitle, this.user);
-          }
-          // this.__initInformazioni();
+          this._spin = false;
         },
         error: (error: any) => {
+          this._spin = false;
           Tools.OnError(error);
-        }
-      });
-    }
-  }
-
-  __initInformazioni() {
-    if (this.user) {
-      this._informazioni = Tools.generateFields(this.config.details, this.user).map((field: FieldClass) => {
-        field.label = this.translate.instant(field.label);
-        return field;
-      });
-    }
-  }
-
-  _translateConfig() {
-    if (this.config && this.config.options) {
-      Object.keys(this.config.options).forEach((key: string) => {
-        if (this.config.options[key].label) {
-          this.config.options[key].label = this.translate.instant(this.config.options[key].label);
-        }
-        if (this.config.options[key].values) {
-          Object.keys(this.config.options[key].values).forEach((key2: string) => {
-            this.config.options[key].values[key2].label = this.translate.instant(this.config.options[key].values[key2].label);
-          });
         }
       });
     }
@@ -318,7 +290,7 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
   _initBreadcrumb() {
     const _title = this.id ? `#${this.id}` : this.translate.instant('APP.TITLE.New');
     this.breadcrumbs = [
-      { label: '', url: '', type: 'title', icon: 'corporate_fare' },
+      { label: '', url: '', type: 'title', icon: 'people' },
       { label: 'APP.TITLE.Users', url: '/users', type: 'link' },
       { label: `${_title}`, url: '', type: 'title' }
     ];
