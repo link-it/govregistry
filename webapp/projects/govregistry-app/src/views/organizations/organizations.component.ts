@@ -5,13 +5,12 @@ import { HttpParams } from '@angular/common/http';
 
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { EventsManagerService } from 'projects/tools/src/lib/eventsmanager.service';
 import { OpenAPIService } from 'projects/govregistry-app/src/services/openAPI.service';
-import { PageloaderService } from 'projects/tools/src/lib/pageloader.service';
 import { SearchBarFormComponent } from 'projects/components/src/lib/ui/search-bar-form/search-bar-form.component';
 
 @Component({
@@ -40,7 +39,7 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
 
   _preventMultiCall: boolean = false;
 
-  _spin: boolean = false;
+  _spin: boolean = true;
   desktop: boolean = false;
 
   _materialAppearance: MatFormFieldAppearance = 'fill';
@@ -70,7 +69,7 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
     { label: 'APP.TITLE.Organizations', url: '', type: 'title', icon: 'corporate_fare' }
   ];
 
-  _unimplemented: boolean = false;
+  _organizationLogoPlaceholder: string = './assets/images/organization-placeholder.png';
 
   constructor(
     private route: ActivatedRoute,
@@ -79,8 +78,7 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
     private configService: ConfigService,
     public tools: Tools,
     private eventsManagerService: EventsManagerService,
-    public apiService: OpenAPIService,
-    public pageloaderService: PageloaderService
+    public apiService: OpenAPIService
   ) {
     this.config = this.configService.getConfiguration();
     this._materialAppearance = this.config.materialAppearance;
@@ -93,7 +91,6 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
   }
 
   ngOnInit() {
-    this.pageloaderService.resetLoader();
     this.configService.getConfig(this.model).subscribe(
       (config: any) => {
         this.organizationsConfig = config;
@@ -141,34 +138,23 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
     this._spin = true;
     this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
-        if (response === null) {
-          this._unimplemented = true;
-        } else {
+        this.page = response.page;
+        this._links = response._links;
 
-          this.page = response.page;
-          this._links = response._links;
-
-          if (response.items) {
-            const _list: any = response.items.map((organization: any) => {
-              const metadataText = Tools.simpleItemFormatter(this.organizationsConfig.simpleItem.metadata.text, organization, this.organizationsConfig.simpleItem.options || null);
-              const metadataLabel = Tools.simpleItemFormatter(this.organizationsConfig.simpleItem.metadata.label, organization, this.organizationsConfig.simpleItem.options || null);
-              const element = {
-                id: organization.id,
-                primaryText: Tools.simpleItemFormatter(this.organizationsConfig.simpleItem.primaryText, organization, this.organizationsConfig.simpleItem.options || null),
-                secondaryText: Tools.simpleItemFormatter(this.organizationsConfig.simpleItem.secondaryText, organization, this.organizationsConfig.simpleItem.options || null),
-                metadata: `${metadataText}<span class="me-2">&nbsp;</span>${metadataLabel}`,
-                secondaryMetadata: Tools.simpleItemFormatter(this.organizationsConfig.simpleItem.secondaryMetadata, organization, this.organizationsConfig.simpleItem.options || null),
-                editMode: false,
-                source: { ...organization }
-              };
-              return element;
-            });
-            this.organizations = (url) ? [...this.organizations, ..._list] : [..._list];
-            this._preventMultiCall = false;
-          }
-          this._spin = false;
-          Tools.ScrollTo(0);
+        if (response.items) {
+          const _list: any = response.items.map((organization: any) => {
+            const _organization: any = this.__prepareOrganizationData(organization);
+            const element = {
+              id: organization.id,
+              source: { ..._organization }
+            };
+            return element;
+          });
+          this.organizations = (url) ? [...this.organizations, ..._list] : [..._list];
+          this._preventMultiCall = false;
         }
+        this._spin = false;
+        Tools.ScrollTo(0);
       },
       error: (error: any) => {
         this._setErrorMessages(true);
@@ -177,6 +163,16 @@ export class OrganizationsComponent implements OnInit, AfterContentChecked, OnDe
         // Tools.OnError(error);
       }
     });
+  }
+
+  __prepareOrganizationData(organization: any) {
+    const _organization: any = {
+      ... organization,
+      logo: organization._links['logo']?.href || this._organizationLogoPlaceholder,
+      logo_small: organization._links['logo-miniature']?.href || this._organizationLogoPlaceholder
+    };
+
+    return _organization;
   }
 
   _queryToHttpParams(query: any) : HttpParams {

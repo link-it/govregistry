@@ -1,11 +1,10 @@
 {
   "itemRow": {
+    "avatar": { "field": "email", "type": "gravatar-image" },
     "primaryText": [
       { "field": "principal", "type": "text" }
     ],
-    "secondaryText": [
-      { "field": "email", "type": "avatar", "tooltip": "full_name" }
-    ],
+    "secondaryText": [],
     "metadata": {
       "text": [
         { "field": "id", "type": "cardinal", "class": "" },

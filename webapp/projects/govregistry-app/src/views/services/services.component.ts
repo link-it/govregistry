@@ -11,7 +11,6 @@ import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { EventsManagerService } from 'projects/tools/src/lib/eventsmanager.service';
 import { OpenAPIService } from 'projects/govregistry-app/src/services/openAPI.service';
-import { PageloaderService } from 'projects/tools/src/lib/pageloader.service';
 import { SearchBarFormComponent } from 'projects/components/src/lib/ui/search-bar-form/search-bar-form.component';
 
 import * as moment from 'moment';
@@ -42,7 +41,7 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
 
   _preventMultiCall: boolean = false;
 
-  _spin: boolean = false;
+  _spin: boolean = true;
   desktop: boolean = false;
 
   _materialAppearance: MatFormFieldAppearance = 'fill';
@@ -71,7 +70,7 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
     { label: 'APP.TITLE.Services', url: '', type: 'title', icon: 'apps' }
   ];
 
-  _unimplemented: boolean = false;
+  _serviceLogoPlaceholder: string = './assets/images/service-placeholder.png';
 
   constructor(
     private route: ActivatedRoute,
@@ -80,8 +79,7 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
     private configService: ConfigService,
     public tools: Tools,
     private eventsManagerService: EventsManagerService,
-    public apiService: OpenAPIService,
-    public pageloaderService: PageloaderService
+    public apiService: OpenAPIService
   ) {
     this.config = this.configService.getConfiguration();
     this._materialAppearance = this.config.materialAppearance;
@@ -141,27 +139,23 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
     this._spin = true;
     this.apiService.getList(this.model, aux, url).subscribe({
       next: (response: any) => {
-        if (response === null) {
-          this._unimplemented = true;
-        } else {
+        this.page = response.page;
+        this._links = response._links;
 
-          this.page = response.page;
-          this._links = response._links;
-
-          if (response.items) {
-            const _list: any = response.items.map((service: any) => {
-              const element = {
-                id: service.id,
-                source: { ...service }
-              };
-              return element;
-            });
-            this.services = (url) ? [...this.services, ..._list] : [..._list];
-            this._preventMultiCall = false;
-          }
-          this._spin = false;
-          Tools.ScrollTo(0);
+        if (response.items) {
+          const _list: any = response.items.map((service: any) => {
+            const _service: any = this.__prepareServiceData(service);
+            const element = {
+              id: service.id,
+              source: { ..._service }
+            };
+            return element;
+          });
+          this.services = (url) ? [...this.services, ..._list] : [..._list];
+          this._preventMultiCall = false;
         }
+        this._spin = false;
+        Tools.ScrollTo(0);
       },
       error: (error: any) => {
         this._setErrorMessages(true);
@@ -170,6 +164,16 @@ export class ServicesComponent implements OnInit, AfterContentChecked, OnDestroy
         // Tools.OnError(error);
       }
     });
+  }
+
+  __prepareServiceData(service: any) {
+    const _service: any = {
+      ... service,
+      logo: service._links['logo']?.href || this._serviceLogoPlaceholder,
+      logo_small: service._links['logo-miniature']?.href || this._serviceLogoPlaceholder
+    };
+
+    return _service;
   }
 
   _queryToHttpParams(query: any) : HttpParams {

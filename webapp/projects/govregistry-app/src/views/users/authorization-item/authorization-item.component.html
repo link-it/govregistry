@@ -16,7 +16,7 @@
               <div class="gl-avatars-inline-child" [style.left]="(index * 18) + 'px'" [style.z-index]="index + 1">
                 <a target="_blank" class="gl-link gl-avatar-link" [tooltip]="org.legal_name" container="body" [delay]="500">
                   <!-- <div [src]="org | mapper: _orgLogoUrl" alt="avatar" class="gl-avatar gl-avatar-circle gl-avatar-s24 bg-white"> -->
-                  <div class="gl-avatar gl-avatar-circle gl-avatar-s24 menu-logo logo-miniature" [style.backgroundImage]="org | mapper: _orgLogoBackground"></div>
+                  <div class="gl-avatar gl-avatar-circle gl-avatar-s24 menu-logo logo-miniature bg-white" [style.backgroundImage]="org | mapper: _orgLogoBackground"></div>
                 </a>
               </div>
             </ng-container>
@@ -42,7 +42,7 @@
               <div class="gl-avatars-inline-child" [style.left]="(index * 18) + 'px'" [style.z-index]="index + 1">
                 <a target="_blank" class="gl-link gl-avatar-link" [tooltip]="service.service_name" container="body" [delay]="500">
                   <!-- <img [src]="service | mapper: _serviceLogoUrl" alt="avatar" class="gl-avatar gl-avatar-circle gl-avatar-s24 bg-white"> -->
-                  <div class="gl-avatar gl-avatar-circle gl-avatar-s24 menu-logo logo-miniature" [style.backgroundImage]="service | mapper: _serviceLogoBackground"></div>
+                  <div class="gl-avatar gl-avatar-circle gl-avatar-s24 menu-logo logo-miniature bg-white" [style.backgroundImage]="service | mapper: _serviceLogoBackground"></div>
                 </a>
               </div>
             </ng-container>
@@ -86,7 +86,6 @@
               [notFoundText]="'APP.MESSAGE.NotFoundItem' | translate"
               [typeToSearchText]="'APP.MESSAGE.PleaseEnterMin' | translate:{ lengthTerm: minLengthTerm }"
               bindValue="id"
-              bindLabel="role_name"
               labelForId="role_id"
               appendTo="body"
               [editableSearchTerm]="true"
@@ -201,7 +200,7 @@
     </div>
 
     <div class="row-content-block footer-block text-end mt-1- py-2">
-      <button aria-label="Save" type="submit" class="gl-button btn btn-confirm gl-mr-2" [disabled]="_formGroup.invalid || _spin">
+      <button aria-label="Save" type="submit" class="gl-button btn btn-confirm gl-mr-2" [disabled]="_formGroup.invalid">
         {{ 'APP.BUTTON.Save' | translate }}
       </button>
       <button aria-label="Cancel" type="button" class="btn gl-button btn-default" (click)="_onCancelEdit($event)">

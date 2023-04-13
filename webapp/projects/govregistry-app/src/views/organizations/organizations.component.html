@@ -16,11 +16,11 @@
     </div>
     <div class="nav-controls">
       <div role="group" class="gl-w-full btn-group- position-relative">
-        <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'create'"> -->
+        <ng-template [appHasPermission]="'ORGANIZATIONS'" [action]="'create'">
           <button aria-label="Add payment" type="button" class="btn btn-confirm btn-md gl-button btn-icon" (click)="_onNew()">
             <mat-icon fontSet="material-icons-outlined">add</mat-icon> <span class="ms-2">{{ 'APP.BUTTON.AddOrganization' | translate }}</span>
           </button>
-        <!-- </ng-template> -->
+        </ng-template>
       </div>
     </div>
   </div>
@@ -62,19 +62,12 @@
     (scrolled)="__loadMoreData()"
     [scrollWindow]="false">
     <div class="row">
-      <ui-box-message *ngIf="organizations.length == 0 && !_spin && !_unimplemented"
+      <ui-box-message *ngIf="organizations.length == 0 && !_spin"
         [size]="64"
         [icon]="'report_problem'"
         [image]="'./assets/images/illustrations/organizations.svg'"
         [message]="_message | translate"
         [subMessage]="_messageHelp | translate">
-      </ui-box-message>
-
-      <ui-box-message *ngIf="_unimplemented && !_spin"
-        [size]="64"
-        [icon]="'report_problem'"
-        [image]="'./assets/images/illustrations/organizations.svg'"
-        [message]="_messageUnimplemented | translate">
       </ui-box-message>
 
       <div class="col-12">
