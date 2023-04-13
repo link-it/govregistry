@@ -12,7 +12,7 @@ export class PhotoBase64Component implements OnInit, OnChanges {
   @Input() boxWidth: string = '175';
   @Input() boxHeight: string = 'auto';
   @Input() imageSaved: string = '';
-  @Input() isImageSaved: boolean = false;
+  @Input('isImageSaved') _isImageSaved: boolean = false;
   @Input() maxSize: number = 200000;
   @Input() removeLabel: string = 'Remove';
   @Input() fileTypes: string[] = ['image/png', 'image/jpeg'];
@@ -38,9 +38,9 @@ export class PhotoBase64Component implements OnInit, OnChanges {
   fileChangeEvent(fileInput: any) {
     this.imageError = null;
     if (fileInput.target.files && fileInput.target.files[0]) {
+      const file_type = fileInput.target.files[0].type;
       // Size Filter Bytes
       const max_size = this.maxSize; // /* The size of the file in bytes. */
-      20971520
       const allowed_types = this.fileTypes;
       const max_height = 15200;
       const max_width = 25600;
@@ -74,34 +74,36 @@ export class PhotoBase64Component implements OnInit, OnChanges {
             } else {
               const imgBase64Path = e.target.result;
               this.cardImageBase64 = imgBase64Path;
-              this.isImageSaved = true;
-              this.imageLoaded.emit(imgBase64Path);
+              this._isImageSaved = true;
+              this.imageLoaded.emit(this.base64ToArrayBuffer(imgBase64Path.split(',')[1]));
               return true;
             }
           };
         } else {
           const imageData = e.target.result;
-          this.imageLoaded.emit(imageData);
-          // var buffer = e.target.result;
-          // var int32View = new Int32Array(buffer);
-          // var tipoImmagine = 'sconosciuto';
+          // const int32View = new Int32Array(imageData);
+          // let imageType = 'unknown';
           // switch(int32View[0]) {
           //   case 1196314761:
-          //     tipoImmagine = "png";
+          //     imageType = "image/png";
           //     break;
           //   case 944130375:
-          //     tipoImmagine = "gif";
+          //     imageType = "image/gif";
           //     break;
           //   case 544099650:
-          //     tipoImmagine = "bmp";
+          //     imageType = "image/bmp";
           //     break;
           //   case -520103681:
-          //     tipoImmagine = "jpg";
+          //     imageType = "image/jpg";
           //     break;
           //   default:
-          //     tipoImmagine= "sconosciuto";
+          //     imageType= "unknown";
           //     break;
           // }
+          const _base64 = this.arrayBufferToBase64(imageData);
+          this.cardImageBase64 = `data:${file_type};base64,${_base64}`;
+          this._isImageSaved = true;
+          this.imageLoaded.emit(imageData);
         }
       };
 
@@ -117,10 +119,75 @@ export class PhotoBase64Component implements OnInit, OnChanges {
 
   removeImage() {
     this.cardImageBase64 = null;
-    this.isImageSaved = false;
+    this._isImageSaved = false;
     this.imageError = null;
     this.imageLoaded.emit(null);
   }
+
+  arrayBufferToBase64(buffer: any) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+  }
+
+  _base64ToArrayBuffer(base64Url: any) {
+    let base64 = base64Url.replaceAll('-', '+');
+    base64 = base64.replaceAll('_', '/');
+    const binaryString = window.atob(base64);
+    const length = binaryString.length;
+    const bytes = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  _b64ToUint6(nChr: any) {
+    return nChr > 64 && nChr < 91
+      ? nChr - 65
+      : nChr > 96 && nChr < 123
+      ? nChr - 71
+      : nChr > 47 && nChr < 58
+      ? nChr + 4
+      : nChr === 43
+      ? 62
+      : nChr === 47
+      ? 63
+      : 0;
+  }
+
+  base64ToArrayBuffer(sBase64: any, nBlocksSize: number = 1024) {
+    const sB64Enc = sBase64.replace(/[^A-Za-z0-9+/]/g, "");
+    const nInLen = sB64Enc.length;
+    const nOutLen = nBlocksSize
+      ? Math.ceil(((nInLen * 3 + 1) >> 2) / nBlocksSize) * nBlocksSize
+      : (nInLen * 3 + 1) >> 2;
+    const taBytes = new Uint8Array(nOutLen);
+  
+    let nMod3;
+    let nMod4;
+    let nUint24 = 0;
+    let nOutIdx = 0;
+    for (let nInIdx = 0; nInIdx < nInLen; nInIdx++) {
+      nMod4 = nInIdx & 3;
+      nUint24 |= this._b64ToUint6(sB64Enc.charCodeAt(nInIdx)) << (6 * (3 - nMod4));
+      if (nMod4 === 3 || nInLen - nInIdx === 1) {
+        nMod3 = 0;
+        while (nMod3 < 3 && nOutIdx < nOutLen) {
+          taBytes[nOutIdx] = (nUint24 >>> ((16 >>> nMod3) & 24)) & 255;
+          nMod3++;
+          nOutIdx++;
+        }
+        nUint24 = 0;
+      }
+    }
+  
+    return taBytes;
+  }  
 }
 
 /** Other File Type

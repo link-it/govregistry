@@ -2,15 +2,14 @@ import { AfterContentChecked, Component, EventEmitter, Input, OnChanges, OnDestr
 import { Router, ActivatedRoute } from '@angular/router';
 import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { EventsManagerService } from 'projects/tools/src/lib/eventsmanager.service';
+import { AuthenticationService } from '@app/services/authentication.service';
 import { OpenAPIService } from 'projects/govregistry-app/src/services/openAPI.service';
-import { PageloaderService } from 'projects/tools/src/lib/pageloader.service';
-import { FieldClass } from 'projects/link-lab/src/lib/it/link/classes/definitions';
 
 import { YesnoDialogBsComponent } from 'projects/components/src/lib/dialogs/yesno-dialog-bs/yesno-dialog-bs.component';
 
@@ -44,8 +43,6 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
   ];
   _currentTab: string = 'details';
 
-  _informazioni: FieldClass[] = [];
-
   _isDetails = true;
 
   _isEdit = false;
@@ -67,9 +64,11 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
 
   _error: boolean = false;
   _errorMsg: string = '';
-
+  
   _modalConfirmRef!: BsModalRef;
-
+  
+  _canEdit: boolean = false;
+  
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -78,13 +77,15 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
     private configService: ConfigService,
     public tools: Tools,
     public eventsManagerService: EventsManagerService,
-    public apiService: OpenAPIService,
-    public pageloaderService: PageloaderService
+    public authenticationService: AuthenticationService,
+    public apiService: OpenAPIService
   ) {
     this.appConfig = this.configService.getConfiguration();
   }
 
   ngOnInit() {
+    this._canEdit = this.authenticationService.hasPermission('USERS', 'edit');
+
     this.route.params.subscribe(params => {
       if (params['id'] && params['id'] !== 'new') {
         this.id = params['id'];
@@ -93,7 +94,6 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
         this.configService.getConfig(this.model).subscribe(
           (config: any) => {
             this.config = config;
-            this._translateConfig();
             this._loadAll();
           }
         );
@@ -277,36 +277,11 @@ export class UserDetailsComponent implements OnInit, OnChanges, AfterContentChec
         next: (response: any) => {
           this.user = new User({ ...response });
           this._user = new User({ ...response });
-          // this.__initInformazioni();
           this._spin = false;
         },
         error: (error: any) => {
           this._spin = false;
           Tools.OnError(error);
-        }
-      });
-    }
-  }
-
-  __initInformazioni() {
-    if (this.user) {
-      this._informazioni = Tools.generateFields(this.config.details, this.user).map((field: FieldClass) => {
-        field.label = this.translate.instant(field.label);
-        return field;
-      });
-    }
-  }
-
-  _translateConfig() {
-    if (this.config && this.config.options) {
-      Object.keys(this.config.options).forEach((key: string) => {
-        if (this.config.options[key].label) {
-          this.config.options[key].label = this.translate.instant(this.config.options[key].label);
-        }
-        if (this.config.options[key].values) {
-          Object.keys(this.config.options[key].values).forEach((key2: string) => {
-            this.config.options[key].values[key2].label = this.translate.instant(this.config.options[key].values[key2].label);
-          });
         }
       });
     }

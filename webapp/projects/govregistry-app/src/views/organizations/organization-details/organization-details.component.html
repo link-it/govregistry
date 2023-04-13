@@ -6,7 +6,7 @@
     <h3 class="page-title" *ngIf="_isEdit && !_isNew">{{ 'APP.TITLE.EditOrganization' | translate }}</h3>
     <h3 class="page-title" *ngIf="_isEdit && _isNew">{{ 'APP.TITLE.NewOrganization' | translate }}</h3>
     <div class="d-flex flex-grow-1">&nbsp;</div>
-    <!-- <ng-template [appHasPermission]="'SETTINGS'" [action]="'edit'"> -->
+    <ng-template [appHasPermission]="'USERS'" [action]="'edit'">
       <div class="nav-controls">
         <div class="position-relative" *ngIf="!_isEdit && !_spin">
           <button aria-expanded="false" type="button" class="btn btn-default btn-md gl-button btn-icon" [tooltip]="'APP.TOOLTIP.EditOrganization' | translate" (click)="_editOrganization()">
@@ -44,7 +44,7 @@
           </button>
         </div>
       </div>
-    <!-- </ng-template> -->
+    </ng-template>
   </div>
   <section class="container-fluid container-limited limit-container-width container-scroller container-scroller-no-search">
     <ui-box-spinner [color]="'accent'" [diameter]="48" [strokeWidth]="4" *ngIf="_spin && !_isNew"></ui-box-spinner>
@@ -228,19 +228,23 @@
             </div>
           </form>
         </div>
-        <div class="row gl-mt-5 border-top pt-5" *ngIf="!_isNew">
+        <div class="row gl-mt-5 border-top pt-5 form-image" *ngIf="!_isNew">
           <div class="col-lg-4 mb-4">
             <h4 class="gl-mt-0 text-break"><span>{{ 'APP.SERVICES.TITLE.LogosInformations' | translate }}</span></h4>
             <div class="text-break" markdown>{{ 'APP.SERVICES.TITLE.LogosInformations_sub' | translate }}</div>
           </div>
           <div class="col-lg-8">
-            <div class="position-absolute top-0" style="z-index: 999;right: 15px !important;">
-              <button class="btn btn-default btn-md gl-button btn-icon ms-3" (click)="toggleEditLogos()" [tooltip]="(_isEditLogos ? 'APP.TOOLTIP.CancelEdit':'APP.TOOLTIP.ModifyLogos') | translate">
-                <span *ngIf="!_isEditLogos"><i class="bi bi-pencil"></i><span class="d-none">{{ 'APP.BUTTON.ModifyLogos' | translate }}</span></span>
-                <span *ngIf="_isEditLogos"><i class="bi bi-x-lg"></i><span class="d-none">{{ 'APP.BUTTON.Cancel' | translate }}</span></span>
-              </button>  
-            </div>
-            <div class="row" *ngIf="!_isNew">
+            <ng-template [appHasPermission]="'ORGANIZATIONS'" [action]="'edit'">
+              <div class="position-absolute top-0" style="z-index: 999;right: 15px !important;">
+                <button class="btn btn-default btn-md gl-button btn-icon ms-3" (click)="_onEditLogos()" [tooltip]="(_isEditLogos ? 'APP.TOOLTIP.CancelEdit':'APP.TOOLTIP.ModifyLogos') | translate" *ngIf="!_isEditLogos">
+                  <span><i class="bi bi-pencil"></i></span>
+                </button>  
+                <button class="btn btn-default btn-md gl-button btn-icon ms-3" (click)="_onCancelEditLogos()" [tooltip]="(_isEditLogos ? 'APP.TOOLTIP.CancelEdit':'APP.TOOLTIP.ModifyLogos') | translate" *ngIf="_isEditLogos">
+                  <span><i class="bi bi-x-lg"></i></span>
+                </button>  
+              </div>
+            </ng-template>
+            <div class="row" *ngIf="!_isNew && !_refreshLogo">
               <div class="col-6">
                 <div class="form-group logo">
                   <label class="label-bold" for="logo">{{ 'APP.LABEL.Logo' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'logo'" *ngIf="_isEditLogos"></span></label>
@@ -250,8 +254,8 @@
                       [boxHeight]="'auto'"
                       [maxSize]="20971520"
                       [placeHolder]="_imagePlaceHolder"
-                      [imageSaved]="_getLogo(organization, 'logo')"
-                      [isImageSaved]="_hasLogo(organization, 'logo')"
+                      [imageSaved]="organization | mapper:_getLogoMapper:'logo'"
+                      [isImageSaved]="organization | mapper:_hasLogoMapper:'logo'"
                       [removeLabel]="'APP.BUTTON.Remove' | translate"
                       [asDataUrl]="false"
                       [isEdit]="_isEditLogos"
@@ -259,7 +263,7 @@
                     </app-photo-base64>
                   </div>
                   <div class="mt-2" *ngIf="!_isEditLogos && false">
-                    <img class="img-space" style="width: 175px;height: auto;" [src]="_getLogo(organization, 'logo')" />
+                    <img class="img-space" style="width: 175px;height: auto;" [src]="organization | mapper:_getLogoMapper:'logo'" />
                   </div>
                 </div>
               </div>
@@ -272,8 +276,8 @@
                       [boxHeight]="'auto'"
                       [maxSize]="20971520"
                       [placeHolder]="_imagePlaceHolder"
-                      [imageSaved]="_getLogo(organization, 'logo-miniature')"
-                      [isImageSaved]="_hasLogo(organization, 'logo-miniature')"
+                      [imageSaved]="organization | mapper:_getLogoMapper:'logo-miniature'"
+                      [isImageSaved]="organization | mapper:_hasLogoMapper:'logo-miniature'"
                       [removeLabel]="'APP.BUTTON.Remove' | translate"
                       [asDataUrl]="false"
                       [isEdit]="_isEditLogos"
@@ -281,12 +285,20 @@
                     </app-photo-base64>
                   </div>
                   <div class="mt-2" *ngIf="!_isEditLogos && false">
-                    <img class="img-space" style="width: 90px;height: auto;" [src]="_getLogo(organization, 'logo-miniature')" />
+                    <img class="img-space" style="width: 90px;height: auto;" [src]="organization | mapper:_getLogoMapper:'logo-miniature'" />
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        <div class="row-content-block form-footer-image footer-block" *ngIf="_isEditLogos">
+          <button aria-label="Save" type="submit" class="gl-button btn btn-confirm gl-mr-2" (click)="_saveLogos()" [disabled]="!_modifiedLogo && !_modifiedLogoSmall">
+            {{ 'APP.BUTTON.Save' | translate }}
+          </button>
+          <button aria-label="Cancel" type="button" class="btn gl-button btn-default" (click)="_onCancelEditLogos()">
+            {{ 'APP.BUTTON.Cancel' | translate }}
+          </button>
         </div>
       </div>
     </div>
