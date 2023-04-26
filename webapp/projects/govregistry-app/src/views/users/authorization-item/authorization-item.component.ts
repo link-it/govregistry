@@ -316,7 +316,6 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
         _options.params =  { ..._options.params, q: term };
       }
       if (typeof term === 'object' ) {
-        console.log('term', term);
         _options.params =  { ..._options.params, ...term };
       }
     }

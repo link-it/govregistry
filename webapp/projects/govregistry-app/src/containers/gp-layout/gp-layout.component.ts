@@ -173,7 +173,7 @@ export class GpLayoutComponent implements OnInit, AfterContentChecked, OnDestroy
         this._spin = false;
       },
       (error: any) => {
-        console.log('loadProfile error', error.error.status, error);
+        console.log('loadProfile error', error);
         this._spin = false;
       }
     );
