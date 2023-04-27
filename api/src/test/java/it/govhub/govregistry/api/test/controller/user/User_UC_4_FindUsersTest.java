@@ -171,8 +171,8 @@ class User_UC_4_FindUsersTest {
 	
 	@Test
 	void UC_4_04_FindAllOk_Offset() throws Exception {
-		UserEntity user = Costanti.getUser_Snakamoto();		
-		UserEntity user2 = Costanti.getUser_Vbuterin();
+//		UserEntity user = Costanti.getUser_Snakamoto();		
+//		UserEntity user2 = Costanti.getUser_Vbuterin();
 		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "1");
