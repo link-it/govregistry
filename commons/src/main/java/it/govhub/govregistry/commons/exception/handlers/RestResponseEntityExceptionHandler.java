@@ -58,6 +58,7 @@ import it.govhub.govregistry.commons.exception.ForbiddenException;
 import it.govhub.govregistry.commons.exception.InternalException;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
+import it.govhub.govregistry.commons.exception.InternalConfigurationException;
 import it.govhub.govregistry.commons.exception.SemanticValidationException;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.messages.SystemMessages;
@@ -150,6 +151,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler(ForbiddenException.class)
 	public Object handleConstraintViolation(ForbiddenException ex, WebRequest request) {
 		return buildProblem(HttpStatus.FORBIDDEN, ex.getLocalizedMessage(),request.getHeader(HttpHeaders.ACCEPT));
+	}
+	
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler({InternalConfigurationException.class})
+	public final Object handleInternalConfigurationException(InternalConfigurationException ex, WebRequest request) {
+		logger.error("An Internal Configuration Exception was Raised:: {}", ex);
+		return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT)) ;
 	}
 	
 	
