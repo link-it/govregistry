@@ -189,6 +189,8 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("organizations").size());
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 		
+		// Applicazione
+		assertEquals(Costanti.APPLICATION_GOVREGISTRY, items.getJsonObject(0).getJsonObject("role").getString("application"));
 	}
 	
 	@Test
@@ -251,6 +253,8 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
+		// Applicazione
+		assertEquals(Costanti.APPLICATION_GOVREGISTRY, items.getJsonObject(0).getJsonObject("role").getString("application"));
 	}
 	
 	@Test
@@ -313,6 +317,9 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		assertEquals(1, items.getJsonObject(0).getJsonArray("services").size());
 		assertEquals(servizio.getName(), items.getJsonObject(0).getJsonArray("services").getJsonObject(0).getString("service_name"));
 		// aggiungere check data dopo che si sistema il servizio
+		
+		// Applicazione
+		assertEquals(Costanti.APPLICATION_GOVREGISTRY, items.getJsonObject(0).getJsonObject("role").getString("application"));
 	}
 	
 	@Test
@@ -405,11 +412,17 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		assertEquals(0, item0.getJsonArray("organizations").size());
 		assertEquals(0, item0.getJsonArray("services").size());
 		
+		// Applicazione
+		assertEquals(Costanti.APPLICATION_GOVREGISTRY, item0.getJsonObject("role").getString("application"));
+		
 		JsonObject item1 = items.getJsonObject(1);
 		assertEquals(idRole2, item1.getInt("id"));
 		assertEquals(ruoloUser2.getName(), item1.getJsonObject("role").getString("role_name"));
 		assertEquals(0, item1.getJsonArray("organizations").size());
 		assertEquals(0, item1.getJsonArray("services").size());
+		
+		// Applicazione
+		assertEquals(Costanti.APPLICATION_GOVREGISTRY, item1.getJsonObject("role").getString("application"));
 	}
 	
 	@Test
@@ -502,11 +515,17 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		assertEquals(0, item0.getJsonArray("organizations").size());
 		assertEquals(0, item0.getJsonArray("services").size());
 		
+		// Applicazione
+		assertEquals(Costanti.APPLICATION_GOVREGISTRY, item0.getJsonObject("role").getString("application"));
+		
 		JsonObject item1 = items.getJsonObject(1);
 		assertEquals(idRole1, item1.getInt("id"));
 		assertEquals(ruoloUser.getName(), item1.getJsonObject("role").getString("role_name"));
 		assertEquals(0, item1.getJsonArray("organizations").size());
 		assertEquals(0, item1.getJsonArray("services").size());
+		
+		// Applicazione
+		assertEquals(Costanti.APPLICATION_GOVREGISTRY, item1.getJsonObject("role").getString("application"));
 		
 	}
 	
@@ -600,11 +619,17 @@ class Authorization_UC_3_FindAuthorizationsTest {
 		assertEquals(0, item0.getJsonArray("organizations").size());
 		assertEquals(0, item0.getJsonArray("services").size());
 		
+		// Applicazione
+		assertEquals(Costanti.APPLICATION_GOVREGISTRY, item0.getJsonObject("role").getString("application"));
+		
 		JsonObject item1 = items.getJsonObject(1);
 		assertEquals(idRole2, item1.getInt("id"));
 		assertEquals(ruoloUser2.getName(), item1.getJsonObject("role").getString("role_name"));
 		assertEquals(0, item1.getJsonArray("organizations").size());
 		assertEquals(0, item1.getJsonArray("services").size());
+		
+		// Applicazione
+		assertEquals(Costanti.APPLICATION_GOVREGISTRY, item1.getJsonObject("role").getString("application"));
 	}
 }
 
