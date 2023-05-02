@@ -978,6 +978,7 @@ paths:
             - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
             - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
             - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
+            - $ref: "#/components/parameters/application_id_query"
         tags:
            - authorization
         summary: Get the Role list.
@@ -1120,6 +1121,15 @@ components:
          schema:
             $ref: "govhub-api-commons.yaml#/components/schemas/AuthorizationId"
       
+      
+      application_id_query:
+         name: application_id
+         in: query
+         required: false
+         schema:
+            type: string
+            minLength: 1
+            pattern: .+      
             
    # SCHEMAS ---------------- #
    

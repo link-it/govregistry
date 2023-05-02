@@ -21,6 +21,7 @@ package it.govhub.govregistry.api.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -32,6 +33,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import it.govhub.govregistry.api.beans.AuthorizationCreate;
 import it.govhub.govregistry.api.beans.RoleList;
+import it.govhub.govregistry.api.repository.RoleFilters;
 import it.govhub.govregistry.api.services.RoleAuthorizationService;
 import it.govhub.govregistry.api.spec.AuthorizationApi;
 import it.govhub.govregistry.commons.api.beans.Authorization;
@@ -116,10 +118,18 @@ public class AuthorizationController implements AuthorizationApi {
 
 	@Transactional
 	@Override
-	public ResponseEntity<RoleList> listRoles(Direction sortDirection,Integer limit, Long offset, String q) {
+	public ResponseEntity<RoleList> listRoles(Direction sortDirection,Integer limit, Long offset,  String q, String application_id) {
 		this.securityService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR, GovregistryRoles.GOVREGISTRY_USERS_VIEWER);
 
 		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, Sort.by(sortDirection, RoleEntity_.NAME));
+		
+		var spec = RoleFilters.empty();
+		if (! StringUtils.isBlank(q)) {
+			spec = spec.and(RoleFilters.likeRoleName(q));
+		}
+		if (! StringUtils.isBlank(application_id)) {
+			spec = spec.and(RoleFilters.byApplicationId(application_id));
+		}
 		
 		Page<RoleEntity> roles = this.roleRepo.findAll(null, pageRequest.pageable);
 		
