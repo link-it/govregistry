@@ -1005,9 +1005,6 @@ components:
          properties:
           page:
              $ref: "#/components/schemas/PageInfo" 
-          # I links li aggiunge spring hateoas
-          #_links:
-          #   $ref: "#/components/schemas/PaginationLinks"
                     
       PageInfo:
          type: object
