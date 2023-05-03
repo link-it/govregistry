@@ -38,10 +38,9 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -55,18 +54,17 @@ import it.govhub.govregistry.commons.api.beans.Problem;
 import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.ConflictException;
 import it.govhub.govregistry.commons.exception.ForbiddenException;
+import it.govhub.govregistry.commons.exception.InternalConfigurationException;
 import it.govhub.govregistry.commons.exception.InternalException;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
-import it.govhub.govregistry.commons.exception.InternalConfigurationException;
 import it.govhub.govregistry.commons.exception.SemanticValidationException;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.messages.SystemMessages;
 import it.govhub.govregistry.commons.utils.RequestUtils;
 
 
-@ControllerAdvice
-@ResponseBody
+@RestControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	public static final Map<HttpStatus, String> problemTypes = Map.ofEntries(
@@ -86,7 +84,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	
 	private Logger logger = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
 	
-	public static Object buildProblem(HttpStatus status, String detail, String accept) {
+	public static ResponseEntity<Object> buildProblem(HttpStatus status, String detail, String accept) {
 		
 		   List<MediaType> mediaTypes = MediaType.parseMediaTypes(accept);
 		   if (mediaTypes.isEmpty() || mediaTypes.contains(MediaType.ALL )  || mediaTypes.contains(MediaType.APPLICATION_JSON) || mediaTypes.contains(MediaType.APPLICATION_PROBLEM_JSON)) {
@@ -96,23 +94,36 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 					ret.setTitle(status.getReasonPhrase());
 					ret.setType(new URI(problemTypes.get(status)));
 					ret.setDetail(detail);
-					return ret;
+					
+					return ResponseEntity.status(status)
+			                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+							.body(ret);
 				} catch (URISyntaxException e){
 					// Non deve mai fallire la new URI di sopra
 					throw new UnreachableException(e);
 				}
 		   }
 		else {
-			return "HTTP " + status.value() + ": " + detail;
+			return ResponseEntity.status(status)
+					.body("HTTP " + status.value() + ": " + detail);
 		}
 	}
 	
 	public static Problem buildProblem(HttpStatus status, String detail) {
-		return (Problem) buildProblem(status, detail, null);
+		Problem ret = new Problem();
+		ret.setStatus(status.value());
+		ret.setTitle(status.getReasonPhrase());
+		try {
+			ret.setType(new URI(problemTypes.get(status)));
+		} catch (URISyntaxException e) {
+			throw new UnreachableException(e);
+		}
+		ret.setDetail(detail);
+		
+		return ret;
 	}
 
 
-	@ResponseStatus(HttpStatus.CONFLICT)
 	@ExceptionHandler(ConflictException.class)
 	public Object handleConstraintViolation(ConflictException ex, WebRequest request) {		
 		return buildProblem(HttpStatus.CONFLICT, ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT) );
