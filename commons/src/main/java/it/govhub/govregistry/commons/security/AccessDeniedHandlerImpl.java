@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.govhub.govregistry.commons.api.beans.AuthenticationProblem;
+import it.govhub.govregistry.commons.api.beans.Problem;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.exception.handlers.RestResponseEntityExceptionHandler;
 
@@ -58,19 +58,19 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		logger.debug("Building problem for Access Denied: {}", accessDeniedException.getMessage());
 		
-		AuthenticationProblem problem = new AuthenticationProblem();
+		Problem problem = new Problem();
 		
-		problem.status = HttpStatus.FORBIDDEN.value();
-		problem.title = HttpStatus.FORBIDDEN.getReasonPhrase();
-		problem.detail = accessDeniedException.getMessage();
+		problem.setStatus(HttpStatus.FORBIDDEN.value());
+		problem.setTitle(HttpStatus.FORBIDDEN.getReasonPhrase());
+		problem.setDetail(accessDeniedException.getMessage());
 		
 		// imposto il content-type della risposta
 		response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PROBLEM_JSON_VALUE);
-		response.setStatus(problem.status);
+		response.setStatus(problem.getStatus());
 		
 		ServletOutputStream outputStream = null;
 		try{
-			problem.instance = new URI(RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.FORBIDDEN));
+			problem.setInstance(new URI(RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.FORBIDDEN)));
 			outputStream = response.getOutputStream();
 			this.jsonMapper.writeValue(outputStream, problem);
 			outputStream.flush();
