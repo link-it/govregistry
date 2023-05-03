@@ -32,7 +32,6 @@ public class SystemController implements SystemApi {
 	@Override
 	public ResponseEntity<Problem> status() {
 		Problem ret =  RestResponseEntityExceptionHandler.buildProblem(HttpStatus.OK,"System is working correctly");
-		ret.removeLinks();
 		
 		return ResponseEntity.ok(ret);
 	}
