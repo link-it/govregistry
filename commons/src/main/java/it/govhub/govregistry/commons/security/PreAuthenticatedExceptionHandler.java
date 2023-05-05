@@ -54,7 +54,7 @@ public class PreAuthenticatedExceptionHandler extends OncePerRequestFilter {
 	            throws ServletException, IOException {
 
 	        try {
-	        	log.debug("Delegating Exception Handling to the RestResponseEntityExceptionHandler...");
+	        	log.debug("Wrapping the filter chain in a try catch and delegating the exception handling to the RestResponseEntityExceptionHandler...");
 	            filterChain.doFilter(request, response);
 	        } catch (Exception e) {
 	            log.error("Spring Security Filter Chain Exception:", e);

@@ -31,7 +31,6 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +51,8 @@ import it.govhub.govregistry.commons.entity.UserEntity;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di lettura degli Utenti")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 class System_UC_1_GetProfileTest {
-
-	private static final String PROFILE_BASE_PATH = "/v1/profile";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -66,18 +63,9 @@ class System_UC_1_GetProfileTest {
 	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;
 	
-	@BeforeEach
-	private void caricaUtenti() {
-		UserEntity user = Costanti.getUser_Vbuterin();
-		this.userRepository.save(user);
-		
-		UserEntity user2 = Costanti.getUser_Snakamoto();
-		this.userRepository.save(user2);
-	}
-	
 	@Test
 	void UC_1_01_GetProfile_UtenzaAdmin_NotAuthorized() throws Exception {
-		this.mockMvc.perform(get(PROFILE_BASE_PATH)
+		this.mockMvc.perform(get(Costanti.PROFILE_BASE_PATH)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.status", is(401)))
@@ -90,8 +78,9 @@ class System_UC_1_GetProfileTest {
 	@Test
 	void UC_1_02_GetProfile_UtenzaAdminOk() throws Exception {
 		UserEntity user = Costanti.getUser_Vbuterin();
+		this.userRepository.save(user);
 		
-		MvcResult result = this.mockMvc.perform(get(PROFILE_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(get(Costanti.PROFILE_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(user.getPrincipal()))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())

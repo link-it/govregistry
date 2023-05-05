@@ -27,11 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.commons.codec.binary.Base64;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,20 +40,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import it.govhub.govregistry.api.Application;
 import it.govhub.govregistry.api.repository.OrganizationRepository;
 import it.govhub.govregistry.api.test.Costanti;
+import it.govhub.govregistry.api.test.utils.Utils;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di censimento proprieta logo e logo_miniature di una Organization")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Organization_UC_7_OrganizationLogoTest {
-
-	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
-	private static final String ORGANIZATIONS_BASE_PATH_DETAIL_ID = ORGANIZATIONS_BASE_PATH + "/{id}";
-	private static final String ORGANIZATIONS_BASE_PATH_LOGO = ORGANIZATIONS_BASE_PATH_DETAIL_ID + "/logo";
-	private static final String ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE = ORGANIZATIONS_BASE_PATH_DETAIL_ID + "/logo-miniature";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -68,25 +60,26 @@ class Organization_UC_7_OrganizationLogoTest {
 	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;
 	
-	@BeforeEach
 	private void configurazioneDB() {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 		ente.setLogo(null);
 		ente.setLogoMiniature(null);
-		this.organizationRepository.save(ente);
+		if(leggiEnteDB(ente.getTaxCode()) == null) {
+			this.organizationRepository.save(ente);
+		}
 	}
 	
 	private OrganizationEntity leggiEnteDB(String nome) {
-		List<OrganizationEntity> findAll = this.organizationRepository.findAll();
-		return findAll.stream().filter(f -> f.getTaxCode().equals(nome)).collect(Collectors.toList()).get(0);
+		return Utils.leggiEnteDB(nome, this.organizationRepository);
 	}
 	
 	@Test
 	void UC_7_01_PatchOrganization_ReplaceLogoMiniature() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		Long id = ente.getId();
 
-		this.mockMvc.perform(put(ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE, id)
+		this.mockMvc.perform(put(Costanti.ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -103,10 +96,11 @@ class Organization_UC_7_OrganizationLogoTest {
 	
 	@Test
 	void UC_7_02_PatchOrganization_ReplaceLogo() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		Long id = ente.getId();
 
-		this.mockMvc.perform(put(ORGANIZATIONS_BASE_PATH_LOGO, id)
+		this.mockMvc.perform(put(Costanti.ORGANIZATIONS_BASE_PATH_LOGO, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -123,10 +117,11 @@ class Organization_UC_7_OrganizationLogoTest {
 	
 	@Test
 	void UC_7_03_PatchOrganization_DeleteLogoMiniature() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		Long id = ente.getId();
 
-		this.mockMvc.perform(put(ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE, id)
+		this.mockMvc.perform(put(Costanti.ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -139,7 +134,7 @@ class Organization_UC_7_OrganizationLogoTest {
 		
 		assertNotNull(ente.getLogoMiniature());
 		
-		this.mockMvc.perform(delete(ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE, id)
+		this.mockMvc.perform(delete(Costanti.ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				)
@@ -156,10 +151,11 @@ class Organization_UC_7_OrganizationLogoTest {
 	
 	@Test
 	void UC_7_04_PatchOrganization_DeleteLogo() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		Long id = ente.getId();
 
-		this.mockMvc.perform(put(ORGANIZATIONS_BASE_PATH_LOGO, id)
+		this.mockMvc.perform(put(Costanti.ORGANIZATIONS_BASE_PATH_LOGO, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -172,7 +168,7 @@ class Organization_UC_7_OrganizationLogoTest {
 		
 		assertNotNull(ente.getLogo());
 		
-		this.mockMvc.perform(delete(ORGANIZATIONS_BASE_PATH_LOGO, id)
+		this.mockMvc.perform(delete(Costanti.ORGANIZATIONS_BASE_PATH_LOGO, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				)
@@ -190,7 +186,7 @@ class Organization_UC_7_OrganizationLogoTest {
 	void UC_7_05_PatchOrganization_LogoMiniature_OrganizationNotFound() throws Exception {
 		int idUser1 = 10000;
 		
-		this.mockMvc.perform(put(ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE,idUser1)
+		this.mockMvc.perform(put(Costanti.ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -202,7 +198,7 @@ class Organization_UC_7_OrganizationLogoTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 		
-		this.mockMvc.perform(delete(ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE,idUser1)
+		this.mockMvc.perform(delete(Costanti.ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf()))
 				.andExpect(status().isNotFound())
@@ -217,7 +213,7 @@ class Organization_UC_7_OrganizationLogoTest {
 	void UC_7_06_PatchOrganization_LogoMiniature_OrganizationInvalidId() throws Exception {
 		String idUser1 = "XXX";
 		
-		this.mockMvc.perform(put(ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE,idUser1)
+		this.mockMvc.perform(put(Costanti.ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -229,7 +225,7 @@ class Organization_UC_7_OrganizationLogoTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 		
-		this.mockMvc.perform(delete(ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE,idUser1)
+		this.mockMvc.perform(delete(Costanti.ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf()))
 				.andExpect(status().isBadRequest())
@@ -244,7 +240,7 @@ class Organization_UC_7_OrganizationLogoTest {
 	void UC_7_07_PatchOrganization_Logo_OrganizationNotFound() throws Exception {
 		int idUser1 = 10000;
 		
-		this.mockMvc.perform(put(ORGANIZATIONS_BASE_PATH_LOGO,idUser1)
+		this.mockMvc.perform(put(Costanti.ORGANIZATIONS_BASE_PATH_LOGO,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -256,7 +252,7 @@ class Organization_UC_7_OrganizationLogoTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 		
-		this.mockMvc.perform(delete(ORGANIZATIONS_BASE_PATH_LOGO,idUser1)
+		this.mockMvc.perform(delete(Costanti.ORGANIZATIONS_BASE_PATH_LOGO,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf()))
 				.andExpect(status().isNotFound())
@@ -271,7 +267,7 @@ class Organization_UC_7_OrganizationLogoTest {
 	void UC_7_08_PatchOrganization_Logo_OrganizationInvalidId() throws Exception {
 		String idUser1 = "XXX";
 		
-		this.mockMvc.perform(put(ORGANIZATIONS_BASE_PATH_LOGO,idUser1)
+		this.mockMvc.perform(put(Costanti.ORGANIZATIONS_BASE_PATH_LOGO,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -283,7 +279,7 @@ class Organization_UC_7_OrganizationLogoTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 		
-		this.mockMvc.perform(delete(ORGANIZATIONS_BASE_PATH_LOGO,idUser1)
+		this.mockMvc.perform(delete(Costanti.ORGANIZATIONS_BASE_PATH_LOGO,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf()))
 				.andExpect(status().isBadRequest())

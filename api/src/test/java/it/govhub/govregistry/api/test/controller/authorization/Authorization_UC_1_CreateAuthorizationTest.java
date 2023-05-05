@@ -34,14 +34,12 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonReader;
 import javax.transaction.Transactional;
 
 import org.hibernate.Hibernate;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +59,7 @@ import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.Matchers;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
+import it.govhub.govregistry.api.test.utils.Utils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity;
@@ -72,12 +71,10 @@ import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di creazione delle Authorization")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Authorization_UC_1_CreateAuthorizationTest {
 	
-	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
-
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -104,36 +101,37 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	@Value("${govhub.time-zone:Europe/Rome}")
 	private String timeZone;
 	
-	@BeforeEach
 	private void configurazioneDB() {
 		UserEntity user = Costanti.getUser_Snakamoto();
-		this.userRepository.save(user);
+		if(leggiUtenteDB(user.getPrincipal()) == null) {
+			this.userRepository.save(user);
+		}
 		
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-		this.organizationRepository.save(ente);
-		
+		OrganizationEntity ente2 = Costanti.getEnteCreditore3();
+		if(leggiEnteDB(ente2.getTaxCode()) == null) {
+			this.organizationRepository.save(ente2);
+		}
+
 		ServiceEntity servizio = Costanti.getServizioTest();
-		this.serviceRepository.save(servizio);
+		if(leggiServizioDB(servizio.getName()) == null) {
+			this.serviceRepository.save(servizio);
+		}
 	}
 	
 	private RoleEntity leggiRuoloDB(String nomeRuolo) {
-		List<RoleEntity> findAll = this.roleRepository.findAll();
-		return findAll.stream().filter(f -> f.getName().equals(nomeRuolo)).collect(Collectors.toList()).get(0);
+		return Utils.leggiRuoloDB(nomeRuolo, this.roleRepository);
 	}
 	
 	private UserEntity leggiUtenteDB(String principal) {
-		List<UserEntity> findAll = this.userRepository.findAll();
-		return findAll.stream().filter(f -> f.getPrincipal().equals(principal)).collect(Collectors.toList()).get(0);
+		return Utils.leggiUtenteDB(principal, this.userRepository);
 	}
 	
 	private OrganizationEntity leggiEnteDB(String nome) {
-		List<OrganizationEntity> findAll = this.organizationRepository.findAll();
-		return findAll.stream().filter(f -> f.getTaxCode().equals(nome)).collect(Collectors.toList()).get(0);
+		return Utils.leggiEnteDB(nome, this.organizationRepository);
 	}
 	
 	private ServiceEntity leggiServizioDB(String nome) {
-		List<ServiceEntity> findAll = this.serviceRepository.findAll();
-		return findAll.stream().filter(f -> f.getName().equals(nome)).collect(Collectors.toList()).get(0);
+		return Utils.leggiServizioDB(nome, this.serviceRepository);
 	}
 	
 	@Transactional
@@ -181,6 +179,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 
 	@Test
 	void UC_1_01_CreateAuthorizationOk() throws Exception {
+		configurazioneDB();
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
 		String ruoloDaAssegnare = "govhub_user";
@@ -196,7 +195,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -215,10 +214,18 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		int id = reader.readObject().getInt("id");
 		
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, null);
+
+		// Cancellazione Autorizzazione
+		cancellaAutorizzazione(id);
+	}
+
+	private void cancellaAutorizzazione(int id) throws Exception {
+		Utils.cancellaAutorizzazione(id, this.mockMvc, this.userAuthProfilesUtils.utenzaAdmin());
 	}
 	
 	@Test
 	void UC_1_02_CreateAuthorizationOk_Organization() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
@@ -235,7 +242,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -254,10 +261,14 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		int id = reader.readObject().getInt("id");
 		
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, Arrays.asList(ente.getTaxCode()), null);
+		
+		// Cancellazione Autorizzazione
+		cancellaAutorizzazione(id);
 	}
 	
 	@Test
 	void UC_1_03_CreateAuthorizationOk_Service() throws Exception {
+		configurazioneDB();
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		
@@ -274,7 +285,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -294,10 +305,13 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, Arrays.asList(servizio.getName()));
 		
+		// Cancellazione Autorizzazione
+		cancellaAutorizzazione(id);
 	}
 	
 	@Test
 	void UC_1_04_CreateAuthorizationOk_OrganizationService() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
@@ -315,7 +329,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -335,10 +349,13 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, Arrays.asList(ente.getTaxCode()), Arrays.asList(servizio.getName()));
 		
+		// Cancellazione Autorizzazione
+		cancellaAutorizzazione(id);
 	}
 	
 	@Test
 	void UC_1_05_CreateAuthorizationOk_NoOrganizationService() throws Exception {
+		configurazioneDB();
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
 		String ruoloDaAssegnare = "govhub_user";
@@ -354,7 +371,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -373,10 +390,14 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		int id = reader.readObject().getInt("id");
 		
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, null);
+		
+		// Cancellazione Autorizzazione
+		cancellaAutorizzazione(id);
 	}
 	
 	@Test
 	void UC_1_06_CreateAuthorizationOk_UserEditor() throws Exception {
+		configurazioneDB();
 		UserEntity user = leggiUtenteDB("user_viewer");
 		
 		String ruoloDaAssegnare = "govhub_user";
@@ -392,7 +413,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -412,6 +433,8 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, null);
 		
+		// Cancellazione Autorizzazione
+		cancellaAutorizzazione(id);
 	}
 	
 	@Test
@@ -420,6 +443,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
 	 * */
 	void UC_1_07_CreateAuthorizationOk_UserEditor_Organization() throws Exception {
+		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
@@ -437,7 +461,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -465,7 +489,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -484,6 +508,9 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		int id = reader.readObject().getInt("id");
 		
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, Arrays.asList(ente.getTaxCode()), null);
+		
+		// Cancellazione Autorizzazione
+		cancellaAutorizzazione(id);
 	}
 	
 	@Test
@@ -492,6 +519,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
 	 * */
 	void UC_1_08_CreateAuthorizationOk_UserEditor_Organization_Ente3() throws Exception {
+		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
@@ -509,7 +537,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -537,7 +565,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -557,6 +585,8 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, Arrays.asList(ente.getTaxCode()), null);
 		
+		// Cancellazione Autorizzazione
+		cancellaAutorizzazione(id);
 	}
 	
 	@Test
@@ -565,6 +595,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per il servizio[2]
 	 * */
 	void UC_1_09_CreateAuthorizationOk_UserEditor_Service() throws Exception {
+		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
@@ -584,7 +615,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -612,7 +643,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -632,6 +663,8 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, Arrays.asList(servizio.getName()));
 		
+		// Cancellazione Autorizzazione
+		cancellaAutorizzazione(id);
 	}
 	
 	@Test
@@ -640,6 +673,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per il servizio2.
 	 * */
 	void UC_1_10_CreateAuthorizationOk_UserEditor_Service_Servizio2() throws Exception {
+		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
@@ -657,7 +691,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -685,7 +719,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -704,6 +738,9 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		int id = reader.readObject().getInt("id");
 		
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, Arrays.asList(servizio.getName()));
+		
+		// Cancellazione Autorizzazione
+		cancellaAutorizzazione(id);
 	}
 }
 

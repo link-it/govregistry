@@ -33,15 +33,12 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +56,7 @@ import it.govhub.govregistry.api.repository.OrganizationRepository;
 import it.govhub.govregistry.api.repository.ServiceRepository;
 import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
+import it.govhub.govregistry.api.test.utils.Utils;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity;
@@ -69,13 +67,9 @@ import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di cancellazione delle Authorization")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 class Authorization_UC_5_DeleteAuthorizationFailsTest {
 	
-	private static final String AUTHORIZATIONS_BASE_PATH_DETAIL_ID = "/v1/authorizations/{id}";
-	
-	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
-
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -99,31 +93,37 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 	@Value("${govhub.time-zone:Europe/Rome}")
 	private String timeZone;
 	
-	@BeforeEach
 	private void configurazioneDB() {
 		UserEntity user = Costanti.getUser_Snakamoto();
-		this.userRepository.save(user);
+		if(leggiUtenteDB(user.getPrincipal()) == null) {
+			this.userRepository.save(user);
+		}
 		
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-		this.organizationRepository.save(ente);
-		
+		OrganizationEntity ente2 = Costanti.getEnteCreditore3();
+		if(leggiEnteDB(ente2.getTaxCode()) == null) {
+			this.organizationRepository.save(ente2);
+		}
+
 		ServiceEntity servizio = Costanti.getServizioTest();
-		this.serviceRepository.save(servizio);
+		if(leggiServizioDB(servizio.getName()) == null) {
+			this.serviceRepository.save(servizio);
+		}
 	}
 	
 	private RoleEntity leggiRuoloDB(String nomeRuolo) {
-		List<RoleEntity> findAll = this.roleRepository.findAll();
-		return findAll.stream().filter(f -> f.getName().equals(nomeRuolo)).collect(Collectors.toList()).get(0);
+		return Utils.leggiRuoloDB(nomeRuolo, this.roleRepository);
 	}
 	
 	private UserEntity leggiUtenteDB(String principal) {
-		List<UserEntity> findAll = this.userRepository.findAll();
-		return findAll.stream().filter(f -> f.getPrincipal().equals(principal)).collect(Collectors.toList()).get(0);
+		return Utils.leggiUtenteDB(principal, this.userRepository);
 	}
 	
 	private OrganizationEntity leggiEnteDB(String nome) {
-		List<OrganizationEntity> findAll = this.organizationRepository.findAll();
-		return findAll.stream().filter(f -> f.getTaxCode().equals(nome)).collect(Collectors.toList()).get(0);
+		return Utils.leggiEnteDB(nome, this.organizationRepository);
+	}
+	
+	private ServiceEntity leggiServizioDB(String nome) {
+		return Utils.leggiServizioDB(nome, this.serviceRepository);
 	}
 	
 //	@Test
@@ -133,6 +133,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 	 * Con l'utenza SNakamato provo a cancellare un'autorizzazione su un ruolo che non puo' gestire
 	 * */
 	void UC_4_01_DeleteAuthorizationFail_UserEditor_Organization() throws Exception {
+		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
@@ -150,7 +151,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -178,7 +179,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(json)
@@ -208,7 +209,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -226,7 +227,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
 		int idRoleAssegnatoAdmin = reader.readObject().getInt("id");
 		
-		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -261,7 +262,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 		assertEquals(ente.getTaxCode(), item1.getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRoleAssegnatoAdmin)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRoleAssegnatoAdmin)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -273,7 +274,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 				.andReturn();
 		
 		// Verifica che la lista autorizzazioni non sia stata modificata
-		result = this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON))
@@ -304,7 +305,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 	void UC_4_02_DeleteAuthorizationFail_NotFound() throws Exception {
 		int idRole = 10000;
 		// Cancellazione Autorizzazione non esistente
-		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))

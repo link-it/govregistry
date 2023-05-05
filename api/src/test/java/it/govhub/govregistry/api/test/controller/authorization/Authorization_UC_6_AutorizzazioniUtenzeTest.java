@@ -31,13 +31,10 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonReader;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +54,7 @@ import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.Matchers;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
+import it.govhub.govregistry.api.test.utils.Utils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
@@ -66,13 +64,9 @@ import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di controllo autorizzazioni sulle operazioni delle Authorization")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Authorization_UC_6_AutorizzazioniUtenzeTest {
-	
-	private static final String AUTHORIZATIONS_BASE_PATH_DETAIL_ID = "/v1/authorizations/{id}";
-	
-	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -97,31 +91,43 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 	@Value("${govhub.time-zone:Europe/Rome}")
 	private String timeZone;
 	
-	@BeforeEach
 	private void configurazioneDB() {
 		UserEntity user = Costanti.getUser_Snakamoto();
-		this.userRepository.save(user);
+		if(leggiUtenteDB(user.getPrincipal()) == null) {
+			this.userRepository.save(user);
+		}
 		
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-		this.organizationRepository.save(ente);
-		
+		OrganizationEntity ente2 = Costanti.getEnteCreditore3();
+		if(leggiEnteDB(ente2.getTaxCode()) == null) {
+			this.organizationRepository.save(ente2);
+		}
+
 		ServiceEntity servizio = Costanti.getServizioTest();
-		this.serviceRepository.save(servizio);
+		if(leggiServizioDB(servizio.getName()) == null) {
+			this.serviceRepository.save(servizio);
+		}
 	}
 	
 	private RoleEntity leggiRuoloDB(String nomeRuolo) {
-		List<RoleEntity> findAll = this.roleRepository.findAll();
-		return findAll.stream().filter(f -> f.getName().equals(nomeRuolo)).collect(Collectors.toList()).get(0);
+		return Utils.leggiRuoloDB(nomeRuolo, this.roleRepository);
 	}
 	
 	private UserEntity leggiUtenteDB(String principal) {
-		List<UserEntity> findAll = this.userRepository.findAll();
-		return findAll.stream().filter(f -> f.getPrincipal().equals(principal)).collect(Collectors.toList()).get(0);
+		return Utils.leggiUtenteDB(principal, this.userRepository);
+	}
+	
+	private OrganizationEntity leggiEnteDB(String nome) {
+		return Utils.leggiEnteDB(nome, this.organizationRepository);
+	}
+	
+	private ServiceEntity leggiServizioDB(String nome) {
+		return Utils.leggiServizioDB(nome, this.serviceRepository);
 	}
 	
 	// 1. CreateAuthorization con utenza non admin con ruolo users_editor: Ok
 	@Test
 	void UC_6_01_CreateAuthorizationOk_UtenzaConRuolo_GovHub_Users_Editor() throws Exception {
+		configurazioneDB();
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
 		String ruoloDaAssegnare = "govhub_user";
@@ -138,7 +144,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 		
 		
 		// Creo una authorization e verifico la risposta
-		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -156,6 +162,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 	// 2. CreateAuthorization con utenza non admin con ruolo non users_editor: NotAuthorized
 	@Test
 	void UC_6_02_CreateAuthorizationFail_UtenzaSenzaRuolo_GovHub_Users_Editor() throws Exception {
+		configurazioneDB();
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
 		String ruoloDaAssegnare = "govhub_user";
@@ -171,7 +178,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.with(csrf())
 				.content(json)
@@ -188,15 +195,16 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 	// 3. FindAllAuthorizations con utenza non admin con ruolo users_editor o users_viewer: Ok
 	@Test
 	void UC_6_03_FindAllOk_UtenzaConRuolo_GovHub_Users_Editor() throws Exception {
+		configurazioneDB();
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
-		this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -206,9 +214,10 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 	// 4. FindAllAuthorizations con utenza non admin con ruolo non users_editor o users_viewer: NotAuthorized
 	@Test
 	void UC_6_04_FindAllFail_UtenzaSenzaRuolo_GovHub_Users_Editor() throws Exception {
+		configurazioneDB();
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
-		this.mockMvc.perform(get(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
@@ -222,6 +231,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 	// 5. DeleteAuthorization con utenza non admin con ruolo users_editor: Ok
 	@Test
 	void UC_6_05_DeleteAuthorizationOk_UtenzaConRuolo_GovHub_Users_Editor() throws Exception {
+		configurazioneDB();
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
 		String ruoloDaAssegnare = "govhub_user";
@@ -237,7 +247,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -255,7 +265,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 		int idRole = reader.readObject().getInt("id");
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.accept("*/*"))
@@ -267,6 +277,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 	// 6. DeleteAuthorization con utenza non admin con ruolo non users_editor: NotAuthorized
 	@Test
 	void UC_6_06_DeleteAuthorizationFail_UtenzaSenzaRuolo_GovHub_Users_Editor() throws Exception {
+		configurazioneDB();
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		
 		String ruoloDaAssegnare = "govhub_user";
@@ -282,7 +293,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 				.toString();
 		
 		// Creo una authorization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.content(json)
@@ -300,7 +311,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 		int idRole = reader.readObject().getInt("id");
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.with(csrf())
 				.accept("*/*"))
