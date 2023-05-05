@@ -20,9 +20,7 @@ package it.govhub.govregistry.commons.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -63,28 +61,6 @@ public class ApplicationEntity implements Serializable {
 	
 	@Column(name = "deployed_uri", nullable = false)
 	private String deployedUri;
-	
-	@Embedded
-	 @AttributeOverride(
-	            name = "name",
-	            column = @Column( name = "logo_name" )
-	        )
-	 @AttributeOverride(
-	            name = "url",
-	            column = @Column( name = "logo_url" )
-	        )
-	 @AttributeOverride(
-	            name = "type",
-	            column = @Column( name = "logo_type" )
-	        )
-	 @AttributeOverride(
-	            name = "color",
-	            column = @Column( name = "logo_color" )
-	        )
-	 @AttributeOverride(
-	            name = "bgColor",
-	            column = @Column( name = "logo_bg_color" )
-	        )
-	private LogoEntity logo;
+
 	
 }
