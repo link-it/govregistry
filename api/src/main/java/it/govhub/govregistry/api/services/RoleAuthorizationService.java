@@ -142,7 +142,8 @@ public class RoleAuthorizationService {
 	    if ( !this.securityService.canWriteAuthorization(newAuthorization))  {
 			throw new NotAuthorizedException();
 		}
-		
+	    
+	    assignee.getAuthorizations().add(newAuthorization);
 		newAuthorization = this.authRepo.save(newAuthorization);
 		
 		return this.authAssembler.toModel(newAuthorization);

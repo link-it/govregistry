@@ -56,12 +56,9 @@ import it.govhub.govregistry.commons.entity.OrganizationEntity;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di censimento Organization")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Organization_UC_5_PatchOrganizationTest {
-
-	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
-	private static final String ORGANIZATIONS_BASE_PATH_DETAIL_ID = ORGANIZATIONS_BASE_PATH + "/{id}";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -71,7 +68,6 @@ class Organization_UC_5_PatchOrganizationTest {
 	
 	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;
-	
 
 	@Test
 	void UC_5_01_PatchOrganization_WrongMediaType() throws Exception {
@@ -85,7 +81,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, 1)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, 1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -101,6 +97,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_02_PatchOrganization_WrongPayload() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("50245678903");
+		ente.setLegalName(ente.getLegalName() + "-502");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -109,7 +107,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -132,7 +130,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -166,6 +164,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_03_PatchOrganization_TaxCode() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("50345678903");
+		ente.setLegalName(ente.getLegalName() + "-503");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -174,7 +174,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -202,7 +202,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -237,6 +237,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_04_PatchOrganization_RemoveTaxCode() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("50445678903");
+		ente.setLegalName(ente.getLegalName() + "-504");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -245,7 +247,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -271,7 +273,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -307,6 +309,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_05_PatchOrganization_LegalName() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("50545678903");
+		ente.setLegalName(ente.getLegalName() + "-505");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -315,7 +319,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -343,7 +347,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -378,6 +382,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_06_PatchOrganization_RemoveLegalName() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("50645678903");
+		ente.setLegalName(ente.getLegalName() + "-506");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -386,7 +392,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -412,7 +418,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -448,6 +454,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_07_PatchOrganization_ReplaceOfficeAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("50745678903");
+		ente.setLegalName(ente.getLegalName() + "-507");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -457,7 +465,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -487,7 +495,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -523,6 +531,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_08_PatchOrganization_AddOfficeAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("50845678903");
+		ente.setLegalName(ente.getLegalName() + "-508");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -531,7 +541,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -560,7 +570,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -596,6 +606,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_09_PatchOrganization_RemoveOfficeAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("50945678903");
+		ente.setLegalName(ente.getLegalName() + "-509");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -605,7 +617,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -631,7 +643,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -665,20 +677,22 @@ class Organization_UC_5_PatchOrganizationTest {
 	
 	@ParameterizedTest
 	@CsvSource({
-		"/office_address,Parco della Vittoria 1/A",
-		"/office_address_details,Parco della Vittoria 1/A",
-		"/office_at,Parco della Vittoria 1/A",
-		"/office_zip,56125",
-		"/office_municipality,56125",
-		"/office_municipality_details,56125",
-		"/office_province,PI",
-		"/office_foreign_state,DE",
-		"/office_phone_number,050123456",
-		"/office_email_address,mariorossi@gmail.com",
-		"/office_pec_address,mariorossi@gmail.com"
+		"/office_address,Parco della Vittoria 1/A,01",
+		"/office_address_details,Parco della Vittoria 1/A,02",
+		"/office_at,Parco della Vittoria 1/A,03",
+		"/office_zip,56125,04",
+		"/office_municipality,56125,05",
+		"/office_municipality_details,56125,06",
+		"/office_province,PI,07",
+		"/office_foreign_state,DE,08",
+		"/office_phone_number,050123456,09",
+		"/office_email_address,mariorossi@gmail.com,10",
+		"/office_pec_address,mariorossi@gmail.com,11"
     })
-	void UC_5_10_PatchOrganization_ReplaceNotExistingField(String path, String value) throws Exception {
+	void UC_5_10_PatchOrganization_ReplaceNotExistingField(String path, String value, String suffix) throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("510456789" + suffix);
+		ente.setLegalName(ente.getLegalName() + "-" + suffix);
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -687,7 +701,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -713,7 +727,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -749,6 +763,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_11_PatchOrganization_ReplaceOfficeAddressDetails() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("51145678903");
+		ente.setLegalName(ente.getLegalName() + "-511");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -758,7 +774,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -788,7 +804,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -824,6 +840,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_12_PatchOrganization_AddOfficeAddressDetails() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("51245678903");
+		ente.setLegalName(ente.getLegalName() + "-512");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -832,7 +850,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -861,7 +879,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -897,6 +915,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_13_PatchOrganization_RemoveOfficeAddressDetails() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("51345678903");
+		ente.setLegalName(ente.getLegalName() + "-513");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -906,7 +926,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -932,7 +952,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -967,6 +987,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_14_PatchOrganization_ReplaceOfficeAt() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("51445678903");
+		ente.setLegalName(ente.getLegalName() + "-514");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -976,7 +998,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1006,7 +1028,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1042,6 +1064,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_15_PatchOrganization_AddOfficeAt() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("51545678903");
+		ente.setLegalName(ente.getLegalName() + "-515");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1050,7 +1074,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1079,7 +1103,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1115,6 +1139,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_16_PatchOrganization_RemoveOfficeAt() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("51645678903");
+		ente.setLegalName(ente.getLegalName() + "-516");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1124,7 +1150,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1150,7 +1176,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1185,7 +1211,9 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_17_PatchOrganization_ReplaceOfficeZip() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
+		ente.setTaxCode("51745678903");
+		ente.setLegalName(ente.getLegalName() + "-517");
+		
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
 				.add("legal_name", ente.getLegalName())
@@ -1194,7 +1222,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1224,7 +1252,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1260,6 +1288,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_18_PatchOrganization_AddOfficeZip() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("51845678903");
+		ente.setLegalName(ente.getLegalName() + "-518");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1268,7 +1298,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1297,7 +1327,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1333,6 +1363,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_19_PatchOrganization_RemoveOfficeZip() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("51945678903");
+		ente.setLegalName(ente.getLegalName() + "-519");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1342,7 +1374,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1368,7 +1400,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1403,6 +1435,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_20_PatchOrganization_ReplaceOfficeMunicipality() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("52045678903");
+		ente.setLegalName(ente.getLegalName() + "-520");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1412,7 +1446,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1442,7 +1476,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1478,6 +1512,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_21_PatchOrganization_AddOfficeMunicipality() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("52145678903");
+		ente.setLegalName(ente.getLegalName() + "-521");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1486,7 +1522,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1515,7 +1551,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1551,6 +1587,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_22_PatchOrganization_RemoveOfficeMunicipality() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("52245678903");
+		ente.setLegalName(ente.getLegalName() + "-522");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1560,7 +1598,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1586,7 +1624,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1621,6 +1659,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_23_PatchOrganization_ReplaceOfficeMunicipalityDetails() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("52345678903");
+		ente.setLegalName(ente.getLegalName() + "-523");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1630,7 +1670,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1660,7 +1700,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1696,6 +1736,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_24_PatchOrganization_AddOfficeMunicipalityDetails() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("52445678903");
+		ente.setLegalName(ente.getLegalName() + "-524");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1704,7 +1746,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1733,7 +1775,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1769,6 +1811,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_25_PatchOrganization_RemoveOfficeMunicipalityDetails() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("52545678903");
+		ente.setLegalName(ente.getLegalName() + "-525");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1778,7 +1822,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1804,7 +1848,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1839,6 +1883,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_26_PatchOrganization_ReplaceOfficeProvince() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("52645678903");
+		ente.setLegalName(ente.getLegalName() + "-526");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1848,7 +1894,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1878,7 +1924,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1914,6 +1960,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_27_PatchOrganization_AddOfficeProvince() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("52745678903");
+		ente.setLegalName(ente.getLegalName() + "-527");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1922,7 +1970,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -1951,7 +1999,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -1987,6 +2035,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_28_PatchOrganization_RemoveOfficeProvince() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("52845678903");
+		ente.setLegalName(ente.getLegalName() + "-528");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -1996,7 +2046,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2022,7 +2072,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2057,6 +2107,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_29_PatchOrganization_ReplaceOfficeForeignState() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("52945678903");
+		ente.setLegalName(ente.getLegalName() + "-529");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2066,7 +2118,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2096,7 +2148,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2132,6 +2184,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_30_PatchOrganization_AddOfficeForeignState() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("53045678903");
+		ente.setLegalName(ente.getLegalName() + "-530");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2140,7 +2194,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2169,7 +2223,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2205,6 +2259,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_31_PatchOrganization_RemoveOfficeForeignState() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("53145678903");
+		ente.setLegalName(ente.getLegalName() + "-531");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2214,7 +2270,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2240,7 +2296,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2275,6 +2331,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_32_PatchOrganization_ReplaceOfficePhoneNumber() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("53245678903");
+		ente.setLegalName(ente.getLegalName() + "-532");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2284,7 +2342,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2314,7 +2372,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2350,6 +2408,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_33_PatchOrganization_AddOfficePhoneNumber() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("53345678903");
+		ente.setLegalName(ente.getLegalName() + "-533");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2358,7 +2418,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2387,7 +2447,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2423,6 +2483,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_34_PatchOrganization_RemoveOfficePhoneNumber() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("53445678903");
+		ente.setLegalName(ente.getLegalName() + "-534");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2432,7 +2494,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2458,7 +2520,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2493,6 +2555,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_35_PatchOrganization_ReplaceOfficeEmailAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("53545678903");
+		ente.setLegalName(ente.getLegalName() + "-535");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2502,7 +2566,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2532,7 +2596,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2568,6 +2632,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_36_PatchOrganization_AddOfficeEmailAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("53645678903");
+		ente.setLegalName(ente.getLegalName() + "-536");	
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2576,7 +2642,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2605,7 +2671,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2641,6 +2707,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_37_PatchOrganization_RemoveOfficeEmailAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("53745678903");
+		ente.setLegalName(ente.getLegalName() + "-537");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2650,7 +2718,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2676,7 +2744,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2711,6 +2779,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_38_PatchOrganization_ReplaceOfficePecAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("53845678903");
+		ente.setLegalName(ente.getLegalName() + "-538");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2720,7 +2790,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2750,7 +2820,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2786,6 +2856,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_39_PatchOrganization_AddOfficePecAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("53945678903");
+		ente.setLegalName(ente.getLegalName() + "-539");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2794,7 +2866,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2823,7 +2895,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2859,6 +2931,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_40_PatchOrganization_RemoveOfficePecAddress() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("54045678903");
+		ente.setLegalName(ente.getLegalName() + "-540");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2868,7 +2942,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2894,7 +2968,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2929,6 +3003,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_41_PatchOrganization_ConflictTaxCode() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("54145678903");
+		ente.setLegalName(ente.getLegalName() + "-541");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -2937,7 +3013,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -2963,7 +3039,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -2999,6 +3075,8 @@ class Organization_UC_5_PatchOrganizationTest {
 	@Test
 	void UC_5_42_PatchOrganization_ConflictLegalName() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("54245678903");
+		ente.setLegalName(ente.getLegalName() + "-542");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -3007,7 +3085,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -3033,7 +3111,7 @@ class Organization_UC_5_PatchOrganizationTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchOrganization)
