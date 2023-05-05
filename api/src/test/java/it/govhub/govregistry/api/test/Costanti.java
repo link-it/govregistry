@@ -29,6 +29,22 @@ import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 
 public class Costanti {
+	
+	// Path
+	public static final String AUTHORIZATIONS_BASE_PATH_DETAIL_ID = "/v1/authorizations/{id}";
+	public static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
+	public static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
+	public static final String ORGANIZATIONS_BASE_PATH_DETAIL_ID = ORGANIZATIONS_BASE_PATH + "/{id}";
+	public static final String ORGANIZATIONS_BASE_PATH_LOGO = ORGANIZATIONS_BASE_PATH_DETAIL_ID + "/logo";
+	public static final String ORGANIZATIONS_BASE_PATH_LOGO_MINIATURE = ORGANIZATIONS_BASE_PATH_DETAIL_ID + "/logo-miniature";
+	public static final String SERVICES_BASE_PATH = "/v1/services";
+	public static final String SERVICES_BASE_PATH_DETAIL_ID = SERVICES_BASE_PATH + "/{id}";
+	public static final String SERVICES_BASE_PATH_LOGO = SERVICES_BASE_PATH_DETAIL_ID + "/logo";
+	public static final String SERVICES_BASE_PATH_LOGO_MINIATURE = SERVICES_BASE_PATH_DETAIL_ID + "/logo-miniature";
+	public static final String PROFILE_BASE_PATH = "/v1/profile";
+	public static final String STATUS_BASE_PATH = "/v1/status";
+	public static final String USERS_BASE_PATH = "/v1/users";
+	public static final String USERS_BASE_PATH_DETAIL_ID = USERS_BASE_PATH + "/{id}";
 
 	public static final String STRING_256 = "abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234";
 

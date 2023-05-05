@@ -29,8 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.ByteArrayInputStream;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -38,7 +36,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +53,7 @@ import it.govhub.govregistry.api.repository.ServiceRepository;
 import it.govhub.govregistry.api.repository.UserRepository;
 import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.Matchers;
+import it.govhub.govregistry.api.test.utils.Utils;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.api.beans.PatchOp.OpEnum;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
@@ -67,13 +65,9 @@ import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di controllo autorizzazioni necessarie all'esecuzione delle operazioni sulle Organizations")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Organization_UC_6_AutorizzazioneUtenzeTest {
-
-	private static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
-	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
-	private static final String ORGANIZATIONS_BASE_PATH_DETAIL_ID = ORGANIZATIONS_BASE_PATH + "/{id}";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -93,37 +87,50 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;
 	
-	@BeforeEach
 	private void configurazioneDB() {
 		UserEntity user = Costanti.getUser_Snakamoto();
-		this.userRepository.save(user);
+		if(leggiUtenteDB(user.getPrincipal()) == null) {
+			this.userRepository.save(user);
+		}
 		
 		OrganizationEntity ente = Costanti.getEnteCreditore4();
-		this.organizationRepository.save(ente);
+		if(leggiEnteDB(ente.getTaxCode()) == null) {
+			this.organizationRepository.save(ente);
+		}
 		
+		OrganizationEntity ente2 = Costanti.getEnteCreditore3();
+		if(leggiEnteDB(ente2.getTaxCode()) == null) {
+			this.organizationRepository.save(ente2);
+		}
+
 		ServiceEntity servizio = Costanti.getServizioTest();
-		this.serviceRepository.save(servizio);
+		if(leggiServizioDB(servizio.getName()) == null) {
+			this.serviceRepository.save(servizio);
+		}
 	}
 	
 	private RoleEntity leggiRuoloDB(String nomeRuolo) {
-		List<RoleEntity> findAll = this.roleRepository.findAll();
-		return findAll.stream().filter(f -> f.getName().equals(nomeRuolo)).collect(Collectors.toList()).get(0);
+		return Utils.leggiRuoloDB(nomeRuolo, this.roleRepository);
 	}
 	
 	private UserEntity leggiUtenteDB(String principal) {
-		List<UserEntity> findAll = this.userRepository.findAll();
-		return findAll.stream().filter(f -> f.getPrincipal().equals(principal)).collect(Collectors.toList()).get(0);
+		return Utils.leggiUtenteDB(principal, this.userRepository);
 	}
 	
 	private OrganizationEntity leggiEnteDB(String nome) {
-		List<OrganizationEntity> findAll = this.organizationRepository.findAll();
-		return findAll.stream().filter(f -> f.getTaxCode().equals(nome)).collect(Collectors.toList()).get(0);
+		return Utils.leggiEnteDB(nome, this.organizationRepository);
+	}
+	
+	private ServiceEntity leggiServizioDB(String nome) {
+		return Utils.leggiServizioDB(nome, this.serviceRepository);
 	}
 	
 	//1. CreateOrganization con utenza non admin con ruolo govhub_organizations_editor: OK
 	@Test
 	void UC_6_01_CreateOrganizationOk_UtenzaConRuolo_GovHub_Organizations_Editor() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("60145678903");
+		ente.setLegalName(ente.getLegalName() + "-601");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -132,7 +139,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationEditor())
 				.with(csrf())
 				.content(json)
@@ -180,7 +187,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
 				.with(csrf())
 				.content(json)
@@ -197,104 +204,91 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//3. PatchOrganization con utenza non admin con ruolo govhub_organizations_editor: OK
 	@Test
 	void UC_6_03_PatchOrganizationOk_UtenzaConRuolo_GovHub_Organizations_Editor() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		configurazioneDB();		
+		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_4);
+		long id = ente.getId();
 
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
-
-		// Modifico l'organization
-		ente.setTaxCode("12345678907");
-
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
-
-		JsonObjectBuilder patchOp = Json.createObjectBuilder()
-				.add("op", OpEnum.REPLACE.toString())
-				.add("path", "/tax_code")
-				.add("value", ente.getTaxCode());
-
-		String PatchOrganization = Json.createArrayBuilder()
-				.add(patchOp)
-				.build()
-				.toString();
-
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
-				.with(this.userAuthProfilesUtils.utenzaOrganizationEditor())
-				.with(csrf())
-				.content(PatchOrganization)
-				.contentType("application/json-patch+json")
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.id").isNumber())
-		.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-		.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-		.andReturn();
-
-		OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
-
-		assertEquals(id, organizationEntity.getId());
-		assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
-		assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
-		assertNull(organizationEntity.getLogo());
-		assertNull(organizationEntity.getLogoMiniature());
-		assertNull(organizationEntity.getOfficeAddress());
-		assertNull(organizationEntity.getOfficeAddressDetails());
-		assertNull(organizationEntity.getOfficeAt());
-		assertNull(organizationEntity.getOfficeEmailAddress());
-		assertNull(organizationEntity.getOfficeForeignState());
-		assertNull(organizationEntity.getOfficeMunicipality());
-		assertNull(organizationEntity.getOfficeMunicipalityDetails());
-		assertNull(organizationEntity.getOfficePecAddress());
-		assertNull(organizationEntity.getOfficePhoneNumber());
-		assertNull(organizationEntity.getOfficeProvince());
-		assertNull(organizationEntity.getOfficeZip());
+		try {
+			// Modifico l'organization
+			ente.setTaxCode("12345678907");
+	
+			JsonObjectBuilder patchOp = Json.createObjectBuilder()
+					.add("op", OpEnum.REPLACE.toString())
+					.add("path", "/tax_code")
+					.add("value", ente.getTaxCode());
+	
+			String PatchOrganization = Json.createArrayBuilder()
+					.add(patchOp)
+					.build()
+					.toString();
+	
+			this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+					.with(this.userAuthProfilesUtils.utenzaOrganizationEditor())
+					.with(csrf())
+					.content(PatchOrganization)
+					.contentType("application/json-patch+json")
+					.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").isNumber())
+			.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
+			.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
+			.andReturn();
+	
+			OrganizationEntity organizationEntity = this.organizationRepository.findById((long) id).get();
+	
+			assertEquals(id, organizationEntity.getId());
+			assertEquals(ente.getTaxCode(), organizationEntity.getTaxCode());
+			assertEquals(ente.getLegalName(), organizationEntity.getLegalName());
+			assertNull(organizationEntity.getLogo());
+			assertNull(organizationEntity.getLogoMiniature());
+			assertNull(organizationEntity.getOfficeAddress());
+			assertNull(organizationEntity.getOfficeAddressDetails());
+			assertNull(organizationEntity.getOfficeAt());
+			assertNull(organizationEntity.getOfficeEmailAddress());
+			assertNull(organizationEntity.getOfficeForeignState());
+			assertNull(organizationEntity.getOfficeMunicipality());
+			assertNull(organizationEntity.getOfficeMunicipalityDetails());
+			assertNull(organizationEntity.getOfficePecAddress());
+			assertNull(organizationEntity.getOfficePhoneNumber());
+			assertNull(organizationEntity.getOfficeProvince());
+			assertNull(organizationEntity.getOfficeZip());
+		}finally {
+			// ripristino
+			ente.setTaxCode(Costanti.TAX_CODE_ENTE_CREDITORE_4);
+			
+			JsonObjectBuilder patchOp = Json.createObjectBuilder()
+					.add("op", OpEnum.REPLACE.toString())
+					.add("path", "/tax_code")
+					.add("value", ente.getTaxCode());
+	
+			String PatchOrganization = Json.createArrayBuilder()
+					.add(patchOp)
+					.build()
+					.toString();
+	
+			this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+					.with(this.userAuthProfilesUtils.utenzaOrganizationEditor())
+					.with(csrf())
+					.content(PatchOrganization)
+					.contentType("application/json-patch+json")
+					.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").isNumber())
+			.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
+			.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
+			.andReturn();
+		}
 	}
 	
 	//4. PatchOrganization con utenza non admin con ruolo non govhub_organizations_editor: NotAuthorized
 	@Test
 	void UC_6_04_PatchOrganizationFail_UtenzaSenzaRuolo_GovHub_Organizations_Editor() throws Exception {
-		OrganizationEntity ente = Costanti.getEnteCreditore3();
-
-		String json = Json.createObjectBuilder()
-				.add("tax_code", ente.getTaxCode())
-				.add("legal_name", ente.getLegalName())
-				.build()
-				.toString();
-
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.legal_name", is(ente.getLegalName())))
-				.andExpect(jsonPath("$.tax_code", is(ente.getTaxCode())))
-				.andReturn();
+		configurazioneDB();		
+		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
+		long id = ente.getId();
 
 		// Modifico l'organization
 		ente.setTaxCode("12345678907");
-
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int id = reader.readObject().getInt("id");
 
 		JsonObjectBuilder patchOp = Json.createObjectBuilder()
 				.add("op", OpEnum.REPLACE.toString())
@@ -306,7 +300,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
 				.with(csrf())
 				.content(PatchOrganization)
@@ -324,13 +318,13 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//5. FindAllOrganizations con utenza non admin con ruolo govhub_organizations_editor/govhub_organizations_viewer: OK
 	@Test
 	void UC_6_05_FindAllOk_UtenzaConRuolo_GovHub_Organizations_Editor_O_Viewer() throws Exception {
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationEditor())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -341,7 +335,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	@Test
 	void UC_6_06_FindAllFail_UtenzaSenzaRuolo_GovHub_Organizations_Editor_O_Viewer() throws Exception {
 		
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -358,7 +352,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//7. GetOrganization con utenza non admin con ruolo govhub_organizations_editor/govhub_organizations_viewer: OK
 	@Test
 	void UC_6_07_GetOrganizationOk_UtenzaConRuolo_GovHub_Organizations_Editor_O_Viewer() throws Exception {
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -373,13 +367,13 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
 		
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
+		this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationEditor())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
+		this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaOrganizationViewer())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -389,7 +383,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//8. GetOrganization con utenza non admin con ruolo non govhub_organizations_editor/govhub_organizations_viewer: NotAuthorized
 	@Test
 	void UC_6_08_GetOrganizationFail_UtenzaSenzaRuolo_GovHub_Organizations_Editor_O_Viewer() throws Exception {
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -404,7 +398,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idUser1 = item1.getInt("id");
 		
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
+		this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaOspite())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
@@ -418,6 +412,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//9. FindAllOrganizations con utenza non admin con ruolo govhub_organizations_editor/govhub_organizations_viewer: OK che ha autorizzazione solo su una organization
 	@Test
 	void UC_6_09_FindAllOk_UtenzaConRuolo_GovHub_Organizations_Editor_O_Viewer_Authorization() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_4);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_organizations_viewer");
@@ -430,7 +425,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -444,7 +439,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.andReturn();
 		
 		// leggo la lista delle organizations con l'utenza che puo' visualizzarne solo 1
-		result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
+		result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -469,6 +464,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//10. GetOrganization con utenza non admin con ruolo govhub_organizations_viewer che ha autorizzazione solo su una organization
 	@Test
 	void UC_6_10_GetOrganizationOk_UtenzaConRuolo_GovHub_Organizations_Viewer_Authorization() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_4);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_organizations_viewer");
@@ -481,7 +477,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 		
 		// Autorizzo SNakamoto a vedere l'organization Ente4 
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -494,7 +490,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
 				.andReturn();
 		
-		result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
+		result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -508,7 +504,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 		int idEnte1 = item1.getInt("id"); // Ente1
 				
 		// l'utenza non vede altre organization a parte quella che gli e' stata assegnata (Ente 4)
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID,idEnte1)
+		this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID,idEnte1)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
@@ -519,7 +515,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.andReturn();
 		
 		// l'utenza puo' vedere solo l'organization che gli e' stata assegnata (Ente 4)
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH_DETAIL_ID, ente.getId())
+		this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, ente.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -529,6 +525,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 	//11. PatchOrganization con utenza non admin con ruolo govhub_organizations_editor che ha autorizzazione solo su una organization
 	//@Test
 	void UC_6_11_PatchOrganizationOk_UtenzaConRuolo_GovHub_Organizations_Editor_Authorization() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_4);
 		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
 		RoleEntity ruoloUser = leggiRuoloDB("govhub_organizations_editor");
@@ -541,7 +538,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.toString();
 		
 		// Autorizzo SNakamoto a vedere l'organization Ente4 
-		MvcResult result = this.mockMvc.perform(post(USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -555,7 +552,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.andReturn();
 		
 		// Prendo la lista delle organization 
-		result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
+		result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -581,7 +578,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, ente.getId())
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, ente.getId())
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(PatchOrganization)
@@ -613,7 +610,7 @@ class Organization_UC_6_AutorizzazioneUtenzeTest {
 		assertNull(organizationEntity.getOfficeZip());
 		
 		// Patch su un organization per cui non si e' autorizzati fallisce
-		this.mockMvc.perform(patch(ORGANIZATIONS_BASE_PATH_DETAIL_ID, idEnte1)
+		this.mockMvc.perform(patch(Costanti.ORGANIZATIONS_BASE_PATH_DETAIL_ID, idEnte1)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.content(PatchOrganization)

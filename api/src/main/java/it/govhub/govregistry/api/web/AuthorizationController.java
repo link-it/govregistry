@@ -18,10 +18,12 @@
  */
 package it.govhub.govregistry.api.web;
 
+import org.slf4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -44,13 +46,16 @@ import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity_;
 import it.govhub.govregistry.commons.entity.RoleEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity_;
 import it.govhub.govregistry.commons.exception.UnreachableException;
+import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.AuthorizationConverter;
 import it.govhub.govregistry.readops.api.repository.ReadRoleAuthorizationRepository;
 import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
+import it.govhub.govregistry.readops.api.repository.ReadUserRepository;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
+import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 
 
 @V1RestController
@@ -70,7 +75,14 @@ public class AuthorizationController implements AuthorizationApi {
 	
 	@Autowired
 	ReadRoleRepository roleRepo;
-
+	
+	@Autowired
+	ReadUserRepository userRepo;
+	
+	@Autowired
+	UserMessages userMessages;
+	
+	private Logger log = LoggerFactory.getLogger(AuthorizationController.class);
 	@Override
 	public ResponseEntity<Authorization> assignAuthorization(Long id, AuthorizationCreate authorizationCreate) {
 		
@@ -89,8 +101,18 @@ public class AuthorizationController implements AuthorizationApi {
 	}
 	
 	
+	
 	@Override
 	public ResponseEntity<AuthorizationList> listAuthorizations(Long userId, AuthorizationOrdering sort,  Direction sortDirection, Integer limit, Long offset) {
+		this.log.debug("Listing Authorizations for User: {}", userId);
+		
+		var user = this.userRepo.findById(userId)
+				.orElseThrow( () ->new ResourceNotFoundException(this.userMessages.idNotFound(userId)));
+		
+		this.log.debug("User [{}] authorizations: ", user.getPrincipal());
+		for (var auth : user.getAuthorizations()) {
+			this.log.debug(auth.getRole().getName());
+		}
 		
 		this.securityService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR, GovregistryRoles.GOVREGISTRY_USERS_VIEWER);
 		

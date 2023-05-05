@@ -54,12 +54,9 @@ import it.govhub.govregistry.commons.entity.ServiceEntity;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di update dei Services")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Service_UC_3_PatchServiceTest {
-
-	private static final String SERVICES_BASE_PATH = "/v1/services";
-	private static final String SERVICES_BASE_PATH_DETAIL_ID = SERVICES_BASE_PATH + "/{id}";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -82,7 +79,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, 1)
+		this.mockMvc.perform(patch(Costanti.SERVICES_BASE_PATH_DETAIL_ID, 1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -98,6 +95,7 @@ class Service_UC_3_PatchServiceTest {
 	@Test
 	void UC_3_02_PatchService_WrongPayload() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
+		servizio.setName(servizio.getName() + "-302");
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -106,7 +104,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -129,7 +127,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -150,6 +148,7 @@ class Service_UC_3_PatchServiceTest {
 	@Test
 	void UC_3_03_PatchService_Name() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
+		servizio.setName(servizio.getName() + "-303");
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -158,7 +157,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -186,7 +185,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -208,6 +207,7 @@ class Service_UC_3_PatchServiceTest {
 	@Test
 	void UC_3_04_PatchService_RemoveName() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
+		servizio.setName(servizio.getName() + "-304");
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -216,7 +216,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -242,7 +242,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -265,6 +265,7 @@ class Service_UC_3_PatchServiceTest {
 	@Test
 	void UC_3_05_PatchService_ReplaceDescription() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
+		servizio.setName(servizio.getName() + "-305");
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -273,7 +274,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -301,7 +302,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -323,6 +324,7 @@ class Service_UC_3_PatchServiceTest {
 	@Test
 	void UC_3_06_PatchService_AddDescription() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
+		servizio.setName(servizio.getName() + "-306");
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -331,7 +333,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -359,7 +361,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -381,6 +383,7 @@ class Service_UC_3_PatchServiceTest {
 	@Test
 	void UC_3_07_PatchService_RemoveDescription() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
+		servizio.setName(servizio.getName() + "-307");
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -389,7 +392,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -415,7 +418,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
@@ -437,6 +440,7 @@ class Service_UC_3_PatchServiceTest {
 	@Test
 	void UC_3_08_PatchService_ReplaceNotExistingDescription() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
+		servizio.setName(servizio.getName() + "-308");
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -444,7 +448,7 @@ class Service_UC_3_PatchServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -469,7 +473,7 @@ class Service_UC_3_PatchServiceTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(SERVICES_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.SERVICES_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(PatchService)
