@@ -51,11 +51,9 @@ import it.govhub.govregistry.commons.entity.OrganizationEntity;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di creazione delle Organizations")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Organization_UC_3_CreateOrganizationTest {
-
-	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -70,6 +68,8 @@ class Organization_UC_3_CreateOrganizationTest {
 	@Test
 	void UC_3_01_CreateOrganizationOk() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("30145678903");
+		ente.setLegalName(ente.getLegalName() + "-301");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -78,7 +78,7 @@ class Organization_UC_3_CreateOrganizationTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -117,6 +117,8 @@ class Organization_UC_3_CreateOrganizationTest {
 	@Test
 	void UC_3_02_CreateOrganizationOk_withOfficeProps() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("30245678903");
+		ente.setLegalName(ente.getLegalName() + "-302");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -136,7 +138,7 @@ class Organization_UC_3_CreateOrganizationTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
