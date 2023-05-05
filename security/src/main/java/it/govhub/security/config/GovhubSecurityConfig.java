@@ -92,11 +92,9 @@ public class GovhubSecurityConfig{
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
 		.and()
 			.headers()
-			.xssProtection();
-         //   .and()
-         // Politica di CSP più restrittiva. https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-         // Anche le immagini dal gravatar
-        //.contentSecurityPolicy(this.cspPolicy);
+			.xssProtection()
+            .and()
+            .contentSecurityPolicy(this.cspPolicy);
 		
 		return http.build();
 	}
