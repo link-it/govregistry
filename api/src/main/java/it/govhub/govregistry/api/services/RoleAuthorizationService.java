@@ -97,6 +97,7 @@ public class RoleAuthorizationService {
 			throw new NotAuthorizedException();
 		}
 		
+	    auth.getUser().getAuthorizations().remove(auth);
 		this.authRepo.delete(auth);
 	}
 	
