@@ -73,6 +73,7 @@ public class RoleAuthorizationService {
 		srcAuth.setOrganizations(updateAuth.getOrganizations());
 		srcAuth.setServices(updateAuth.getServices());
 		srcAuth.setExpirationDate(updateAuth.getExpirationDate());
+		srcAuth.setRole(updateAuth.getRole());
 
 		if (!this.securityService.canWriteAuthorization(srcAuth)) {
 			throw new NotAuthorizedException();

@@ -144,7 +144,7 @@ public class AuthorizationController implements AuthorizationApi {
 
 	
 	@Override
-	public ResponseEntity<Void> removeAuthorization(Long authId) {
+	public ResponseEntity<Void> removeAuthorization(Long userId, Long authId) {
 		
 		this.authService.removeAuthorization(authId);
 		
@@ -228,22 +228,24 @@ public class AuthorizationController implements AuthorizationApi {
 
 
 	@Override
-	public ResponseEntity<Authorization> updateAuthorization(Long id, AuthorizationUpdate authUpdate) {
+	public ResponseEntity<Authorization> updateAuthorization(Long userId, Long authId, AuthorizationUpdate authUpdate) {
 		
-		log.info("Updating Authorization {} for user {}", authUpdate, id);
+		log.info("Updating Authorization {} for user {}", authUpdate, authId);
 		
 		this.securityService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR);
 			
-		RoleAuthorizationEntity auth = this.authRepo.findById(id)
-			.orElseThrow( () -> new ResourceNotFoundException(RoleMessages.authorizationNotFound(id)));
-		 
-		// TODO: Testa la BadRequest nel caso i servizi non esistano
+		RoleAuthorizationEntity auth = this.authRepo.findById(authId)
+			.orElseThrow( () -> new ResourceNotFoundException(RoleMessages.authorizationNotFound(authId)));
 		
+		RoleEntity role = this.roleRepo.findById(authUpdate.getRole())
+				.orElseThrow( () -> new BadRequestException(RoleMessages.notFound(authUpdate.getRole())));
+		 
 		// Colleziono organizzazioni e servizi
 		Set<OrganizationEntity> organizations = retrieveOrganizations(authUpdate.getOrganizations());
 		Set<ServiceEntity> services = retrieveServices(authUpdate.getServices());
 		
 		RoleAuthorizationEntity newAuthorization = RoleAuthorizationEntity.builder()
+			.role(role)
 			.organizations(organizations)
 			.services(services)
 			.expirationDate(authUpdate.getExpirationDate())
