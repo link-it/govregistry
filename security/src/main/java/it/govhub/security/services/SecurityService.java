@@ -122,7 +122,6 @@ public class SecurityService {
 		
 		var authorizedOrganizations = this.listAuthorizedOrganizations(roles);
 		var authorizedServices = this.listAuthorizedServices(roles);
-
 		
 		boolean canWriteOrganizations = true;
 		if (authorizedOrganizations != null) {

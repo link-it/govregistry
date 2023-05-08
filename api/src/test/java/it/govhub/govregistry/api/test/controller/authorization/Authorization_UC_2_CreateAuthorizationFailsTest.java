@@ -468,6 +468,8 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 					//				.add("expiration_date", dt.format(now))
 					.build()
 					.toString();
+			
+			evictCaches();
 
 //			this.log.info("Con l'utenza snakamoto autorizzo lo user_viewer al ruolo di govhub_user");
 			this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, userViewer.getId())
