@@ -18,11 +18,16 @@
  */
 package it.govhub.govregistry.api.web;
 
-import org.slf4j.Logger;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,28 +39,39 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import it.govhub.govregistry.api.beans.AuthorizationCreate;
+import it.govhub.govregistry.api.beans.AuthorizationUpdate;
 import it.govhub.govregistry.api.beans.RoleList;
+import it.govhub.govregistry.api.messages.RoleMessages;
 import it.govhub.govregistry.api.repository.RoleFilters;
+import it.govhub.govregistry.api.repository.ServiceRepository;
 import it.govhub.govregistry.api.services.RoleAuthorizationService;
 import it.govhub.govregistry.api.spec.AuthorizationApi;
 import it.govhub.govregistry.commons.api.beans.Authorization;
 import it.govhub.govregistry.commons.api.beans.AuthorizationList;
 import it.govhub.govregistry.commons.api.beans.AuthorizationOrdering;
 import it.govhub.govregistry.commons.config.V1RestController;
+import it.govhub.govregistry.commons.entity.OrganizationEntity;
+import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity_;
 import it.govhub.govregistry.commons.entity.RoleEntity;
 import it.govhub.govregistry.commons.entity.RoleEntity_;
+import it.govhub.govregistry.commons.entity.ServiceEntity;
+import it.govhub.govregistry.commons.entity.UserEntity;
+import it.govhub.govregistry.commons.exception.BadRequestException;
+import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.exception.UnreachableException;
+import it.govhub.govregistry.commons.messages.OrganizationMessages;
+import it.govhub.govregistry.commons.messages.ServiceMessages;
 import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.commons.utils.ListaUtils;
 import it.govhub.govregistry.readops.api.assemblers.AuthorizationConverter;
+import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
 import it.govhub.govregistry.readops.api.repository.ReadRoleAuthorizationRepository;
 import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 import it.govhub.govregistry.readops.api.repository.ReadUserRepository;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
-import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 
 
 @V1RestController
@@ -80,15 +96,50 @@ public class AuthorizationController implements AuthorizationApi {
 	ReadUserRepository userRepo;
 	
 	@Autowired
+	ReadOrganizationRepository orgRepo;
+	
+	@Autowired
+	ServiceRepository serviceRepo;
+	
+	@Autowired
 	UserMessages userMessages;
+	
+	@Autowired
+	OrganizationMessages orgMessages;
+	
+	@Autowired
+	ServiceMessages serviceMessages;
 	
 	private Logger log = LoggerFactory.getLogger(AuthorizationController.class);
 	@Override
-	public ResponseEntity<Authorization> assignAuthorization(Long id, AuthorizationCreate authorizationCreate) {
+	public ResponseEntity<Authorization> assignAuthorization(Long userId, AuthorizationCreate authorization) {
 		
-		Authorization ret =  this.authService.assignAuthorization(id, authorizationCreate);
+		log.info("Assigning new authorization to user [{}]: {} )",  userId, authorization);
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(ret);
+		this.securityService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR);
+		
+		UserEntity assignee = this.userRepo.findById(userId)
+				.orElseThrow( () -> new ResourceNotFoundException(this.userMessages.idNotFound(userId)));
+		
+		RoleEntity role = this.roleRepo.findById(authorization.getRole())
+				.orElseThrow( () -> new BadRequestException(RoleMessages.notFound(authorization.getRole())));
+		
+		// Colleziono organizzazioni e servizi
+		
+		Set<OrganizationEntity> organizations = retrieveOrganizations(authorization.getOrganizations());
+		Set<ServiceEntity> services  = retrieveServices(authorization.getServices());
+		
+		RoleAuthorizationEntity newAuthorization = RoleAuthorizationEntity.builder()
+			.user(assignee)
+			.role(role)
+			.organizations(organizations)
+			.services(services)
+			.expirationDate(authorization.getExpirationDate())
+			.build();
+		
+		newAuthorization =  this.authService.assignAuthorization(newAuthorization);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(this.authAssembler.toModel(newAuthorization));
 	}
 
 	
@@ -101,7 +152,7 @@ public class AuthorizationController implements AuthorizationApi {
 	}
 	
 	
-	
+	@Transactional
 	@Override
 	public ResponseEntity<AuthorizationList> listAuthorizations(Long userId, AuthorizationOrdering sort,  Direction sortDirection, Integer limit, Long offset) {
 		this.log.debug("Listing Authorizations for User: {}", userId);
@@ -132,8 +183,16 @@ public class AuthorizationController implements AuthorizationApi {
 		}
 		
 		LimitOffsetPageRequest pageRequest = new LimitOffsetPageRequest(offset, limit, orderBy);
+		Page<RoleAuthorizationEntity> auths = authService.listUserAuthorizations(userId, pageRequest);
 		
-		AuthorizationList ret = authService.listUserAuthorizations(userId, pageRequest);
+		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes()).getRequest();
+		
+		AuthorizationList ret = ListaUtils.buildPaginatedList(auths,  pageRequest.limit, curRequest, new AuthorizationList());
+		
+		for (RoleAuthorizationEntity auth : auths) {
+			ret.addItemsItem(this.authAssembler.toModel(auth));
+		}
 		
 		return ResponseEntity.ok(ret);
 	}
@@ -168,4 +227,77 @@ public class AuthorizationController implements AuthorizationApi {
 	}
 
 
+	@Override
+	public ResponseEntity<Authorization> updateAuthorization(Long id, AuthorizationUpdate authUpdate) {
+		
+		log.info("Updating Authorization {} for user {}", authUpdate, id);
+		
+		this.securityService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR);
+			
+		RoleAuthorizationEntity auth = this.authRepo.findById(id)
+			.orElseThrow( () -> new ResourceNotFoundException(RoleMessages.authorizationNotFound(id)));
+		 
+		// TODO: Testa la BadRequest nel caso i servizi non esistano
+		
+		// Colleziono organizzazioni e servizi
+		Set<OrganizationEntity> organizations = retrieveOrganizations(authUpdate.getOrganizations());
+		Set<ServiceEntity> services = retrieveServices(authUpdate.getServices());
+		
+		RoleAuthorizationEntity newAuthorization = RoleAuthorizationEntity.builder()
+			.organizations(organizations)
+			.services(services)
+			.expirationDate(authUpdate.getExpirationDate())
+			.build();
+		
+		auth = this.authService.updateAuthorization(auth, newAuthorization);	
+		
+		return ResponseEntity.ok(this.authAssembler.toModel(auth));
+	}
+
+
+	private Set<ServiceEntity> retrieveServices(List<Long> requestedIds) {
+		Set<ServiceEntity> services  = new HashSet<>(this.serviceRepo.findAllById(requestedIds));
+		Set<Long> foundIds = services.stream().map(ServiceEntity::getId).collect(Collectors.toSet());
+		for (Long sid : requestedIds) {
+			if (!foundIds.contains(sid)) {
+				throw new BadRequestException(this.serviceMessages.idNotFound(sid));
+			}			
+		}
+		return services;
+	}
+
+
+	private Set<OrganizationEntity> retrieveOrganizations(List<Long> requestedIds) {
+		Set<OrganizationEntity> organizations = new HashSet<>(this.orgRepo.findAllById(requestedIds));
+		Set<Long> orgIds = organizations.stream().map(OrganizationEntity::getId).collect(Collectors.toSet());
+		for (Long oid: requestedIds) {
+			if (!orgIds.contains(oid)) {
+				throw new BadRequestException(this.orgMessages.idNotFound(oid));
+			}
+		}
+		return organizations;
+	}
+	
+	
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

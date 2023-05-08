@@ -18,11 +18,6 @@
  */
 package it.govhub.govregistry.api.services;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -31,31 +26,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import it.govhub.govregistry.api.beans.AuthorizationCreate;
 import it.govhub.govregistry.api.messages.RoleMessages;
 import it.govhub.govregistry.api.repository.RoleAuthorizationRepository;
-import it.govhub.govregistry.api.repository.ServiceRepository;
-import it.govhub.govregistry.api.repository.UserRepository;
-import it.govhub.govregistry.commons.api.beans.Authorization;
-import it.govhub.govregistry.commons.api.beans.AuthorizationList;
-import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
-import it.govhub.govregistry.commons.entity.RoleEntity;
-import it.govhub.govregistry.commons.entity.ServiceEntity;
-import it.govhub.govregistry.commons.entity.UserEntity;
-import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
-import it.govhub.govregistry.commons.messages.OrganizationMessages;
-import it.govhub.govregistry.commons.messages.ServiceMessages;
-import it.govhub.govregistry.commons.messages.UserMessages;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
-import it.govhub.govregistry.commons.utils.ListaUtils;
-import it.govhub.govregistry.readops.api.assemblers.AuthorizationConverter;
-import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
 import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 import it.govhub.govregistry.readops.api.repository.RoleAuthorizationFilters;
 import it.govhub.security.config.GovregistryRoles;
@@ -65,88 +42,45 @@ import it.govhub.security.services.SecurityService;
 public class RoleAuthorizationService {
 	
 	@Autowired
-	UserRepository userRepo;
-	
-	@Autowired
-	ReadOrganizationRepository orgRepo;
-	
-	@Autowired
-	ServiceRepository serviceRepo;
-	
-	@Autowired
 	RoleAuthorizationRepository authRepo;
 	
 	@Autowired
 	ReadRoleRepository roleRepo;
 	
 	@Autowired
-	AuthorizationConverter authAssembler;
-	
-	@Autowired
 	SecurityService securityService;
-	
-	@Autowired
-	UserMessages userMessages;
-	
-	@Autowired
-	OrganizationMessages orgMessages;
-	
-	@Autowired
-	ServiceMessages serviceMessages;
 	
 	Logger log = LoggerFactory.getLogger(RoleAuthorizationService.class);
 	
 	@Transactional
-	public Authorization assignAuthorization(Long userId, AuthorizationCreate authorization) {
-		
-		log.info("Assigning new authorization to user [{}]: {} )",  userId, authorization);
-		
-		this.securityService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, GovregistryRoles.GOVREGISTRY_USERS_EDITOR);
-		
-		UserEntity assignee = this.userRepo.findById(userId)
-				.orElseThrow( () -> new ResourceNotFoundException(this.userMessages.idNotFound(userId)));
-		
-		RoleEntity role = this.roleRepo.findById(authorization.getRole())
-				.orElseThrow( () -> new BadRequestException(RoleMessages.notFound(authorization.getRole())));
-		
-		// Colleziono organizzazioni e servizi
-		
-		Set<OrganizationEntity> organizations = new HashSet<>(this.orgRepo.findAllById(authorization.getOrganizations()));
-		Set<Long> orgIds = organizations.stream().map(OrganizationEntity::getId).collect(Collectors.toSet());
-		
-		for (Long oid: authorization.getOrganizations()) {
-			if (!orgIds.contains(oid)) {
-				throw new BadRequestException(this.orgMessages.idNotFound(oid));
-			}
-		}
-	
-		Set<ServiceEntity> services  = new HashSet<>(this.serviceRepo.findAllById(authorization.getServices()));
-		Set<Long> foundIds = services.stream().map(ServiceEntity::getId).collect(Collectors.toSet());
-		
-		for (Long sid : authorization.getServices()) {
-			if (!foundIds.contains(sid)) {
-				throw new BadRequestException(this.serviceMessages.idNotFound(sid));
-			}			
-		}
-		
-		RoleAuthorizationEntity newAuthorization = RoleAuthorizationEntity.builder()
-			.user(assignee)
-			.role(role)
-			.organizations(organizations)
-			.services(services)
-			.expirationDate(authorization.getExpirationDate())
-			.build();
-		
-		// Autorizzo
+	public RoleAuthorizationEntity assignAuthorization(RoleAuthorizationEntity newAuthorization) {
 		
 	    if ( !this.securityService.canWriteAuthorization(newAuthorization))  {
 			throw new NotAuthorizedException();
 		}
 	    
-	    assignee.getAuthorizations().add(newAuthorization);
+	    newAuthorization.getUser().getAuthorizations().add(newAuthorization);
 		newAuthorization = this.authRepo.save(newAuthorization);
 		
-		return this.authAssembler.toModel(newAuthorization);
+		return newAuthorization;
+	}
+	
+
+	@Transactional
+	public RoleAuthorizationEntity updateAuthorization(RoleAuthorizationEntity srcAuth,	RoleAuthorizationEntity updateAuth) {
+		this.securityService.expectAnyRole(GovregistryRoles.GOVREGISTRY_SYSADMIN, 	GovregistryRoles.GOVREGISTRY_USERS_EDITOR);
+
+		srcAuth.setOrganizations(updateAuth.getOrganizations());
+		srcAuth.setServices(updateAuth.getServices());
+		srcAuth.setExpirationDate(updateAuth.getExpirationDate());
+
+		if (!this.securityService.canWriteAuthorization(srcAuth)) {
+			throw new NotAuthorizedException();
+		}
+
+		srcAuth = this.authRepo.save(srcAuth);
+
+		return srcAuth;
 	}
 	
 	
@@ -168,22 +102,10 @@ public class RoleAuthorizationService {
 	
 	
 	@Transactional
-	public AuthorizationList listUserAuthorizations(Long id, LimitOffsetPageRequest pageRequest) {
+	public Page<RoleAuthorizationEntity> listUserAuthorizations(Long id, LimitOffsetPageRequest pageRequest) {
 		
 		Specification<RoleAuthorizationEntity> spec = RoleAuthorizationFilters.byUser(id);
-		
-		Page<RoleAuthorizationEntity> auths = this.authRepo.findAll(spec, pageRequest.pageable);
-		
-		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder
-				.currentRequestAttributes()).getRequest();
-		
-		AuthorizationList ret = ListaUtils.buildPaginatedList(auths,  pageRequest.limit, curRequest, new AuthorizationList());
-		
-		for (RoleAuthorizationEntity auth : auths) {
-			ret.addItemsItem(this.authAssembler.toModel(auth));
-		}
-		return ret;
+		return this.authRepo.findAll(spec, pageRequest.pageable);
 	}
 
-	
 }
