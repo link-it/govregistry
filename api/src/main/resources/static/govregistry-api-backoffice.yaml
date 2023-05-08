@@ -35,9 +35,39 @@ tags:
   - name: service
     description: Operation on services.
   - name: profile
-    description: Read User Profile Info 
+    description: Read User Profile Info
+  - name: application
+    description: Provide information on the installed Govhub Applications      
 
 paths:
+
+  /applications:
+       get:
+         tags:
+           - application
+         summary: Retrieve the installed Govhub Applications.
+         description: Retrieve the installed Govhub Applications.
+         operationId: listApplications
+         responses:
+           '200':
+             description: Successful operation.
+             content:
+               application/hal+json:
+                 schema:
+                   $ref: 'govhub-api-commons.yaml#/components/schemas/ApplicationList'          
+           '400':
+             $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+           '401':
+             $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+           '403':
+             $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+           '429':
+             $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+           '503':
+             $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+           default:
+             $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
+
   /profile:
        get:
          tags:

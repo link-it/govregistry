@@ -43,3 +43,11 @@ alter table govhub_authorizations alter column id_govhub_user set not null;
 
 alter table govhub_authorizations alter column id_govhub_role set not null;
 
+-- PATCH 8-05-2023 Il logo nella tabella application diventa un json
+
+alter table govhub_applications drop column logo_bg_color;
+alter table govhub_applications drop column logo_color;
+alter table govhub_applications drop column logo_type;
+alter table govhub_applications drop column logo_url;
+alter table govhub_applications drop column bg_color;
+alter table govhub_applications add column logo TEXT;

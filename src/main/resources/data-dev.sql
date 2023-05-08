@@ -1,6 +1,6 @@
 -- Applicazione
 
-INSERT INTO public.govhub_applications(id, application_id, name, deployed_uri, logo_type, logo_color, logo_bg_color) VALUES (1, 'govregistry', 'GovRegistry', 'http://localhost:10001', 'SVG', '#FFFF00', '#0000FF');
+INSERT INTO public.govhub_applications(id, application_id, name, deployed_uri) VALUES (1, 'govregistry', 'GovRegistry', 'http://localhost:10001');
 
 -- Utenti
 
