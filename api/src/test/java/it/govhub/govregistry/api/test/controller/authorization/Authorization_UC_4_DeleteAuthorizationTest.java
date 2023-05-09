@@ -188,7 +188,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -281,7 +281,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -375,7 +375,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		// aggiungere check data dopo che si sistema il servizio
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -468,7 +468,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
@@ -599,7 +599,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -730,7 +730,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -861,7 +861,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(servizio.getName(), items.getJsonObject(0).getJsonArray("services").getJsonObject(0).getString("service_name"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))
@@ -992,7 +992,7 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		assertEquals(servizio.getName(), items.getJsonObject(0).getJsonArray("services").getJsonObject(0).getString("service_name"));
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
 				.accept("*/*"))

@@ -97,13 +97,13 @@ public class Utils {
 				int idRole = item.getInt("id");
 			
 				// Cancellazione Autorizzazione
-				cancellaAutorizzazione(idRole, mockMvc, utenza);
+				cancellaAutorizzazione(user.getId().intValue(), idRole, mockMvc, utenza);
 			}
 		}
 	}
 	
-	public static void cancellaAutorizzazione(int id, MockMvc mockMvc, RequestPostProcessor utenza) throws Exception {
-		mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, id)
+	public static void cancellaAutorizzazione(int uid, int aid, MockMvc mockMvc, RequestPostProcessor utenza) throws Exception {
+		mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, uid, aid)
 				.with(utenza)
 				.with(csrf())
 				.accept("*/*"))
