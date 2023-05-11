@@ -216,11 +216,11 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, null);
 
 		// Cancellazione Autorizzazione
-		cancellaAutorizzazione(id);
+		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 
-	private void cancellaAutorizzazione(int id) throws Exception {
-		Utils.cancellaAutorizzazione(id, this.mockMvc, this.userAuthProfilesUtils.utenzaAdmin());
+	private void cancellaAutorizzazione(int uid, int aid) throws Exception {
+		Utils.cancellaAutorizzazione(uid, aid, this.mockMvc, this.userAuthProfilesUtils.utenzaAdmin());
 	}
 	
 	@Test
@@ -263,7 +263,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, Arrays.asList(ente.getTaxCode()), null);
 		
 		// Cancellazione Autorizzazione
-		cancellaAutorizzazione(id);
+		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
 	@Test
@@ -306,7 +306,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, Arrays.asList(servizio.getName()));
 		
 		// Cancellazione Autorizzazione
-		cancellaAutorizzazione(id);
+		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
 	@Test
@@ -350,7 +350,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, Arrays.asList(ente.getTaxCode()), Arrays.asList(servizio.getName()));
 		
 		// Cancellazione Autorizzazione
-		cancellaAutorizzazione(id);
+		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
 	@Test
@@ -392,7 +392,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, null);
 		
 		// Cancellazione Autorizzazione
-		cancellaAutorizzazione(id);
+		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
 	@Test
@@ -434,7 +434,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, null);
 		
 		// Cancellazione Autorizzazione
-		cancellaAutorizzazione(id);
+		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
 	@Test
@@ -510,7 +510,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, Arrays.asList(ente.getTaxCode()), null);
 		
 		// Cancellazione Autorizzazione
-		cancellaAutorizzazione(id);
+		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
 	@Test
@@ -586,7 +586,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, Arrays.asList(ente.getTaxCode()), null);
 		
 		// Cancellazione Autorizzazione
-		cancellaAutorizzazione(id);
+		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
 	@Test
@@ -664,7 +664,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, Arrays.asList(servizio.getName()));
 		
 		// Cancellazione Autorizzazione
-		cancellaAutorizzazione(id);
+		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
 	@Test
@@ -740,7 +740,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		verificaRegola(id, expirationDate, ruoloDaAssegnare, null, Arrays.asList(servizio.getName()));
 		
 		// Cancellazione Autorizzazione
-		cancellaAutorizzazione(id);
+		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 }
 

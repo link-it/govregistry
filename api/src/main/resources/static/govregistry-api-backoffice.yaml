@@ -328,8 +328,9 @@ paths:
              $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
              
 
-  /authorizations/{id}:
+  /users/{id}/authorizations/{aid}:
     parameters:
+       - $ref: "govhub-api-commons.yaml#/components/parameters/user_id"
        - $ref: "#/components/parameters/authorization_id"    
     delete:
       tags:
@@ -1179,7 +1180,7 @@ components:
    parameters:
    
       authorization_id:
-         name: id
+         name: aid
          in: path
          required: true
          schema:
@@ -1234,7 +1235,10 @@ components:
          required:
             - organizations
             - services
+            - role
          properties:
+            role:
+               $ref: "govhub-api-commons.yaml#/components/schemas/RoleId"                 
             organizations:
                type: array
                items:

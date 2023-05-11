@@ -132,7 +132,7 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
 	 * Con l'utenza SNakamato provo a cancellare un'autorizzazione su un ruolo che non puo' gestire
 	 * */
-	void UC_4_01_DeleteAuthorizationFail_UserEditor_Organization() throws Exception {
+	void UC_5_01_DeleteAuthorizationFail_UserEditor_Organization() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
 		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
@@ -302,10 +302,10 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 	}
 	
 	@Test
-	void UC_4_02_DeleteAuthorizationFail_NotFound() throws Exception {
+	void UC_5_02_DeleteAuthorizationFail_NotFound() throws Exception {
 		int idRole = 10000;
 		// Cancellazione Autorizzazione non esistente
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, 1, idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.accept("*/*"))
