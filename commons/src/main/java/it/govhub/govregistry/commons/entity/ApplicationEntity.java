@@ -62,6 +62,9 @@ public class ApplicationEntity implements Serializable {
 	@Column(name = "deployed_uri", nullable = false)
 	private String deployedUri;
 	
+	@Column(name = "webapp_uri", columnDefinition = "VARCHAR(1024)")
+	private String webappUri;
+	
 	@Column(name = "logo", columnDefinition = "TEXT")
 	private String logo;
 	
