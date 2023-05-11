@@ -265,7 +265,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 		int idRole = reader.readObject().getInt("id");
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
 				.accept("*/*"))
@@ -311,7 +311,7 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 		int idRole = reader.readObject().getInt("id");
 		
 		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRole)
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaUserViewer())
 				.with(csrf())
 				.accept("*/*"))

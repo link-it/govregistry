@@ -31,7 +31,7 @@ import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 public class Costanti {
 	
 	// Path
-	public static final String AUTHORIZATIONS_BASE_PATH_DETAIL_ID = "/v1/authorizations/{id}";
+	public static final String AUTHORIZATIONS_BASE_PATH_DETAIL_ID = "/v1/users/{uid}/authorizations/{aid}";
 	public static final String USERS_ID_AUTHORIZATIONS_BASE_PATH = "/v1/users/{id}/authorizations";
 	public static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
 	public static final String ORGANIZATIONS_BASE_PATH_DETAIL_ID = ORGANIZATIONS_BASE_PATH + "/{id}";
