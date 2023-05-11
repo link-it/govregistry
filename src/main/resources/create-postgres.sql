@@ -9,6 +9,7 @@ CREATE TABLE govhub_applications (
   id BIGINT DEFAULT nextval('seq_govhub_applications') NOT NULL,
   application_id VARCHAR(255) NOT NULL UNIQUE,
   deployed_uri VARCHAR(255) NOT NULL,
+  webapp_uri VARCHAR(1024), 
   name VARCHAR(255) NOT NULL,
   logo TEXT,
   PRIMARY KEY (id)

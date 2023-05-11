@@ -54,3 +54,8 @@ alter table govhub_applications drop column bg_color;
 alter table govhub_applications drop column logo;
 
 alter table govhub_applications add column logo TEXT;
+
+
+-- PATCH 11-05-2023 Aggiungi webapp_uri nella tabella applications
+
+alter table govhub_applications add column webapp_uri VARCHAR(1024);

@@ -2,6 +2,7 @@ CREATE TABLE govhub_applications (
   id BIGINT NOT NULL AUTO_INCREMENT,
   application_id VARCHAR(255) NOT NULL UNIQUE,
   deployed_uri VARCHAR(255) NOT NULL,
+  webapp_uri VARCHAR(1024),
   logo TEXT, 
   name VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
