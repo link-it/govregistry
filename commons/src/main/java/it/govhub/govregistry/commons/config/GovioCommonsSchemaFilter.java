@@ -18,7 +18,10 @@ public class GovioCommonsSchemaFilter implements SchemaFilter {
 			"govhub_authorizations",
 			"govhub_roles",
 			"govhub_services",
-			"govhub_users"
+			"govhub_users",
+			"govhub_assignable_roles",
+			"govhub_auth_organizations",
+			"govhub_auth_services"
 			);
 	
 	private static final Set<String> sequenceToExclude = Set.of(
@@ -29,14 +32,10 @@ public class GovioCommonsSchemaFilter implements SchemaFilter {
 			"seq_govhub_services",
 			"seq_govhub_users"
 			);
-			
-			
-	
 	
 	private Logger log = LoggerFactory.getLogger(GovioCommonsSchemaFilter.class);
 	
 	
-
     @Override
     public boolean includeNamespace(Namespace namespace) {
         return true;
