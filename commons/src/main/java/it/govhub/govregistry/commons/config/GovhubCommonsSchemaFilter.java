@@ -8,9 +8,9 @@ import org.hibernate.tool.schema.spi.SchemaFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GovioCommonsSchemaFilter implements SchemaFilter {
+public class GovhubCommonsSchemaFilter implements SchemaFilter {
 	
-	public static final GovioCommonsSchemaFilter INSTANCE = new GovioCommonsSchemaFilter();
+	public static final GovhubCommonsSchemaFilter INSTANCE = new GovhubCommonsSchemaFilter();
 	
 	private static final Set<String> tablesToExclude = Set.of(
 			"govhub_applications",
@@ -33,7 +33,7 @@ public class GovioCommonsSchemaFilter implements SchemaFilter {
 			"seq_govhub_users"
 			);
 	
-	private Logger log = LoggerFactory.getLogger(GovioCommonsSchemaFilter.class);
+	private Logger log = LoggerFactory.getLogger(GovhubCommonsSchemaFilter.class);
 	
 	
     @Override

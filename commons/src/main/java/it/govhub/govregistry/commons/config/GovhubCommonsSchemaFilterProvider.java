@@ -12,26 +12,26 @@ import org.hibernate.tool.schema.spi.SchemaFilterProvider;
  *  	spring.jpa.properties.hibernate.hbm2ddl.schema_filter_provider=it.govhub.govregistry.commons.config.GovioCommonsSchemaFilterProvider
  *
  */
-public class GovioCommonsSchemaFilterProvider implements SchemaFilterProvider {
+public class GovhubCommonsSchemaFilterProvider implements SchemaFilterProvider {
 
 	@Override
 	public SchemaFilter getCreateFilter() {
-		return GovioCommonsSchemaFilter.INSTANCE;
+		return GovhubCommonsSchemaFilter.INSTANCE;
 	}
 
 	@Override
 	public SchemaFilter getDropFilter() {
-		return GovioCommonsSchemaFilter.INSTANCE;
+		return GovhubCommonsSchemaFilter.INSTANCE;
 	}
 
 	@Override
 	public SchemaFilter getMigrateFilter() {
-		return GovioCommonsSchemaFilter.INSTANCE;
+		return GovhubCommonsSchemaFilter.INSTANCE;
 	}
 
 	@Override
 	public SchemaFilter getValidateFilter() {
-		return GovioCommonsSchemaFilter.INSTANCE;
+		return GovhubCommonsSchemaFilter.INSTANCE;
 	}
 
 }
