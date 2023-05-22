@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Propagation;
 
 public interface ReadOnlyRepository<T, ID> extends Repository<T, ID>, JpaSpecificationExecutor<T> {
 	
+	@Transactional
 	Optional<T> findById(Long id);
     
     List<T> findAll();

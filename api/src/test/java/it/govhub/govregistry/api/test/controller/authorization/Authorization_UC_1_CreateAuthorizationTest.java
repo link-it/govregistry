@@ -135,7 +135,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	}
 	
 	@Transactional
-	private void verificaRegola(int idRegola, OffsetDateTime expirationDate, String nomeRuolo, List<Object> organizations, List<Object> services) {
+	public void verificaRegola(int idRegola, OffsetDateTime expirationDate, String nomeRuolo, List<Object> organizations, List<Object> services) {
 		RoleAuthorizationEntity roleAuthorizationEntity = this.authRepository.findById((long) idRegola).get();
 		
 		// Identificativo
@@ -154,7 +154,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 //			assertEquals(expirationDate, roleAuthorizationEntity.getExpirationDate());
 		}
 		
-		//Hibernate.initialize(roleAuthorizationEntity.getOrganizations());
+		Hibernate.initialize(roleAuthorizationEntity.getOrganizations());
 		
 		// Organizations
 		if(organizations == null || organizations.size() == 0) {
