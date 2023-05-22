@@ -154,7 +154,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 //			assertEquals(expirationDate, roleAuthorizationEntity.getExpirationDate());
 		}
 		
-		Hibernate.initialize(roleAuthorizationEntity.getOrganizations());
+		//Hibernate.initialize(roleAuthorizationEntity.getOrganizations());
 		
 		// Organizations
 		if(organizations == null || organizations.size() == 0) {
