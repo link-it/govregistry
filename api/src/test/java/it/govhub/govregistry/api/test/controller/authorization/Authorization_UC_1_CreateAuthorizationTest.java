@@ -72,7 +72,6 @@ import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 @AutoConfigureMockMvc
 @DisplayName("Test di creazione delle Authorization")
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
-
 class Authorization_UC_1_CreateAuthorizationTest {
 	
 	@Autowired
@@ -97,6 +96,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	private UserRepository userRepository;
 	
 	private DateTimeFormatter dt = DateTimeFormatter.ISO_DATE_TIME;
+	
 	
 	@Value("${govhub.time-zone:Europe/Rome}")
 	private String timeZone;
@@ -136,6 +136,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	
 	@Transactional
 	public void verificaRegola(int idRegola, OffsetDateTime expirationDate, String nomeRuolo, List<Object> organizations, List<Object> services) {
+		
 		RoleAuthorizationEntity roleAuthorizationEntity = this.authRepository.findById((long) idRegola).get();
 		
 		// Identificativo
@@ -165,6 +166,8 @@ class Authorization_UC_1_CreateAuthorizationTest {
 			assertEquals(organizations.get(0).toString(), roleAuthorizationEntity.getOrganizations().toArray(new OrganizationEntity[1])[0].getTaxCode());
 		}
 		
+		Hibernate.initialize(roleAuthorizationEntity.getServices());
+		
 		// Services
 		if(services == null || services.size() == 0) {
 			assertEquals(0, roleAuthorizationEntity.getServices().size());
@@ -176,7 +179,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	}
 	
 
-
+	@Transactional
 	@Test
 	void UC_1_01_CreateAuthorizationOk() throws Exception {
 		configurazioneDB();
@@ -223,6 +226,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		Utils.cancellaAutorizzazione(uid, aid, this.mockMvc, this.userAuthProfilesUtils.utenzaAdmin());
 	}
 	
+	@Transactional
 	@Test
 	void UC_1_02_CreateAuthorizationOk_Organization() throws Exception {
 		configurazioneDB();
@@ -266,6 +270,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
+	@Transactional
 	@Test
 	void UC_1_03_CreateAuthorizationOk_Service() throws Exception {
 		configurazioneDB();
@@ -309,6 +314,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
+	@Transactional
 	@Test
 	void UC_1_04_CreateAuthorizationOk_OrganizationService() throws Exception {
 		configurazioneDB();
@@ -353,6 +359,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
+	@Transactional
 	@Test
 	void UC_1_05_CreateAuthorizationOk_NoOrganizationService() throws Exception {
 		configurazioneDB();
@@ -395,6 +402,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
+	@Transactional
 	@Test
 	void UC_1_06_CreateAuthorizationOk_UserEditor() throws Exception {
 		configurazioneDB();
@@ -437,6 +445,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
+	@Transactional
 	@Test
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per l'ente[3]
@@ -513,6 +522,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
+	@Transactional
 	@Test
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti gli enti
@@ -589,6 +599,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
+	@Transactional
 	@Test
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per il servizio[2]
@@ -667,6 +678,7 @@ class Authorization_UC_1_CreateAuthorizationTest {
 		cancellaAutorizzazione(user.getId().intValue(), id);
 	}
 	
+	@Transactional
 	@Test
 	/*
 	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti i servizi
