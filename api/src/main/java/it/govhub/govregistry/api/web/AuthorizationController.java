@@ -111,6 +111,8 @@ public class AuthorizationController implements AuthorizationApi {
 	ServiceMessages serviceMessages;
 	
 	private Logger log = LoggerFactory.getLogger(AuthorizationController.class);
+	
+	
 	@Override
 	public ResponseEntity<Authorization> assignAuthorization(Long userId, AuthorizationCreate authorization) {
 		

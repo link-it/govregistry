@@ -30,10 +30,14 @@ import org.springframework.stereotype.Service;
 import it.govhub.govregistry.api.messages.RoleMessages;
 import it.govhub.govregistry.api.repository.RoleAuthorizationRepository;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
+import it.govhub.govregistry.commons.entity.RoleEntity;
+import it.govhub.govregistry.commons.entity.UserEntity;
+import it.govhub.govregistry.commons.exception.BadRequestException;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
 import it.govhub.govregistry.commons.exception.ResourceNotFoundException;
 import it.govhub.govregistry.commons.utils.LimitOffsetPageRequest;
 import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
+import it.govhub.govregistry.readops.api.repository.ReadUserRepository;
 import it.govhub.govregistry.readops.api.repository.RoleAuthorizationFilters;
 import it.govhub.security.config.GovregistryRoles;
 import it.govhub.security.services.SecurityService;
@@ -50,6 +54,9 @@ public class RoleAuthorizationService {
 	@Autowired
 	SecurityService securityService;
 	
+	@Autowired
+	ReadUserRepository userRepo;
+	
 	Logger log = LoggerFactory.getLogger(RoleAuthorizationService.class);
 	
 	@Transactional
@@ -59,9 +66,20 @@ public class RoleAuthorizationService {
 			throw new NotAuthorizedException();
 		}
 	    
+		UserEntity assignee = this.userRepo.findById(newAuthorization.getUser().getId()).orElseThrow();
+		assignee.getAuthorizations().add(newAuthorization);
+		newAuthorization.setUser(assignee);
+		
+		RoleEntity role = this.roleRepo.findById(newAuthorization.getRole().getId()).orElseThrow();
+		newAuthorization.setRole(role);
+		
 	    newAuthorization.getUser().getAuthorizations().add(newAuthorization);
 		newAuthorization = this.authRepo.save(newAuthorization);
 		
+		// Preload
+		for (var v : 	newAuthorization.getRole().getAssignableRoles()) {
+			
+		}
 		return newAuthorization;
 	}
 	
