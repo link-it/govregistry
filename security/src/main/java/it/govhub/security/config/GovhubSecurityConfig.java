@@ -62,9 +62,14 @@ public class GovhubSecurityConfig{
 			throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
+	
+	@Bean
+	public AccessDeniedHandlerImpl accessDeniedHandler() {
+		return new AccessDeniedHandlerImpl();
+	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChainDev(HttpSecurity http, ObjectMapper jsonMapper, PreAuthenticatedExceptionHandler preAuthenticatedExceptionHandler, AccessDeniedHandlerImpl accessDeniedHandler) throws Exception {
+	public SecurityFilterChain securityFilterChainDev(HttpSecurity http, ObjectMapper jsonMapper, PreAuthenticatedExceptionHandler preAuthenticatedExceptionHandler) throws Exception {
 		
 		AuthenticationManager manager = this.authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
 		
@@ -80,7 +85,7 @@ public class GovhubSecurityConfig{
 		.addFilterBefore(preAuthenticatedExceptionHandler, LogoutFilter.class)
 		.exceptionHandling()
 				// Gestisci accessDenied in modo da restituire un problem ben formato
-				.accessDeniedHandler(accessDeniedHandler)																	
+				.accessDeniedHandler(accessDeniedHandler())																	
 				// Gestisci la mancata autenticazione con un problem ben formato
 				.authenticationEntryPoint(new UnauthorizedAuthenticationEntryPoint(jsonMapper))	
 		.and()

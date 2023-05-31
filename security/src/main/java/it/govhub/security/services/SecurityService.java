@@ -56,7 +56,11 @@ public class SecurityService {
 		log.debug("Retrieving GovhubPrincipal from the Authentication Context");
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
+		
+		Object objPrincipal = authentication.getPrincipal();
+		log.debug("Found principal {}", objPrincipal);
+		
+		GovhubPrincipal principal = (GovhubPrincipal) objPrincipal;
 		return  principal.getUser();
 	}
 	
