@@ -135,6 +135,7 @@ public class GovhubSecurityConfig{
 			.antMatchers(HttpMethod.GET, servletPath+"/govregistry-api-backoffice.yaml").permitAll()
 			.antMatchers(HttpMethod.GET, servletPath+"/govio-api-backoffice.yaml").permitAll()
 			.antMatchers(HttpMethod.GET, servletPath+"/govhub-api-commons.yaml").permitAll()
+			.antMatchers(HttpMethod.GET, servletPath+"/actuator/health/liveness").permitAll()
 			.anyRequest().authenticated();
 		
 		return http;
