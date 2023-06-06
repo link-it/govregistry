@@ -213,7 +213,16 @@
 			<artifactId>json-patch</artifactId>
 			<version>${jsonpatch.version}</version>
 		</dependency>
+		
+		<!--Endpoint di liveness-->
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		
 	</dependencies>
+	
+	
 
 	<build>
 		<finalName>govregistry</finalName>
