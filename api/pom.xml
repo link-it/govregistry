@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>it.govhub.govregistry</groupId>
 		<artifactId>govregistry</artifactId>
-		<version>1.0.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>api</artifactId>
@@ -213,7 +213,16 @@
 			<artifactId>json-patch</artifactId>
 			<version>${jsonpatch.version}</version>
 		</dependency>
+		
+		<!--Endpoint di liveness-->
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		
 	</dependencies>
+	
+	
 
 	<build>
 		<finalName>govregistry</finalName>

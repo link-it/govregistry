@@ -35,9 +35,12 @@ tags:
   - name: service
     description: Operation on services.
   - name: profile
-    description: Read User Profile Info 
+    description: Read User Profile Info
+  - name: application
+    description: Provide information on the installed Govhub Applications      
 
 paths:
+
   /profile:
        get:
          tags:
@@ -295,17 +298,18 @@ paths:
            '503':
              $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
            default:
-             $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"                 
-          
-          
-  /authorizations/{id}:
+             $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
+             
+
+  /users/{id}/authorizations/{aid}:
     parameters:
+       - $ref: "govhub-api-commons.yaml#/components/parameters/user_id"
        - $ref: "#/components/parameters/authorization_id"    
     delete:
       tags:
         - authorization
-      summary: Removes  the authorization.
-      description: Removes the authorization.
+      summary: Removes  an authorization.
+      description: Removes an authorization.
       operationId: removeAuthorization
       responses:
         '200':
@@ -324,6 +328,40 @@ paths:
           $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
         default:
           $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"
+
+    put:
+      summary: Update an Authorization.
+      description: An authorization can be updated in all of is part except for the role.
+      operationId: updateAuthorization
+      tags:
+      - authorization
+      requestBody:    
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthorizationUpdate"
+      responses:
+        '200':
+          description: Succsessful operation.
+          content:
+            application/hal+json:
+              schema:
+                $ref: 'govhub-api-commons.yaml#/components/schemas/Authorization'
+        '400':
+          $ref: "govhub-api-commons.yaml#/components/responses/400BadRequest"
+        '401':
+          $ref: "govhub-api-commons.yaml#/components/responses/401Unauthorized"
+        '403':
+          $ref: "govhub-api-commons.yaml#/components/responses/403Forbidden"
+        '404':
+          $ref: "govhub-api-commons.yaml#/components/responses/404NotFound"
+        '429':
+          $ref: "govhub-api-commons.yaml#/components/responses/429TooManyRequests"
+        '503':
+          $ref: "govhub-api-commons.yaml#/components/responses/503ServiceUnavailable"
+        default:
+          $ref: "govhub-api-commons.yaml#/components/responses/ResponseDefault"          
           
 
   /organizations:
@@ -978,6 +1016,7 @@ paths:
             - $ref: "govhub-api-commons.yaml#/components/parameters/offset"
             - $ref: "govhub-api-commons.yaml#/components/parameters/q_query"
             - $ref: "govhub-api-commons.yaml#/components/parameters/sort_direction_query"
+            - $ref: "#/components/parameters/application_id_query"
         tags:
            - authorization
         summary: Get the Role list.
@@ -1114,12 +1153,21 @@ components:
    parameters:
    
       authorization_id:
-         name: id
+         name: aid
          in: path
          required: true
          schema:
             $ref: "govhub-api-commons.yaml#/components/schemas/AuthorizationId"
       
+      
+      application_id_query:
+         name: application_id
+         in: query
+         required: false
+         schema:
+            type: string
+            minLength: 1
+            pattern: .+      
             
    # SCHEMAS ---------------- #
    
@@ -1146,13 +1194,71 @@ components:
             services:
                type: array
                items:
-                  $ref: "govhub-api-commons.yaml#/components/schemas/OrganizationId"
+                  $ref: "govhub-api-commons.yaml#/components/schemas/ServiceId"
                minItems: 0
                maxItems: 2147483647
                default: []            
             expiration_date:
                type: string
                format: date-time
-           
+               
+      AuthorizationUpdate:
+         type: object
+         additionalProperties: false
+         required:
+            - organizations
+            - services
+            - role
+         properties:
+            role:
+               $ref: "govhub-api-commons.yaml#/components/schemas/RoleId"                 
+            organizations:
+               type: array
+               items:
+                  $ref: "govhub-api-commons.yaml#/components/schemas/OrganizationId"
+               minItems: 0
+               maxItems: 2147483647
+               default: []
+            services:
+               type: array
+               items:
+                  $ref: "govhub-api-commons.yaml#/components/schemas/ServiceId"
+               minItems: 0
+               maxItems: 2147483647
+               default: []            
+            expiration_date:
+               type: string
+               format: date-time         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
       
          

@@ -53,11 +53,9 @@ import it.govhub.govregistry.commons.entity.UserEntity;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di censimento Utenti")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class User_UC_1_CreateUserTest {
-
-	private static final String USERS_BASE_PATH = "/v1/users";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -71,6 +69,7 @@ class User_UC_1_CreateUserTest {
 	@Test
 	void UC_1_01_CreateUserOk() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-101");
 
 		String json = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -80,7 +79,7 @@ class User_UC_1_CreateUserTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -110,6 +109,7 @@ class User_UC_1_CreateUserTest {
 	@Test
 	void UC_1_02_CreateUserOk_withEmail() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-102");
 		
 		String json = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -120,7 +120,7 @@ class User_UC_1_CreateUserTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -151,6 +151,7 @@ class User_UC_1_CreateUserTest {
 	@Test
 	void UC_1_03_CreateUserOk_Enabled() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-103");
 		user.setEnabled(true);
 
 		String json = Json.createObjectBuilder()
@@ -161,7 +162,7 @@ class User_UC_1_CreateUserTest {
 				.toString();
 
 		// Creo un utente e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)

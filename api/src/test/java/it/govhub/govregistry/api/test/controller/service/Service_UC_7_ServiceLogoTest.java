@@ -27,11 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.commons.codec.binary.Base64;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,20 +40,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import it.govhub.govregistry.api.Application;
 import it.govhub.govregistry.api.repository.ServiceRepository;
 import it.govhub.govregistry.api.test.Costanti;
+import it.govhub.govregistry.api.test.utils.Utils;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di censimento proprieta logo e logo_miniature di un service")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Service_UC_7_ServiceLogoTest {
-
-	private static final String SERVICES_BASE_PATH = "/v1/services";
-	private static final String SERVICES_BASE_PATH_DETAIL_ID = SERVICES_BASE_PATH + "/{id}";
-	private static final String SERVICES_BASE_PATH_LOGO = SERVICES_BASE_PATH_DETAIL_ID + "/logo";
-	private static final String SERVICES_BASE_PATH_LOGO_MINIATURE = SERVICES_BASE_PATH_DETAIL_ID + "/logo-miniature";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -68,25 +60,26 @@ class Service_UC_7_ServiceLogoTest {
 	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;
 	
-	@BeforeEach
 	private void configurazioneDB() {
 		ServiceEntity service = Costanti.getServizioTest();
 		service.setLogo(null);
 		service.setLogoMiniature(null);
-		this.serviceRepository.save(service);
+		if(leggiServizioDB(service.getName()) == null) {
+			this.serviceRepository.save(service);
+		}
 	}
 	
 	private ServiceEntity leggiServizioDB(String nome) {
-		List<ServiceEntity> findAll = this.serviceRepository.findAll();
-		return findAll.stream().filter(f -> f.getName().equals(nome)).collect(Collectors.toList()).get(0);
+		return Utils.leggiServizioDB(nome, this.serviceRepository);
 	}
 	
 	@Test
 	void UC_7_01_PathchService_ReplaceLogoMiniature() throws Exception {
+		configurazioneDB();
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		Long id = servizio.getId();
 
-		this.mockMvc.perform(put(SERVICES_BASE_PATH_LOGO_MINIATURE, id)
+		this.mockMvc.perform(put(Costanti.SERVICES_BASE_PATH_LOGO_MINIATURE, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -103,10 +96,11 @@ class Service_UC_7_ServiceLogoTest {
 	
 	@Test
 	void UC_7_02_PathchService_ReplaceLogo() throws Exception {
+		configurazioneDB();
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		Long id = servizio.getId();
 
-		this.mockMvc.perform(put(SERVICES_BASE_PATH_LOGO, id)
+		this.mockMvc.perform(put(Costanti.SERVICES_BASE_PATH_LOGO, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -123,10 +117,11 @@ class Service_UC_7_ServiceLogoTest {
 	
 	@Test
 	void UC_7_03_PathchService_DeleteLogoMiniature() throws Exception {
+		configurazioneDB();
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		Long id = servizio.getId();
 
-		this.mockMvc.perform(put(SERVICES_BASE_PATH_LOGO_MINIATURE, id)
+		this.mockMvc.perform(put(Costanti.SERVICES_BASE_PATH_LOGO_MINIATURE, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -139,7 +134,7 @@ class Service_UC_7_ServiceLogoTest {
 		
 		assertNotNull(servizio.getLogoMiniature());
 		
-		this.mockMvc.perform(delete(SERVICES_BASE_PATH_LOGO_MINIATURE, id)
+		this.mockMvc.perform(delete(Costanti.SERVICES_BASE_PATH_LOGO_MINIATURE, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				)
@@ -156,10 +151,11 @@ class Service_UC_7_ServiceLogoTest {
 	
 	@Test
 	void UC_7_04_PathchService_DeleteLogo() throws Exception {
+		configurazioneDB();
 		ServiceEntity servizio = leggiServizioDB(Costanti.SERVICE_NAME_TEST);
 		Long id = servizio.getId();
 
-		this.mockMvc.perform(put(SERVICES_BASE_PATH_LOGO, id)
+		this.mockMvc.perform(put(Costanti.SERVICES_BASE_PATH_LOGO, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -172,7 +168,7 @@ class Service_UC_7_ServiceLogoTest {
 		
 		assertNotNull(servizio.getLogo());
 		
-		this.mockMvc.perform(delete(SERVICES_BASE_PATH_LOGO, id)
+		this.mockMvc.perform(delete(Costanti.SERVICES_BASE_PATH_LOGO, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				)
@@ -190,7 +186,7 @@ class Service_UC_7_ServiceLogoTest {
 	void UC_7_05_PathchService_LogoMiniature_ServiceNotFound() throws Exception {
 		int idUser1 = 10000;
 		
-		this.mockMvc.perform(put(SERVICES_BASE_PATH_LOGO_MINIATURE,idUser1)
+		this.mockMvc.perform(put(Costanti.SERVICES_BASE_PATH_LOGO_MINIATURE,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -202,7 +198,7 @@ class Service_UC_7_ServiceLogoTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 		
-		this.mockMvc.perform(delete(SERVICES_BASE_PATH_LOGO_MINIATURE,idUser1)
+		this.mockMvc.perform(delete(Costanti.SERVICES_BASE_PATH_LOGO_MINIATURE,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf()))
 				.andExpect(status().isNotFound())
@@ -217,7 +213,7 @@ class Service_UC_7_ServiceLogoTest {
 	void UC_7_06_PathchService_LogoMiniature_ServiceInvalidId() throws Exception {
 		String idUser1 = "XXX";
 		
-		this.mockMvc.perform(put(SERVICES_BASE_PATH_LOGO_MINIATURE,idUser1)
+		this.mockMvc.perform(put(Costanti.SERVICES_BASE_PATH_LOGO_MINIATURE,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -229,7 +225,7 @@ class Service_UC_7_ServiceLogoTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 		
-		this.mockMvc.perform(delete(SERVICES_BASE_PATH_LOGO_MINIATURE,idUser1)
+		this.mockMvc.perform(delete(Costanti.SERVICES_BASE_PATH_LOGO_MINIATURE,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf()))
 				.andExpect(status().isBadRequest())
@@ -244,7 +240,7 @@ class Service_UC_7_ServiceLogoTest {
 	void UC_7_07_PathchService_Logo_ServiceNotFound() throws Exception {
 		int idUser1 = 10000;
 		
-		this.mockMvc.perform(put(SERVICES_BASE_PATH_LOGO,idUser1)
+		this.mockMvc.perform(put(Costanti.SERVICES_BASE_PATH_LOGO,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -256,7 +252,7 @@ class Service_UC_7_ServiceLogoTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 		
-		this.mockMvc.perform(delete(SERVICES_BASE_PATH_LOGO,idUser1)
+		this.mockMvc.perform(delete(Costanti.SERVICES_BASE_PATH_LOGO,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf()))
 				.andExpect(status().isNotFound())
@@ -271,7 +267,7 @@ class Service_UC_7_ServiceLogoTest {
 	void UC_7_08_PathchService_Logo_ServiceInvalidId() throws Exception {
 		String idUser1 = "XXX";
 		
-		this.mockMvc.perform(put(SERVICES_BASE_PATH_LOGO,idUser1)
+		this.mockMvc.perform(put(Costanti.SERVICES_BASE_PATH_LOGO,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(Base64.decodeBase64(Costanti.LOGO_ENTE_CREDITORE_3))
@@ -283,7 +279,7 @@ class Service_UC_7_ServiceLogoTest {
 				.andExpect(jsonPath("$.detail").isString())
 				.andReturn();
 		
-		this.mockMvc.perform(delete(SERVICES_BASE_PATH_LOGO,idUser1)
+		this.mockMvc.perform(delete(Costanti.SERVICES_BASE_PATH_LOGO,idUser1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf()))
 				.andExpect(status().isBadRequest())

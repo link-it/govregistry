@@ -34,11 +34,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.govhub.govregistry.commons.beans.AuthenticationProblem;
+import it.govhub.govregistry.commons.api.beans.Problem;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.exception.handlers.RestResponseEntityExceptionHandler;
 
@@ -46,7 +45,7 @@ import it.govhub.govregistry.commons.exception.handlers.RestResponseEntityExcept
 * Handler che viene eseguito quando un oggetto {@link org.springframework.security.core.Authentication Authentication} non ha
 * l'autorizzazione richiesta. (e.g.: visistare un'endpoint) 
 */
-@Component
+
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
 	@Autowired
@@ -58,19 +57,19 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		logger.debug("Building problem for Access Denied: {}", accessDeniedException.getMessage());
 		
-		AuthenticationProblem problem = new AuthenticationProblem();
+		Problem problem = new Problem();
 		
-		problem.status = HttpStatus.FORBIDDEN.value();
-		problem.title = HttpStatus.FORBIDDEN.getReasonPhrase();
-		problem.detail = accessDeniedException.getMessage();
+		problem.setStatus(HttpStatus.FORBIDDEN.value());
+		problem.setTitle(HttpStatus.FORBIDDEN.getReasonPhrase());
+		problem.setDetail(accessDeniedException.getMessage());
 		
 		// imposto il content-type della risposta
 		response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PROBLEM_JSON_VALUE);
-		response.setStatus(problem.status);
+		response.setStatus(problem.getStatus());
 		
 		ServletOutputStream outputStream = null;
 		try{
-			problem.instance = new URI(RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.FORBIDDEN));
+			problem.setInstance(new URI(RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.FORBIDDEN)));
 			outputStream = response.getOutputStream();
 			this.jsonMapper.writeValue(outputStream, problem);
 			outputStream.flush();

@@ -44,11 +44,9 @@ import it.govhub.govregistry.commons.entity.OrganizationEntity;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di validazione delle creazioni delle Organizations")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Organization_UC_4_CreateOrganizationFailsTest {
-
-	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -66,7 +64,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -90,7 +88,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -126,7 +124,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -163,7 +161,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -200,7 +198,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -237,7 +235,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -274,7 +272,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -311,7 +309,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -348,7 +346,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -385,7 +383,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -422,7 +420,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -459,7 +457,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -496,7 +494,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -533,7 +531,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 		
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -551,6 +549,8 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 	@Test
 	void UC_4_15_CreateOrganizationFail_ConflictTaxCode() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("41545678901");
+		ente.setLegalName("Ente Test 415");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -559,7 +559,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -578,7 +578,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -595,6 +595,8 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 	@Test
 	void UC_4_16_CreateOrganizationFail_ConflictLegalName() throws Exception {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
+		ente.setTaxCode("41645678901");
+		ente.setLegalName("Ente Test 416");
 
 		String json = Json.createObjectBuilder()
 				.add("tax_code", ente.getTaxCode())
@@ -603,7 +605,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)
@@ -622,7 +624,7 @@ class Organization_UC_4_CreateOrganizationFailsTest {
 				.toString();
 
 		// Creo una organization e verifico la risposta
-		this.mockMvc.perform(post(ORGANIZATIONS_BASE_PATH)
+		this.mockMvc.perform(post(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)

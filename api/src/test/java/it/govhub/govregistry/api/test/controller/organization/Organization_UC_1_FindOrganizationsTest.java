@@ -31,7 +31,6 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,16 +47,15 @@ import org.springframework.util.MultiValueMap;
 import it.govhub.govregistry.api.Application;
 import it.govhub.govregistry.api.repository.OrganizationRepository;
 import it.govhub.govregistry.api.test.Costanti;
+import it.govhub.govregistry.api.test.utils.Utils;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di lettura delle Organizations")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 class Organization_UC_1_FindOrganizationsTest {
-
-	private static final String ORGANIZATIONS_BASE_PATH = "/v1/organizations";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -68,17 +66,25 @@ class Organization_UC_1_FindOrganizationsTest {
 	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;
 	
-	@BeforeEach
-	private void caricaUtenti() {
+	private void configurazioneDB() {
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
-		this.organizationRepository.save(ente);
+		ente.setLogo(null);
+		ente.setLogoMiniature(null);
+		if(leggiEnteDB(ente.getTaxCode()) == null) {
+			this.organizationRepository.save(ente);
+		}
+	}
+
+	private OrganizationEntity leggiEnteDB(String nome) {
+		return Utils.leggiEnteDB(nome, this.organizationRepository);
 	}
 	
 	@Test
 	void UC_1_01_FindAllOk() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 		
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -106,12 +112,13 @@ class Organization_UC_1_FindOrganizationsTest {
 	
 	@Test
 	void UC_1_02_FindAllOk_Limit() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "1");
 		
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -140,7 +147,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "XXX");
 		
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
+		this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
@@ -153,10 +160,11 @@ class Organization_UC_1_FindOrganizationsTest {
 	
 	@Test
 	void UC_1_04_FindAllOk_Offset() throws Exception {
+		configurazioneDB();
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "1");
 		
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -190,7 +198,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "XXX");
 		
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
+		this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
@@ -203,10 +211,11 @@ class Organization_UC_1_FindOrganizationsTest {
 	
 	@Test
 	void UC_1_06_FindAllOk_Q() throws Exception {
+		configurazioneDB();
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_Q, "naka");
 		
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -229,11 +238,12 @@ class Organization_UC_1_FindOrganizationsTest {
 	
 	@Test
 	void UC_1_07_FindAllOk_OffsetLimit() throws Exception {
+		configurazioneDB();
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_OFFSET, "2");
 		params.add(Costanti.USERS_QUERY_PARAM_LIMIT, "2");
 		
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -257,13 +267,14 @@ class Organization_UC_1_FindOrganizationsTest {
 	
 	@Test
 	void UC_1_08_FindAllOk_SortLegalnameDesc() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "legal_name");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -289,13 +300,14 @@ class Organization_UC_1_FindOrganizationsTest {
 	
 	@Test
 	void UC_1_09_FindAllOk_SortIdDesc() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "id");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -325,7 +337,7 @@ class Organization_UC_1_FindOrganizationsTest {
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "XXX");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
+		this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
@@ -338,13 +350,14 @@ class Organization_UC_1_FindOrganizationsTest {
 	
 	@Test
 	void UC_1_11_FindAllOk_Sort_Unsorted() throws Exception {
+		configurazioneDB();
 		OrganizationEntity ente = Costanti.getEnteCreditore3();
 		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add(Costanti.USERS_QUERY_PARAM_SORT, "unsorted");
 		params.add(Costanti.USERS_QUERY_PARAM_SORT_DIRECTION, Costanti.QUERY_PARAM_SORT_DIRECTION_DESC);
 		
-		MvcResult result = this.mockMvc.perform(get(ORGANIZATIONS_BASE_PATH).params(params )
+		MvcResult result = this.mockMvc.perform(get(Costanti.ORGANIZATIONS_BASE_PATH).params(params )
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())

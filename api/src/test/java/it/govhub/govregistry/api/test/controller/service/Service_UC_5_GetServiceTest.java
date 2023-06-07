@@ -31,7 +31,6 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,18 +45,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import it.govhub.govregistry.api.Application;
 import it.govhub.govregistry.api.repository.ServiceRepository;
 import it.govhub.govregistry.api.test.Costanti;
+import it.govhub.govregistry.api.test.utils.Utils;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di lettura dei services")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Service_UC_5_GetServiceTest {
-
-	private static final String SERVICES_BASE_PATH = "/v1/services";
-	private static final String SERVICES_BASE_PATH_DETAIL_ID = SERVICES_BASE_PATH + "/{id}";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -68,17 +65,23 @@ class Service_UC_5_GetServiceTest {
 	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;
 	
-	@BeforeEach
-	private void caricaServizi() {
-		ServiceEntity servizio = Costanti.getServizioTest();
-		this.serviceRepository.save(servizio);
+	private void configurazioneDB() {
+		ServiceEntity service = Costanti.getServizioTest();
+		if(leggiServizioDB(service.getName()) == null) {
+			this.serviceRepository.save(service);
+		}
+	}
+	
+	private ServiceEntity leggiServizioDB(String nome) {
+		return Utils.leggiServizioDB(nome, this.serviceRepository);
 	}
 	
 	@Test
-	void UC_5_01_GetUserOk() throws Exception {
+	void UC_5_01_GetServiceOk() throws Exception {
+		configurazioneDB();
 		ServiceEntity servizio = Costanti.getServizioTest();
 		
-		MvcResult result = this.mockMvc.perform(get(SERVICES_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(get(Costanti.SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -94,7 +97,7 @@ class Service_UC_5_GetServiceTest {
 		JsonObject item1 = items.getJsonObject(0); 
 		int idService1 = item1.getInt("id");
 		
-		result = this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID,idService1)
+		result = this.mockMvc.perform(get(Costanti.SERVICES_BASE_PATH_DETAIL_ID,idService1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -109,10 +112,10 @@ class Service_UC_5_GetServiceTest {
 	}
 	
 	@Test
-	void UC_5_02_GetUser_NotFound() throws Exception {
+	void UC_5_02_GetService_NotFound() throws Exception {
 		int idService1 = 10000;
 		
-		this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID,idService1)
+		this.mockMvc.perform(get(Costanti.SERVICES_BASE_PATH_DETAIL_ID,idService1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
@@ -124,10 +127,10 @@ class Service_UC_5_GetServiceTest {
 	}
 	
 	@Test	
-	void UC_5_03_GetUser_InvalidId() throws Exception {
+	void UC_5_03_GetService_InvalidId() throws Exception {
 		String idService1 = "XXX";
 		
-		this.mockMvc.perform(get(SERVICES_BASE_PATH_DETAIL_ID,idService1)
+		this.mockMvc.perform(get(Costanti.SERVICES_BASE_PATH_DETAIL_ID,idService1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
