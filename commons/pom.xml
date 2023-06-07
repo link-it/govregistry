@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>it.govhub.govregistry</groupId>
 		<artifactId>govregistry</artifactId>
-		<version>1.0.0</version>
+		<version>1.2.1</version>
 	</parent>
 	
 	<artifactId>commons</artifactId>
@@ -116,8 +116,11 @@
 							<typeMappings>base64=it.govhub.govregistry.commons.utils.Base64String</typeMappings>
 							<importMappings>
 								<importMapping>Direction=org.springframework.data.domain.Sort.Direction</importMapping>
+								<importMapping>Problem=it.govhub.govregistry.commons.api.beans.Problem</importMapping>
 							</importMappings>
-
+							<languageSpecificPrimitives>
+								<languageSpecificPrimitive>Problem</languageSpecificPrimitive>		<!-- Insieme al relativo importMapping fa skippare la generazione della classe Problem --> 
+							</languageSpecificPrimitives>
 							<configOptions>
 								<dateLibrary>java8</dateLibrary>
 								<library>spring-boot</library>

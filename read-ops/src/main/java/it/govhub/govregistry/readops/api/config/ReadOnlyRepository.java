@@ -21,12 +21,16 @@ package it.govhub.govregistry.readops.api.config;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.Repository;
+import org.springframework.transaction.annotation.Propagation;
 
 public interface ReadOnlyRepository<T, ID> extends Repository<T, ID>, JpaSpecificationExecutor<T> {
 	
-    Optional<T> findById(Long id);
+	@Transactional
+	Optional<T> findById(Long id);
     
     List<T> findAll();
     

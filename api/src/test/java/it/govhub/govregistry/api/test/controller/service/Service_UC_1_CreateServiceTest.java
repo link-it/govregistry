@@ -50,11 +50,9 @@ import it.govhub.govregistry.commons.entity.ServiceEntity;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di creazione dei Services")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class Service_UC_1_CreateServiceTest {
-
-	private static final String SERVICES_BASE_PATH = "/v1/services";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -68,6 +66,7 @@ class Service_UC_1_CreateServiceTest {
 	@Test
 	void UC_1_01_CreateServiceOk() throws Exception {
 		ServiceEntity servizio = Costanti.getServizioTest();
+		servizio.setName(servizio.getName() + "-101");
 
 		String json = Json.createObjectBuilder()
 				.add("service_name", servizio.getName())
@@ -76,7 +75,7 @@ class Service_UC_1_CreateServiceTest {
 				.toString();
 
 		// Creo un service e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(SERVICES_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.SERVICES_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(json)

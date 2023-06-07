@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import it.govhub.govregistry.commons.entity.OrganizationEntity;
 import it.govhub.govregistry.commons.entity.RoleAuthorizationEntity;
+import it.govhub.govregistry.commons.entity.RoleEntity;
 import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.commons.exception.NotAuthorizedException;
@@ -55,17 +56,26 @@ public class SecurityService {
 		log.debug("Retrieving GovhubPrincipal from the Authentication Context");
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		GovhubPrincipal principal = (GovhubPrincipal) authentication.getPrincipal();
+		
+		Object objPrincipal = authentication.getPrincipal();
+		log.debug("Found principal {}", objPrincipal);
+		
+		GovhubPrincipal principal = (GovhubPrincipal) objPrincipal;
 		return  principal.getUser();
 	}
 	
 	public boolean hasAnyRole(String ...roles) {
-		log.debug("Checking if principal has any of the following roles: {}", (Object[]) roles);
-		
 		UserEntity user = getPrincipal();
-		
 		Set<String> roleList = Set.of(roles);
+		
+		log.debug("Checking if principal {} has any of the following roles: {}", user.getPrincipal(),  roleList);
+		
 		OffsetDateTime now = OffsetDateTime.now();
+		
+		log.debug("Authorizations: ");
+		for(var auth : user.getAuthorizations()) {
+			log.debug(auth.getRole().getName());
+		}
 		
 		// Cerco fra le autorizzazioni una che abbia uno dei ruoli specificati e che non sia scaduta
 		return user.getAuthorizations().stream()
@@ -107,38 +117,43 @@ public class SecurityService {
 		
 		OffsetDateTime now = OffsetDateTime.now();
 
-		Iterable<RoleAuthorizationEntity> validAuths = principal.getAuthorizations().stream()
+		var roles = principal.getAuthorizations().stream()
 				.filter( auth -> auth.getExpirationDate() == null || now.compareTo(auth.getExpirationDate()) < 0 )
-				.filter( auth -> auth.getRole().getAssignableRoles().contains(authToEdit.getRole()))
-				::iterator;
-				
-		// Assumo di non essere autorizzato per tutte le organizzazioni e servizi e rimuovo mano mano 
-		// quelli che incontro, devo anche avere almeno una validAuths
-		Set<OrganizationEntity> notAuthorizedOrgs = new HashSet<>(authToEdit.getOrganizations());
-		Set<ServiceEntity> notAuthorizedServices = new HashSet<>(authToEdit.getServices());
-		boolean hasValidAuths = false;
+				.map(RoleAuthorizationEntity::getRole)
+				.filter( role -> role.getAssignableRoles().contains(authToEdit.getRole()))
+				.map(RoleEntity::getName)
+				.collect(Collectors.toSet());
 		
-	    for (var auth : validAuths) {
-	    	hasValidAuths = true;
-	    	
-			if (notAuthorizedOrgs.isEmpty() && notAuthorizedServices.isEmpty() )  {
-				break;
-			}
-			
-			if (auth.getOrganizations().isEmpty()) {
-				notAuthorizedOrgs.clear();
+		var authorizedOrganizations = this.listAuthorizedOrganizations(roles);
+		var authorizedServices = this.listAuthorizedServices(roles);
+		
+		boolean canWriteOrganizations = true;
+		if (authorizedOrganizations != null) {
+
+			if (authToEdit.getOrganizations().isEmpty()) {
+				// Se ho restrizioni sulle organizzazioni da autorizzare e sto chiedendo di abilitare per tutte le organizzazioni allora nisba
+				canWriteOrganizations = false;
 			} else {
-				notAuthorizedOrgs.removeAll(auth.getOrganizations());
+				// Se ho restrizioni sulle organizzazioni da autorizzare e sto chiedendo di abilitare per un certo set di organizzazioni allora controllo
+				var  notAuthorizedOrgs = authToEdit.getOrganizations().stream().map(OrganizationEntity::getId).collect(Collectors.toSet());
+				notAuthorizedOrgs.removeAll(authorizedOrganizations);
+				canWriteOrganizations = notAuthorizedOrgs.isEmpty();
 			}
-			
-			if (auth.getServices().isEmpty()) {
-				notAuthorizedServices.clear();
+		}
+		
+		// Faccio loi stesso per i servizi
+		boolean canWriteServices = true;
+		if (authorizedServices != null) {
+			if (authToEdit.getServices().isEmpty()) {
+				canWriteServices = false; 
 			} else {
-				notAuthorizedServices.removeAll(auth.getServices());
+				var notAuthorizedServices = authToEdit.getServices().stream().map(ServiceEntity::getId).collect(Collectors.toSet());
+				notAuthorizedServices.removeAll(authorizedServices);
+				canWriteServices = notAuthorizedServices.isEmpty();
 			}
-	    }
-	    
-	    return hasValidAuths && notAuthorizedOrgs.isEmpty() && notAuthorizedServices.isEmpty();
+		}
+		
+	    return canWriteOrganizations && canWriteServices;
 	}
 
 	

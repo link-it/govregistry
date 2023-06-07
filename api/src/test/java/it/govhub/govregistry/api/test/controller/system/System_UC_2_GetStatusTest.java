@@ -33,15 +33,14 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 
 import it.govhub.govregistry.api.Application;
+import it.govhub.govregistry.api.test.Costanti;
 import it.govhub.govregistry.api.test.utils.UserAuthProfilesUtils;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di lettura degli Utenti")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 class System_UC_2_GetStatusTest {
-
-	private static final String STATUS_BASE_PATH = "/v1/status";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -51,7 +50,7 @@ class System_UC_2_GetStatusTest {
 	
 	@Test
 	void UC_2_01_GetStatusOk() throws Exception {
-		this.mockMvc.perform(get(STATUS_BASE_PATH)
+		this.mockMvc.perform(get(Costanti.STATUS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.accept("application/problem+json"))
 				.andExpect(status().isOk())

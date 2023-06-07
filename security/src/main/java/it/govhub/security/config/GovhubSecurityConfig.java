@@ -18,7 +18,6 @@
  */
 package it.govhub.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -63,9 +62,14 @@ public class GovhubSecurityConfig{
 			throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
+	
+	@Bean
+	public AccessDeniedHandlerImpl accessDeniedHandler() {
+		return new AccessDeniedHandlerImpl();
+	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChainDev(HttpSecurity http, ObjectMapper jsonMapper, PreAuthenticatedExceptionHandler preAuthenticatedExceptionHandler, AccessDeniedHandlerImpl accessDeniedHandler) throws Exception {
+	public SecurityFilterChain securityFilterChainDev(HttpSecurity http, ObjectMapper jsonMapper, PreAuthenticatedExceptionHandler preAuthenticatedExceptionHandler) throws Exception {
 		
 		AuthenticationManager manager = this.authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
 		
@@ -81,7 +85,7 @@ public class GovhubSecurityConfig{
 		.addFilterBefore(preAuthenticatedExceptionHandler, LogoutFilter.class)
 		.exceptionHandling()
 				// Gestisci accessDenied in modo da restituire un problem ben formato
-				.accessDeniedHandler(accessDeniedHandler)																	
+				.accessDeniedHandler(accessDeniedHandler())																	
 				// Gestisci la mancata autenticazione con un problem ben formato
 				.authenticationEntryPoint(new UnauthorizedAuthenticationEntryPoint(jsonMapper))	
 		.and()
@@ -93,11 +97,9 @@ public class GovhubSecurityConfig{
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
 		.and()
 			.headers()
-			.xssProtection();
-         //   .and()
-         // Politica di CSP più restrittiva. https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-         // Anche le immagini dal gravatar
-        //.contentSecurityPolicy(this.cspPolicy);
+			.xssProtection()
+            .and()
+            .contentSecurityPolicy(this.cspPolicy);
 		
 		return http.build();
 	}
@@ -133,6 +135,7 @@ public class GovhubSecurityConfig{
 			.antMatchers(HttpMethod.GET, servletPath+"/govregistry-api-backoffice.yaml").permitAll()
 			.antMatchers(HttpMethod.GET, servletPath+"/govio-api-backoffice.yaml").permitAll()
 			.antMatchers(HttpMethod.GET, servletPath+"/govhub-api-commons.yaml").permitAll()
+			.antMatchers(HttpMethod.GET, servletPath+"/actuator/health/liveness").permitAll()
 			.anyRequest().authenticated();
 		
 		return http;

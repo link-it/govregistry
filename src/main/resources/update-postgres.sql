@@ -37,3 +37,25 @@ update govhub_applications set logo_type = 'SVG' where logo_type='1';
 update govhub_applications set logo_type = 'BOOTSTRAP' where logo_type='2';
 update govhub_applications set logo_type = 'MATERIAL' where logo_type='3';
 
+-- PATCH 7-04-2024
+
+alter table govhub_authorizations alter column id_govhub_user set not null;
+
+alter table govhub_authorizations alter column id_govhub_role set not null;
+
+-- PATCH 8-05-2023 Il logo nella tabella application diventa un json
+
+alter table govhub_applications drop column logo_bg_color;
+alter table govhub_applications drop column logo_color;
+alter table govhub_applications drop column logo_type;
+alter table govhub_applications drop column logo_url;
+alter table govhub_applications drop column logo_name;
+alter table govhub_applications drop column bg_color;
+alter table govhub_applications drop column logo;
+
+alter table govhub_applications add column logo TEXT;
+
+
+-- PATCH 11-05-2023 Aggiungi webapp_uri nella tabella applications
+
+alter table govhub_applications add column webapp_uri VARCHAR(1024);

@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.govhub.govregistry.commons.beans.AuthenticationProblem;
+import it.govhub.govregistry.commons.api.beans.Problem;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.exception.handlers.RestResponseEntityExceptionHandler;
 
@@ -60,18 +60,18 @@ public class UnauthorizedBasicAuthenticationEntryPoint extends BasicAuthenticati
         
         log.debug("Mappo la AuthenticationException in un problem: {}", authException.getMessage());
 		
-		AuthenticationProblem problem = new AuthenticationProblem();
-		problem.status = HttpStatus.UNAUTHORIZED.value();
-		problem.title = HttpStatus.UNAUTHORIZED.getReasonPhrase();
-		problem.detail = authException.getMessage();
+		Problem problem = new Problem();
+		problem.setStatus(HttpStatus.UNAUTHORIZED.value());
+		problem.setTitle(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+		problem.setDetail(authException.getMessage());
 		
 		// imposto il content-type della risposta
 		response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-		response.setStatus(problem.status);
+		response.setStatus(problem.getStatus());
 		
 		ServletOutputStream outputStream = null;
 		try{
-			problem.instance = new URI(RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.UNAUTHORIZED));
+			problem.setInstance(new URI(RestResponseEntityExceptionHandler.problemTypes.get(HttpStatus.UNAUTHORIZED)));
 			outputStream = response.getOutputStream();
 			this.jsonMapper.writeValue(outputStream, problem);
 			outputStream.flush();

@@ -58,12 +58,9 @@ import it.govhub.govregistry.commons.entity.UserEntity;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @DisplayName("Test di censimento Utenti")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 
 class User_UC_3_PatchUserTest {
-
-	private static final String USERS_BASE_PATH = "/v1/users";
-	private static final String USERS_BASE_PATH_DETAIL_ID = USERS_BASE_PATH + "/{id}";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -73,7 +70,7 @@ class User_UC_3_PatchUserTest {
 	
 	@Autowired
 	private UserAuthProfilesUtils userAuthProfilesUtils;
-
+	
 	@Test
 	void UC_3_01_PatchUser_WrongMediaType() throws Exception {
 		JsonObjectBuilder patchOp = Json.createObjectBuilder()
@@ -86,7 +83,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, 1)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, 1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -102,6 +99,7 @@ class User_UC_3_PatchUserTest {
 	@Test
 	void UC_3_02_PatchUser_WrongPayload() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-302");
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -111,7 +109,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -130,7 +128,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -152,6 +150,7 @@ class User_UC_3_PatchUserTest {
 	@Test
 	void UC_3_03_PatchUser_Enabled() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-303");
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -161,7 +160,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -185,7 +184,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -209,6 +208,7 @@ class User_UC_3_PatchUserTest {
 	@Test
 	void UC_3_04_PatchUser_Fullname() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-304");
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -218,7 +218,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -242,7 +242,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -266,6 +266,7 @@ class User_UC_3_PatchUserTest {
 	@Test
 	void UC_3_05_PatchUser_Principal() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-305");
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -275,7 +276,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -299,7 +300,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -323,6 +324,7 @@ class User_UC_3_PatchUserTest {
 	@Test
 	void UC_3_06_PatchUser_ReplaceEmail() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-306");
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -333,7 +335,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -357,7 +359,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -382,6 +384,7 @@ class User_UC_3_PatchUserTest {
 	@Test
 	void UC_3_07_PatchUser_AddEmail() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-307");
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -392,7 +395,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -416,7 +419,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -441,6 +444,7 @@ class User_UC_3_PatchUserTest {
 	@Test
 	void UC_3_08_PatchUser_RemoveEmail() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-308");
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -451,7 +455,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -475,7 +479,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -499,6 +503,7 @@ class User_UC_3_PatchUserTest {
 	@Test
 	void UC_3_09_PatchUser_ReplaceNotExistingEmail() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-309");
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -508,7 +513,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -532,7 +537,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -558,6 +563,7 @@ class User_UC_3_PatchUserTest {
 	@Test
 	void UC_3_10_PatchUser_ConflictPrincipal() throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-310");
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -567,7 +573,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -589,7 +595,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -614,6 +620,7 @@ class User_UC_3_PatchUserTest {
 	@ValueSource(strings = {"/enabled","/full_name","/principal"})
 	void UC_3_11_PatchUserRemoveRequiredField(String patchField) throws Exception {
 		UserEntity user = Costanti.getUser_Snakamoto();
+		user.setPrincipal(user.getPrincipal() + "-311-" + patchField.substring(1));
 
 		String createUser = Json.createObjectBuilder()
 				.add("enabled", user.getEnabled())
@@ -624,7 +631,7 @@ class User_UC_3_PatchUserTest {
 				.toString();
 
 		// Creo un utente
-		MvcResult result = this.mockMvc.perform(post(USERS_BASE_PATH)
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_BASE_PATH)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(createUser)
@@ -647,7 +654,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, id)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, id)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
@@ -680,7 +687,7 @@ class User_UC_3_PatchUserTest {
 				.build()
 				.toString();
 
-		this.mockMvc.perform(patch(USERS_BASE_PATH_DETAIL_ID, 1)
+		this.mockMvc.perform(patch(Costanti.USERS_BASE_PATH_DETAIL_ID, 1)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
 				.content(patchUser)
