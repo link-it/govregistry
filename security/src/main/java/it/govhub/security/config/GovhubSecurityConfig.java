@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -40,11 +40,6 @@ import it.govhub.govregistry.commons.security.UnauthorizedBasicAuthenticationEnt
 import it.govhub.security.services.GovhubUserDetailService;
 
 
-/**
- * Configurazione della sicurezza
- * 
- *
- */
 @Import(SecurityExportedBeans.class)
 public class GovhubSecurityConfig{
 
@@ -104,9 +99,6 @@ public class GovhubSecurityConfig{
 		return http.build();
 	}
 
-	/**
-	 * Impstiamo il servizio per caricare l'utente a partire dallo header.
-	 */
 	@Bean
 	public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider(GovhubUserDetailService userDetailService) {
 		PreAuthenticatedAuthenticationProvider ret = new PreAuthenticatedAuthenticationProvider();
@@ -115,14 +107,7 @@ public class GovhubSecurityConfig{
 	}
 	
 	
-	/**
-	 * Registriamo lo UserDetailService per essere chiamato in caso di autenticazione basic
-	 */
 	
-	/*@Bean
-	public GovhubUserDetailService userDetailService() {
-		
-	}*/
 	
 	
 	private HttpSecurity applyAuthRules(HttpSecurity http) throws Exception {
@@ -130,15 +115,3 @@ public class GovhubSecurityConfig{
 		http
 			.authorizeRequests()
 			// richieste GET Schema open-api accessibile a tutti
-			.antMatchers(HttpMethod.GET, servletPath+"/swagger-ui/**").permitAll() 
-			.antMatchers(HttpMethod.GET, servletPath+"/v3/api-docs/**").permitAll()
-			.antMatchers(HttpMethod.GET, servletPath+"/govregistry-api-backoffice.yaml").permitAll()
-			.antMatchers(HttpMethod.GET, servletPath+"/govio-api-backoffice.yaml").permitAll()
-			.antMatchers(HttpMethod.GET, servletPath+"/govhub-api-commons.yaml").permitAll()
-			.antMatchers(HttpMethod.GET, servletPath+"/actuator/health/liveness").permitAll()
-			.anyRequest().authenticated();
-		
-		return http;
-	}
-	
-}

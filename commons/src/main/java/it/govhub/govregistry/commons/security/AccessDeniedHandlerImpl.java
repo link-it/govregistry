@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -41,10 +41,6 @@ import it.govhub.govregistry.commons.api.beans.Problem;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.exception.handlers.RestResponseEntityExceptionHandler;
 
-/*
-* Handler che viene eseguito quando un oggetto {@link org.springframework.security.core.Authentication Authentication} non ha
-* l'autorizzazione richiesta. (e.g.: visistare un'endpoint) 
-*/
 
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 

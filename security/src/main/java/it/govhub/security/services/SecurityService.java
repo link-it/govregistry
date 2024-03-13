@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -41,12 +41,6 @@ import it.govhub.security.beans.GovhubPrincipal;
 import it.govhub.security.config.GovregistryRoles;
 
 
-/**
- * Query e Asserzioni sui permessi degli utenti.
- * Se il numero di query per la verifica di autorizzazioni diventa alto, per ottimizzare è possibile rendere
- * EAGER la collezione di authorizations per la UserEntity e verificare in ram invece che su db
- *
- */
 @Service
 public class SecurityService {
 	
@@ -96,16 +90,6 @@ public class SecurityService {
 	}
 	
 	
-	/**
-	 * Restituisce true se il principal può assegnare o rimuovere l'autorizzazione argomento.
-	 *
-	 *  In quanto principal posso assegnare solo i ruoli che sono fra i mei assignable_roles.
-	 *  Posso assegnarli se il principal ha una autorizzazione con un ruolo che ha fra gli assignable_roles il ruolo da assegnare
-	 *  e la cui expiration_date è superiore a quella del ruolo da assegnare.
-	 *  Devo cercare le RoleAuthorizationEntity che hanno questa caratteristica.
-	 *  Da queste entità trovate vado a controllare se posso lavorare su tutte le organizzazioni e servizi specificati dalla autorizzazione da creare.
-	 * 
-	 */
 	public boolean canWriteAuthorization(RoleAuthorizationEntity authToEdit) {
 		log.debug("Checking if principal can write the requested authorization with authority: {}", authToEdit.getRole().getName()); 
 
@@ -157,10 +141,6 @@ public class SecurityService {
 	}
 
 	
-	/**
-	 * Dice se il principal ha delle authority valide con i ruoli specificati su un dato servizio 
-	*
-	*/
 	public void hasAnyServiceAuthority(Long serviceId, String ...roles) {
 		log.debug("Checking if principal has any of the following authorities on service [{}]: {}", serviceId, (Object[]) roles);
 		
@@ -185,10 +165,6 @@ public class SecurityService {
 	}
 	
 	
-	/**
-	 *  Dice se il principal ha delle authority valide con i ruoli specificati su una data organizzazione
-	 *  
-	 */
 	public void hasAnyOrganizationAuthority(Long organizationId, String ...roles) {
 		log.debug("Checking if principal has any of the following authorities on organization [{}]: {}", organizationId, (Object[]) roles);
 		
@@ -223,13 +199,6 @@ public class SecurityService {
 		return listAuthorizedOrganizations(new HashSet<>(roles));
 	}
 	
-	/**
-	 * Elenca le organizzazioni sulle quali si hanno dei permessi.
-	 * Ogni ruolo ha associate delle organizzazioni, mi dice tutte le organizzazioni alle quali ho accesso secondo quei ruoli. 
-	*
-	 * @return   - null se non ho restrizioni (può diventare un Optional)
-	 *						- Set<Long>  l'insieme di id sul quale sono autorizzato a lavorare 
-	 */
 	public Set<Long> listAuthorizedOrganizations(Set<String> roles) {
 		log.debug("Retrieving organizations for which the principal has the following authorities: {}", roles);
 		
@@ -266,13 +235,6 @@ public class SecurityService {
 	}
 
 
-	/**
-	 * Elenca i servizi sui quali si hanno dei permessi.
-	 * Ogni ruolo ha associate dei servizi, mi dice tutti i servizi ai quali ho accesso secondo quei ruoli. 
-	*
-	 * @return   - null se non ho restrizioni (può diventare un Optional)
-	 *						- Set<Long>  l'insieme di id sul quale sono autorizzato a lavorare 
-	 */
 	public Set<Long> listAuthorizedServices(Set<String>  roles) {
 		log.debug("Retrieving services for which the principal has the following authorities: {}", roles);
 		
@@ -299,12 +261,6 @@ public class SecurityService {
 	}
 
 
-	/**
-	 * Ho l'insieme di id auth1 sui cui posso lavorare. Lo restringo sull'insieme auth2.
-	 *
-	 *		null = nessuna restrizione
-	 *	 	[ id1, id2, ... idN ] = autorizzato solo sui seguenti id
-	 */
 	 public static Set<Long> restrictAuthorizations(Set<Long> auth1, Set<Long> auth2) {
 		 if (auth1 == null) {
 			 // Se non ho restrizioni in origine, restituiscimi le seconde restrizioni

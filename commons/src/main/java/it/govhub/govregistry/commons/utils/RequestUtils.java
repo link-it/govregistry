@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -58,11 +58,6 @@ public class RequestUtils {
 	}
 
 	
-	/**
-	 * Crea un messaggio che descrive un errore di validazione è più leggibile 
-	 * per una API rispetto a quello restituito di default.
-	 * 	
-	 */
 	public static String extractValidationError(ObjectError error) {
 		if (error instanceof FieldError) {			
 			var ferror = (FieldError) error;
@@ -75,11 +70,6 @@ public class RequestUtils {
 	}
 
 	
-	/**
-	 * Utilizzata nelle richieste multipart di upload file per estrarre il nome del file dallo header
-	 * Content-Disposition
-	 * 
-	 */
 	public static String readFilenameFromHeaders(FileItemHeaders headers) {
 		
 		String filename = null;
