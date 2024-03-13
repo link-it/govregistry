@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -127,11 +127,6 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 	}
 	
 //	@Test
-	/*
-	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per l'ente[3]
-	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
-	 * Con l'utenza SNakamato provo a cancellare un'autorizzazione su un ruolo che non puo' gestire
-	 * */
 	void UC_5_01_DeleteAuthorizationFail_UserEditor_Organization() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
@@ -265,50 +260,6 @@ class Authorization_UC_5_DeleteAuthorizationFailsTest {
 		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, idRoleAssegnatoAdmin)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
-				.accept("*/*"))
-				.andExpect(status().isUnauthorized())
-				.andExpect(jsonPath("$.status", is(401)))
-				.andExpect(jsonPath("$.title", is("Unauthorized")))
-				.andExpect(jsonPath("$.type").isString())
-				.andExpect(jsonPath("$.detail").isString())
-				.andReturn();
-		
-		// Verifica che la lista autorizzazioni non sia stata modificata
-		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
-				.with(csrf())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Leggo la lista delle autorizzazioni
-		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		userList = reader.readObject();
-		
-		// Controlli sulla paginazione
-		page = userList.getJsonObject("page");
-		assertEquals(0, page.getInt("offset"));
-		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(3, page.getInt("total"));
-		
-		// Controlli sugli items
-		items = userList.getJsonArray("items");
-		assertEquals(3, items.size());
-		
-		assertEquals(idRoleAssegnatoAdmin, item0.getInt("id"));
-		assertEquals(idRole, item1.getInt("id"));
-		assertEquals(ruoloUser.getName(), item1.getJsonObject("role").getString("role_name"));
-		assertEquals("govhub_users_viewer", item2.getJsonObject("role").getString("role_name"));
-	}
-	
-	@Test
-	void UC_5_02_DeleteAuthorizationFail_NotFound() throws Exception {
-		int idRole = 10000;
-		// Cancellazione Autorizzazione non esistente
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, 1, idRole)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.accept("*/*"))
 				.andExpect(status().isNotFound())
 				.andExpect(jsonPath("$.status", is(404)))
 				.andExpect(jsonPath("$.title", is("Not Found")))

@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -38,10 +38,6 @@ public class Base64String {
 		this.value = value;
 	}
 
-	/* 
-	 * Costruisce un'istanza di questa classe codificando in base64 un array di bytes.
-	 *  
-	 */
 	public Base64String(byte[] value) {
 		this.value = new String(Base64.encodeBase64(value));
 	}

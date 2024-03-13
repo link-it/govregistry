@@ -1,50 +1,15 @@
 # GovRegistry
 
-Gestione delle anagrafiche di utenti organizzazioni e servizi di GovHub.
+GovRegistry è un modulo di GovHub per la gestione e consultazione delle anagrafiche
 
-L'autenticazione è header-based:
+# Licenza
 
-```bash
- curl -v -H "GOVHUB-CONSUMER-PRINCIPAL: amministratore" -X GET 'http://localhost:10001/users/1'
-```
+GovHub - Application suite for Public Administration
 
-## Setup
+Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
 
-I comandi SQL assumono l'utilizzo di postgres.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License version 3, as published by the Free Software Foundation.
 
-Creare l'utenza e schema db:
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-```bash
-createuser govhub -P 
-createdb govhub -O govhub
-psql govhub govhub < src/main/resources/govregistry-schema.sql
-psql govhub govhub < src/main/resources/data-dev.sql
-```
-
-Creare la cartella di log:
-
-```bash
-mkdir /var/log/govregistry
-```
-
-## Build
-
-### Jar
-
-Eseguire l'applicazione:
-
-```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=dev -Dspring-boot.run.arguments=--logging.level.org.springframework=TRACE
-```
-
-L'applicazione verrà deployata di default sulla porta 10001.
-
-## War
-
-Per ottenere un war deployabile su application server:
-
-```bash
-mvn package -P war -DskipTests
-```
-
-L'artefatto verrà prodotto in `target/govshell.war`
+You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.

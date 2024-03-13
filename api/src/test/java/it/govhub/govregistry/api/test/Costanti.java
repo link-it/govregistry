@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -85,32 +85,6 @@ public class Costanti {
 	
 	public static final String APPLICATION_GOVREGISTRY = "govregistry";
 	
-	/* USERS */
-	
-	public static UserEntity getUser_Snakamoto() {
-		UserEntity userEntity = UserEntity.builder()
-				.enabled(false)
-				.fullName(Costanti.FULL_NAME_SATOSHI_NAKAMOTO)
-				.principal(Costanti.PRINCIPAL_SNAKAMOTO)
-				.email(Costanti.EMAIL_SNAKAMOTO)
-				.authorizations(new HashSet<>())
-				.build();
-		return userEntity;
-	}
-	
-	public static UserEntity getUser_Vbuterin() {
-		UserEntity userEntity = UserEntity.builder()
-				.enabled(false)
-				.fullName(Costanti.FULL_NAME_VITALIY_BUTERIN)
-				.principal(Costanti.PRINCIPAL_VBUTERIN)
-				.email(Costanti.EMAIL_VBUTERIN)
-				.authorizations(new HashSet<>())
-				.build();
-		return userEntity;
-	}
-	
-	
-	/* ORGANIZATIONS */
 	
 	public static OrganizationEntity getEnteCreditore3() {
 		return OrganizationEntity.builder()
@@ -138,19 +112,3 @@ public class Costanti {
 				.legalName(Costanti.LEGALNAME_ENTE_CREDITORE_4)
 				.build();
 	}
-	/* SERVICES */
-	
-	public static ServiceEntity getServizioTest() {
-		return ServiceEntity.builder()
-				.name(Costanti.SERVICE_NAME_TEST)
-				.description(Costanti.SERVICE_DESCRIPTION_TEST)
-				.build();
-	}
-	
-	public static ServiceEntity getServizioTest2() {
-		return ServiceEntity.builder()
-				.name(Costanti.SERVICE_NAME_TEST_2)
-				.description(Costanti.SERVICE_DESCRIPTION_TEST)
-				.build();
-	}
-}

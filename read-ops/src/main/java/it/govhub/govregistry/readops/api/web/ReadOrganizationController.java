@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -56,13 +56,6 @@ import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
 import it.govhub.security.services.SecurityService;
 
 
-/**
- *		Controller comune per le operazioni di lettura sulle organizzazioni.
- *
- *		I servizi di govhub implementano questo controller e forniscono l'override della getReadOrganizationRoles
- *		che dice per quel servizio quali sono i ruoli che consentono la lettura delle organizzazioni. 
- *
- */
 @Component
 public class ReadOrganizationController {
 	

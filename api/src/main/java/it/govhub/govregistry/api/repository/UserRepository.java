@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -31,13 +31,6 @@ public interface UserRepository extends JpaRepositoryImplementation<UserEntity, 
 	public Optional<UserEntity> findByPrincipal(String principal);
 
 
-	/**
-	 * NOTA: Dopo aver semplificato i pom e tolto il parent di spring boot, non è stato più possibile
-	 * utilizzare il nome del parametro nell'espressione SpEL.
-	 * E' necessario utilizzare la notazione posizionale #p0.
-	 * Probabilmente l'inclusione di spring boot come parent porta alla scrittura di alcune informazioni di debug
-	 * nel jar.  
-	 */
 	@Override
 	@CacheEvict(cacheNames=Caches.PRINCIPALS, key = "#p0.principal")
 	public <S extends UserEntity> S save(S entity);

@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -36,9 +36,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.govhub.govregistry.commons.api.beans.Problem;
 
-/**
- * Questo Bean Restituisce un Problem quando spring-security rifiuta una richiesta perchè ritenuta ad esempio non sicura.
- */
 
 public class RequestRejectedExceptionHandler implements RequestRejectedHandler {
 	

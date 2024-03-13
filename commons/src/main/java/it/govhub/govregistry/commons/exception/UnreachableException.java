@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -18,10 +18,6 @@
  */
 package it.govhub.govregistry.commons.exception;
 
-/**
- * Eccezione sollevata quando una certa riga di codice non dovrebbe essere mai raggiunta. 
- *
- */
 public class UnreachableException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

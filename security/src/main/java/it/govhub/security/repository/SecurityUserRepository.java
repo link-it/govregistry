@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -33,9 +33,6 @@ import it.govhub.govregistry.commons.entity.UserEntity_;
 
 public interface SecurityUserRepository extends JpaRepositoryImplementation<UserEntity, Long>{
 	
-	/**
-	 * Utilizziamo l'EntityGraph per risultare in una sola query invece che N quando preleviamo il principal.
-	 */
 	@Transactional
     @EntityGraph(attributePaths = {
     		UserEntity_.AUTHORIZATIONS, 

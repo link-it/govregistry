@@ -1,7 +1,7 @@
 /*
- * GovRegistry - Registries manager for GovHub
+ * GovHub - Application suite for Public Administration
  *
- * Copyright (c) 2021-2023 Link.it srl (http://www.link.it).
+ * Copyright (c) 2023-2024 Link.it srl (https://www.link.it).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3, as published by
@@ -191,100 +191,6 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
-				.accept("*/*"))
-				.andExpect(status().isOk())
-				.andReturn();
-		
-		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Leggo la lista delle autorizzazioni
-		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		userList = reader.readObject();
-		
-		// Controlli sulla paginazione
-		page = userList.getJsonObject("page");
-		assertEquals(0, page.getInt("offset"));
-		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(0, page.getInt("total"));
-		
-		// Controlli sugli items
-		items = userList.getJsonArray("items");
-		assertEquals(0, items.size());
-	}
-	
-	@Test
-	void UC_4_02_DeleteAuthorizationOk_Organization() throws Exception {
-		configurazioneDB();
-		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
-		deleteAllAuthorizations(user);
-		OrganizationEntity ente = leggiEnteDB(Costanti.TAX_CODE_ENTE_CREDITORE_3);
-		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
-		
-		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
-		String json = Json.createObjectBuilder()
-				.add("role", ruoloUser.getId())
-				.add("organizations", Json.createArrayBuilder().add(ente.getId()))
-				.add("services", Json.createArrayBuilder())
-				.add("expiration_date", dt.format(expirationDate))
-				.build()
-				.toString();
-		
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
-				.andExpect(jsonPath("$.organizations[0].tax_code", is(ente.getTaxCode())))
-				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
-				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
-				.andReturn();
-		
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int idRole = reader.readObject().getInt("id");
-		
-		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Leggo la lista delle autorizzazioni
-		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		JsonObject userList = reader.readObject();
-		
-		// Controlli sulla paginazione
-		JsonObject page = userList.getJsonObject("page");
-		assertEquals(0, page.getInt("offset"));
-		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(1, page.getInt("total"));
-		
-		// Controlli sugli items
-		JsonArray items = userList.getJsonArray("items");
-		assertEquals(1, items.size());
-		
-		assertEquals(idRole, items.getJsonObject(0).getInt("id"));
-		assertEquals(ruoloUser.getName(), items.getJsonObject(0).getJsonObject("role").getString("role_name"));
-		assertEquals(1, items.getJsonObject(0).getJsonArray("organizations").size());
-		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
-		assertEquals(ente.getTaxCode(), items.getJsonObject(0).getJsonArray("organizations").getJsonObject(0).getString("tax_code"));
-		
-		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.accept("*/*"))
 				.andExpect(status().isOk())
 				.andReturn();
 		
@@ -378,100 +284,6 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaAdmin())
 				.with(csrf())
-				.accept("*/*"))
-				.andExpect(status().isOk())
-				.andReturn();
-		
-		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Leggo la lista delle autorizzazioni
-		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		userList = reader.readObject();
-		
-		// Controlli sulla paginazione
-		page = userList.getJsonObject("page");
-		assertEquals(0, page.getInt("offset"));
-		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(0, page.getInt("total"));
-		
-		// Controlli sugli items
-		items = userList.getJsonArray("items");
-		assertEquals(0, items.size());
-	}
-	
-	@Test
-	void UC_4_04_DeleteAuthorizationOk_UserEditor() throws Exception {
-		configurazioneDB();
-		UserEntity user = leggiUtenteDB("user_viewer");
-		
-		RoleEntity ruoloUser = leggiRuoloDB("govhub_user");
-		
-		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
-		String json = Json.createObjectBuilder()
-				.add("role", ruoloUser.getId())
-				.add("organizations", Json.createArrayBuilder())
-				.add("services", Json.createArrayBuilder())
-				.add("expiration_date", dt.format(expirationDate))
-				.build()
-				.toString();
-		
-		// Creo una organization e verifico la risposta
-		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaUserEditor())
-				.with(csrf())
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.role.role_name", is("govhub_user")))
-				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
-				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
-				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
-				.andReturn();
-		
-		// Leggo l'autorizzazione dal servizio e verifico con i dati presenti sul db
-		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		int idRole = reader.readObject().getInt("id");
-		
-		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Leggo la lista delle autorizzazioni
-		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		JsonObject userList = reader.readObject();
-		
-		// Controlli sulla paginazione
-		JsonObject page = userList.getJsonObject("page");
-		assertEquals(0, page.getInt("offset"));
-		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(2, page.getInt("total"));
-		
-		// Controlli sugli items
-		JsonArray items = userList.getJsonArray("items");
-		assertEquals(2, items.size());
-		
-		assertEquals(idRole, items.getJsonObject(0).getInt("id"));
-		assertEquals(ruoloUser.getName(), items.getJsonObject(0).getJsonObject("role").getString("role_name"));
-		assertEquals("govhub_users_viewer", items.getJsonObject(1).getJsonObject("role").getString("role_name"));
-		assertEquals(0, items.getJsonObject(0).getJsonArray("organizations").size());
-		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
-		
-		// Cancellazione Autorizzazione
-		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
-				.with(this.userAuthProfilesUtils.utenzaAdmin())
-				.with(csrf())
-				.accept("*/*"))
 				.andExpect(status().isOk())
 				.andReturn();
 		
@@ -503,10 +315,6 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 	}
 	
 	@Test
-	/*
-	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per l'ente[3]
-	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
-	 * */
 	void UC_4_05_DeleteAuthorizationOk_UserEditor_Organization() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
@@ -602,42 +410,6 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
-				.accept("*/*"))
-				.andExpect(status().isOk())
-				.andReturn();
-		
-		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
-				.with(csrf())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Leggo la lista delle autorizzazioni
-		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		userList = reader.readObject();
-		
-		// Controlli sulla paginazione
-		page = userList.getJsonObject("page");
-		assertEquals(0, page.getInt("offset"));
-		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(1, page.getInt("total"));
-		
-		// Controlli sugli items
-		items = userList.getJsonArray("items");
-		assertEquals(1, items.size());
-		
-		assertEquals("govhub_users_viewer", items.getJsonObject(0).getJsonObject("role").getString("role_name"));
-		assertEquals(0, items.getJsonObject(0).getJsonArray("organizations").size());
-		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
-	}
-	
-	@Test
-	/*
-	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti gli enti
-	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
-	 * */
 	void UC_4_06_DeleteAuthorizationOk_UserEditor_Organization_Ente3() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
@@ -733,42 +505,6 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
-				.accept("*/*"))
-				.andExpect(status().isOk())
-				.andReturn();
-		
-		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
-				.with(csrf())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Leggo la lista delle autorizzazioni
-		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		userList = reader.readObject();
-		
-		// Controlli sulla paginazione
-		page = userList.getJsonObject("page");
-		assertEquals(0, page.getInt("offset"));
-		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(1, page.getInt("total"));
-		
-		// Controlli sugli items
-		items = userList.getJsonArray("items");
-		assertEquals(1, items.size());
-		
-		assertEquals("govhub_users_viewer", items.getJsonObject(0).getJsonObject("role").getString("role_name"));
-		assertEquals(0, items.getJsonObject(0).getJsonArray("organizations").size());
-		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
-	}
-	
-	@Test
-	/*
-	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per il servizio[2]
-	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per il servizio[2]
-	 * */
 	void UC_4_07_DeleteAuthorizationOk_UserEditor_Service() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
@@ -864,42 +600,6 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
-				.accept("*/*"))
-				.andExpect(status().isOk())
-				.andReturn();
-		
-		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
-				.with(csrf())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Leggo la lista delle autorizzazioni
-		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		userList = reader.readObject();
-		
-		// Controlli sulla paginazione
-		page = userList.getJsonObject("page");
-		assertEquals(0, page.getInt("offset"));
-		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(1, page.getInt("total"));
-		
-		// Controlli sugli items
-		items = userList.getJsonArray("items");
-		assertEquals(1, items.size());
-		
-		assertEquals("govhub_users_viewer", items.getJsonObject(0).getJsonObject("role").getString("role_name"));
-		assertEquals(0, items.getJsonObject(0).getJsonArray("organizations").size());
-		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
-	}
-	
-	@Test
-	/*
-	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti i servizi
-	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per il servizio2.
-	 * */
 	void UC_4_08_DeleteAuthorizationOk_UserEditor_Service_Servizio2() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
@@ -995,38 +695,3 @@ class Authorization_UC_4_DeleteAuthorizationTest {
 		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
 				.with(csrf())
-				.accept("*/*"))
-				.andExpect(status().isOk())
-				.andReturn();
-		
-		// Verifica che la lista autorizzazioni sia vuota
-		result = this.mockMvc.perform(get(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
-				.with(this.userAuthProfilesUtils.utenzaPrincipal(Costanti.PRINCIPAL_SNAKAMOTO))
-				.with(csrf())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Leggo la lista delle autorizzazioni
-		reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
-		userList = reader.readObject();
-		
-		// Controlli sulla paginazione
-		page = userList.getJsonObject("page");
-		assertEquals(0, page.getInt("offset"));
-		assertEquals(Costanti.USERS_QUERY_PARAM_LIMIT_DEFAULT_VALUE, page.getInt("limit"));
-		assertEquals(1, page.getInt("total"));
-		
-		// Controlli sugli items
-		items = userList.getJsonArray("items");
-		assertEquals(1, items.size());
-		
-		assertEquals("govhub_users_viewer", items.getJsonObject(0).getJsonObject("role").getString("role_name"));
-		assertEquals(0, items.getJsonObject(0).getJsonArray("organizations").size());
-		assertEquals(0, items.getJsonObject(0).getJsonArray("services").size());
-	}
-	
-	private void deleteAllAuthorizations(UserEntity user) throws Exception {
-		Utils.deleteAllAuthorizations(user, this.mockMvc, this.userAuthProfilesUtils.utenzaAdmin());
-	}
-}
