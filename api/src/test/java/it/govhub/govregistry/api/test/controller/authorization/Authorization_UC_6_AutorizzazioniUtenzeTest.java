@@ -268,6 +268,53 @@ class Authorization_UC_6_AutorizzazioniUtenzeTest {
 		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
 				.with(this.userAuthProfilesUtils.utenzaUserEditor())
 				.with(csrf())
+				.accept("*/*"))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+	}
+	
+	// 6. DeleteAuthorization con utenza non admin con ruolo non users_editor: NotAuthorized
+	@Test
+	void UC_6_06_DeleteAuthorizationFail_UtenzaSenzaRuolo_GovHub_Users_Editor() throws Exception {
+		configurazioneDB();
+		UserEntity user = leggiUtenteDB(Costanti.PRINCIPAL_SNAKAMOTO);
+		
+		String ruoloDaAssegnare = "govhub_user";
+		RoleEntity ruoloUser = leggiRuoloDB(ruoloDaAssegnare);
+		
+		OffsetDateTime expirationDate = ZonedDateTime.now(ZoneId.of(this.timeZone)).plusDays(30).toOffsetDateTime(); 
+		String json = Json.createObjectBuilder()
+				.add("role", ruoloUser.getId())
+				.add("organizations", Json.createArrayBuilder())
+				.add("services", Json.createArrayBuilder())
+				.add("expiration_date", dt.format(expirationDate))
+				.build()
+				.toString();
+		
+		// Creo una authorization e verifico la risposta
+		MvcResult result = this.mockMvc.perform(post(Costanti.USERS_ID_AUTHORIZATIONS_BASE_PATH, user.getId())
+				.with(this.userAuthProfilesUtils.utenzaUserEditor())
+				.with(csrf())
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").isNumber())
+				.andExpect(jsonPath("$.role.role_name", is(ruoloDaAssegnare)))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("organizations")))
+				.andExpect( jsonPath("$").value(Matchers.hasNullOrEmpty("services")))
+				.andExpect(jsonPath("$.expiration_date", is(dt.format(expirationDate))))
+				.andReturn();
+		
+		JsonReader reader = Json.createReader(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()));
+		int idRole = reader.readObject().getInt("id");
+		
+		// Cancellazione Autorizzazione
+		this.mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, user.getId().intValue(), idRole)
+				.with(this.userAuthProfilesUtils.utenzaUserViewer())
+				.with(csrf())
+				.accept("*/*"))
 				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.status", is(401)))
 				.andExpect(jsonPath("$.title", is("Unauthorized")))

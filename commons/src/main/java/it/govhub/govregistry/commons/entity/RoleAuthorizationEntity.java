@@ -42,6 +42,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Una autorizzazione concede ad un utente un ruolo per dei servizii ed organizzazioni.   
+ *
+ */
 
 @Data
 @Builder

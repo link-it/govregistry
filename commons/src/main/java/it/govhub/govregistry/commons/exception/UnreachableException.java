@@ -18,6 +18,10 @@
  */
 package it.govhub.govregistry.commons.exception;
 
+/**
+ * Eccezione sollevata quando una certa riga di codice non dovrebbe essere mai raggiunta. 
+ *
+ */
 public class UnreachableException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

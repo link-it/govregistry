@@ -75,6 +75,12 @@ public class RoleAuthorizationFilters {
 	}
 
 	
+	/**
+	 * Specifica le Autorizzazioni che consentono di lavorare sul servizio argomento.
+	 * 
+	 * Se l'autorizzazione non specifica servizi, allora può lavorare su tutti. 
+	 * 
+	 */
 	public static Specification<RoleAuthorizationEntity> onService(Long id) {
 		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
 			cb.or(
@@ -83,6 +89,12 @@ public class RoleAuthorizationFilters {
 	}
 	
 	
+	/**
+	 * Specifica le Autorizzazioni che consentono di lavorare sull'organizzazione argomento.
+	 * 
+	 * Se l'autorizzazione non specifica organizzazioni, allora può lavorare su tutte. 
+	 * 
+	 */
 	public static Specification<RoleAuthorizationEntity> onOrganization(Long id) {
 		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
 			cb.or(
@@ -92,6 +104,10 @@ public class RoleAuthorizationFilters {
 
 	
 	
+	/**
+	 * Filtra sui servizi autorizzati. Se la lista argomento è vuota, deve essere vuota anche quella sul db.
+	 * 
+	 */
 	public static Specification<RoleAuthorizationEntity> onServices(List<Long> services) {
 		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
@@ -118,6 +134,10 @@ public class RoleAuthorizationFilters {
 	}
 
 	
+	/**
+	 * Filtra sulle organizzazioni autorizzate. Se la lista argomento è vuota, deve essere vuota anche quella sul db.
+	 * 
+	 */
 	public static Specification<RoleAuthorizationEntity> onOrganizations(List<Long> organizations) {
 		return (Root<RoleAuthorizationEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 			

@@ -56,6 +56,13 @@ import it.govhub.govregistry.readops.api.repository.ReadOrganizationRepository;
 import it.govhub.security.services.SecurityService;
 
 
+/**
+ *		Controller comune per le operazioni di lettura sulle organizzazioni.
+ *
+ *		I servizi di govhub implementano questo controller e forniscono l'override della getReadOrganizationRoles
+ *		che dice per quel servizio quali sono i ruoli che consentono la lettura delle organizzazioni. 
+ *
+ */
 @Component
 public class ReadOrganizationController {
 	

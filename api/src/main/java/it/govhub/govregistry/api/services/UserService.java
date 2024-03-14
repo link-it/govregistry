@@ -60,6 +60,10 @@ public class UserService {
 		return this.userRepo.save(userCreate);
 	}
 	
+	/**
+	 * Sostituisce la vecchia entità con la nuova, effettuando i controlli necessari.
+	 * 
+	 */
 	@Transactional
 	public UserEntity replaceUser(UserEntity oldUser, UserEntity newUser) {
 		log.info("Replacing User {} With {}", oldUser, newUser);
