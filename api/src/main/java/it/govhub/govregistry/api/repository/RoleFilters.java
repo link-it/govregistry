@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- *******************************************************************************/
 package it.govhub.govregistry.api.repository;
 
 import javax.persistence.criteria.CriteriaBuilder;

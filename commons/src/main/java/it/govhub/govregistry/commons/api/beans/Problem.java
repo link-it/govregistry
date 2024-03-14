@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- *******************************************************************************/
 package it.govhub.govregistry.commons.api.beans;
 
 import java.net.URI;
