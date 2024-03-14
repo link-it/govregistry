@@ -447,6 +447,10 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	
 	@Transactional
 	@Test
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per l'ente[3]
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
+	 * */
 	void UC_1_07_CreateAuthorizationOk_UserEditor_Organization() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
@@ -520,6 +524,10 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	
 	@Transactional
 	@Test
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti gli enti
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per l'ente[3].
+	 * */
 	void UC_1_08_CreateAuthorizationOk_UserEditor_Organization_Ente3() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
@@ -593,6 +601,10 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	
 	@Transactional
 	@Test
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per il servizio[2]
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per il servizio[2]
+	 * */
 	void UC_1_09_CreateAuthorizationOk_UserEditor_Service() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
@@ -668,6 +680,10 @@ class Authorization_UC_1_CreateAuthorizationTest {
 	
 	@Transactional
 	@Test
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per tutti i servizi
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per il servizio2.
+	 * */
 	void UC_1_10_CreateAuthorizationOk_UserEditor_Service_Servizio2() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli

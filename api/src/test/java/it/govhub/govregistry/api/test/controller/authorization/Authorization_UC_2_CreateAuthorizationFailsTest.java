@@ -383,6 +383,10 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 	
 	@Test
 	@Transactional
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli per l'ente[3]
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per tutti gli enti, non e' consentito per la restrizione sull'ente.
+	 * */
 	void UC_2_09_CreateAuthorizationFail_UserEditor_Organization() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
@@ -495,6 +499,10 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 
 	@Test
 	@Transactional
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli il servizio[2]
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer per tutti i servizi, non e' consentito per la restrizione sul servizio
+	 * */
 	void UC_2_10_CreateAuthorizationFail_UserEditor_Service() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli
@@ -595,6 +603,10 @@ class Authorization_UC_2_CreateAuthorizationFailsTest {
 
 	@Test
 	@Transactional
+	/*
+	 * Con l'admin assegno all'utenza SNakamoto la possibilita' di editare i ruoli con scadenza
+	 * Con l'utenza SNakamoto edito i ruoli dell'utenza user_viewer assegnado il ruolo user_viewer senza scadenza, non e' consentito per la restrizione sulle date
+	 * */
 	void UC_2_11_CreateAuthorizationFail_UserEditor_ExpirationDate() throws Exception {
 		configurazioneDB();
 		// Assegno all'utenza SNakamoto la possibilita' di editare i ruoli

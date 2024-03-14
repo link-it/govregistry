@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+ *******************************************************************************/
 package it.govhub.govregistry.commons.exception;
 
 public class InternalConfigurationException extends RuntimeException {

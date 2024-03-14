@@ -43,6 +43,13 @@ public class ListaUtils {
 	    return iterable == null ? Collections.<T>emptyList() : iterable;
 	}
 	
+	/** 
+	 * Costruisce una lista paginata riempiendola con i riferimenti a 
+	 * first, prev, next e last.
+	 * 
+	 * Mentre il limit non viene toccato.
+	 * 
+	 */
 	public static final <T extends RepresentationModel<T>> T buildPaginatedList(
 			Page<?> results,
 			int limit,
@@ -94,6 +101,10 @@ public class ListaUtils {
 	}
 	
 	
+	/**
+	 * Rimpiazza limit e offset nella URL di richiesta e restituisce la nuova URL
+	 * 
+	 */
 	private static String replaceOffset(HttpServletRequest request, long offset) {
 		
 		

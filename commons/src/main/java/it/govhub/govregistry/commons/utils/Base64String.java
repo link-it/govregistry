@@ -38,6 +38,10 @@ public class Base64String {
 		this.value = value;
 	}
 
+	/* 
+	 * Costruisce un'istanza di questa classe codificando in base64 un array di bytes.
+	 *  
+	 */
 	public Base64String(byte[] value) {
 		this.value = new String(Base64.encodeBase64(value));
 	}

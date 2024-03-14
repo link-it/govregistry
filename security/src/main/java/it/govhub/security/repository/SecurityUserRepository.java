@@ -33,6 +33,9 @@ import it.govhub.govregistry.commons.entity.UserEntity_;
 
 public interface SecurityUserRepository extends JpaRepositoryImplementation<UserEntity, Long>{
 	
+	/**
+	 * Utilizziamo l'EntityGraph per risultare in una sola query invece che N quando preleviamo il principal.
+	 */
 	@Transactional
     @EntityGraph(attributePaths = {
     		UserEntity_.AUTHORIZATIONS, 
