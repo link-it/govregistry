@@ -217,6 +217,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		return buildResponseProblem(HttpStatus.BAD_REQUEST,ex.getLocalizedMessage(), request.getHeader(HttpHeaders.ACCEPT));
 	}
 	
+	/**
+	 * Quanto il client ci manda un header Accept non supportato.
+	 * 
+	 * 
+	 */
 	@Override
 	protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
 			HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {

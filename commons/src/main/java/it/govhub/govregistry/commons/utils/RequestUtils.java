@@ -58,6 +58,11 @@ public class RequestUtils {
 	}
 
 	
+	/**
+	 * Crea un messaggio che descrive un errore di validazione è più leggibile 
+	 * per una API rispetto a quello restituito di default.
+	 * 	
+	 */
 	public static String extractValidationError(ObjectError error) {
 		if (error instanceof FieldError) {			
 			var ferror = (FieldError) error;
@@ -70,6 +75,11 @@ public class RequestUtils {
 	}
 
 	
+	/**
+	 * Utilizzata nelle richieste multipart di upload file per estrarre il nome del file dallo header
+	 * Content-Disposition
+	 * 
+	 */
 	public static String readFilenameFromHeaders(FileItemHeaders headers) {
 		
 		String filename = null;

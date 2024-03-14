@@ -23,6 +23,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 
+/**
+ * Le specifiche AGID richiedono di utilizzare offset o cursor per lo scostamento nella paginazione, JPA usa invece
+ * il numero di pagina. Questo wrapper per un pageable consente di lavorare con JPA e poi  produrre risultati
+ * REST validi per AGID, perchè conserva il valore dell'offset e limit.
+ * 
+ *
+ */
 public class LimitOffsetPageRequest 
 {
 	public final Pageable pageable;

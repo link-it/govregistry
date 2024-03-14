@@ -56,6 +56,17 @@ import it.govhub.govregistry.readops.api.repository.ServiceFilters;
 import it.govhub.security.services.SecurityService;
 
 
+/**
+ * 
+ * Tutte le applicazioni di Govhub hanno una stessa parte in comune per la lettura di utenti, organizzazioni e servizi.
+ * 
+ * Questa classe contiene il codice condiviso per l'accesso in lettura alle service entitities.
+ * 
+ * La specifica dei metodi è dentro govregistry-api-readops.yaml. Questa specifica è riportata dentro gli altri yaml, che per adesso sono
+ * govregisty-api-backoffice.yaml e govio-api-backoffice.yaml.
+ * 
+ *
+ */
 @Component
 public class ReadServiceController {
 	

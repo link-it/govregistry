@@ -47,6 +47,9 @@ import it.govhub.govregistry.commons.entity.ServiceEntity;
 import it.govhub.govregistry.commons.entity.UserEntity;
 import it.govhub.govregistry.readops.api.repository.ReadRoleRepository;
 
+/***
+ * Utilities comuni ai test
+ */
 public class Utils {
 
 	public static RoleEntity leggiRuoloDB(String nomeRuolo, ReadRoleRepository roleRepository) {
@@ -103,3 +106,8 @@ public class Utils {
 		mockMvc.perform(delete(Costanti.AUTHORIZATIONS_BASE_PATH_DETAIL_ID, uid, aid)
 				.with(utenza)
 				.with(csrf())
+				.accept("*/*"))
+				.andExpect(status().isOk())
+				.andReturn();
+	}
+}

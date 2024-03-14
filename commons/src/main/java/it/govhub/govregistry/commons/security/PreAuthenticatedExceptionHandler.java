@@ -34,6 +34,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 
+/**
+ * Questo filtro cattura le eccezioni sollevate durante la SecurityFilterChain di Spring.
+ * 
+ * Fa in modo di delegare al @ControllerAdvice (Il nostro RestResponseEntityExceptionHandler) la gestione delle eccezioni. 
+ *
+ */
 @Component
 public class PreAuthenticatedExceptionHandler extends OncePerRequestFilter {
 

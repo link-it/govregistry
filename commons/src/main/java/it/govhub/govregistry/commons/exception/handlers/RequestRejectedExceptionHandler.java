@@ -36,6 +36,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.govhub.govregistry.commons.api.beans.Problem;
 
+/**
+ * Questo Bean Restituisce un Problem quando spring-security rifiuta una richiesta perchè ritenuta ad esempio non sicura.
+ */
 
 public class RequestRejectedExceptionHandler implements RequestRejectedHandler {
 	

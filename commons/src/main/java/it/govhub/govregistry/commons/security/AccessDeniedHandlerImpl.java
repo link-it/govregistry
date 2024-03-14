@@ -41,6 +41,10 @@ import it.govhub.govregistry.commons.api.beans.Problem;
 import it.govhub.govregistry.commons.exception.UnreachableException;
 import it.govhub.govregistry.commons.exception.handlers.RestResponseEntityExceptionHandler;
 
+/*
+* Handler che viene eseguito quando un oggetto {@link org.springframework.security.core.Authentication Authentication} non ha
+* l'autorizzazione richiesta. (e.g.: visistare un'endpoint) 
+*/
 
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 

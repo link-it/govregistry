@@ -30,6 +30,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * Offre la stessa funzionalità dell'annotazione @RestController, in più
+ * aggiunge il contesto /v1 a tutti i metodi del controller
+ * 
+ * @author Francesco Scarlato
+ *
+ */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
